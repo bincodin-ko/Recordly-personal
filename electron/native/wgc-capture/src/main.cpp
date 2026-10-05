@@ -50,6 +50,7 @@ struct CaptureConfig {
     bool hasDisplayBounds = false;
     bool captureSystemAudio = false;
     bool captureMic = false;
+    int systemAudioLatencyMs = -1;  // -1 = default kLoopbackOutputLatencyMs
 };
 
 static bool parseSimpleJson(const std::string& json, CaptureConfig& config) {
@@ -141,6 +142,8 @@ static bool parseSimpleJson(const std::string& json, CaptureConfig& config) {
     };
 
     config.captureSystemAudio = findBool("captureSystemAudio");
+    int latencyMs = findInt("systemAudioLatencyMs");
+    if (latencyMs >= 0 && latencyMs <= 1000) config.systemAudioLatencyMs = latencyMs;
     config.captureMic = findBool("captureMic");
 
     int dx = findInt("displayX");
@@ -469,7 +472,7 @@ int main(int argc, char* argv[]) {
             config.audioOutputPath,
             firstVideoTimestampHns.load(),
             loopback,
-            kLoopbackOutputLatencyMs);
+            config.systemAudioLatencyMs >= 0 ? config.systemAudioLatencyMs : kLoopbackOutputLatencyMs);
     }
     if (micActive) {
         writeCompanionAudioTimingMetadata(

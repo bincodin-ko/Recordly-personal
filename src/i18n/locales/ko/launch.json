@@ -56,7 +56,16 @@
 			"availableGenericTitle": "새 업데이트가 있어요."
 		},
 		"preparing": "녹화 준비 중",
-		"preparingSubtitle": "곧 편집기가 열려요"
+		"preparingSubtitle": "곧 편집기가 열려요",
+		"audioSync": {
+			"title": "시스템 소리 싱크 (듣는 장치)",
+			"default": "스피커·모니터 (37ms, 기본)",
+			"bt150": "블루투스 150ms",
+			"bt200": "블루투스 200ms",
+			"bt250": "블루투스 250ms",
+			"bt300": "블루투스 300ms",
+			"none": "보정 안 함 (0ms)"
+		}
 	},
 	"sourceSelector": {
 		"loadingSources": "소스를 불러오는 중...",

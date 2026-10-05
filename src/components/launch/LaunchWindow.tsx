@@ -7,6 +7,7 @@ import {
 	MicrophoneSlashIcon,
 	MinusIcon,
 	MonitorIcon,
+	SpeakerHigh,
 	TimerIcon,
 	VideoCameraIcon,
 	VideoCameraSlashIcon,
@@ -30,6 +31,7 @@ import { useRecordingTimer } from "./hooks/useRecordingTimer";
 import { useWebcamPreviewOverlay } from "./hooks/useWebcamPreviewOverlay";
 import styles from "./LaunchWindow.module.css";
 import { MarqueeText } from "./MarqueeText";
+import { AudioSyncPopover } from "./popovers/AudioSyncPopover";
 import { CountdownPopover } from "./popovers/CountdownPopover";
 import {
 	LaunchPopoverCoordinatorProvider,
@@ -333,6 +335,22 @@ function LaunchWindowContent() {
 						) : (
 							<VideoCameraSlashIcon className="size-5" />
 						)}
+					</Button>
+				}
+			/>
+
+			<AudioSyncPopover
+				trigger={
+					<Button
+						variant="ghost"
+						size="icon"
+						iconSize="lg"
+						title={t("recording.audioSync.title", "System audio sync (your output device)")}
+					>
+						<SpeakerHigh
+							weight={openId === "audio-sync" ? "fill" : "regular"}
+							className="size-5"
+						/>
 					</Button>
 				}
 			/>

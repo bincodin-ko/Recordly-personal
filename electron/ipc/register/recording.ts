@@ -1,4 +1,5 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
+import { readAppSetting } from "../../appSettingsStore";
 import { execFile, spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -153,6 +154,9 @@ import {
 } from "../utils";
 import { resolveWindowsCaptureTarget } from "../windowsCaptureSelection";
 import { bringSelectedWindowForward } from "./sources";
+
+// Must match src/components/launch/popovers/AudioSyncPopover.tsx
+const SYSTEM_AUDIO_SYNC_OFFSET_SETTING_KEY = "recordly.recording.systemAudioOffsetMs";
 
 const execFileAsync = promisify(execFile);
 
@@ -515,6 +519,11 @@ export function registerRecordingHandlers(
 						);
 						config.captureSystemAudio = true;
 						config.audioOutputPath = tempSystemAudioPath;
+						// Output-latency compensation chosen in the launch window (Bluetooth etc.).
+						const latencyMs = readAppSetting(SYSTEM_AUDIO_SYNC_OFFSET_SETTING_KEY);
+						if (typeof latencyMs === "number" && latencyMs >= 0 && latencyMs <= 1000) {
+							config.systemAudioLatencyMs = Math.round(latencyMs);
+						}
 						setWindowsSystemAudioPath(systemAudioPath);
 					} else {
 						setWindowsSystemAudioPath(null);

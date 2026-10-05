@@ -56,7 +56,16 @@
 			"availableGenericTitle": "Доступно обновление."
 		},
 		"preparing": "Preparing recording",
-		"preparingSubtitle": "Opening the editor in a moment"
+		"preparingSubtitle": "Opening the editor in a moment",
+		"audioSync": {
+			"title": "System audio sync (your output device)",
+			"default": "Speakers / monitor (37 ms, default)",
+			"bt150": "Bluetooth 150 ms",
+			"bt200": "Bluetooth 200 ms",
+			"bt250": "Bluetooth 250 ms",
+			"bt300": "Bluetooth 300 ms",
+			"none": "No compensation (0 ms)"
+		}
 	},
 	"sourceSelector": {
 		"loadingSources": "Загрузка источников...",
