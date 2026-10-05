@@ -24,6 +24,7 @@ import {
 	isCursorCapturePaused,
 	pushCursorSample,
 } from "./telemetry";
+import { recordKeystroke, resetKeystrokeCapture } from "./keystrokes";
 
 const nodeRequire = createRequire(import.meta.url);
 
@@ -276,6 +277,13 @@ export async function startInteractionCapture() {
 			recordCursorMouseUp();
 		};
 
+		resetKeystrokeCapture();
+		const onKeyDown = (event: HookMouseEvent) => {
+			if (!isCursorCaptureActive || isCursorCapturePaused()) return;
+			// Keyboard events arrive through the same listener type; keycode carries the key.
+			recordKeystroke(event as unknown as { keycode: number }, getCursorCaptureElapsedMs());
+		};
+
 		const onMouseMove = (event: HookMouseEvent) => {
 			if (process.platform !== "linux" || !isCursorCaptureActive || isCursorCapturePaused()) {
 				return;
@@ -291,6 +299,7 @@ export async function startInteractionCapture() {
 
 		hook.on("mousedown", onMouseDown);
 		hook.on("mouseup", onMouseUp);
+		hook.on("keydown", onKeyDown);
 		if (process.platform === "linux") {
 			hook.on("mousemove", onMouseMove);
 		}
@@ -300,12 +309,14 @@ export async function startInteractionCapture() {
 				if (typeof hook.off === "function") {
 					hook.off("mousedown", onMouseDown);
 					hook.off("mouseup", onMouseUp);
+					hook.off("keydown", onKeyDown);
 					if (process.platform === "linux") {
 						hook.off("mousemove", onMouseMove);
 					}
 				} else if (typeof hook.removeListener === "function") {
 					hook.removeListener("mousedown", onMouseDown);
 					hook.removeListener("mouseup", onMouseUp);
+					hook.removeListener("keydown", onKeyDown);
 					if (process.platform === "linux") {
 						hook.removeListener("mousemove", onMouseMove);
 					}

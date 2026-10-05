@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import { persistPendingKeystrokes, snapshotKeystrokesForPersistence } from "./keystrokes";
 import {
 	CURSOR_SAMPLE_INTERVAL_MS,
 	CURSOR_TELEMETRY_VERSION,
@@ -263,6 +264,7 @@ export function sampleCursorPoint() {
 }
 
 export async function persistPendingCursorTelemetry(videoPath: string) {
+	await persistPendingKeystrokes(videoPath);
 	const telemetryPath = getTelemetryPathForVideo(videoPath);
 	if (pendingCursorSamples.length > 0) {
 		await fs.writeFile(
@@ -279,6 +281,7 @@ export async function persistPendingCursorTelemetry(videoPath: string) {
 }
 
 export function snapshotCursorTelemetryForPersistence() {
+	snapshotKeystrokesForPersistence();
 	if (activeCursorSamples.length === 0) {
 		return;
 	}
