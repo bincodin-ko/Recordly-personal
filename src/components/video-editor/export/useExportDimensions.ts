@@ -84,6 +84,7 @@ export function useExportDimensions({
 			good: calculateMp4ExportDimensions(width, height, "good"),
 			high: calculateMp4ExportDimensions(width, height, "high"),
 			source: calculateMp4ExportDimensions(width, height, "source"),
+			uhd: calculateMp4ExportDimensions(width, height, "uhd"),
 		};
 	}, [supportedSourceDimensions, desiredSourceDimensions]);
 	const ensureSupportedSourceDimensions = useCallback(

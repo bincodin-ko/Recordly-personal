@@ -59,7 +59,8 @@ export function normalizeExportPreferences(raw: Partial<ExportPreferences>): Exp
 			raw.exportQuality === "medium" ||
 			raw.exportQuality === "good" ||
 			raw.exportQuality === "high" ||
-			raw.exportQuality === "source"
+			raw.exportQuality === "source" ||
+			raw.exportQuality === "uhd"
 				? raw.exportQuality
 				: "source",
 		mp4FrameRate: normalizeExportMp4FrameRate(raw.mp4FrameRate),

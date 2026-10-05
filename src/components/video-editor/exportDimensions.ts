@@ -89,6 +89,16 @@ export function calculateMp4ExportDimensions(
 	baseHeight: number,
 	quality: ExportQuality,
 ): { width: number; height: number } {
+	if (quality === "uhd") {
+		const longSide = Math.max(baseWidth, baseHeight);
+		const shortSide = Math.min(baseWidth, baseHeight);
+		const scale = Math.max(1, Math.min(3840 / longSide, 2160 / shortSide));
+		return {
+			width: normalizeEvenDimension(baseWidth * scale),
+			height: normalizeEvenDimension(baseHeight * scale),
+		};
+	}
+
 	if (quality === "source") {
 		return {
 			width: normalizeEvenDimension(baseWidth),

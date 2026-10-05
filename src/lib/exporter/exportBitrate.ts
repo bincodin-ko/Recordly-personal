@@ -47,7 +47,7 @@ export function getSourceQualityBitrate(width: number, height: number): number {
 }
 
 function getBaseMp4ExportBitrate(width: number, height: number, quality: ExportQuality): number {
-	if (quality === "source") {
+	if (quality === "source" || quality === "uhd") {
 		return getSourceQualityBitrate(width, height);
 	}
 

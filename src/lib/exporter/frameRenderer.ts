@@ -1,4 +1,5 @@
 import { Application, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
+import { createVideoSharpener } from "@/lib/videoSharpenFilter";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
 import { ZoomBlurFilter } from "pixi-filters/zoom-blur";
 import type {
@@ -226,6 +227,7 @@ export class FrameRenderer {
 	private videoContainer: Container | null = null;
 	private cursorContainer: Container | null = null;
 	private videoSprite: Sprite | null = null;
+	private updateVideoSharpen: (() => void) | null = null;
 	private videoTextureSource: VideoTextureSource | null = null;
 	private backgroundSprite: HTMLCanvasElement | null = null;
 	private maskGraphics: Graphics | null = null;
@@ -1396,7 +1398,8 @@ export class FrameRenderer {
 			if (this.backgroundForwardFrameSource || this.backgroundVideoElement) {
 				await this.syncBackgroundFrame(backgroundTimelineTimestamp / 1_000_000);
 			}
-			this.app.renderer.render(this.app.stage);
+			this.updateVideoSharpen?.();
+		this.app.renderer.render(this.app.stage);
 			this.compositeWithShadows(false);
 			return;
 		}
@@ -1405,6 +1408,10 @@ export class FrameRenderer {
 		if (!this.videoSprite) {
 			const texture = Texture.from(videoFrame as unknown as PixiTextureInput);
 			this.videoSprite = new Sprite(texture);
+			this.updateVideoSharpen = createVideoSharpener(
+				this.videoSprite,
+				() => this.app?.renderer.resolution ?? 1,
+			);
 			this.videoTextureSource = texture.source as unknown as VideoTextureSource;
 			this.videoContainer.addChild(this.videoSprite);
 			if (this.cursorOverlay && this.cursorContainer) {
@@ -1478,6 +1485,7 @@ export class FrameRenderer {
 		});
 
 		// Render the PixiJS stage to its canvas (video only, transparent background)
+		this.updateVideoSharpen?.();
 		this.app.renderer.render(this.app.stage);
 
 		// Composite with shadows to final output canvas

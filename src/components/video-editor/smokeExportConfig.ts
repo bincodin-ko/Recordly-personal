@@ -53,7 +53,7 @@ function parseSmokeExportNonNegativeNumber(value: string | null): number | undef
 }
 
 function parseSmokeExportQuality(value: string | null): ExportQuality | undefined {
-	if (value === "medium" || value === "good" || value === "high" || value === "source") {
+	if (value === "medium" || value === "good" || value === "high" || value === "source" || value === "uhd") {
 		return value;
 	}
 	return undefined;

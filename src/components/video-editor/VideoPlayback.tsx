@@ -1,4 +1,4 @@
-import { Application, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
+import { Application, Container, Graphics, Rectangle, Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
 import { ZoomBlurFilter } from "pixi-filters/zoom-blur";
 import type React from "react";
@@ -111,6 +111,7 @@ import {
 } from "./videoPlayback/motionSmoothing";
 import { updateOverlayIndicator } from "./videoPlayback/overlayUtils";
 import { supportsPreviewPlaybackRate } from "./videoPlayback/playbackRate";
+import { createVideoSharpener } from "@/lib/videoSharpenFilter";
 import { PreviewVideoSource } from "./videoPlayback/previewVideoSource";
 import { usePreviewVideoReady } from "./videoPlayback/usePreviewVideoReady";
 import { getSceneEffectMetrics } from "./videoPlayback/sceneEffects";
@@ -1888,6 +1889,13 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			const videoTexture = Texture.from(source);
 
 			const videoSprite = new Sprite(videoTexture);
+			// Sharpen while the preview shows the recording at a non-1:1 scale; runs
+			// before the ticker's render pass (HIGH priority), never during it.
+			const updateVideoSharpen = createVideoSharpener(
+				videoSprite,
+				() => app.renderer.resolution || 1,
+			);
+			app.ticker.add(updateVideoSharpen, undefined, UPDATE_PRIORITY.HIGH);
 			videoSpriteRef.current = videoSprite;
 
 			const maskGraphics = new Graphics();
@@ -1951,6 +1959,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 
 				videoEffectsContainer.mask = null;
 				videoContainer.mask = null;
+				app.ticker?.remove(updateVideoSharpen);
 				destroyPixiContainer(videoSprite);
 				destroyPixiContainer(maskGraphics);
 				maskGraphicsRef.current = null;

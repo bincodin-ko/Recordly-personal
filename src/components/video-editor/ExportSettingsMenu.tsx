@@ -172,11 +172,11 @@ export function ExportSettingsMenu({
 							label={tSettings("export.qualityTitle", "Quality")}
 							value={exportQuality}
 							onChange={onExportQualityChange}
-							options={(["medium", "good", "high", "source"] as const).map(
+							options={(["medium", "good", "high", "source", "uhd"] as const).map(
 								(value, index) => ({
 									value,
 									label: tSettings(
-										`export.quality.${["low", "medium", "high", "original"][index]}`,
+										`export.quality.${["low", "medium", "high", "original", "uhd"][index]}`,
 									),
 									description: mp4OutputDimensions
 										? `${mp4OutputDimensions[value].width} × ${mp4OutputDimensions[value].height}`

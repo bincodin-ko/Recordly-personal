@@ -1,6 +1,7 @@
 import { Application, BlurFilter, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
 import { ZoomBlurFilter } from "pixi-filters/zoom-blur";
+import { createVideoSharpener } from "@/lib/videoSharpenFilter";
 import { buildActiveCaptionLayout } from "@/components/video-editor/captionLayout";
 import {
 	CAPTION_FONT_WEIGHT,
@@ -374,6 +375,7 @@ export class FrameRenderer {
 	private webcamRootContainer: Container | null = null;
 	private webcamContainer: Container | null = null;
 	private videoSprite: Sprite | null = null;
+	private updateVideoSharpen: (() => void) | null = null;
 	private videoTextureSource: MutableVideoTextureSource | null = null;
 	private backgroundSprite: Sprite | null = null;
 	private backgroundTextureSource: MutableVideoTextureSource | null = null;
@@ -2866,6 +2868,7 @@ export class FrameRenderer {
 			if (this.captionContainer) this.captionContainer.visible = false;
 			// Gap frames must bypass canvas annotation compositing as well as Pixi layers.
 			this.outputCanvasOverride = null;
+			this.updateVideoSharpen?.();
 			this.app.render();
 			return;
 		}
@@ -2882,6 +2885,10 @@ export class FrameRenderer {
 		if (!this.videoSprite) {
 			const texture = this.createTextureFromSource(resolvedVideoSource);
 			this.videoSprite = new Sprite(texture);
+			this.updateVideoSharpen = createVideoSharpener(
+				this.videoSprite,
+				() => this.app?.renderer.resolution ?? 1,
+			);
 			this.videoTextureSource = texture.source as unknown as MutableVideoTextureSource;
 			this.videoContainer.addChildAt(this.videoSprite, 0);
 			this.videoTextureUsesStartupStaging = usesStartupStaging;
@@ -2969,7 +2976,9 @@ export class FrameRenderer {
 				this.captionContainer.visible = false;
 			}
 
-			this.app!.render();
+			this.updateVideoSharpen?.();
+			this.updateVideoSharpen?.();
+		this.app!.render();
 
 			if (this.annotationContainer) {
 				this.annotationContainer.visible = annotationContainerVisible;
@@ -2983,6 +2992,7 @@ export class FrameRenderer {
 		}
 
 		this.outputCanvasOverride = null;
+		this.updateVideoSharpen?.();
 		this.app!.render();
 	}
 
@@ -3265,6 +3275,7 @@ export class FrameRenderer {
 		this.webcamRootContainer = null;
 		this.webcamContainer = null;
 		this.videoSprite = null;
+		this.updateVideoSharpen = null;
 		this.videoTextureSource = null;
 		this.backgroundSprite = null;
 		this.backgroundTextureSource = null;

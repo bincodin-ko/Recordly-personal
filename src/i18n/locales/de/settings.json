@@ -289,7 +289,8 @@
 			"low": "Niedrig",
 			"medium": "Mittel",
 			"high": "Hoch",
-			"original": "Original"
+			"original": "Original",
+			"uhd": "4K (for uploads)"
 		},
 		"fpsTitle": "FPS",
 		"loop": "Wiederholen",

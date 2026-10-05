@@ -160,3 +160,10 @@ describe("shouldDebounceMp4SupportProbe", () => {
 		).toBe(false);
 	});
 });
+
+describe("uhd export dimensions", () => {
+	it("upscales to 4K for uploads and never downsizes larger sources", () => {
+		expect(calculateMp4ExportDimensions(2560, 1440, "uhd")).toEqual({ width: 3840, height: 2160 });
+		expect(calculateMp4ExportDimensions(5120, 2880, "uhd")).toEqual({ width: 5120, height: 2880 });
+	});
+});

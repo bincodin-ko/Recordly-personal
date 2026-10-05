@@ -172,7 +172,8 @@ export interface VideoFrameData {
 
 export type ExportEncodingMode = "fast" | "balanced" | "quality";
 
-export type ExportQuality = "medium" | "good" | "high" | "source";
+// "uhd": upscale to 4K for uploads (more chroma resolution after 4:2:0, higher platform bitrates).
+export type ExportQuality = "medium" | "good" | "high" | "source" | "uhd";
 
 export type ExportMp4FrameRate = 24 | 30 | 60;
 
