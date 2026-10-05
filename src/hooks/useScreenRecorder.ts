@@ -1161,7 +1161,12 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 			typeof window.electronAPI.startNativeScreenRecording === "function";
 
 		let useNativeWindowsCapture = false;
-		if (
+		// Android (scrcpy) records through the native start/stop IPC; the PC cursor is meaningless there.
+		const isAndroidSource = selectedSource.id?.startsWith("android:") === true;
+		if (isAndroidSource) {
+			useNativeWindowsCapture = true;
+			hideEditorOverlayCursorByDefault.current = true;
+		} else if (
 			platform === "win32" &&
 			shouldUseNativeWindowsCaptureForSource(selectedSource) &&
 			typeof window.electronAPI.isNativeWindowsCaptureAvailable === "function"
@@ -1692,7 +1697,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 			const { selectedSource, useNativeMacScreenCapture, useNativeWindowsCapture, micLabel } =
 				preparedStart;
 			const useNativeCapture = useNativeMacScreenCapture || useNativeWindowsCapture;
-			const shouldWarmStartNativeCapture = useNativeCapture && countdownDelay > 0;
+			const shouldWarmStartNativeCapture =
+				useNativeCapture && countdownDelay > 0 && !selectedSource.id?.startsWith("android:");
 			if (countdownDelay > 0 && !shouldWarmStartNativeCapture) {
 				setCountdownActive(true);
 				try {

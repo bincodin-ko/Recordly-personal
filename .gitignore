@@ -49,3 +49,4 @@ gpu-export-probe.mp4
 # Browser test output
 test-results/
 playwright-report/
+electron/native/third_party/scrcpy.zip

@@ -20,6 +20,7 @@ import { pendingCaptureArea, selectedSource, setPendingCaptureArea, setSelectedS
 import type { SelectedSource, WindowBounds } from "../types";
 import { getScreen, parseWindowId } from "../utils";
 import { bringWindowsWindowForward, resolveWindowsWindowBounds } from "../windowsWindowControl";
+import { listAndroidDevices } from "../recording/android";
 import { getScreenSourceIdForDisplay } from "./sourceMapping";
 
 const execFileAsync = promisify(execFile);
@@ -404,6 +405,7 @@ export function registerSourceHandlers({
 	});
 
 	// ── Area recording: drag a rectangle on the selected display ──
+	ipcMain.handle("get-android-devices", () => listAndroidDevices());
 	ipcMain.handle("get-capture-area", () => pendingCaptureArea);
 	ipcMain.handle("clear-capture-area", () => {
 		setPendingCaptureArea(null);

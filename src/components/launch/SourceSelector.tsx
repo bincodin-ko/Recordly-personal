@@ -83,6 +83,58 @@ function AreaPickerRow({
 	);
 }
 
+/** Android phones connected over USB (adb). Recorded with scrcpy in the main process. */
+function AndroidDevicesSection({
+	selectedSource,
+	onSourceSelect,
+}: {
+	selectedSource: string;
+	onSourceSelect: (source: DesktopSource) => void;
+}) {
+	const t = useScopedT("launch");
+	const [devices, setDevices] = useState<Array<{ serial: string; model: string }>>([]);
+	useEffect(() => {
+		void window.electronAPI?.getAndroidDevices?.().then((list) => setDevices(list ?? []));
+	}, []);
+	return (
+		<div className="space-y-1">
+			<div className="px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.08em] source-selector-label">
+				{t("recording.android.title", "Android devices (USB)")}
+			</div>
+			{devices.length === 0 ? (
+				<div className="px-3 pb-2 text-xs source-selector-subtle">
+					{t("recording.android.none", "No phone found. Turn on USB debugging and connect it.")}
+				</div>
+			) : (
+				devices.map((device) => {
+					const source: DesktopSource = {
+						id: `android:${device.serial}`,
+						name: device.model,
+						thumbnail: null,
+						display_id: "",
+						appIcon: null,
+					};
+					const isSelected = selectedSource === source.name;
+					return (
+						<Button
+							key={device.serial}
+							variant="ghost"
+							className={cn(
+								"source-selector-item w-full min-h-[40px] px-3 justify-start gap-3 text-left",
+								isSelected && "source-selector-item-selected",
+							)}
+							onClick={() => onSourceSelect(source)}
+						>
+							<MonitorIcon className="w-5 h-5 source-selector-muted" />
+							<span className="text-sm source-selector-text">{device.model}</span>
+						</Button>
+					);
+				})
+			)}
+		</div>
+	);
+}
+
 /**
  * SourceSelectorContent - The actual list of sources
  */
@@ -202,6 +254,7 @@ export const SourceSelectorContent = ({
 					{t("recording.noSourcesFound")}
 				</div>
 			)}
+			<AndroidDevicesSection selectedSource={selectedSource} onSourceSelect={onSourceSelect} />
 		</div>
 	);
 };

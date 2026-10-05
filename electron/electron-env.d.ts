@@ -242,6 +242,7 @@ interface Window {
 		openSourceSelector: () => Promise<void>;
 		selectSource: (source: ProcessedDesktopSource) => Promise<ProcessedDesktopSource>;
 		showSourceHighlight: (source: ProcessedDesktopSource) => Promise<{ success: boolean }>;
+		getAndroidDevices: () => Promise<Array<{ serial: string; model: string }>>;
 		selectCaptureArea: () => Promise<CaptureArea | null>;
 		clearCaptureArea: () => Promise<null>;
 		getCaptureArea: () => Promise<CaptureArea | null>;

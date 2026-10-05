@@ -1,4 +1,9 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
+import {
+	isAndroidRecordingActive,
+	startAndroidRecording,
+	stopAndroidRecording,
+} from "../recording/android";
 import { readAppSetting } from "../../appSettingsStore";
 import { execFile, spawn } from "node:child_process";
 import fs from "node:fs/promises";
@@ -407,6 +412,10 @@ export function registerRecordingHandlers(
 		async (_, source: SelectedSource, options?: NativeMacRecordingOptions) => {
 			// Protect the HUD at the capture boundary, before the renderer publishes recording state.
 			beginHudCaptureProtection();
+			// Android over USB (scrcpy); everything after start/stop reuses the normal flow.
+			if (source.id?.startsWith("android:")) {
+				return startAndroidRecording(source.id.slice("android:".length), await getRecordingsDir());
+			}
 			const visibleWindowBounds = source.id?.startsWith("window:")
 				? await bringSelectedWindowForward(source)
 				: null;
@@ -950,6 +959,9 @@ export function registerRecordingHandlers(
 		const start = Date.now();
 		console.log("[PERF:MAIN] Handler: stop-native-screen-recording: STARTED");
 		try {
+			if (isAndroidRecordingActive()) {
+				return await stopAndroidRecording();
+			}
 			// Windows native capture stop path
 			if (process.platform === "win32" && windowsNativeCaptureActive) {
 				let stagedTempVideoPath: string | null = null;
@@ -1315,6 +1327,7 @@ export function registerRecordingHandlers(
 	});
 
 	ipcMain.handle("pause-native-screen-recording", async () => {
+		if (isAndroidRecordingActive()) return { success: false, message: "Pause is not supported for Android recording." };
 		if (process.platform === "win32") {
 			if (!windowsNativeCaptureActive || !windowsCaptureProcess) {
 				return { success: false, message: "No native Windows screen recording is active." };
@@ -1371,6 +1384,7 @@ export function registerRecordingHandlers(
 	});
 
 	ipcMain.handle("resume-native-screen-recording", async () => {
+		if (isAndroidRecordingActive()) return { success: false, message: "Pause is not supported for Android recording." };
 		if (process.platform === "win32") {
 			if (!windowsNativeCaptureActive || !windowsCaptureProcess) {
 				return { success: false, message: "No native Windows screen recording is active." };

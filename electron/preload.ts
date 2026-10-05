@@ -529,6 +529,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	selectSource: (source: ProcessedDesktopSource) => {
 		return ipcRenderer.invoke("select-source", source);
 	},
+	getAndroidDevices: () => ipcRenderer.invoke("get-android-devices"),
 	selectCaptureArea: () => ipcRenderer.invoke("select-capture-area"),
 	clearCaptureArea: () => ipcRenderer.invoke("clear-capture-area"),
 	getCaptureArea: () => ipcRenderer.invoke("get-capture-area"),

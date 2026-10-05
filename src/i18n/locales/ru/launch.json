@@ -69,6 +69,10 @@
 		"area": {
 			"select": "Record part of the screen (area)…",
 			"clear": "Area set ({{w}}% × {{h}}%) · clear"
+		},
+		"android": {
+			"title": "Android devices (USB)",
+			"none": "No phone found. Turn on USB debugging and connect it."
 		}
 	},
 	"sourceSelector": {
