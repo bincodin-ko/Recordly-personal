@@ -43,7 +43,6 @@ struct CaptureConfig {
     int fps = 60;
     int width = 0;
     int height = 0;
-    int bitrate = 0;
     int displayX = 0;
     int displayY = 0;
     int displayW = 0;
@@ -126,8 +125,6 @@ static bool parseSimpleJson(const std::string& json, CaptureConfig& config) {
 
     int height = findInt("height");
     if (height > 0) config.height = height;
-    int bitrate = findInt("bitrate");
-    if (bitrate > 0) config.bitrate = bitrate;
 
     config.audioOutputPath = findString("audioOutputPath");
     config.micOutputPath = findString("micOutputPath");
@@ -346,8 +343,7 @@ int main(int argc, char* argv[]) {
     MFEncoder encoder;
     std::wstring outputPathW = utf8ToWide(config.outputPath);
     if (!encoder.initialize(outputPathW, captureWidth, captureHeight, config.fps,
-                           session.device(), session.context(),
-                           static_cast<UINT32>(config.bitrate))) {
+                           session.device(), session.context())) {
         std::cerr << "ERROR: Failed to initialize Media Foundation encoder" << std::endl;
         return 1;
     }
