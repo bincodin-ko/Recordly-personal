@@ -112,6 +112,11 @@ export type { CursorInteractionType, CursorTelemetryPoint };
 export function setSelectedSource(v: SelectedSource | null) {
 	selectedSource = v;
 }
+// Area recording: chosen rectangle on the selected display (normalized 0..1), kept until cleared.
+export let pendingCaptureArea: { x: number; y: number; width: number; height: number } | null = null;
+export function setPendingCaptureArea(v: typeof pendingCaptureArea) {
+	pendingCaptureArea = v;
+}
 export function setCurrentProjectPath(v: string | null) {
 	currentProjectPath = v;
 }

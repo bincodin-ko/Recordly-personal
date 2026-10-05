@@ -16,7 +16,7 @@ import {
 	stopWindowBoundsCapture,
 } from "../cursor/bounds";
 import { getDisplayBoundsForSource, getDisplayWorkAreaForSource } from "../recording/ffmpeg";
-import { selectedSource, setSelectedSource } from "../state";
+import { pendingCaptureArea, selectedSource, setPendingCaptureArea, setSelectedSource } from "../state";
 import type { SelectedSource, WindowBounds } from "../types";
 import { getScreen, parseWindowId } from "../utils";
 import { bringWindowsWindowForward, resolveWindowsWindowBounds } from "../windowsWindowControl";
@@ -403,6 +403,23 @@ export function registerSourceHandlers({
 		return selectedSource;
 	});
 
+	// ── Area recording: drag a rectangle on the selected display ──
+	ipcMain.handle("get-capture-area", () => pendingCaptureArea);
+	ipcMain.handle("clear-capture-area", () => {
+		setPendingCaptureArea(null);
+		return null;
+	});
+	ipcMain.handle("select-capture-area", async () => {
+		const source =
+			selectedSource && !selectedSource.id?.startsWith("window:") ? selectedSource : null;
+		const bounds = source
+			? getDisplayBoundsForSource(source)
+			: getScreen().getPrimaryDisplay().bounds;
+		const area = await pickAreaOnDisplay(bounds);
+		if (area) setPendingCaptureArea(area);
+		return area ?? pendingCaptureArea;
+	});
+
 	ipcMain.handle("show-source-highlight", async (_, source: SelectedSource) => {
 		try {
 			const isWindow = source.id?.startsWith("window:");
@@ -619,5 +636,70 @@ body{background:transparent;overflow:hidden;width:100vw;height:100vh}
 			sourceSelectorWin.close();
 		}
 		recordingNavigation.open();
+	});
+}
+
+const AREA_PICKER_HTML = `<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;height:100%;cursor:crosshair;background:rgba(0,0,0,.28);user-select:none;overflow:hidden;font-family:"Segoe UI",sans-serif}
+#box{position:fixed;border:2px solid #2563eb;background:rgba(37,99,235,.12);box-shadow:0 0 0 9999px rgba(0,0,0,.25);display:none}
+#hint{position:fixed;top:24px;left:50%;transform:translateX(-50%);padding:8px 14px;border-radius:10px;background:rgba(17,17,24,.85);color:#fff;font-size:14px}
+</style></head><body><div id="hint">녹화할 영역을 드래그하세요 · Esc 취소</div><div id="box"></div><script>
+let s=null;const b=document.getElementById("box");
+addEventListener("keydown",e=>{if(e.key==="Escape")document.title="AREA:cancel"});
+addEventListener("mousedown",e=>{s={x:e.clientX,y:e.clientY};b.style.display="block";draw(e)});
+addEventListener("mousemove",e=>{if(s)draw(e)});
+addEventListener("mouseup",e=>{if(!s)return;const r=rect(e);s=null;
+ if(r.w<40||r.h<40){b.style.display="none";return}
+ document.title="AREA:"+JSON.stringify({x:r.x/innerWidth,y:r.y/innerHeight,width:r.w/innerWidth,height:r.h/innerHeight})});
+function rect(e){return{x:Math.min(s.x,e.clientX),y:Math.min(s.y,e.clientY),w:Math.abs(e.clientX-s.x),h:Math.abs(e.clientY-s.y)}}
+function draw(e){const r=rect(e);Object.assign(b.style,{left:r.x+"px",top:r.y+"px",width:r.w+"px",height:r.h+"px"})}
+</script></body></html>`;
+
+/** Full-display transparent picker; resolves a normalized rectangle or null (Esc/closed). */
+function pickAreaOnDisplay(bounds: { x: number; y: number; width: number; height: number }) {
+	return new Promise<{ x: number; y: number; width: number; height: number } | null>((resolve) => {
+		const win = new BrowserWindow({
+			x: bounds.x,
+			y: bounds.y,
+			width: bounds.width,
+			height: bounds.height,
+			frame: false,
+			transparent: true,
+			alwaysOnTop: true,
+			skipTaskbar: true,
+			resizable: false,
+			movable: false,
+			hasShadow: false,
+			webPreferences: { nodeIntegration: false, contextIsolation: true, sandbox: true },
+		});
+		win.setAlwaysOnTop(true, "screen-saver");
+		let settled = false;
+		const finish = (value: { x: number; y: number; width: number; height: number } | null) => {
+			if (settled) return;
+			settled = true;
+			resolve(value);
+			if (!win.isDestroyed()) win.close();
+		};
+		win.on("page-title-updated", (event, title) => {
+			event.preventDefault();
+			if (!title.startsWith("AREA:")) return;
+			const payload = title.slice(5);
+			if (payload === "cancel") return finish(null);
+			try {
+				const r = JSON.parse(payload);
+				const clamp = (v: number) => Math.min(1, Math.max(0, Number(v) || 0));
+				const x = clamp(r.x);
+				const y = clamp(r.y);
+				finish({ x, y, width: Math.min(1 - x, clamp(r.width)), height: Math.min(1 - y, clamp(r.height)) });
+			} catch {
+				finish(null);
+			}
+		});
+		win.on("closed", () => finish(null));
+		void win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(AREA_PICKER_HTML)}`);
+		win.once("ready-to-show", () => {
+			win.show();
+			win.focus();
+		});
 	});
 }

@@ -48,6 +48,8 @@ export type RecordingSessionData = {
 	webcamPath?: string | null;
 	timeOffsetMs?: number;
 	hideOverlayCursorByDefault?: boolean;
+	/** Area recording: normalized crop (0..1) the editor applies to a fresh recording. */
+	initialCropRegion?: { x: number; y: number; width: number; height: number } | null;
 };
 
 export type PauseSegment = {

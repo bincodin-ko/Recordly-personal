@@ -242,6 +242,9 @@ interface Window {
 		openSourceSelector: () => Promise<void>;
 		selectSource: (source: ProcessedDesktopSource) => Promise<ProcessedDesktopSource>;
 		showSourceHighlight: (source: ProcessedDesktopSource) => Promise<{ success: boolean }>;
+		selectCaptureArea: () => Promise<CaptureArea | null>;
+		clearCaptureArea: () => Promise<null>;
+		getCaptureArea: () => Promise<CaptureArea | null>;
 		getSelectedSource: () => Promise<ProcessedDesktopSource | null>;
 		onSelectedSourceChanged: (
 			callback: (source: ProcessedDesktopSource | null) => void,
@@ -733,6 +736,7 @@ interface Window {
 			options?: {
 				preserveProjectPath?: boolean;
 				hideOverlayCursorByDefault?: boolean;
+				initialCropRegion?: CaptureArea | null;
 			},
 		) => Promise<{ success: boolean; webcamPath: string | null }>;
 		setCurrentRecordingSession: (
@@ -741,6 +745,7 @@ interface Window {
 				webcamPath?: string | null;
 				timeOffsetMs?: number;
 				hideOverlayCursorByDefault?: boolean;
+				initialCropRegion?: CaptureArea | null;
 			},
 			options?: { preserveProjectPath?: boolean },
 		) => Promise<{ success: boolean }>;
@@ -751,6 +756,7 @@ interface Window {
 				webcamPath?: string | null;
 				timeOffsetMs?: number;
 				hideOverlayCursorByDefault?: boolean;
+				initialCropRegion?: CaptureArea | null;
 			};
 		}>;
 		getCurrentVideoPath: () => Promise<{ success: boolean; path?: string }>;
@@ -1040,6 +1046,13 @@ interface Window {
 		getActiveCountdown: () => Promise<{ success: boolean; seconds: number | null }>;
 		onCountdownTick: (callback: (seconds: number) => void) => () => void;
 	};
+}
+
+interface CaptureArea {
+	x: number;
+	y: number;
+	width: number;
+	height: number;
 }
 
 interface ProcessedDesktopSource {

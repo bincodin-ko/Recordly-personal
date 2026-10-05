@@ -39,6 +39,7 @@ import {
 	setCurrentProjectPath,
 	setCurrentRecordingSession,
 	setCurrentVideoPath,
+ pendingCaptureArea,
 } from "../state";
 import {
 	approveUserPath,
@@ -870,6 +871,7 @@ export function registerProjectHandlers() {
 				webcamPath: normalizeVideoSourcePath(session.webcamPath ?? null),
 				timeOffsetMs: normalizeRecordingTimeOffsetMs(session.timeOffsetMs),
 				hideOverlayCursorByDefault: normalizeBoolean(session.hideOverlayCursorByDefault),
+				initialCropRegion: pendingCaptureArea,
 			});
 			await rememberApprovedLocalReadPath(currentRecordingSession!.videoPath);
 			await rememberApprovedLocalReadPath(currentRecordingSession!.webcamPath);

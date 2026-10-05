@@ -65,6 +65,10 @@
 			"bt250": "Bluetooth 250 ms",
 			"bt300": "Bluetooth 300 ms",
 			"none": "No compensation (0 ms)"
+		},
+		"area": {
+			"select": "Record part of the screen (area)…",
+			"clear": "Area set ({{w}}% × {{h}}%) · clear"
 		}
 	},
 	"sourceSelector": {

@@ -1,5 +1,5 @@
 import { ToggleButton } from "@heroui/react";
-import { AppWindowIcon, CaretUpIcon, MonitorIcon } from "@/components/ui/icons";
+import { AppWindowIcon, CaretUpIcon, Crop, MonitorIcon } from "@/components/ui/icons";
 import * as React from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,51 @@ interface SourceSelectorProps {
 	onOpenChange?: (open: boolean) => void;
 	/** Optional custom trigger element */
 	children?: React.ReactNode;
+}
+
+type CaptureArea = { x: number; y: number; width: number; height: number };
+
+/** Area recording: pick a rectangle on the selected screen (recorded full, editor opens cropped). */
+function AreaPickerRow({
+	screenSources,
+	selectedSource,
+	onSourceSelect,
+}: {
+	screenSources: DesktopSource[];
+	selectedSource: string;
+	onSourceSelect: (source: DesktopSource) => void;
+}) {
+	const t = useScopedT("launch");
+	const [area, setArea] = useState<CaptureArea | null>(null);
+	useEffect(() => {
+		void window.electronAPI?.getCaptureArea?.().then((value) => setArea(value ?? null));
+	}, []);
+	const onClick = async () => {
+		if (area) {
+			setArea(await window.electronAPI.clearCaptureArea());
+			return;
+		}
+		const screen = screenSources.find((s) => s.name === selectedSource) ?? screenSources[0];
+		if (screen && screen.name !== selectedSource) await onSourceSelect(screen);
+		setArea((await window.electronAPI.selectCaptureArea()) ?? null);
+	};
+	return (
+		<Button
+			variant="ghost"
+			className="source-selector-item w-full min-h-[40px] px-3 justify-start gap-3 text-left"
+			onClick={() => void onClick()}
+		>
+			<Crop className="w-5 h-5 source-selector-muted" />
+			<span className="text-sm source-selector-text">
+				{area
+					? t("recording.area.clear", "Area set ({{w}}% × {{h}}%) · clear", {
+							w: Math.round(area.width * 100),
+							h: Math.round(area.height * 100),
+						})
+					: t("recording.area.select", "Record part of the screen (area)…")}
+			</span>
+		</Button>
+	);
 }
 
 /**
@@ -131,6 +176,11 @@ export const SourceSelectorContent = ({
 								{screenSources.map((source, index) =>
 									renderSourceItem(source, index),
 								)}
+								<AreaPickerRow
+									screenSources={screenSources}
+									selectedSource={selectedSource}
+									onSourceSelect={onSourceSelect}
+								/>
 							</div>
 						</div>
 					) : null}

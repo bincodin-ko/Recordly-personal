@@ -169,6 +169,11 @@ export function useInitialEditorSource({
 					pendingFreshRecordingAutoZoomPathRef.current =
 						appearance.autoApplyFreshRecordingAutoZooms ? sourceUrl : null;
 					applySessionPresentation(sessionResult.session);
+					// Area recording: start the fresh recording cropped to the chosen rectangle.
+					const area = sessionResult.session.initialCropRegion;
+					if (area && area.width > 0 && area.height > 0) {
+						appearance.setCropRegion({ ...area });
+					}
 					appearance.setWebcam((previous) => ({
 						...previous,
 						visibleRanges: undefined,

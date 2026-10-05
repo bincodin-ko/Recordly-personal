@@ -529,6 +529,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	selectSource: (source: ProcessedDesktopSource) => {
 		return ipcRenderer.invoke("select-source", source);
 	},
+	selectCaptureArea: () => ipcRenderer.invoke("select-capture-area"),
+	clearCaptureArea: () => ipcRenderer.invoke("clear-capture-area"),
+	getCaptureArea: () => ipcRenderer.invoke("get-capture-area"),
 	showSourceHighlight: (source: ProcessedDesktopSource) => {
 		return ipcRenderer.invoke("show-source-highlight", source);
 	},
