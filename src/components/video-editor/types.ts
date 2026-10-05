@@ -14,6 +14,8 @@ export interface ZoomRegion {
 	depth: ZoomDepth;
 	focus: ZoomFocus;
 	mode?: ZoomMode;
+	/** Cut straight in/out instead of easing (Screen Studio "Instant Animation"). */
+	instant?: boolean;
 }
 
 export interface CursorTelemetryPoint {
@@ -423,8 +425,10 @@ export function trimsToClips(trims: TrimRegion[], totalDurationMs: number): Clip
 	return clips;
 }
 
-export type AnnotationType = "text" | "image" | "figure" | "blur";
+export type AnnotationType = "text" | "image" | "figure" | "blur" | "highlight";
 export const BLUR_ANNOTATION_STRENGTH = 20;
+/** Highlight annotations reuse blurIntensity as the dim opacity (percent) outside the rect. */
+export const HIGHLIGHT_ANNOTATION_DIM = 60;
 export const BASE_PREVIEW_WIDTH = 1920;
 export const BASE_PREVIEW_HEIGHT = 1080;
 

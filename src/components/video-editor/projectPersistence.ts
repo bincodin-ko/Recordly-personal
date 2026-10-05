@@ -114,6 +114,8 @@ export interface ProjectEditorState {
 	cameraSpringMassMultiplier: number;
 	zoomSmoothness: number;
 	zoomClassicMode: boolean;
+	/** Screen Studio "Always keep zoomed in": fill the aspect ratio and follow the cursor. */
+	autoFrame: boolean;
 	cursorMotionBlur: number;
 	cursorClickBounce: number;
 	cursorClickBounceDuration: number;
@@ -402,6 +404,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 							region.mode === "auto" || region.mode === "manual"
 								? region.mode
 								: undefined,
+						instant: region.instant === true ? true : undefined,
 					};
 				})
 		: [];
@@ -545,7 +548,8 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 						type:
 							region.type === "image" ||
 							region.type === "figure" ||
-							region.type === "blur"
+							region.type === "blur" ||
+							region.type === "highlight"
 								? region.type
 								: "text",
 						content: typeof region.content === "string" ? region.content : "",
@@ -879,6 +883,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 		zoomSmoothness: DEFAULT_ZOOM_SMOOTHNESS,
 		zoomClassicMode:
 			typeof editor.zoomClassicMode === "boolean" ? editor.zoomClassicMode : false,
+		autoFrame: editor.autoFrame === true,
 		cursorMotionBlur: DEFAULT_CURSOR_MOTION_BLUR,
 		cursorClickBounce: normalizedMotionPreset.cursorClickBounce,
 		cursorClickBounceDuration: normalizedMotionPreset.cursorClickBounceDuration,

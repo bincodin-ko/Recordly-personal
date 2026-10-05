@@ -272,6 +272,7 @@ interface VideoPlaybackProps {
 	cameraSpringMassMultiplier?: number;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
+	autoFrame?: boolean;
 	zoomMotionBlur?: number;
 	zoomMotionBlurTuning?: ZoomMotionBlurTuning;
 	cursorMotionBlur?: number;
@@ -358,6 +359,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			cameraSpringMassMultiplier = 1.12,
 			zoomSmoothness = 0.5,
 			zoomClassicMode = false,
+			autoFrame = false,
 			zoomMotionBlur = DEFAULT_ZOOM_MOTION_BLUR,
 			zoomMotionBlurTuning = DEFAULT_ZOOM_MOTION_BLUR_TUNING,
 			cursorMotionBlur = DEFAULT_CURSOR_MOTION_BLUR,
@@ -511,6 +513,8 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		const cursorClickBounceDurationRef = useRef(cursorClickBounceDuration);
 		const cursorSwayRef = useRef(cursorSway);
 		const zoomMotionBlurRef = useRef(zoomMotionBlur);
+		/** Instant zooms cut the camera; skip zoom motion blur like export does. */
+		const cameraCutRef = useRef(false);
 		const zoomMotionBlurTuningRef = useRef(zoomMotionBlurTuning);
 
 		// Spring animation state for smooth zoom transitions
@@ -520,6 +524,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		const lastRenderedContentTimeRef = useRef<number | null>(null);
 		const zoomSmoothnessRef = useRef(zoomSmoothness);
 		const zoomClassicModeRef = useRef(zoomClassicMode);
+		const autoFrameRef = useRef(autoFrame);
 		const cursorFollowCameraRef = useRef<CursorFollowCameraState>(
 			createCursorFollowCameraState(),
 		);
@@ -1499,6 +1504,11 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		}, [zoomClassicMode, requestPausedFrameRefresh]);
 
 		useEffect(() => {
+			autoFrameRef.current = autoFrame;
+			requestPausedFrameRefresh();
+		}, [autoFrame, requestPausedFrameRefresh]);
+
+		useEffect(() => {
 			cursorMotionBlurRef.current = cursorMotionBlur;
 			requestPausedFrameRefresh();
 		}, [cursorMotionBlur, requestPausedFrameRefresh]);
@@ -1999,7 +2009,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 					focusX: focus.cx,
 					focusY: focus.cy,
 					isPlaying: isPlayingRef.current,
-					motionBlurAmount: zoomMotionBlurRef.current,
+					motionBlurAmount: cameraCutRef.current ? 0 : zoomMotionBlurRef.current,
 					motionBlurTuning: zoomMotionBlurTuningRef.current,
 					transformOverride: transform,
 					motionBlurState: motionBlurStateRef.current,
@@ -2070,9 +2080,13 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 					zoomClassicMode: zoomClassicModeRef.current,
 					cursorTelemetry: cursorTelemetryRef.current,
 					cursorFollowCamera: cursorFollowCameraRef.current,
+					autoFrameViewport: autoFrameRef.current
+						? { stageSize: stageSizeRef.current, mask: baseMaskRef.current }
+						: null,
 				});
 
 				const state = animationStateRef.current;
+				cameraCutRef.current = Boolean(target.instant);
 
 				state.scale = target.scale;
 				state.focusX = target.focus.cx;
@@ -2102,7 +2116,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				let appliedX: number;
 				let appliedY: number;
 
-				if (motionMode === "spring" && contentAdvanced) {
+				if (motionMode === "spring" && contentAdvanced && !target.instant) {
 					appliedScale = stepSpringValue(
 						springScaleRef.current,
 						projectedTransform.scale,
@@ -2121,7 +2135,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 						deltaMs,
 						zoomSpringConfig,
 					);
-				} else if (motionMode === "snap") {
+				} else if (motionMode === "snap" || target.instant) {
 					// Timeline seeks and classic mode intentionally evaluate the exact target.
 					appliedScale = projectedTransform.scale;
 					appliedX = projectedTransform.x;

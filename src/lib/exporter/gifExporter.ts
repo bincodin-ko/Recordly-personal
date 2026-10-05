@@ -77,6 +77,7 @@ interface GifExporterConfig {
 	cameraSpringMassMultiplier?: number;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
+	autoFrame?: boolean;
 	cursorMotionBlur?: number;
 	cursorClickEffect?: CursorClickEffectStyle;
 	cursorClickEffectColor?: string;
@@ -181,6 +182,7 @@ export function buildGifFrameRendererConfig(
 		cameraSpringMassMultiplier: config.cameraSpringMassMultiplier,
 		zoomSmoothness: config.zoomSmoothness,
 		zoomClassicMode: config.zoomClassicMode,
+		autoFrame: config.autoFrame,
 		cursorMotionBlur: config.cursorMotionBlur,
 		cursorClickEffect: config.cursorClickEffect,
 		cursorClickEffectColor: config.cursorClickEffectColor,

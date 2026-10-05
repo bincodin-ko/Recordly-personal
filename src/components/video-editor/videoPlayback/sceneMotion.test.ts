@@ -110,3 +110,57 @@ describe("preview seek completion", () => {
 		expect(shouldComposePreviewFrame({ ...pending, isSeeking: false })).toBe(true);
 	});
 });
+
+describe("instant zoom and auto framing", () => {
+	const instantRegion: ZoomRegion = { ...region, startMs: 1000, endMs: 2000, instant: true };
+	const resolve = (timeMs: number, extra = {}) =>
+		resolveSceneZoomTarget({
+			zoomRegions: [instantRegion],
+			timeMs,
+			cursorFollowCamera: createCursorFollowCameraState(),
+			...extra,
+		});
+
+	it("cuts an instant zoom in and out at the block edges", () => {
+		expect(resolve(999).progress).toBe(0);
+		expect(resolve(1000)).toMatchObject({ progress: 1, instant: true });
+		expect(resolve(1999).progress).toBe(1);
+		expect(resolve(2000)).toMatchObject({ progress: 0, instant: true });
+	});
+
+	it("fills a vertical frame with 16:9 video and follows the cursor", () => {
+		const autoFrameViewport = {
+			stageSize: { width: 1080, height: 1920 },
+			mask: { width: 1080, height: 607.5 },
+		};
+		const cursorTelemetry = [
+			{ timeMs: 0, cx: 0.9, cy: 0.5 },
+			{ timeMs: 10000, cx: 0.9, cy: 0.5 },
+		];
+		const target = resolveSceneZoomTarget({
+			zoomRegions: [],
+			timeMs: 5000,
+			cursorFollowCamera: createCursorFollowCameraState(),
+			cursorTelemetry,
+			autoFrameViewport,
+		});
+		expect(target.scale).toBeCloseTo(1920 / 607.5);
+		expect(target.progress).toBe(1);
+		// Right edge clamp keeps the video covering the stage: 1 - 1080 / (2 * scale * 1080).
+		expect(target.focus.cx).toBeCloseTo(1 - 1 / (2 * target.scale));
+		expect(target.focus.cy).toBeCloseTo(0.5);
+	});
+
+	it("leaves matching aspect ratios untouched", () => {
+		const target = resolveSceneZoomTarget({
+			zoomRegions: [],
+			timeMs: 0,
+			cursorFollowCamera: createCursorFollowCameraState(),
+			autoFrameViewport: {
+				stageSize: { width: 1920, height: 1080 },
+				mask: { width: 1700, height: 956 },
+			},
+		});
+		expect(target.scale).toBe(1);
+	});
+});

@@ -10,6 +10,7 @@ import {
 	Info,
 	TextItalic as Italic,
 	BoundingBox as SquareDashed,
+	SunIcon,
 	Trash as Trash2,
 	TextT as Type,
 	TextUnderline as Underline,
@@ -35,7 +36,13 @@ import { cn } from "@/lib/utils";
 import { useScopedT } from "../../contexts/I18nContext";
 import { AddCustomFontDialog } from "./AddCustomFontDialog";
 import { getArrowComponent } from "./ArrowSvgs";
-import type { AnnotationRegion, AnnotationType, ArrowDirection, FigureData } from "./types";
+import {
+	type AnnotationRegion,
+	type AnnotationType,
+	type ArrowDirection,
+	type FigureData,
+	HIGHLIGHT_ANNOTATION_DIM,
+} from "./types";
 
 interface AnnotationSettingsPanelProps {
 	annotation: AnnotationRegion;
@@ -150,7 +157,7 @@ export function AnnotationSettingsPanel({
 							aria-label={t("annotations.typeLabel", "Annotation type")}
 							value={annotation.type}
 							onValueChange={(value) => onTypeChange(value as AnnotationType)}
-							className="grid grid-cols-4 gap-2"
+							className="grid grid-cols-5 gap-2"
 						>
 							<ChoiceItem
 								value="text"
@@ -195,6 +202,14 @@ export function AnnotationSettingsPanel({
 							>
 								<SquareDashed className="w-4 h-4" />
 								{t("annotations.blur")}
+							</ChoiceItem>
+							<ChoiceItem
+								value="highlight"
+								aria-label={t("annotations.highlight")}
+								className="min-w-0 gap-1 px-1 text-xs"
+							>
+								<SunIcon className="w-4 h-4" />
+								{t("annotations.highlight")}
 							</ChoiceItem>
 						</ChoiceGroup>
 
@@ -598,6 +613,32 @@ export function AnnotationSettingsPanel({
 										compact
 									/>
 								</div>
+							</div>
+						)}
+
+						{annotation.type === "highlight" && (
+							<div className="space-y-5">
+								<p className="text-xs text-muted-foreground">
+									{t("annotations.highlightHint")}
+								</p>
+								<span className="text-sm font-medium text-foreground">
+									{t("annotations.highlightOpacity", undefined, {
+										strength:
+											annotation.blurIntensity ?? HIGHLIGHT_ANNOTATION_DIM,
+									})}
+								</span>
+								<Slider
+									aria-label={t("annotations.highlightOpacity", undefined, {
+										strength:
+											annotation.blurIntensity ?? HIGHLIGHT_ANNOTATION_DIM,
+									})}
+									value={[annotation.blurIntensity ?? HIGHLIGHT_ANNOTATION_DIM]}
+									onValueChange={([value]) => onBlurIntensityChange?.(value)}
+									min={1}
+									max={100}
+									step={1}
+									className="w-full"
+								/>
 							</div>
 						)}
 

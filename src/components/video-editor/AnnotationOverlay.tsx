@@ -3,7 +3,12 @@ import { useRef } from "react";
 import { Rnd } from "react-rnd";
 import { cn } from "@/lib/utils";
 import { getArrowComponent } from "./ArrowSvgs";
-import { type AnnotationRegion, BASE_PREVIEW_WIDTH, BLUR_ANNOTATION_STRENGTH } from "./types";
+import {
+	type AnnotationRegion,
+	BASE_PREVIEW_WIDTH,
+	BLUR_ANNOTATION_STRENGTH,
+	HIGHLIGHT_ANNOTATION_DIM,
+} from "./types";
 
 type Rect = {
 	x: number;
@@ -196,6 +201,20 @@ export function AnnotationOverlay({
 							backdropFilter: blurStyle,
 							WebkitBackdropFilter: blurStyle,
 							backgroundColor: annotation.blurColor || "transparent",
+							borderRadius: `${(annotation.style.borderRadius ?? 0) * blurScaleFactor}px`,
+						}}
+					/>
+				);
+			}
+
+			case "highlight": {
+				// Dim everything outside the rect; the preview container clips the spread.
+				const dim = (annotation.blurIntensity ?? HIGHLIGHT_ANNOTATION_DIM) / 100;
+				return (
+					<div
+						className="h-full w-full"
+						style={{
+							boxShadow: `0 0 0 100vmax rgba(0, 0, 0, ${dim})`,
 							borderRadius: `${(annotation.style.borderRadius ?? 0) * blurScaleFactor}px`,
 						}}
 					/>

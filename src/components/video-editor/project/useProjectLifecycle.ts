@@ -160,6 +160,7 @@ export function useProjectLifecycle(input: Input) {
 		appearance.setCursorClickEffectDurationMs(editor.cursorClickEffectDurationMs);
 		appearance.setZoomSmoothness(editor.zoomSmoothness);
 		appearance.setZoomClassicMode(editor.zoomClassicMode);
+		appearance.setAutoFrame(editor.autoFrame);
 		appearance.setCursorMotionBlur(editor.cursorMotionBlur);
 		appearance.setCursorClickBounce(editor.cursorClickBounce);
 		appearance.setCursorClickBounceDuration(editor.cursorClickBounceDuration);

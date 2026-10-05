@@ -75,6 +75,7 @@ export function buildExportRenderOptions({
 		cameraSpringMassMultiplier: appearance.cameraSpringMassMultiplier,
 		zoomSmoothness: appearance.zoomSmoothness,
 		zoomClassicMode: appearance.zoomClassicMode,
+		autoFrame: appearance.autoFrame,
 		cursorMotionBlur: appearance.cursorMotionBlur,
 		cursorClickEffect: appearance.cursorClickEffect,
 		cursorClickEffectColor: appearance.cursorClickEffectColor,

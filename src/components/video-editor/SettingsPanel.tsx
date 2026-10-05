@@ -430,6 +430,8 @@ interface SettingsPanelProps {
 	selectedZoomId?: string | null;
 	selectedZoomMode?: ZoomMode | null;
 	onZoomModeChange?: (mode: ZoomMode) => void;
+	selectedZoomInstant?: boolean;
+	onZoomInstantChange?: (instant: boolean) => void;
 	onZoomDelete?: (id: string) => void;
 	selectedClipId?: string | null;
 	selectedClipSpeed?: number | null;
@@ -493,6 +495,8 @@ interface SettingsPanelProps {
 	onCameraSpringMassMultiplierChange?: (multiplier: number) => void;
 	zoomClassicMode?: boolean;
 	onZoomClassicModeChange?: (enabled: boolean) => void;
+	autoFrame?: boolean;
+	onAutoFrameChange?: (enabled: boolean) => void;
 	cursorClickEffect?: CursorClickEffectStyle;
 	onCursorClickEffectChange?: (effect: CursorClickEffectStyle) => void;
 	cursorClickEffectColor?: string;
@@ -887,6 +891,8 @@ export function SettingsPanel({
 	selectedZoomId,
 	selectedZoomMode,
 	onZoomModeChange,
+	selectedZoomInstant = false,
+	onZoomInstantChange,
 	onZoomDelete,
 	selectedClipId,
 	selectedClipSpeed,
@@ -938,6 +944,8 @@ export function SettingsPanel({
 	onCameraSpringMassMultiplierChange,
 	zoomClassicMode = false,
 	onZoomClassicModeChange,
+	autoFrame = false,
+	onAutoFrameChange,
 	cursorClickEffect = DEFAULT_CURSOR_CLICK_EFFECT,
 	onCursorClickEffectChange,
 	cursorClickEffectColor = DEFAULT_CURSOR_CLICK_EFFECT_COLOR,
@@ -2626,8 +2634,36 @@ export function SettingsPanel({
 								</ChoiceItem>
 							))}
 						</ChoiceGroup>
+						<div className="flex items-center justify-between py-1">
+							<span className="text-xs text-muted-foreground">
+								{tSettings("zoom.instantAnimation", "Instant Animation")}
+							</span>
+							<Switch
+								aria-label={tSettings("zoom.instantAnimation", "Instant Animation")}
+								checked={selectedZoomInstant}
+								onCheckedChange={(v) => onZoomInstantChange?.(v)}
+							/>
+						</div>
 					</>
 				)}
+				<div>
+					<div className="flex items-center justify-between py-1">
+						<span className="text-xs text-muted-foreground">
+							{tSettings("zoom.autoFrame", "Always keep zoomed in")}
+						</span>
+						<Switch
+							aria-label={tSettings("zoom.autoFrame", "Always keep zoomed in")}
+							checked={autoFrame}
+							onCheckedChange={(v) => onAutoFrameChange?.(v)}
+						/>
+					</div>
+					<p className="mt-1 text-xs text-muted-foreground/70">
+						{tSettings(
+							"zoom.autoFrameDescription",
+							"Fill the selected aspect ratio and follow the cursor",
+						)}
+					</p>
+				</div>
 				{advanced && (
 					<>
 						<div className="flex items-center justify-between gap-3">

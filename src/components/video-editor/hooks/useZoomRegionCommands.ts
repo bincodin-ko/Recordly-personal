@@ -169,6 +169,19 @@ export function useZoomRegionCommands({
 		},
 		[selectedZoomId, setZoomRegions],
 	);
+	const handleZoomInstantChange = useCallback(
+		(instant: boolean) => {
+			if (!selectedZoomId) return;
+			setZoomRegions((current) =>
+				current.map((region) =>
+					region.id === selectedZoomId
+						? { ...region, instant: instant || undefined }
+						: region,
+				),
+			);
+		},
+		[selectedZoomId, setZoomRegions],
+	);
 	const handleZoomDelete = useCallback(
 		(id: string) => {
 			setZoomRegions((current) => current.filter((region) => region.id !== id));
@@ -185,6 +198,7 @@ export function useZoomRegionCommands({
 		handleZoomFocusChange,
 		handleZoomDepthChange,
 		handleZoomModeChange,
+		handleZoomInstantChange,
 		handleZoomDelete,
 	};
 }

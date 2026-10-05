@@ -91,6 +91,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		selectedZoomMode: selectedZoom?.mode ?? (timeline.selectedZoomId ? "auto" : null),
 		onZoomModeChange: (mode) =>
 			timeline.selectedZoomId && zoomCommands.handleZoomModeChange(mode),
+		selectedZoomInstant: selectedZoom?.instant ?? false,
+		onZoomInstantChange: zoomCommands.handleZoomInstantChange,
 		onZoomDelete: zoomCommands.handleZoomDelete,
 		selectedClipId: timeline.selectedClipId,
 		selectedClipSpeed: selectedClip?.speed ?? (timeline.selectedClipId ? 1 : null),
@@ -153,6 +155,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		onCameraSpringMassMultiplierChange: appearance.setCameraSpringMassMultiplier,
 		zoomClassicMode: appearance.zoomClassicMode,
 		onZoomClassicModeChange: appearance.setZoomClassicMode,
+		autoFrame: appearance.autoFrame,
+		onAutoFrameChange: appearance.setAutoFrame,
 		cursorClickEffect: appearance.cursorClickEffect,
 		cursorClickEffectColor: appearance.cursorClickEffectColor,
 		onCursorClickEffectChange: appearance.setCursorClickEffect,

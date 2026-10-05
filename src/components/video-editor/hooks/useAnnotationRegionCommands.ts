@@ -7,6 +7,7 @@ import {
 	DEFAULT_ANNOTATION_STYLE,
 	DEFAULT_FIGURE_DATA,
 	type FigureData,
+	HIGHLIGHT_ANNOTATION_DIM,
 } from "../types";
 
 interface UseAnnotationRegionCommandsParams {
@@ -117,6 +118,9 @@ export function useAnnotationRegionCommands({
 					} else if (type === "blur") {
 						updated.content = "";
 						if (region.blurIntensity === undefined) updated.blurIntensity = 20;
+					} else if (type === "highlight") {
+						updated.content = "";
+						updated.blurIntensity = HIGHLIGHT_ANNOTATION_DIM;
 					}
 					return updated;
 				}),

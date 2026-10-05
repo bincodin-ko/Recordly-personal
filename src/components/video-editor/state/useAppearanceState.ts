@@ -86,6 +86,7 @@ export function useAppearanceState(preferences: EditorPreferences) {
 	);
 	const [zoomSmoothness, setZoomSmoothness] = useState(0.5);
 	const [zoomClassicMode, setZoomClassicMode] = useState(false);
+	const [autoFrame, setAutoFrame] = useState(false);
 	const [cursorMotionBlur, setCursorMotionBlur] = useState(preferences.cursorMotionBlur);
 	const [cursorClickEffect, setCursorClickEffect] = useState<CursorClickEffectStyle>(
 		preferences.cursorClickEffect,
@@ -172,6 +173,8 @@ export function useAppearanceState(preferences: EditorPreferences) {
 		setZoomSmoothness,
 		zoomClassicMode,
 		setZoomClassicMode,
+		autoFrame,
+		setAutoFrame,
 		cursorMotionBlur,
 		setCursorMotionBlur,
 		cursorClickEffect,

@@ -125,6 +125,7 @@ interface FrameRenderConfig {
 	cameraSpringMassMultiplier?: number;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
+	autoFrame?: boolean;
 	cursorMotionBlur?: number;
 	cursorClickEffect?: CursorClickEffectStyle;
 	cursorClickEffectColor?: string;
@@ -256,6 +257,8 @@ export class FrameRenderer {
 	private springY: SpringState;
 	private cursorFollowCamera: CursorFollowCameraState;
 	private lastContentTimeMs: number | null = null;
+	/** Instant zooms cut the camera; a cut must not be smeared by zoom motion blur. */
+	private cameraCut = false;
 	private cursorOverlay: PixiCursorOverlay | null = null;
 	private webcamForwardFrameSource: ForwardFrameSource | null = null;
 	private webcamDecodedFrame: VideoFrame | null = null;
@@ -1473,7 +1476,7 @@ export class FrameRenderer {
 			focusX: this.animationState.focusX,
 			focusY: this.animationState.focusY,
 			isPlaying: true,
-			motionBlurAmount: this.config.zoomMotionBlur ?? 0,
+			motionBlurAmount: this.cameraCut ? 0 : (this.config.zoomMotionBlur ?? 0),
 			motionBlurTuning: this.config.zoomMotionBlurTuning,
 			transformOverride: {
 				scale: this.animationState.appliedScale,
@@ -1615,6 +1618,9 @@ export class FrameRenderer {
 			zoomClassicMode: this.config.zoomClassicMode,
 			cursorTelemetry: this.config.cursorTelemetry,
 			cursorFollowCamera: this.cursorFollowCamera,
+			autoFrameViewport: this.config.autoFrame
+				? { stageSize: this.layoutCache.stageSize, mask: this.layoutCache.maskRect }
+				: null,
 		});
 
 		const state = this.animationState;
@@ -1649,7 +1655,8 @@ export class FrameRenderer {
 			massMultiplier: this.config.cameraSpringMassMultiplier,
 		});
 
-		if (this.config.zoomClassicMode) {
+		this.cameraCut = Boolean(target.instant);
+		if (this.config.zoomClassicMode || target.instant) {
 			state.appliedScale = projectedTransform.scale;
 			state.x = projectedTransform.x;
 			state.y = projectedTransform.y;

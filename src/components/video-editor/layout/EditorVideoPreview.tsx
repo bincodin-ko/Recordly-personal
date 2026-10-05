@@ -115,6 +115,7 @@ export function EditorVideoPreview({
 			cameraSpringMassMultiplier={appearance.cameraSpringMassMultiplier}
 			zoomSmoothness={appearance.zoomSmoothness}
 			zoomClassicMode={appearance.zoomClassicMode}
+			autoFrame={appearance.autoFrame}
 			zoomMotionBlur={appearance.zoomMotionBlur}
 			zoomMotionBlurTuning={appearance.zoomMotionBlurTuning}
 			cursorMotionBlur={appearance.cursorMotionBlur}

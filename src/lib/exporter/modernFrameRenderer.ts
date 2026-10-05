@@ -153,6 +153,7 @@ interface FrameRenderConfig {
 	cursorSway?: number;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
+	autoFrame?: boolean;
 	nativeReadbackMode?: "pixels" | "canvas";
 }
 
@@ -428,6 +429,8 @@ export class FrameRenderer {
 	private springY: SpringState;
 	private cursorFollowCamera: CursorFollowCameraState;
 	private lastContentTimeMs: number | null = null;
+	/** Instant zooms cut the camera; a cut must not be smeared by zoom motion blur. */
+	private cameraCut = false;
 	private layoutCache: LayoutCache | null = null;
 	private currentVideoTime = 0;
 	private cursorOverlay: PixiCursorOverlay | null = null;
@@ -1424,7 +1427,7 @@ export class FrameRenderer {
 	private hasActiveBlurAnnotations(timeMs: number): boolean {
 		return (this.config.annotationRegions ?? []).some(
 			(annotation) =>
-				annotation.type === "blur" &&
+				(annotation.type === "blur" || annotation.type === "highlight") &&
 				timeMs >= annotation.startMs &&
 				timeMs <= annotation.endMs,
 		);
@@ -2947,7 +2950,7 @@ export class FrameRenderer {
 			focusX: this.animationState.focusX,
 			focusY: this.animationState.focusY,
 			isPlaying: true,
-			motionBlurAmount: this.config.zoomMotionBlur ?? 0,
+			motionBlurAmount: this.cameraCut ? 0 : (this.config.zoomMotionBlur ?? 0),
 			motionBlurTuning: this.config.zoomMotionBlurTuning,
 			transformOverride: {
 				scale: this.animationState.appliedScale,
@@ -3113,6 +3116,9 @@ export class FrameRenderer {
 			zoomClassicMode: this.config.zoomClassicMode,
 			cursorTelemetry: this.config.cursorTelemetry,
 			cursorFollowCamera: this.cursorFollowCamera,
+			autoFrameViewport: this.config.autoFrame
+				? { stageSize: this.layoutCache.stageSize, mask: this.layoutCache.maskRect }
+				: null,
 		});
 
 		const state = this.animationState;
@@ -3146,7 +3152,8 @@ export class FrameRenderer {
 			massMultiplier: this.config.cameraSpringMassMultiplier,
 		});
 
-		if (this.config.zoomClassicMode) {
+		this.cameraCut = Boolean(target.instant);
+		if (this.config.zoomClassicMode || target.instant) {
 			state.appliedScale = projectedTransform.scale;
 			state.x = projectedTransform.x;
 			state.y = projectedTransform.y;

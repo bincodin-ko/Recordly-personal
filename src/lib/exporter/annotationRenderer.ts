@@ -2,6 +2,7 @@ import {
 	type AnnotationRegion,
 	type ArrowDirection,
 	BLUR_ANNOTATION_STRENGTH,
+	HIGHLIGHT_ANNOTATION_DIM,
 } from "@/components/video-editor/types";
 
 export interface AnnotationRenderAssets {
@@ -457,6 +458,24 @@ export async function renderAnnotations(
 				ctx.restore();
 				break;
 			}
+
+			case "highlight": {
+				const dim = (annotation.blurIntensity ?? HIGHLIGHT_ANNOTATION_DIM) / 100;
+				ctx.save();
+				ctx.beginPath();
+				ctx.rect(0, 0, canvasWidth, canvasHeight);
+				ctx.roundRect(
+					x,
+					y,
+					width,
+					height,
+					(annotation.style.borderRadius ?? 0) * effectiveScaleFactor,
+				);
+				ctx.fillStyle = `rgba(0, 0, 0, ${dim})`;
+				ctx.fill("evenodd");
+				ctx.restore();
+				break;
+			}
 		}
 	}
 }
@@ -509,6 +528,7 @@ export async function renderAnnotationToCanvas(
 			);
 			break;
 		case "blur":
+		case "highlight":
 			// Blur annotations must sample already-rendered scene pixels,
 			// so they cannot be rasterized as standalone sprites.
 			return null;

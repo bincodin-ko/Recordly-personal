@@ -144,6 +144,7 @@ interface VideoExporterConfig extends ExportConfig {
 	cursorSway?: number;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
+	autoFrame?: boolean;
 	audioRegions?: AudioRegion[];
 	clipRegions?: ClipRegion[];
 	sourceAudioFallbackPaths?: string[];
@@ -656,6 +657,7 @@ export class ModernVideoExporter {
 					cursorSway: this.config.cursorSway,
 					zoomSmoothness: this.config.zoomSmoothness,
 					zoomClassicMode: this.config.zoomClassicMode,
+					autoFrame: this.config.autoFrame,
 				});
 				await this.renderer.initialize();
 				this.rendererInitTimeMs = this.getNowMs() - stageStartedAt;
@@ -1748,6 +1750,10 @@ export class ModernVideoExporter {
 		if ((this.config.annotationRegions ?? []).length > 0) {
 			reasons.push("unsupported-annotation-overlay");
 		}
+		if (this.config.autoFrame) {
+			// Auto framing moves the camera every frame; keep it on the shared renderer.
+			reasons.push("unsupported-auto-frame");
+		}
 		if ((this.config.autoCaptions ?? []).length > 0) {
 			reasons.push("unsupported-caption-overlay");
 		}
@@ -2360,7 +2366,7 @@ export class ModernVideoExporter {
 				lastContentTimeMs !== null ? timeMs - lastContentTimeMs : frameDurationMs;
 			lastContentTimeMs = timeMs;
 
-			if (this.config.zoomClassicMode) {
+			if (this.config.zoomClassicMode || target.instant) {
 				appliedScale = projectedTransform.scale;
 				appliedX = projectedTransform.x;
 				appliedY = projectedTransform.y;

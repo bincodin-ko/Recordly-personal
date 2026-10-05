@@ -40,6 +40,11 @@ export function computeRegionStrength(
 	timeMs: number,
 	options: Pick<DominantRegionOptions, "zoomInDurationMs" | "zoomOutDurationMs"> = {},
 ) {
+	if (region.instant) {
+		// Instant zooms cut exactly at the block edges, without the eased lead-in/out.
+		return timeMs >= region.startMs && timeMs < region.endMs ? 1 : 0;
+	}
+
 	const zoomInDurationMs = Math.max(1, options.zoomInDurationMs ?? ZOOM_IN_TRANSITION_WINDOW_MS);
 	const zoomOutDurationMs = Math.max(1, options.zoomOutDurationMs ?? TRANSITION_WINDOW_MS);
 	const adjustedTimeMs = timeMs - ZOOM_ANIMATION_DELAY_MS;
@@ -85,7 +90,7 @@ function getConnectedRegionPairs(regions: ZoomRegion[]) {
 		const nextRegion = sortedRegions[index + 1];
 		const gapMs = nextRegion.startMs - currentRegion.endMs;
 
-		if (gapMs > CHAINED_ZOOM_PAN_GAP_MS) {
+		if (gapMs > CHAINED_ZOOM_PAN_GAP_MS || currentRegion.instant || nextRegion.instant) {
 			continue;
 		}
 
@@ -165,6 +170,28 @@ function getActiveRegion(
 		strength: activeRegions[0].strength,
 		blendedScale: null,
 	};
+}
+
+/**
+ * Whether the camera should cut instead of spring: inside an instant zoom, or after
+ * one ended (so the zoom-out also cuts) until another region takes over.
+ */
+export function isInstantZoomAt(
+	regions: ZoomRegion[],
+	timeMs: number,
+	activeRegion: ZoomRegion | null,
+) {
+	if (activeRegion) {
+		return Boolean(activeRegion.instant);
+	}
+
+	let lastEnded: ZoomRegion | null = null;
+	for (const region of regions) {
+		if (region.endMs <= timeMs && (!lastEnded || region.endMs > lastEnded.endMs)) {
+			lastEnded = region;
+		}
+	}
+	return Boolean(lastEnded?.instant);
 }
 
 function getConnectedRegionHold(timeMs: number, connectedPairs: ConnectedRegionPair[]) {

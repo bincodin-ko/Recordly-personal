@@ -67,6 +67,7 @@ export function useProjectLibraryController({
 		zoomOutDurationMs,
 		zoomOutEasing,
 		zoomClassicMode,
+		autoFrame,
 	} = appearance;
 	const {
 		annotationRegions,
@@ -237,6 +238,7 @@ export function useProjectLibraryController({
 					cameraSpringMassMultiplier,
 					zoomSmoothness,
 					zoomClassicMode,
+					autoFrame,
 					cursorMotionBlur,
 					cursorClickEffect,
 					cursorClickEffectColor,
@@ -318,6 +320,7 @@ export function useProjectLibraryController({
 		zoomOutEasing,
 		zoomRegions,
 		zoomClassicMode,
+		autoFrame,
 	]);
 
 	return { refreshProjectLibrary, captureProjectThumbnail };
