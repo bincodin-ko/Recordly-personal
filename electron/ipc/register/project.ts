@@ -39,7 +39,7 @@ import {
 	setCurrentProjectPath,
 	setCurrentRecordingSession,
 	setCurrentVideoPath,
- pendingCaptureArea,
+ captureAreaForVideo,
 } from "../state";
 import {
 	approveUserPath,
@@ -825,6 +825,9 @@ export function registerProjectHandlers() {
 				hideOverlayCursorByDefault:
 					normalizeBoolean(options?.hideOverlayCursorByDefault) ||
 					normalizeBoolean(resolvedSession.hideOverlayCursorByDefault),
+				// Area recording (no-webcam recordings arrive through this handler).
+				initialCropRegion:
+					resolvedSession.initialCropRegion ?? captureAreaForVideo(resolvedSession.videoPath),
 			};
 
 			setCurrentRecordingSession(nextSession);
@@ -871,7 +874,7 @@ export function registerProjectHandlers() {
 				webcamPath: normalizeVideoSourcePath(session.webcamPath ?? null),
 				timeOffsetMs: normalizeRecordingTimeOffsetMs(session.timeOffsetMs),
 				hideOverlayCursorByDefault: normalizeBoolean(session.hideOverlayCursorByDefault),
-				initialCropRegion: pendingCaptureArea,
+				initialCropRegion: captureAreaForVideo(normalizedVideoPath),
 			});
 			await rememberApprovedLocalReadPath(currentRecordingSession!.videoPath);
 			await rememberApprovedLocalReadPath(currentRecordingSession!.webcamPath);

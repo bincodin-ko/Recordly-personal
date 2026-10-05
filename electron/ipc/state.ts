@@ -114,8 +114,16 @@ export function setSelectedSource(v: SelectedSource | null) {
 }
 // Area recording: chosen rectangle on the selected display (normalized 0..1), kept until cleared.
 export let pendingCaptureArea: { x: number; y: number; width: number; height: number } | null = null;
+let pendingCaptureAreaSelectedAt = 0;
 export function setPendingCaptureArea(v: typeof pendingCaptureArea) {
 	pendingCaptureArea = v;
+	pendingCaptureAreaSelectedAt = v ? Date.now() : 0;
+}
+/** Area crop for a recording made after the area was chosen (recording-<epochMs> file names). */
+export function captureAreaForVideo(videoPath: string | null | undefined) {
+	if (!pendingCaptureArea || !videoPath) return null;
+	const match = /recording-(\d{12,})/.exec(videoPath);
+	return match && Number(match[1]) >= pendingCaptureAreaSelectedAt ? pendingCaptureArea : null;
 }
 export function setCurrentProjectPath(v: string | null) {
 	currentProjectPath = v;
