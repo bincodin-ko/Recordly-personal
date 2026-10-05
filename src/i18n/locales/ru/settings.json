@@ -30,7 +30,8 @@
 		"mutedState": "Звук выключен",
 		"unmutedState": "Звук включен",
 		"separateClipFromAudio": "Отделить аудио от клипа",
-		"delete": "Удалить клип"
+		"delete": "Удалить клип",
+		"hideCursor": "Скрыть курсор"
 	},
 	"effects": {
 		"title": "Эффекты",
@@ -182,7 +183,11 @@
 		"webcamVertical": "Vertical",
 		"webcamMargin": "Margin",
 		"customEffectColor": "Custom effect color",
-		"devBadge": "DEV"
+		"devBadge": "DEV",
+		"hideIdleCursor": "Скрывать курсор, если он не движется",
+		"idleCursorDelay": "Скрыть через",
+		"clickSound": "Звук щелчка",
+		"clickSoundVolume": "Громкость щелчка"
 	},
 	"sections": {
 		"scene": "Сцена",
@@ -347,5 +352,18 @@
 	"general": {
 		"onboarding": "Onboarding",
 		"showOnboarding": "Show onboarding"
+	},
+	"shortcuts": {
+		"title": "Сочетания клавиш",
+		"show": "Показывать сочетания",
+		"singleKeys": "Показывать одиночные клавиши",
+		"size": "Размер подписей",
+		"position": "Положение подписей",
+		"noneRecorded": "В этом видео не записано сочетаний клавиш.",
+		"positions": {
+			"bottom-left": "Слева",
+			"bottom-center": "По центру",
+			"bottom-right": "Справа"
+		}
 	}
 }

@@ -30,7 +30,8 @@
 		"mutedState": "O áudio está mudo",
 		"unmutedState": "O áudio está tocando",
 		"separateClipFromAudio": "Separar áudio do clipe",
-		"delete": "Excluir clipe"
+		"delete": "Excluir clipe",
+		"hideCursor": "Ocultar cursor"
 	},
 	"effects": {
 		"title": "Efeitos de vídeo",
@@ -182,7 +183,11 @@
 		"webcamVertical": "Vertical",
 		"webcamMargin": "Margin",
 		"customEffectColor": "Custom effect color",
-		"devBadge": "DEV"
+		"devBadge": "DEV",
+		"hideIdleCursor": "Ocultar o cursor se não estiver se movendo",
+		"idleCursorDelay": "Ocultar após",
+		"clickSound": "Som de clique",
+		"clickSoundVolume": "Volume do som de clique"
 	},
 	"sections": {
 		"scene": "Cena",
@@ -347,5 +352,18 @@
 	"general": {
 		"onboarding": "Onboarding",
 		"showOnboarding": "Show onboarding"
+	},
+	"shortcuts": {
+		"title": "Atalhos de teclado",
+		"show": "Mostrar atalhos",
+		"singleKeys": "Mostrar atalhos de tecla única",
+		"size": "Tamanho dos rótulos",
+		"position": "Posição dos atalhos",
+		"noneRecorded": "Nenhum atalho foi gravado neste vídeo.",
+		"positions": {
+			"bottom-left": "Esquerda",
+			"bottom-center": "Centro",
+			"bottom-right": "Direita"
+		}
 	}
 }

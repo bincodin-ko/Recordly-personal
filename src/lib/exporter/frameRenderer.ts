@@ -1,3 +1,4 @@
+import { type CursorExtrasRenderOptions, drawShortcutOverlay } from "@/components/video-editor/cursorExtras";
 import { Application, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
 import { createVideoSharpener } from "@/lib/videoSharpenFilter";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
@@ -134,6 +135,7 @@ interface FrameRenderConfig {
 	cursorClickBounce?: number;
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
+	cursorExtras?: CursorExtrasRenderOptions;
 }
 
 interface AnimationState {
@@ -426,6 +428,12 @@ export class FrameRenderer {
 					DEFAULT_CURSOR_CONFIG.clickBounceDuration,
 				sway: this.config.cursorSway ?? DEFAULT_CURSOR_CONFIG.sway,
 			});
+			this.cursorOverlay.setVisibilityRules(
+				this.config.cursorExtras?.settings.hideIdleCursor
+					? this.config.cursorExtras.settings.idleCursorDelaySec * 1000
+					: 0,
+				this.config.cursorExtras?.hiddenRanges ?? [],
+			);
 		}
 
 		// Setup background (render separately, not in PixiJS)
@@ -1534,6 +1542,17 @@ export class FrameRenderer {
 				this.config.width,
 				this.config.height,
 				timestamp / 1000,
+			);
+		}
+
+		if (this.config.cursorExtras && this.compositeCtx) {
+			drawShortcutOverlay(
+				this.compositeCtx,
+				this.config.cursorExtras.keystrokes,
+				cursorTimestamp / 1000,
+				this.config.width,
+				this.config.height,
+				this.config.cursorExtras.settings,
 			);
 		}
 	}

@@ -129,9 +129,14 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 
 		// Decode audio region overlay files
 		const regionEntries: Array<{ buffer: AudioBuffer; region: AudioRegion }> = [];
+		// Many regions can share one file (e.g. one click sound per click); decode it once.
+		const decodedByPath = new Map<string, AudioBuffer | null>();
 		for (const region of audioRegions) {
 			if (this.cancelled) throw new Error("Export cancelled");
-			const buffer = await this.decodeAudioFromUrl(region.audioPath);
+			if (!decodedByPath.has(region.audioPath)) {
+				decodedByPath.set(region.audioPath, await this.decodeAudioFromUrl(region.audioPath));
+			}
+			const buffer = decodedByPath.get(region.audioPath);
 			if (buffer) regionEntries.push({ buffer, region });
 		}
 

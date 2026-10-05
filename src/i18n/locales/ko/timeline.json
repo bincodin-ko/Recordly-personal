@@ -75,7 +75,8 @@
 		"manual": "수동",
 		"auto": "자동",
 		"trim": "자르기",
-		"clip": "클립"
+		"clip": "클립",
+		"cursorHidden": "커서 숨김"
 	},
 	"empty": {
 		"title": "불러온 영상이 없어요",

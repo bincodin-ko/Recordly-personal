@@ -1,3 +1,4 @@
+import { normalizeKeystrokeSamples } from "../cursorExtras";
 import { type MutableRefObject, useEffect, useMemo, useRef } from "react";
 import type { useTimelineState } from "../state/useTimelineState";
 import { normalizeCursorTelemetry } from "../timeline/zoomSuggestionUtils";
@@ -27,7 +28,7 @@ export function useCursorTelemetry({
 	autoSuggestedVideoPathRef,
 }: UseCursorTelemetryInput) {
 	const pendingRetryTimeoutRef = useRef<number | null>(null);
-	const { setCursorTelemetry, setCursorTelemetrySourcePath } = timeline;
+	const { setCursorTelemetry, setCursorTelemetrySourcePath, setKeystrokes } = timeline;
 
 	useEffect(() => {
 		let mounted = true;
@@ -50,11 +51,18 @@ export function useCursorTelemetry({
 			if (!videoPath || !videoSourcePath) {
 				if (mounted) {
 					setCursorTelemetry([]);
+					setKeystrokes([]);
 					setCursorTelemetrySourcePath(null);
 				}
 				return;
 			}
 			try {
+				// Keys load first so they are ready once the telemetry source path is set.
+				const keystrokes = await window.electronAPI
+					.getRecordingKeystrokes?.(videoSourcePath)
+					.catch(() => []);
+				if (!mounted) return;
+				setKeystrokes(normalizeKeystrokeSamples(keystrokes ?? []));
 				const result = await window.electronAPI.getCursorTelemetry(videoSourcePath);
 				if (!mounted) return;
 				setCursorTelemetry(result.success ? result.samples : []);
@@ -86,6 +94,7 @@ export function useCursorTelemetry({
 		videoSourcePath,
 		setCursorTelemetry,
 		setCursorTelemetrySourcePath,
+		setKeystrokes,
 		pendingFreshRecordingAutoZoomPathRef,
 		autoSuggestedVideoPathRef,
 	]);

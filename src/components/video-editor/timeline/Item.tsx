@@ -5,6 +5,7 @@ import {
 	MusicNotes as Music,
 	Scissors,
 	SpeakerX,
+	EyeSlash,
 } from "@/components/ui/icons";
 import { ClipFilmstrip } from "./components/filmstrip/ClipFilmstrip";
 import type { Span, GetSpanFromDragEvent, GetSpanFromResizeEvent } from "dnd-timeline";
@@ -49,6 +50,7 @@ interface ItemProps {
 	waveformGain?: number;
 	waveformNormalize?: boolean;
 	muted?: boolean;
+	cursorHidden?: boolean;
 	variant?: "zoom" | "trim" | "clip" | "annotation" | "speed" | "audio" | "caption";
 	isLoading?: boolean;
 	loadingLabel?: string;
@@ -88,6 +90,7 @@ export default function Item({
 	waveformGain = 1,
 	waveformNormalize = false,
 	muted = false,
+	cursorHidden = false,
 	variant = "zoom",
 	isLoading = false,
 	loadingLabel,
@@ -362,6 +365,14 @@ export default function Item({
 					{isAudio && muted && (
 						<div className="absolute inset-0 z-20 flex items-center justify-center gap-1 bg-red-900/40 pointer-events-none">
 							<SpeakerX className="w-3 h-3 text-red-300/90 shrink-0" />
+						</div>
+					)}
+					{isClip && cursorHidden && (
+						<div
+							className="absolute left-1 top-1 z-20 flex items-center rounded bg-black/65 p-0.5 pointer-events-none"
+							title={translate("timeline.item.cursorHidden", "Cursor hidden")}
+						>
+							<EyeSlash className="w-3 h-3 text-white/90 shrink-0" />
 						</div>
 					)}
 					{/* Normal-speed clips show only the filmstrip and resize handles. */}

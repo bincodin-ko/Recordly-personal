@@ -531,6 +531,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	},
 	getAndroidDevices: () => ipcRenderer.invoke("get-android-devices"),
 	getRecordingFlags: () => ipcRenderer.invoke("get-recording-flags"),
+	getRecordingKeystrokes: (videoPath?: string) =>
+		ipcRenderer.invoke("get-recording-keystrokes", videoPath),
 	togglePrompterWindow: () => ipcRenderer.invoke("toggle-prompter-window"),
 	getAudioSyncOffset: () => ipcRenderer.invoke("get-audio-sync-offset"),
 	setAudioSyncOffset: (offsetMs: number) => ipcRenderer.invoke("set-audio-sync-offset", offsetMs),

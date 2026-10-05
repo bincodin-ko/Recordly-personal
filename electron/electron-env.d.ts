@@ -244,6 +244,7 @@ interface Window {
 		showSourceHighlight: (source: ProcessedDesktopSource) => Promise<{ success: boolean }>;
 		getAndroidDevices: () => Promise<Array<{ serial: string; model: string }>>;
 		getRecordingFlags: () => Promise<number[]>;
+		getRecordingKeystrokes: (videoPath?: string) => Promise<unknown[]>;
 		togglePrompterWindow: () => Promise<boolean>;
 		getAudioSyncOffset: () => Promise<number>;
 		setAudioSyncOffset: (offsetMs: number) => Promise<number>;

@@ -34,6 +34,15 @@ import { AnnotationOverlay } from "./AnnotationOverlay";
 import { type CaptionEditTarget, normalizeCaptionEditText } from "./captionEditing";
 import { buildActiveCaptionLayout } from "./captionLayout";
 import {
+	type CursorExtrasSettings,
+	DEFAULT_CURSOR_EXTRAS,
+	drawShortcutOverlay,
+	getActiveShortcut,
+	getHiddenCursorRanges,
+	type KeystrokeSample,
+	playPreviewClickSound,
+} from "./cursorExtras";
+import {
 	CAPTION_FONT_WEIGHT,
 	CAPTION_LINE_HEIGHT,
 	getCaptionPadding,
@@ -283,9 +292,13 @@ interface VideoPlaybackProps {
 	cursorClickBounce?: number;
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
+	cursorExtras?: CursorExtrasSettings;
+	keystrokes?: KeystrokeSample[];
 	volume?: number;
 	suspendRendering?: boolean;
 }
+
+const EMPTY_KEYSTROKES: KeystrokeSample[] = [];
 
 export interface VideoPlaybackRef {
 	readonly isPlaying: boolean;
@@ -369,6 +382,8 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			cursorClickBounce = DEFAULT_CURSOR_CLICK_BOUNCE,
 			cursorClickBounceDuration = DEFAULT_CURSOR_CLICK_BOUNCE_DURATION,
 			cursorSway = DEFAULT_CURSOR_SWAY,
+			cursorExtras = DEFAULT_CURSOR_EXTRAS,
+			keystrokes = EMPTY_KEYSTROKES,
 			volume = 1,
 			suspendRendering = false,
 		},
@@ -492,6 +507,12 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		const cursorOverlayRef = useRef<PixiCursorOverlay | null>(null);
 		const cursorTelemetryRef = useRef<CursorTelemetryPoint[]>([]);
 		const showCursorRef = useRef(showCursor);
+		const cursorExtrasRef = useRef(cursorExtras);
+		const keystrokesRef = useRef(keystrokes);
+		const hiddenCursorRangesRef = useRef(getHiddenCursorRanges(clipRegions));
+		const shortcutCanvasRef = useRef<HTMLCanvasElement | null>(null);
+		const shortcutCanvasDrawnRef = useRef(false);
+		const lastClickSoundTimeRef = useRef<number | null>(null);
 		const cursorSizeRef = useRef(cursorSize);
 		const cursorStyleRef = useRef(cursorStyle);
 		const cursorSmoothingRef = useRef(cursorSmoothing);
@@ -1422,6 +1443,17 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		}, [showCursor, requestPausedFrameRefresh]);
 
 		useEffect(() => {
+			cursorExtrasRef.current = cursorExtras;
+			keystrokesRef.current = keystrokes;
+			hiddenCursorRangesRef.current = getHiddenCursorRanges(clipRegions);
+			cursorOverlayRef.current?.setVisibilityRules(
+				cursorExtras.hideIdleCursor ? cursorExtras.idleCursorDelaySec * 1000 : 0,
+				hiddenCursorRangesRef.current,
+			);
+			requestPausedFrameRefresh();
+		}, [cursorExtras, keystrokes, clipRegions, requestPausedFrameRefresh]);
+
+		useEffect(() => {
 			cursorStyleRef.current = cursorStyle;
 			requestPausedFrameRefresh();
 		}, [cursorStyle, requestPausedFrameRefresh]);
@@ -1810,6 +1842,12 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 						sway: cursorSwayRef.current,
 					});
 					cursorOverlayRef.current = cursorOverlay;
+					cursorOverlay.setVisibilityRules(
+						cursorExtrasRef.current.hideIdleCursor
+							? cursorExtrasRef.current.idleCursorDelaySec * 1000
+							: 0,
+						hiddenCursorRangesRef.current,
+					);
 					cursorOverlay.setFilterResolution(
 						app.renderer.resolution || window.devicePixelRatio || 1,
 					);
@@ -2026,6 +2064,55 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				});
 			};
 
+			const drawPreviewShortcut = (timeMs: number) => {
+				const canvas = shortcutCanvasRef.current;
+				if (!canvas) return;
+				const extras = cursorExtrasRef.current;
+				const active =
+					extras.showShortcuts &&
+					getActiveShortcut(keystrokesRef.current, timeMs, extras) !== null;
+				if (!active && !shortcutCanvasDrawnRef.current) return;
+				const dpr = window.devicePixelRatio || 1;
+				const width = Math.max(1, Math.round(canvas.clientWidth * dpr));
+				const height = Math.max(1, Math.round(canvas.clientHeight * dpr));
+				if (canvas.width !== width || canvas.height !== height) {
+					canvas.width = width;
+					canvas.height = height;
+				}
+				const context = canvas.getContext("2d");
+				if (!context) return;
+				context.clearRect(0, 0, width, height);
+				shortcutCanvasDrawnRef.current = drawShortcutOverlay(
+					context,
+					keystrokesRef.current,
+					timeMs,
+					width,
+					height,
+					extras,
+				);
+			};
+
+			const playPreviewClickSounds = (timeMs: number) => {
+				const extras = cursorExtrasRef.current;
+				const last = lastClickSoundTimeRef.current;
+				lastClickSoundTimeRef.current = timeMs;
+				// Only while playing forward in small steps, never on seeks.
+				if (!extras.clickSound || !isPlayingRef.current || last === null) return;
+				if (timeMs <= last || timeMs - last > 250) return;
+				for (const sample of cursorTelemetryRef.current) {
+					if (sample.timeMs <= last) continue;
+					if (sample.timeMs > timeMs) break;
+					if (
+						sample.interactionType === "click" ||
+						sample.interactionType === "double-click" ||
+						sample.interactionType === "right-click" ||
+						sample.interactionType === "middle-click"
+					) {
+						playPreviewClickSound(extras.clickSoundVolume);
+					}
+				}
+			};
+
 			const ticker = () => {
 				if (suspendRenderingRef.current) {
 					return;
@@ -2150,6 +2237,8 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 						isSeekingRef.current || shouldSnapPausedFrameRef.current,
 					);
 				}
+				drawPreviewShortcut(timeMs);
+				playPreviewClickSounds(timeMs);
 
 				// Seeking events request one exact composition. Further Pixi ticks at the
 				// same media timestamp must hold it just like an exported frame.
@@ -2419,6 +2508,10 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 						filter: sceneEffects.shadowFilter,
 						visibility: isGap ? "hidden" : "visible",
 					}}
+				/>
+				<canvas
+					ref={shortcutCanvasRef}
+					className="pointer-events-none absolute inset-0 z-10 h-full w-full"
 				/>
 				{/* Only render overlay after PIXI and video are fully initialized */}
 				{pixiReady && videoReady && (

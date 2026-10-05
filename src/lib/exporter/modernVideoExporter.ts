@@ -1,3 +1,4 @@
+import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
 import type {
 	AnnotationRegion,
 	AudioRegion,
@@ -142,6 +143,7 @@ interface VideoExporterConfig extends ExportConfig {
 	cursorClickBounce?: number;
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
+	cursorExtras?: CursorExtrasRenderOptions;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	audioRegions?: AudioRegion[];
@@ -654,6 +656,7 @@ export class ModernVideoExporter {
 					cursorClickBounce: this.config.cursorClickBounce,
 					cursorClickBounceDuration: this.config.cursorClickBounceDuration,
 					cursorSway: this.config.cursorSway,
+					cursorExtras: this.config.cursorExtras,
 					zoomSmoothness: this.config.zoomSmoothness,
 					zoomClassicMode: this.config.zoomClassicMode,
 				});
@@ -1722,6 +1725,15 @@ export class ModernVideoExporter {
 		}
 		if (hasCursorClickEffect) {
 			reasons.push("unsupported-cursor-click-effect");
+		}
+		const cursorExtras = this.config.cursorExtras;
+		if (
+			cursorExtras &&
+			((cursorExtras.settings.showShortcuts && cursorExtras.keystrokes.length > 0) ||
+				((this.config.cursorTelemetry?.length ?? 0) > 0 &&
+					(cursorExtras.settings.hideIdleCursor || cursorExtras.hiddenRanges.length > 0)))
+		) {
+			reasons.push("unsupported-cursor-extras");
 		}
 
 		const hasZoomRegions = (this.config.zoomRegions ?? []).length > 0;

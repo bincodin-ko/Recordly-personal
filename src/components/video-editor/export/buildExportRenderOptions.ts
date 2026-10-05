@@ -1,3 +1,4 @@
+import { getHiddenCursorRanges } from "../cursorExtras";
 import type { ExportProgress } from "@/lib/exporter";
 import { toFileUrl } from "../projectPersistence";
 import type { useAppearanceState } from "../state/useAppearanceState";
@@ -84,6 +85,11 @@ export function buildExportRenderOptions({
 		cursorClickBounce: appearance.cursorClickBounce,
 		cursorClickBounceDuration: appearance.cursorClickBounceDuration,
 		cursorSway: appearance.cursorSway,
+		cursorExtras: {
+			settings: appearance.cursorExtras,
+			keystrokes: timeline.keystrokes,
+			hiddenRanges: getHiddenCursorRanges(timeline.clipRegions),
+		},
 		previewWidth,
 		previewHeight,
 		onProgress,

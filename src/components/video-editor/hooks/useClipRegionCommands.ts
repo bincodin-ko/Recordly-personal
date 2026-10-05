@@ -174,6 +174,15 @@ export function useClipRegionCommands({
 		},
 		[selectedClipId, setClipRegions],
 	);
+	const handleClipHideCursorChange = useCallback(
+		(hideCursor: boolean) => {
+			if (!selectedClipId) return;
+			setClipRegions((current) =>
+				current.map((clip) => (clip.id === selectedClipId ? { ...clip, hideCursor } : clip)),
+			);
+		},
+		[selectedClipId, setClipRegions],
+	);
 	const handleClipShowSourceAudioChange = useCallback(
 		(showSourceAudio: boolean) => {
 			if (!selectedClipId) return;
@@ -200,6 +209,7 @@ export function useClipRegionCommands({
 		handleClipSpanChange,
 		handleClipSpeedChange,
 		handleClipMutedChange,
+		handleClipHideCursorChange,
 		handleClipShowSourceAudioChange,
 		handleClipDelete,
 	};

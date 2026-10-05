@@ -1,3 +1,4 @@
+import { type CursorExtrasSettings, normalizeCursorExtras } from "./cursorExtras";
 import { getLocalMediaServerPath } from "@/lib/localMediaUrl";
 import type { SourceAudioTrackSettings } from "@/components/video-editor/audio/audioTypes";
 import { DEFAULT_WALLPAPER_PATH } from "@/lib/wallpapers";
@@ -118,6 +119,7 @@ export interface ProjectEditorState {
 	cursorClickBounce: number;
 	cursorClickBounceDuration: number;
 	cursorSway: number;
+	cursorExtras: CursorExtrasSettings;
 	borderRadius: number;
 	padding: Padding;
 	cropRegion: CropRegion;
@@ -471,6 +473,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 							typeof region.showSourceAudio === "boolean"
 								? region.showSourceAudio
 								: false,
+						...(region.hideCursor === true ? { hideCursor: true } : {}),
 					};
 				})
 		: [];
@@ -885,6 +888,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 		cursorSway: isFiniteNumber((editor as Partial<ProjectEditorState>).cursorSway)
 			? clamp((editor as Partial<ProjectEditorState>).cursorSway as number, 0, 2)
 			: DEFAULT_CURSOR_SWAY,
+		cursorExtras: normalizeCursorExtras((editor as Partial<ProjectEditorState>).cursorExtras),
 		borderRadius: isFiniteNumber(editor.borderRadius)
 			? clamp(editor.borderRadius, 0, 50)
 			: getDefaultBorderRadiusPercent(),

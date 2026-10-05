@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { type CursorExtrasSettings, DEFAULT_CURSOR_EXTRAS } from "../cursorExtras";
 import type { EditorPreferences } from "../editorPreferences";
 import type {
 	CropRegion,
@@ -107,6 +108,9 @@ export function useAppearanceState(preferences: EditorPreferences) {
 		preferences.cursorClickBounceDuration,
 	);
 	const [cursorSway, setCursorSway] = useState(preferences.cursorSway);
+	const [cursorExtras, setCursorExtras] = useState<CursorExtrasSettings>(
+		preferences.cursorExtras ?? DEFAULT_CURSOR_EXTRAS,
+	);
 	const [borderRadius, setBorderRadius] = useState(preferences.borderRadius);
 	const [padding, setPadding] = useState(preferences.padding);
 	const [cropRegion, setCropRegion] = useState<CropRegion>(DEFAULT_CROP_REGION);
@@ -190,6 +194,8 @@ export function useAppearanceState(preferences: EditorPreferences) {
 		setCursorClickBounceDuration,
 		cursorSway,
 		setCursorSway,
+		cursorExtras,
+		setCursorExtras,
 		borderRadius,
 		setBorderRadius,
 		padding,

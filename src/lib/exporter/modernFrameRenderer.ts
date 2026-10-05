@@ -1,3 +1,8 @@
+import {
+	type CursorExtrasRenderOptions,
+	drawShortcutOverlay,
+	getActiveShortcut,
+} from "@/components/video-editor/cursorExtras";
 import { Application, BlurFilter, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
 import { ZoomBlurFilter } from "pixi-filters/zoom-blur";
@@ -151,6 +156,7 @@ interface FrameRenderConfig {
 	cursorClickBounce?: number;
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
+	cursorExtras?: CursorExtrasRenderOptions;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	nativeReadbackMode?: "pixels" | "canvas";
@@ -583,6 +589,12 @@ export class FrameRenderer {
 					DEFAULT_CURSOR_CONFIG.clickBounceDuration,
 				sway: this.config.cursorSway ?? DEFAULT_CURSOR_CONFIG.sway,
 			});
+			this.cursorOverlay.setVisibilityRules(
+				this.config.cursorExtras?.settings.hideIdleCursor
+					? this.config.cursorExtras.settings.idleCursorDelaySec * 1000
+					: 0,
+				this.config.cursorExtras?.hiddenRanges ?? [],
+			);
 			this.cursorContainer.addChild(this.cursorOverlay.container);
 		}
 
@@ -2962,6 +2974,31 @@ export class FrameRenderer {
 		this.updateCaptionLayer(timestamp / 1000);
 		this.updateWebcamOverlay();
 		await this.renderOutput(timeMs);
+		this.composeShortcutOverlay(cursorTimeMs);
+	}
+
+	/** Keyboard shortcut pill, composited on top of the finished frame. */
+	private composeShortcutOverlay(cursorTimeMs: number): void {
+		const extras = this.config.cursorExtras;
+		if (!extras || !this.app) return;
+		// Only pay for the 2D copy on frames that actually show a pill.
+		if (!getActiveShortcut(extras.keystrokes, cursorTimeMs, extras.settings)) return;
+		const compositeState = this.ensureExportCompositeCanvas();
+		if (!compositeState) return;
+		const { canvas, context } = compositeState;
+		if (this.outputCanvasOverride !== canvas) {
+			context.clearRect(0, 0, canvas.width, canvas.height);
+			context.drawImage(this.app.canvas as HTMLCanvasElement, 0, 0, canvas.width, canvas.height);
+		}
+		drawShortcutOverlay(
+			context,
+			extras.keystrokes,
+			cursorTimeMs,
+			canvas.width,
+			canvas.height,
+			extras.settings,
+		);
+		this.outputCanvasOverride = canvas;
 	}
 
 	private async renderOutput(timeMs: number): Promise<void> {

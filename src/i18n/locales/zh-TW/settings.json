@@ -30,7 +30,8 @@
 		"mutedState": "音訊已靜音",
 		"unmutedState": "音訊正在播放",
 		"separateClipFromAudio": "將片段與音訊分離",
-		"delete": "刪除片段"
+		"delete": "刪除片段",
+		"hideCursor": "隱藏游標"
 	},
 	"effects": {
 		"title": "影片效果",
@@ -182,7 +183,11 @@
 		"webcamVertical": "Vertical",
 		"webcamMargin": "Margin",
 		"customEffectColor": "Custom effect color",
-		"devBadge": "DEV"
+		"devBadge": "DEV",
+		"hideIdleCursor": "游標靜止時隱藏",
+		"idleCursorDelay": "隱藏前等待",
+		"clickSound": "點擊音效",
+		"clickSoundVolume": "點擊音效音量"
 	},
 	"sections": {
 		"scene": "場景",
@@ -347,5 +352,18 @@
 	"general": {
 		"onboarding": "Onboarding",
 		"showOnboarding": "Show onboarding"
+	},
+	"shortcuts": {
+		"title": "鍵盤快捷鍵",
+		"show": "顯示快捷鍵",
+		"singleKeys": "顯示單鍵快捷鍵",
+		"size": "快捷鍵標籤大小",
+		"position": "快捷鍵位置",
+		"noneRecorded": "此影片中未錄製到快捷鍵。",
+		"positions": {
+			"bottom-left": "左側",
+			"bottom-center": "置中",
+			"bottom-right": "右側"
+		}
 	}
 }

@@ -75,7 +75,8 @@
 		"manual": "Manual",
 		"auto": "Auto",
 		"trim": "Trim",
-		"clip": "Clip"
+		"clip": "Clip",
+		"cursorHidden": "游標已隱藏"
 	},
 	"empty": {
 		"title": "No Video Loaded",

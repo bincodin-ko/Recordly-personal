@@ -1989,6 +1989,18 @@ export function registerRecordingHandlers(
 		}
 	});
 
+	// Shortcut samples saved by keystrokes.ts; the renderer normalizes them.
+	ipcMain.handle("get-recording-keystrokes", async (_, videoPath?: string) => {
+		const target = normalizeVideoSourcePath(videoPath ?? currentVideoPath);
+		if (!target) return [];
+		try {
+			const parsed = JSON.parse(await fs.readFile(`${target}.keys.json`, "utf-8")) as { samples?: unknown };
+			return Array.isArray(parsed.samples) ? parsed.samples : [];
+		} catch {
+			return [];
+		}
+	});
+
 	ipcMain.handle("get-cursor-telemetry", async (_, videoPath?: string) => {
 		const targetVideoPath = normalizeVideoSourcePath(videoPath ?? currentVideoPath);
 		if (!targetVideoPath) {
