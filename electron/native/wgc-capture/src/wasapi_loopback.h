@@ -67,6 +67,7 @@ private:
     IAudioClient* silenceClient_ = nullptr;
     IAudioRenderClient* silenceRender_ = nullptr;
     HANDLE processLoopbackEvent_ = nullptr;
+    bool processLoopback_ = false;
     DWORD streamFlags_ = 0;
 
     UINT32 bufferFrameCount_ = 0;

@@ -190,6 +190,7 @@ public:
 bool WasapiCapture::initializeProcessLoopback(const std::string& outputPath, DWORD processId) {
     outputPath_ = outputPath;
     streamFlags_ = AUDCLNT_STREAMFLAGS_LOOPBACK;
+    processLoopback_ = true;
 
     AUDIOCLIENT_ACTIVATION_PARAMS params = {};
     params.ActivationType = AUDIOCLIENT_ACTIVATION_TYPE_PROCESS_LOOPBACK;
@@ -599,6 +600,14 @@ void WasapiCapture::captureThread() {
             }
             if ((flags & AUDCLNT_BUFFERFLAGS_TIMESTAMP_ERROR) != 0) {
                 timestampErrorCount_.fetch_add(1);
+            }
+            // Process loopback packets carried device timestamps seconds off from the
+            // video clock (audio placed 3.2 s late while data was continuous), so time
+            // them by arrival instead: now minus the packet's own duration.
+            if (processLoopback_ && numFrames > 0) {
+                qpcPosition = static_cast<UINT64>(
+                    queryPerformanceCounterHns() -
+                    static_cast<int64_t>(numFrames) * 10000000LL / static_cast<int64_t>(mixFormat_->nSamplesPerSec));
             }
             const bool hasReliableTimestamp =
                 numFrames > 0 &&
