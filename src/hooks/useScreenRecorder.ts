@@ -768,7 +768,12 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 			}
 
 			setFinalizing(false);
-			await window.electronAPI.switchToEditor();
+			// Screen Studio flow: the quick export widget (Save / Copy / Edit) when enabled,
+			// otherwise straight into the editor.
+			const widgetShown = await window.electronAPI
+				.showQuickExportWidget?.(videoPath)
+				.catch(() => false);
+			if (!widgetShown) await window.electronAPI.switchToEditor();
 			console.log(
 				`[PERF:RENDERER] Finalize Session & Switch to Editor: COMPLETED in ${(performance.now() - start).toFixed(2)}ms`,
 			);
@@ -1696,6 +1701,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 
 			const { selectedSource, useNativeMacScreenCapture, useNativeWindowsCapture, micLabel } =
 				preparedStart;
+			// Hides desktop icons when that setting is on; restored on stop or failed start.
+			await window.electronAPI.desktopIconsBeforeRecording?.().catch(() => undefined);
 			const useNativeCapture = useNativeMacScreenCapture || useNativeWindowsCapture;
 			const shouldWarmStartNativeCapture =
 				useNativeCapture && countdownDelay > 0 && !selectedSource.id?.startsWith("android:");
@@ -2285,6 +2292,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 			} catch (error) {
 				console.warn("Failed to release recording startup protection:", error);
 			}
+			void window.electronAPI.desktopIconsAfterStartup?.().catch(() => undefined);
 			setHudSourceSelectionActive(false);
 			startInFlight.current = false;
 			setStarting(false);

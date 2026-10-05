@@ -1047,6 +1047,18 @@ interface Window {
 		getCountdownDelay: () => Promise<{ success: boolean; delay: number }>;
 		setCountdownDelay: (delay: number) => Promise<{ success: boolean; error?: string }>;
 		finishRecordingStartup: () => Promise<void>;
+		resizeSelectedWindow: (
+			width: number,
+			height: number,
+		) => Promise<{ success: boolean; width?: number; height?: number; error?: string }>;
+		desktopIconsBeforeRecording: () => Promise<void>;
+		desktopIconsAfterStartup: () => Promise<void>;
+		/** Resolves false when the widget is turned off; the caller opens the editor instead. */
+		showQuickExportWidget: (videoPath: string) => Promise<boolean>;
+		quickExportGetVideo: () => Promise<string | null>;
+		quickExportSave: () => Promise<{ success: boolean; canceled?: boolean; path?: string }>;
+		quickExportCopy: () => Promise<{ success: boolean; error?: string }>;
+		quickExportClose: () => Promise<void>;
 		startCountdown: (seconds: number) => Promise<{ success: boolean; cancelled?: boolean }>;
 		cancelCountdown: () => Promise<{ success: boolean }>;
 		getActiveCountdown: () => Promise<{ success: boolean; seconds: number | null }>;

@@ -166,5 +166,29 @@
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
 		"placeholder": "Paste or type your script here, then press Start."
+	},
+	"recordingSettings": {
+		"title": "Opname-instellingen",
+		"showQuickExport": "Snelle-exportwidget tonen na opname",
+		"hideDesktopIcons": "Bureaubladpictogrammen verbergen tijdens opname"
+	},
+	"windowSize": {
+		"title": "Venstergrootte aanpassen",
+		"hd": "720p (16:9)",
+		"fullHd": "1080p (16:9)",
+		"wide": "16:10",
+		"vertical": "Staand (9:16)",
+		"failed": "Kan de grootte van dit venster niet aanpassen",
+		"clamped": "Aangepast naar {{width}}×{{height}} (beperkt door scherm of app)"
+	},
+	"quickExport": {
+		"save": "Opslaan",
+		"copy": "Kopiëren",
+		"edit": "Bewerken",
+		"close": "Sluiten",
+		"saved": "Opgeslagen",
+		"copied": "Gekopieerd naar klembord",
+		"copyFailed": "Kopiëren mislukt",
+		"doubleClickToEdit": "Dubbelklik om in de editor te openen"
 	}
 }

@@ -1238,3 +1238,44 @@ let appIsQuitting = false;
 app.on("before-quit", () => {
 	appIsQuitting = true;
 });
+
+const QUICK_EXPORT_WIDGET_WIDTH = 296;
+const QUICK_EXPORT_WIDGET_HEIGHT = 236;
+
+/** Screen Studio-style quick export widget, bottom-left of the recording's display. */
+export function createQuickExportWidgetWindow(): BrowserWindow {
+	const { workArea } = getHudOverlayDisplay();
+	const win = new BrowserWindow({
+		width: QUICK_EXPORT_WIDGET_WIDTH,
+		height: QUICK_EXPORT_WIDGET_HEIGHT,
+		x: Math.round(workArea.x + HUD_EDGE_MARGIN_DIP),
+		y: Math.round(
+			workArea.y + workArea.height - QUICK_EXPORT_WIDGET_HEIGHT - HUD_EDGE_MARGIN_DIP,
+		),
+		frame: false,
+		transparent: true,
+		resizable: false,
+		alwaysOnTop: true,
+		skipTaskbar: true,
+		hasShadow: false,
+		show: false,
+		backgroundColor: "#00000000",
+		webPreferences: {
+			preload: path.join(electronWindowsDir, "preload.mjs"),
+			nodeIntegration: false,
+			contextIsolation: true,
+		},
+	});
+	// Never shows up in the next recording.
+	win.setContentProtection(true);
+	win.setAlwaysOnTop(true, "floating");
+	win.once("ready-to-show", () => win.showInactive());
+	if (VITE_DEV_SERVER_URL) {
+		win.loadURL(VITE_DEV_SERVER_URL + "?windowType=quick-export");
+	} else {
+		win.loadFile(path.join(RENDERER_DIST, "index.html"), {
+			query: { windowType: "quick-export" },
+		});
+	}
+	return win;
+}

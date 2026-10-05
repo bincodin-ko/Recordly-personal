@@ -166,5 +166,29 @@
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
 		"placeholder": "Paste or type your script here, then press Start."
+	},
+	"recordingSettings": {
+		"title": "录制设置",
+		"showQuickExport": "录制后显示快速导出小窗",
+		"hideDesktopIcons": "录制时隐藏桌面图标"
+	},
+	"windowSize": {
+		"title": "调整窗口大小",
+		"hd": "720p (16:9)",
+		"fullHd": "1080p (16:9)",
+		"wide": "16:10",
+		"vertical": "竖屏 (9:16)",
+		"failed": "无法调整此窗口的大小",
+		"clamped": "已调整为 {{width}}×{{height}}（受屏幕或应用限制）"
+	},
+	"quickExport": {
+		"save": "保存",
+		"copy": "复制",
+		"edit": "编辑",
+		"close": "关闭",
+		"saved": "已保存",
+		"copied": "已复制到剪贴板",
+		"copyFailed": "复制失败",
+		"doubleClickToEdit": "双击在编辑器中打开"
 	}
 }

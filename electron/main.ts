@@ -28,6 +28,11 @@ import {
 	killWindowsCaptureProcess,
 	registerIpcHandlers,
 } from "./ipc/handlers";
+import {
+	onCaptureExtrasRecordingState,
+	registerCaptureExtrasHandlers,
+	restoreDesktopIconsSync,
+} from "./captureExtras";
 import { ensureMediaServer } from "./mediaServer";
 import { hardenWebContentsNavigation, shouldHardenWebContentsType } from "./navigationPolicy";
 import { shouldGrantDisplayCapture, shouldGrantMediaPermission } from "./permissionPolicy";
@@ -884,6 +889,7 @@ app.on("before-quit", () => {
 	);
 	killWindowsCaptureProcess();
 	showCursor();
+	restoreDesktopIconsSync();
 	cleanupNativeVideoExportSessions();
 	void cleanupAllExportStreams();
 });
@@ -1034,6 +1040,7 @@ app.whenReady().then(async () => {
 		(recording: boolean, sourceName: string) => {
 			selectedSourceName = sourceName;
 			setHudOverlayRecordingActive(recording);
+			onCaptureExtrasRecordingState(recording);
 			if (shouldUseTray()) {
 				if (!tray) createTray();
 				updateTrayMenu(recording);
@@ -1046,6 +1053,7 @@ app.whenReady().then(async () => {
 			}
 		},
 	);
+	registerCaptureExtrasHandlers();
 
 	if (IS_SMOKE_EXPORT || process.env.RECORDLY_DEV_OPEN_RECORDING_INPUT) {
 		await logSmokeExportGpuDiagnostics();

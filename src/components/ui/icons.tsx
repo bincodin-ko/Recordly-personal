@@ -144,6 +144,8 @@ import { RefreshIcon as RefreshLinear } from "@solar-icons/react/linear/refresh"
 import { RefreshIcon as RefreshBold } from "@solar-icons/react/bold/refresh";
 import { RestartIcon as RestartLinear } from "@solar-icons/react/linear/restart";
 import { RestartIcon as RestartBold } from "@solar-icons/react/bold/restart";
+import { PenIcon as PenLinear } from "@solar-icons/react/linear/pen";
+import { PenIcon as PenBold } from "@solar-icons/react/bold/pen";
 import { ScissorsIcon as ScissorsLinear } from "@solar-icons/react/linear/scissors";
 import { ScissorsIcon as ScissorsBold } from "@solar-icons/react/bold/scissors";
 import { SettingsIcon as SettingsLinear } from "@solar-icons/react/linear/settings";
@@ -256,6 +258,7 @@ export const Play = solar(PlayLinear, PlayBold);
 export const PlayIcon = solar(PlayLinear, PlayBold);
 export const Plus = solar(AddLinear, AddBold);
 export const Question = solar(QuestionCircleLinear, QuestionCircleBold);
+export const PencilSimple = solar(PenLinear, PenBold);
 export const Scissors = solar(ScissorsLinear, ScissorsBold);
 export const ShareNetwork = solar(ShareLinear, ShareBold);
 export const SignOut = solar(LogoutLinear, LogoutBold);
