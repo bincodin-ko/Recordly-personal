@@ -531,6 +531,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	},
 	getAndroidDevices: () => ipcRenderer.invoke("get-android-devices"),
 	getRecordingFlags: () => ipcRenderer.invoke("get-recording-flags"),
+	togglePrompterWindow: () => ipcRenderer.invoke("toggle-prompter-window"),
 	selectCaptureArea: () => ipcRenderer.invoke("select-capture-area"),
 	clearCaptureArea: () => ipcRenderer.invoke("clear-capture-area"),
 	getCaptureArea: () => ipcRenderer.invoke("get-capture-area"),

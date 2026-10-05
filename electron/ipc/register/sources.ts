@@ -7,6 +7,7 @@ import {
 	createHudOverlayWindow,
 	getHudOverlayWindow,
 	reassertHudOverlayMousePassthrough,
+	togglePrompterWindow,
 } from "../../windows";
 import { ALLOW_RECORDLY_WINDOW_CAPTURE } from "../constants";
 import {
@@ -406,6 +407,7 @@ export function registerSourceHandlers({
 
 	// ── Area recording: drag a rectangle on the selected display ──
 	ipcMain.handle("get-android-devices", () => listAndroidDevices());
+	ipcMain.handle("toggle-prompter-window", () => togglePrompterWindow());
 	ipcMain.handle("get-capture-area", () => pendingCaptureArea);
 	ipcMain.handle("clear-capture-area", () => {
 		setPendingCaptureArea(null);

@@ -8,6 +8,7 @@ import {
 	MinusIcon,
 	MonitorIcon,
 	SpeakerHigh,
+	TextT,
 	TimerIcon,
 	VideoCameraIcon,
 	VideoCameraSlashIcon,
@@ -354,6 +355,16 @@ function LaunchWindowContent() {
 					</Button>
 				}
 			/>
+
+			<Button
+				variant="ghost"
+				size="icon"
+				iconSize="lg"
+				title={t("prompter.open", "Teleprompter (not recorded)")}
+				onClick={() => void window.electronAPI.togglePrompterWindow()}
+			>
+				<TextT className="size-5" />
+			</Button>
 
 			<CountdownPopover
 				countdownDelay={countdownDelay}

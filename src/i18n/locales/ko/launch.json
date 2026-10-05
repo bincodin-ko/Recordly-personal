@@ -151,5 +151,16 @@
 		"microphoneOff": "마이크 꺼짐",
 		"recordlyUpdate": "Recordly 업데이트",
 		"downloadingUpdate": "업데이트 다운로드 중"
+	},
+	"prompter": {
+		"open": "프롬프터 (녹화 안 됨)",
+		"start": "시작",
+		"pause": "멈춤",
+		"toTop": "처음으로",
+		"speed": "속도",
+		"fontSize": "글자 크기",
+		"opacity": "투명도",
+		"hiddenNote": "녹화에 안 찍힘",
+		"placeholder": "대본을 붙여넣거나 입력한 뒤 시작을 누르세요."
 	}
 }

@@ -1,4 +1,5 @@
 import { Card } from "@heroui/react";
+import { PrompterWindow } from "./components/prompter/PrompterWindow";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useI18n } from "./contexts/I18nContext";
 import { EditorLoadingSkeleton } from "./components/video-editor/layout/EditorLoadingSkeleton";
@@ -74,6 +75,9 @@ export default function App() {
 			break;
 		case "update-toast":
 			content = <UpdateToastWindow />;
+			break;
+		case "prompter":
+			content = <PrompterWindow />;
 			break;
 		case "editor":
 			content = <EditorWindow />;

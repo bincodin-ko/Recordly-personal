@@ -151,5 +151,16 @@
 		"microphoneOff": "Microphone off",
 		"recordlyUpdate": "Recordly update",
 		"downloadingUpdate": "Downloading update"
+	},
+	"prompter": {
+		"open": "Teleprompter (not recorded)",
+		"start": "Start",
+		"pause": "Pause",
+		"toTop": "Back to top",
+		"speed": "Speed",
+		"fontSize": "Text size",
+		"opacity": "Opacity",
+		"hiddenNote": "Not recorded",
+		"placeholder": "Paste or type your script here, then press Start."
 	}
 }

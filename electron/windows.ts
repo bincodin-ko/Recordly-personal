@@ -1172,3 +1172,42 @@ export function closeCountdownWindow(): void {
 		countdownWindow = null;
 	}
 }
+
+let prompterWindow: BrowserWindow | null = null;
+
+/** Teleprompter: always on top and excluded from screen capture, so it never appears in recordings. */
+export function togglePrompterWindow(): boolean {
+	if (prompterWindow && !prompterWindow.isDestroyed()) {
+		prompterWindow.close();
+		return false;
+	}
+	const { workArea } = getScreen().getPrimaryDisplay();
+	const win = new BrowserWindow({
+		width: 720,
+		height: 360,
+		x: Math.round(workArea.x + (workArea.width - 720) / 2),
+		y: workArea.y + 40,
+		alwaysOnTop: true,
+		skipTaskbar: false,
+		title: "Recordly 프롬프터",
+		autoHideMenuBar: true,
+		backgroundColor: "#111118",
+		webPreferences: {
+			preload: path.join(electronWindowsDir, "preload.mjs"),
+			nodeIntegration: false,
+			contextIsolation: true,
+		},
+	});
+	win.setContentProtection(true);
+	win.setAlwaysOnTop(true, "floating");
+	prompterWindow = win;
+	win.on("closed", () => {
+		if (prompterWindow === win) prompterWindow = null;
+	});
+	if (VITE_DEV_SERVER_URL) {
+		win.loadURL(VITE_DEV_SERVER_URL + "?windowType=prompter");
+	} else {
+		win.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { windowType: "prompter" } });
+	}
+	return true;
+}
