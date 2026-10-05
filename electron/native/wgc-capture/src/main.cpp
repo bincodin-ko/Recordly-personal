@@ -207,10 +207,17 @@ static void closeActivePauseAt(int64_t timestampHns) {
     g_pauseRequested.store(false);
 }
 
+// Loopback audio is captured when the engine mixes it, before it reaches the
+// speakers; players show video in sync with what is *heard*, so recorded system
+// audio led the picture by the output latency (~37 ms mean over 8 runs on this PC, measured
+// with qa/av_sync_player.py). Delay loopback audio by that much.
+static constexpr int64_t kLoopbackOutputLatencyMs = 37;
+
 static void writeCompanionAudioTimingMetadata(
     const std::string& audioPath,
     int64_t firstVideoTimestampHns,
-    const WasapiCapture& capture
+    const WasapiCapture& capture,
+    int64_t latencyCompensationMs = 0
 ) {
     if (audioPath.empty() || firstVideoTimestampHns < 0) {
         return;
@@ -221,7 +228,7 @@ static void writeCompanionAudioTimingMetadata(
         return;
     }
 
-    int64_t startDelayMs = (firstPacketQpcHns - firstVideoTimestampHns + 5000) / 10000;
+    int64_t startDelayMs = (firstPacketQpcHns - firstVideoTimestampHns + 5000) / 10000 + latencyCompensationMs;
     if (startDelayMs < 0) {
         startDelayMs = 0;
     }
@@ -461,7 +468,8 @@ int main(int argc, char* argv[]) {
         writeCompanionAudioTimingMetadata(
             config.audioOutputPath,
             firstVideoTimestampHns.load(),
-            loopback);
+            loopback,
+            kLoopbackOutputLatencyMs);
     }
     if (micActive) {
         writeCompanionAudioTimingMetadata(
