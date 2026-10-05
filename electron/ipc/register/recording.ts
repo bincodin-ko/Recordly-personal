@@ -167,6 +167,7 @@ import { bringSelectedWindowForward } from "./sources";
 
 // Must match src/components/launch/popovers/AudioSyncPopover.tsx
 const SYSTEM_AUDIO_SYNC_OFFSET_SETTING_KEY = "recordly.recording.systemAudioOffsetMs";
+const SYSTEM_AUDIO_APP_SETTING_KEY = "recordly.recording.systemAudioApp";
 
 const execFileAsync = promisify(execFile);
 
@@ -532,6 +533,24 @@ export function registerRecordingHandlers(
 							`recordly-native-${timestamp}.system.wav`,
 						);
 						config.captureSystemAudio = true;
+						// Per-app audio: record only the app that owns the chosen window (falls back to all audio).
+						const audioApp = readAppSetting(SYSTEM_AUDIO_APP_SETTING_KEY) as
+							| { windowId?: string; name?: string }
+							| null;
+						// Window ids change when the app restarts: re-find a current window by app name.
+						let audioWindowId = audioApp?.windowId;
+						const audioAppName = audioApp?.name;
+						if (audioAppName) {
+							const windows = await desktopCapturer
+								.getSources({ types: ["window"], thumbnailSize: { width: 1, height: 1 } })
+								.catch(() => []);
+							const match = windows.find(
+								(w) => w.id === audioWindowId || w.name === audioAppName || w.name.endsWith(audioAppName),
+							);
+							audioWindowId = match?.id ?? audioWindowId;
+						}
+						const audioHwnd = parseWindowId(audioWindowId);
+						if (audioHwnd) config.audioWindowHandle = audioHwnd;
 						config.audioOutputPath = tempSystemAudioPath;
 						// Output-latency compensation chosen in the launch window (Bluetooth etc.).
 						const latencyMs = readAppSetting(SYSTEM_AUDIO_SYNC_OFFSET_SETTING_KEY);

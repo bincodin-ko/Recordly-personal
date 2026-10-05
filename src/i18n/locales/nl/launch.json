@@ -73,6 +73,10 @@
 		"android": {
 			"title": "Android devices (USB)",
 			"none": "No phone found. Turn on USB debugging and connect it."
+		},
+		"audioApp": {
+			"title": "Record sound from",
+			"all": "All system sound"
 		}
 	},
 	"sourceSelector": {

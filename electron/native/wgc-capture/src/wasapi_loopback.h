@@ -14,6 +14,8 @@ public:
     ~WasapiCapture();
 
     bool initializeLoopback(const std::string& outputPath);
+    // Only this process (and its children) — Windows 10 2104+ process loopback.
+    bool initializeProcessLoopback(const std::string& outputPath, DWORD processId);
     bool initializeMic(
         const std::string& outputPath,
         const std::string& deviceId = "",
@@ -64,6 +66,7 @@ private:
     // render stream on the same endpoint keeps packets continuous (OBS does this).
     IAudioClient* silenceClient_ = nullptr;
     IAudioRenderClient* silenceRender_ = nullptr;
+    HANDLE processLoopbackEvent_ = nullptr;
     DWORD streamFlags_ = 0;
 
     UINT32 bufferFrameCount_ = 0;

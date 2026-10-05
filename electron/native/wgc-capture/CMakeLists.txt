@@ -25,4 +25,5 @@ target_link_libraries(wgc-capture PRIVATE
   ole32
   shcore
   dwmapi
+  mmdevapi
 )

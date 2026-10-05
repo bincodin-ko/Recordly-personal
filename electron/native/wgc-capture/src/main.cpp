@@ -51,6 +51,7 @@ struct CaptureConfig {
     bool captureSystemAudio = false;
     bool captureMic = false;
     int systemAudioLatencyMs = -1;  // -1 = default kLoopbackOutputLatencyMs
+    int64_t audioWindowHandle = 0;   // >0: record only the app that owns this window
 };
 
 static bool parseSimpleJson(const std::string& json, CaptureConfig& config) {
@@ -117,6 +118,8 @@ static bool parseSimpleJson(const std::string& json, CaptureConfig& config) {
 
     int64_t windowHandle = findInt64("windowHandle");
     if (windowHandle > 0) config.windowHandle = windowHandle;
+    int64_t audioWindowHandle = findInt64("audioWindowHandle");
+    if (audioWindowHandle > 0) config.audioWindowHandle = audioWindowHandle;
 
     int fps = findInt("fps");
     if (fps > 0) config.fps = fps;
@@ -395,7 +398,17 @@ int main(int argc, char* argv[]) {
     bool micInitialized = false;
 
     if (config.captureSystemAudio && !config.audioOutputPath.empty()) {
-        audioInitialized = loopback.initializeLoopback(config.audioOutputPath);
+        DWORD audioProcessId = 0;
+        if (config.audioWindowHandle > 0) {
+            GetWindowThreadProcessId(reinterpret_cast<HWND>(static_cast<intptr_t>(config.audioWindowHandle)), &audioProcessId);
+        }
+        if (audioProcessId != 0) {
+            audioInitialized = loopback.initializeProcessLoopback(config.audioOutputPath, audioProcessId);
+            std::cerr << "Audio source: app process " << audioProcessId << (audioInitialized ? "" : " (failed)") << std::endl;
+        }
+        if (!audioInitialized) {
+            audioInitialized = loopback.initializeLoopback(config.audioOutputPath);
+        }
         if (!audioInitialized) {
             std::cerr << "WARNING: Failed to initialize WASAPI loopback" << std::endl;
         }

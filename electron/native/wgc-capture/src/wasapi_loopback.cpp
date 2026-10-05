@@ -1,4 +1,6 @@
 #include "wasapi_loopback.h"
+#include <audioclientactivationparams.h>
+#include <wrl/implements.h>
 #include <functiondiscoverykeys_devpkey.h>
 #include <iostream>
 #include <cstring>
@@ -106,6 +108,7 @@ WasapiCapture::WasapiCapture() {}
 WasapiCapture::~WasapiCapture() {
     stopSilenceKeepAlive();
     stop();
+    if (processLoopbackEvent_) CloseHandle(processLoopbackEvent_);
     if (mixFormat_) CoTaskMemFree(mixFormat_);
     if (captureClient_) captureClient_->Release();
     if (audioClient_) audioClient_->Release();
@@ -165,6 +168,85 @@ bool WasapiCapture::initializeLoopback(const std::string& outputPath) {
     if (FAILED(hr)) return false;
 
     return initializeCommon();
+}
+
+namespace {
+// Completion handler for ActivateAudioInterfaceAsync (must be agile: FtmBase).
+class ActivationHandler
+    : public Microsoft::WRL::RuntimeClass<
+          Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+          Microsoft::WRL::FtmBase,
+          IActivateAudioInterfaceCompletionHandler> {
+public:
+    HANDLE done = CreateEventW(nullptr, TRUE, FALSE, nullptr);
+    ~ActivationHandler() { if (done) CloseHandle(done); }
+    STDMETHOD(ActivateCompleted)(IActivateAudioInterfaceAsyncOperation*) override {
+        SetEvent(done);
+        return S_OK;
+    }
+};
+}  // namespace
+
+bool WasapiCapture::initializeProcessLoopback(const std::string& outputPath, DWORD processId) {
+    outputPath_ = outputPath;
+    streamFlags_ = AUDCLNT_STREAMFLAGS_LOOPBACK;
+
+    AUDIOCLIENT_ACTIVATION_PARAMS params = {};
+    params.ActivationType = AUDIOCLIENT_ACTIVATION_TYPE_PROCESS_LOOPBACK;
+    params.ProcessLoopbackParams.TargetProcessId = processId;
+    params.ProcessLoopbackParams.ProcessLoopbackMode = PROCESS_LOOPBACK_MODE_INCLUDE_TARGET_PROCESS_TREE;
+    PROPVARIANT activateParams = {};
+    activateParams.vt = VT_BLOB;
+    activateParams.blob.cbSize = sizeof(params);
+    activateParams.blob.pBlobData = reinterpret_cast<BYTE*>(&params);
+
+    auto handler = Microsoft::WRL::Make<ActivationHandler>();
+    IActivateAudioInterfaceAsyncOperation* op = nullptr;
+    HRESULT hr = ActivateAudioInterfaceAsync(
+        VIRTUAL_AUDIO_DEVICE_PROCESS_LOOPBACK, __uuidof(IAudioClient), &activateParams, handler.Get(), &op);
+    if (FAILED(hr)) {
+        std::cerr << "WARNING: Process loopback activation failed: 0x" << std::hex << hr << std::dec << std::endl;
+        return false;
+    }
+    WaitForSingleObject(handler->done, 5000);
+    HRESULT activateHr = E_FAIL;
+    IUnknown* activated = nullptr;
+    hr = op->GetActivateResult(&activateHr, &activated);
+    op->Release();
+    if (FAILED(hr) || FAILED(activateHr) || !activated) {
+        std::cerr << "WARNING: Process loopback unavailable: 0x" << std::hex << (FAILED(hr) ? hr : activateHr) << std::dec << std::endl;
+        return false;
+    }
+    hr = activated->QueryInterface(__uuidof(IAudioClient), reinterpret_cast<void**>(&audioClient_));
+    activated->Release();
+    if (FAILED(hr)) return false;
+
+    // Process loopback has no mix format; request 48 kHz stereo 16-bit PCM.
+    mixFormat_ = static_cast<WAVEFORMATEX*>(CoTaskMemAlloc(sizeof(WAVEFORMATEX)));
+    if (!mixFormat_) return false;
+    *mixFormat_ = {};
+    mixFormat_->wFormatTag = WAVE_FORMAT_PCM;
+    mixFormat_->nChannels = 2;
+    mixFormat_->nSamplesPerSec = 48000;
+    mixFormat_->wBitsPerSample = 16;
+    mixFormat_->nBlockAlign = mixFormat_->nChannels * mixFormat_->wBitsPerSample / 8;
+    mixFormat_->nAvgBytesPerSec = mixFormat_->nSamplesPerSec * mixFormat_->nBlockAlign;
+
+    hr = audioClient_->Initialize(
+        AUDCLNT_SHAREMODE_SHARED,
+        AUDCLNT_STREAMFLAGS_LOOPBACK | AUDCLNT_STREAMFLAGS_EVENTCALLBACK | AUDCLNT_STREAMFLAGS_AUTOCONVERTPCM,
+        200000, 0, mixFormat_, nullptr);
+    if (FAILED(hr)) {
+        std::cerr << "WARNING: Process loopback Initialize failed: 0x" << std::hex << hr << std::dec << std::endl;
+        return false;
+    }
+    // Event-callback mode requires an event even though the capture thread polls.
+    processLoopbackEvent_ = CreateEventW(nullptr, FALSE, FALSE, nullptr);
+    audioClient_->SetEventHandle(processLoopbackEvent_);
+    hr = audioClient_->GetBufferSize(&bufferFrameCount_);
+    if (FAILED(hr)) return false;
+    hr = audioClient_->GetService(IID_IAudioCaptureClient_, reinterpret_cast<void**>(&captureClient_));
+    return SUCCEEDED(hr);
 }
 
 bool WasapiCapture::initializeMic(

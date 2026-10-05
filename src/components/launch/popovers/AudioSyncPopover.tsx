@@ -1,5 +1,5 @@
 import { SpeakerHigh } from "@/components/ui/icons";
-import { type ReactElement, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { useScopedT } from "@/contexts/I18nContext";
 import { loadAppSetting, saveAppSetting } from "@/lib/appSettings";
 import styles from "../LaunchWindow.module.css";
@@ -20,6 +20,9 @@ const OPTIONS: Array<{ ms: number; key: string; fallback: string }> = [
 	{ ms: 0, key: "none", fallback: "No compensation (0 ms)" },
 ];
 const POPOVER_ID = "audio-sync";
+// Read by electron/ipc/register/recording.ts: record only this app's sound (null = all system sound).
+const SYSTEM_AUDIO_APP_SETTING_KEY = "recordly.recording.systemAudioApp";
+type AudioApp = { windowId: string; name: string } | null;
 
 function loadOffset(): number {
 	const value = loadAppSetting<number>(SYSTEM_AUDIO_SYNC_OFFSET_SETTING_KEY);
@@ -30,14 +33,56 @@ export function AudioSyncPopover({ trigger }: { trigger: ReactElement }) {
 	const t = useScopedT("launch");
 	const { isOpen, requestOpen, requestClose } = useLaunchPopoverCoordinator();
 	const [offset, setOffset] = useState(loadOffset);
+	const [audioApp, setAudioApp] = useState<AudioApp>(
+		() => loadAppSetting<AudioApp>(SYSTEM_AUDIO_APP_SETTING_KEY) ?? null,
+	);
+	const [apps, setApps] = useState<Array<{ windowId: string; name: string }>>([]);
+	const open = isOpen(POPOVER_ID);
+	useEffect(() => {
+		if (!open) return;
+		void window.electronAPI
+			?.getSources({ types: ["window"], thumbnailSize: { width: 1, height: 1 } })
+			.then((sources) => {
+				const seen = new Set<string>();
+				setApps(
+					sources
+						.map((s) => ({ windowId: s.id, name: String(s.appName || s.name) }))
+						.filter((s) => s.windowId.startsWith("window:") && !seen.has(s.name) && seen.add(s.name)),
+				);
+			})
+			.catch(() => setApps([]));
+	}, [open]);
+	const chooseApp = (value: AudioApp) => {
+		setAudioApp(value);
+		saveAppSetting(SYSTEM_AUDIO_APP_SETTING_KEY, value);
+	};
 
 	return (
 		<HudPopover
-			open={isOpen(POPOVER_ID)}
+			open={open}
 			onOpenChange={(nextOpen) => (nextOpen ? requestOpen(POPOVER_ID) : requestClose(POPOVER_ID))}
 			trigger={trigger}
 			align="center"
 		>
+			<div className={styles.ddLabel}>{t("recording.audioApp.title", "Record sound from")}</div>
+			<DropdownItem icon={<SpeakerHigh size={16} />} selected={!audioApp} onClick={() => chooseApp(null)}>
+				{t("recording.audioApp.all", "All system sound")}
+			</DropdownItem>
+			{apps.map((app) => (
+				<DropdownItem
+					key={app.windowId}
+					icon={<SpeakerHigh size={16} />}
+					selected={audioApp?.name === app.name}
+					onClick={() => chooseApp(app)}
+				>
+					{app.name}
+				</DropdownItem>
+			))}
+			{audioApp && !apps.some((app) => app.name === audioApp.name) ? (
+				<DropdownItem icon={<SpeakerHigh size={16} />} selected onClick={() => chooseApp(null)}>
+					{audioApp.name}
+				</DropdownItem>
+			) : null}
 			<div className={styles.ddLabel}>
 				{t("recording.audioSync.title", "System audio sync (your output device)")}
 			</div>

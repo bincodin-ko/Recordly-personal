@@ -73,6 +73,10 @@
 		"android": {
 			"title": "안드로이드 기기 (USB)",
 			"none": "연결된 휴대폰이 없어요. USB 디버깅을 켜고 연결하세요."
+		},
+		"audioApp": {
+			"title": "녹음할 소리",
+			"all": "모든 시스템 소리"
 		}
 	},
 	"sourceSelector": {
