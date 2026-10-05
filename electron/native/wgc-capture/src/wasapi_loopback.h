@@ -44,6 +44,8 @@ private:
     void writeSilenceFrames(uint64_t frameCount, WORD channels);
     uint32_t boundaryFadeInFrameCount() const;
     IMMDevice* findCaptureDeviceByName(const std::wstring& name);
+    void startSilenceKeepAlive();
+    void stopSilenceKeepAlive();
 
     std::string outputPath_;
     std::thread thread_;
@@ -58,6 +60,10 @@ private:
     IAudioClient* audioClient_ = nullptr;
     IAudioCaptureClient* captureClient_ = nullptr;
     WAVEFORMATEX* mixFormat_ = nullptr;
+    // Loopback only delivers packets while something plays; an idle silent
+    // render stream on the same endpoint keeps packets continuous (OBS does this).
+    IAudioClient* silenceClient_ = nullptr;
+    IAudioRenderClient* silenceRender_ = nullptr;
     DWORD streamFlags_ = 0;
 
     UINT32 bufferFrameCount_ = 0;

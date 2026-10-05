@@ -104,6 +104,7 @@ static const IID IID_IAudioCaptureClient_ = __uuidof(IAudioCaptureClient);
 WasapiCapture::WasapiCapture() {}
 
 WasapiCapture::~WasapiCapture() {
+    stopSilenceKeepAlive();
     stop();
     if (mixFormat_) CoTaskMemFree(mixFormat_);
     if (captureClient_) captureClient_->Release();
@@ -225,6 +226,34 @@ bool WasapiCapture::initializeCommon() {
     return true;
 }
 
+void WasapiCapture::startSilenceKeepAlive() {
+    if (silenceClient_ || !device_) return;
+    WAVEFORMATEX* format = nullptr;
+    UINT32 frames = 0;
+    BYTE* data = nullptr;
+    HRESULT hr = device_->Activate(__uuidof(IAudioClient), CLSCTX_ALL, nullptr,
+                                   reinterpret_cast<void**>(&silenceClient_));
+    if (SUCCEEDED(hr)) hr = silenceClient_->GetMixFormat(&format);
+    if (SUCCEEDED(hr)) hr = silenceClient_->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, 10000000, 0, format, nullptr);
+    if (format) CoTaskMemFree(format);
+    if (SUCCEEDED(hr)) hr = silenceClient_->GetBufferSize(&frames);
+    if (SUCCEEDED(hr)) hr = silenceClient_->GetService(__uuidof(IAudioRenderClient),
+                                                       reinterpret_cast<void**>(&silenceRender_));
+    if (SUCCEEDED(hr)) hr = silenceRender_->GetBuffer(frames, &data);
+    if (SUCCEEDED(hr)) hr = silenceRender_->ReleaseBuffer(frames, AUDCLNT_BUFFERFLAGS_SILENT);
+    if (SUCCEEDED(hr)) hr = silenceClient_->Start();
+    if (FAILED(hr)) {
+        std::cerr << "WARNING: Silent keep-alive stream unavailable: 0x" << std::hex << hr << std::dec << std::endl;
+        stopSilenceKeepAlive();
+    }
+}
+
+void WasapiCapture::stopSilenceKeepAlive() {
+    if (silenceClient_) silenceClient_->Stop();
+    if (silenceRender_) { silenceRender_->Release(); silenceRender_ = nullptr; }
+    if (silenceClient_) { silenceClient_->Release(); silenceClient_ = nullptr; }
+}
+
 bool WasapiCapture::start() {
     if (capturing_) return true;
 
@@ -252,6 +281,10 @@ bool WasapiCapture::start() {
     compactedSilentDiscontinuityFrames_ = 0;
     fadeInFramesRemaining_ = 0;
     writeWavHeader(outputFile_, 0);
+
+    if (streamFlags_ & AUDCLNT_STREAMFLAGS_LOOPBACK) {
+        startSilenceKeepAlive();
+    }
 
     HRESULT hr = audioClient_->Start();
     if (FAILED(hr)) {
@@ -293,6 +326,7 @@ void WasapiCapture::stop() {
     capturing_ = false;
     if (thread_.joinable()) thread_.join();
     if (audioClient_) audioClient_->Stop();
+    stopSilenceKeepAlive();
 
     if (outputFile_ != INVALID_HANDLE_VALUE) {
         SetFilePointer(outputFile_, 0, nullptr, FILE_BEGIN);
