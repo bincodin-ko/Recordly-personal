@@ -464,20 +464,20 @@ function setupApplicationMenu() {
 
 	template.push(
 		{
-			label: "File",
+			label: "파일",
 			submenu: [
 				{
-					label: "Open Projects…",
+					label: "프로젝트 열기…",
 					accelerator: "CmdOrCtrl+O",
 					click: () => sendEditorMenuAction("menu-load-project"),
 				},
 				{
-					label: "Save Project…",
+					label: "프로젝트 저장…",
 					accelerator: "CmdOrCtrl+S",
 					click: () => sendEditorMenuAction("menu-save-project"),
 				},
 				{
-					label: "Save Project As…",
+					label: "다른 이름으로 프로젝트 저장…",
 					accelerator: "CmdOrCtrl+Shift+S",
 					click: () => sendEditorMenuAction("menu-save-project-as"),
 				},
@@ -490,7 +490,7 @@ function setupApplicationMenu() {
 			],
 		},
 		{
-			label: "Edit",
+			label: "편집",
 			submenu: [
 				{ role: "undo" },
 				{ role: "redo" },
@@ -502,7 +502,7 @@ function setupApplicationMenu() {
 			],
 		},
 		{
-			label: "View",
+			label: "보기",
 			submenu: [
 				{ role: "reload" },
 				{ role: "forceReload" },
@@ -516,16 +516,16 @@ function setupApplicationMenu() {
 			],
 		},
 		{
-			label: "Window",
+			label: "창",
 			submenu: isMac
 				? [{ role: "minimize" }, { role: "zoom" }, { type: "separator" }, { role: "front" }]
 				: [{ role: "minimize" }, { role: "close" }],
 		},
 		{
-			label: "Help",
+			label: "도움말",
 			submenu: [
 				{
-					label: "Check for Updates…",
+					label: "업데이트 확인…",
 					click: () => {
 						void checkForAppUpdates(getUpdateDialogWindow, { manual: true });
 					},
@@ -716,11 +716,11 @@ ipcMain.handle("check-for-app-updates", async () => {
 function updateTrayMenu(recording: boolean = false) {
 	if (!tray) return;
 	const trayIcon = recording ? getRecordingTrayIcon() : getDefaultTrayIcon();
-	const trayToolTip = recording ? `Recording: ${selectedSourceName}` : "Recordly";
+	const trayToolTip = recording ? `녹화 중: ${selectedSourceName}` : "Recordly";
 	const menuTemplate = recording
 		? [
 				{
-					label: "Show Controls",
+					label: "컨트롤 보기",
 					click: () => {
 						if (!showHudOverlayFromTray()) {
 							focusOrCreateMainWindow();
@@ -728,7 +728,7 @@ function updateTrayMenu(recording: boolean = false) {
 					},
 				},
 				{
-					label: "Stop Recording",
+					label: "녹화 중지",
 					click: () => {
 						if (mainWindow && !mainWindow.isDestroyed()) {
 							mainWindow.webContents.send("stop-recording-from-tray");
@@ -738,7 +738,7 @@ function updateTrayMenu(recording: boolean = false) {
 			]
 		: [
 				{
-					label: "Open",
+					label: "열기",
 					click: () => {
 						if (!showHudOverlayFromTray()) {
 							focusOrCreateMainWindow();
@@ -746,7 +746,7 @@ function updateTrayMenu(recording: boolean = false) {
 					},
 				},
 				{
-					label: "Quit",
+					label: "종료",
 					click: () => {
 						app.quit();
 					},
@@ -834,11 +834,11 @@ function createEditorWindowWrapper() {
 		offerDiscard: async () => {
 			const result = await dialog.showMessageBox(editorWindow, {
 				type: "warning",
-				buttons: ["Discard & Close", "Cancel"],
+				buttons: ["버리고 닫기", "취소"],
 				defaultId: 1,
 				cancelId: 1,
-				title: "Project could not be saved",
-				message: "Saving failed or did not respond. Discard unsaved changes and close?",
+				title: "프로젝트를 저장하지 못했어요",
+				message: "저장에 실패했거나 응답이 없어요. 저장하지 않은 변경 사항을 버리고 닫을까요?",
 			});
 			return result.response === 0;
 		},

@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { Plus } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,7 @@ export function RecordNewButton({
 	className?: string;
 	first?: boolean;
 }) {
+	const { t } = useI18n();
 	return (
 		<Button
 			variant="default"
@@ -21,7 +23,9 @@ export function RecordNewButton({
 			className={cn("h-10 shrink-0 gap-2 text-[13px]", className)}
 		>
 			<Plus className="size-4" />
-			{first ? "Record your first video" : "Record new"}
+			{first
+				? t("editor.dashboard.recordFirst", "Record your first video")
+				: t("editor.dashboard.recordNew", "Record new")}
 		</Button>
 	);
 }

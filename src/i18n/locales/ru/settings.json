@@ -6,7 +6,12 @@
 		"modeAuto": "Автоматически",
 		"modeManual": "Вручную",
 		"modeManualDescription": "Установить фиксированную точку фокусировки",
-		"modeAutoDescription": "Камера выравнивается по центру, когда курсор приближается к краю увеличенного изображения"
+		"modeAutoDescription": "Камера выравнивается по центру, когда курсор приближается к краю увеличенного изображения",
+		"mode": "Mode",
+		"amount": "Amount",
+		"globalSettings": "Animation",
+		"modeLabel": "Zoom mode",
+		"levelLabel": "Zoom level"
 	},
 	"trim": {
 		"deleteRegion": "Удалить"
@@ -15,7 +20,8 @@
 		"playbackSpeed": "Скорость воспроизведения",
 		"selectRegion": "Диапазон скорости",
 		"deleteRegion": "Удалить",
-		"label": "Скорость"
+		"label": "Скорость",
+		"unsupported": "Not supported for preview on this device"
 	},
 	"clip": {
 		"title": "Клип",
@@ -151,7 +157,32 @@
 		"paddingBottom": "Снизу",
 		"paddingLeft": "Слева",
 		"paddingRight": "Справа",
-		"removeBackground": "Удалить фон"
+		"removeBackground": "Удалить фон",
+		"devSection": "Dev",
+		"devSectionHint": "Temporary testing controls for native capture and motion tuning.",
+		"nativeCaptureWarningTester": "Native capture warning",
+		"nativeCaptureWarningTesterUnavailable": "This project is currently marked as native capture unavailable.",
+		"nativeCaptureWarningTesterAvailable": "This project is not marked as unsupported, but you can still open the modal for UI testing.",
+		"openNativeCaptureWarning": "Open warning",
+		"cameraDebugTuning": "Camera Debug Tuning",
+		"cameraDebugTuningHint": "Development-only spring tuning controls for camera motion.",
+		"cameraSpringStiffnessMultiplier": "Camera stiffness",
+		"cameraSpringDampingMultiplier": "Camera damping",
+		"cameraSpringMassMultiplier": "Camera mass",
+		"cursorDebugTuning": "Cursor Debug Tuning",
+		"cursorDebugTuningHint": "Development-only spring tuning controls.",
+		"cursorSpringStiffnessMultiplier": "Spring stiffness",
+		"cursorSpringDampingMultiplier": "Spring damping",
+		"cursorSpringMassMultiplier": "Spring mass",
+		"classicZoom": "Classic Animation",
+		"cursorDebugMovedToDev": "Cursor spring tuning is available in Settings > Dev.",
+		"webcamPosition": "Position",
+		"webcamCustomPosition": "Custom position",
+		"webcamHorizontal": "Horizontal",
+		"webcamVertical": "Vertical",
+		"webcamMargin": "Margin",
+		"customEffectColor": "Custom effect color",
+		"devBadge": "DEV"
 	},
 	"sections": {
 		"scene": "Сцена",
@@ -161,7 +192,11 @@
 		"cursor": "Курсор",
 		"webcam": "Веб-камера",
 		"frame": "Рамка",
-		"crop": "Обрезать видео"
+		"crop": "Обрезать видео",
+		"appearance": "Appearance",
+		"settings": "Settings",
+		"title": "Editor tools",
+		"ariaLabel": "Settings sections"
 	},
 	"captions": {
 		"selectOnTimeline": "Выберите субтитры на таймлайне, чтобы отредактировать их.",
@@ -198,7 +233,24 @@
 			"split": "Split",
 			"merge": "Merge",
 			"delete": "Delete"
-		}
+		},
+		"generation": "Generation",
+		"useCustomModel": "Use custom",
+		"generatingStatus": "Generating captions. This can take a moment.",
+		"editSaved": "Caption updated",
+		"languageOptions": {
+			"auto": "Auto Detect",
+			"en": "English",
+			"es": "Spanish",
+			"fr": "French",
+			"de": "German",
+			"it": "Italian",
+			"pt": "Portuguese",
+			"zh": "Chinese (Simplified)",
+			"ja": "Japanese",
+			"ko": "Korean"
+		},
+		"downloadingModel": "Downloading caption model"
 	},
 	"crop": {
 		"title": "Обрезка видео",
@@ -218,7 +270,16 @@
 		"uploadCustom": "Загрузить",
 		"uploadSuccess": "Изображение загружено.",
 		"uploadError": "Загрузите JPG или JPEG.",
-		"uploadErrorDescription": "Поддерживаются только JPG и JPEG."
+		"uploadErrorDescription": "Поддерживаются только JPG и JPEG.",
+		"video": "Video",
+		"addWallpaper": "Add wallpaper",
+		"addVideoWallpaper": "Add video wallpaper",
+		"customWallpaper": "Custom wallpaper",
+		"unsupportedFormat": "Unsupported format",
+		"unsupportedFormatDesc": "Please select a video file (mp4, webm, mov, etc.)",
+		"videoAdded": "Video background added",
+		"videoImportFailed": "Failed to import video background",
+		"customColor": "Custom color"
 	},
 	"export": {
 		"title": "Экспорт",
@@ -240,7 +301,24 @@
 		"saveProject": "Сохранить проект",
 		"exportVideo": "Экспортировать {{format}}",
 		"reportBug": "Сообщить об ошибке",
-		"starOnGithub": "Оценить на GitHub"
+		"starOnGithub": "Оценить на GitHub",
+		"format": "Format",
+		"qualityTitle": "Quality",
+		"encodingTitle": "Encoding",
+		"nvidiaCuda": {
+			"title": "NVIDIA CUDA"
+		},
+		"captionSidecar": {
+			"title": "Export captions file",
+			"hint": "Save .srt and .vtt files next to your exported video."
+		},
+		"size": "Size",
+		"encoding": {
+			"fast": "Fast",
+			"balanced": "Balanced",
+			"quality": "Quality"
+		},
+		"formatVideo": "Video"
 	},
 	"audio": {
 		"title": "Аудио",
@@ -258,5 +336,15 @@
 		"experimental": "Экспериментальные обновления",
 		"saveFailed": "Не удалось изменить канал обновлений.",
 		"experimentalDescription": "Вы включили экспериментальные обновления, поэтому можете протестировать последнее обновление Recordly до его широкого выпуска."
+	},
+	"annotation": {
+		"delete": "Delete Annotation"
+	},
+	"padding": {
+		"linkSides": "Link padding sides"
+	},
+	"general": {
+		"onboarding": "Onboarding",
+		"showOnboarding": "Show onboarding"
 	}
 }

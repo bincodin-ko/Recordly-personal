@@ -14,6 +14,7 @@ import { useDndMonitor } from "@dnd-kit/core";
 import { useTimelinePresentation } from "./core/TimelinePresentation";
 import { getRegionDisplaySpan, snapRegionSpan } from "./core/clipPresentation";
 import { resolveDragEnd, resolveResizeEnd } from "./dnd/engine";
+import { translate } from "@/contexts/I18nContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { formatClipSpeedLabel } from "../clipSpeedChange";
@@ -332,7 +333,7 @@ export default function Item({
 							pointerEvents: isClip ? "none" : "auto",
 							display: isClip && sharedLeftGrip ? "none" : undefined,
 						}}
-						title="Resize left"
+						title={translate("timeline.item.resizeLeft", "Resize left")}
 					/>
 					<div
 						className={cn(
@@ -345,7 +346,7 @@ export default function Item({
 							pointerEvents: isClip ? "none" : "auto",
 							display: isClip && sharedRightGrip ? "none" : undefined,
 						}}
-						title="Resize right"
+						title={translate("timeline.item.resizeRight", "Resize right")}
 					/>
 					{showAudioWaveform && waveformPeaks && (
 						<AudioWaveform
@@ -366,7 +367,7 @@ export default function Item({
 					{/* Normal-speed clips show only the filmstrip and resize handles. */}
 					{(!isClip || clipSpeedLabel) && (
 						<div
-							title={`${isZoom ? `${ZOOM_LABELS[zoomDepth]} ${zoomMode === "manual" ? "Manual" : "Auto"}` : typeof children === "string" ? children : "Clip"} · ${timeLabel}`}
+							title={`${isZoom ? `${ZOOM_LABELS[zoomDepth]} ${zoomMode === "manual" ? translate("timeline.item.manual", "Manual") : translate("timeline.item.auto", "Auto")}` : typeof children === "string" ? children : translate("timeline.item.clip", "Clip")} · ${timeLabel}`}
 							className={cn(
 								"relative z-10 flex max-w-full items-center justify-center gap-1 px-1 text-[11px] font-medium text-black/70 dark:text-white/90 select-none overflow-hidden",
 								isClip &&
@@ -386,7 +387,9 @@ export default function Item({
 									<span className="zoom-value whitespace-nowrap">
 										{ZOOM_LABELS[zoomDepth] || `${zoomDepth}×`}
 										<span className="zoom-mode font-normal">
-											{zoomMode === "manual" ? "Manual" : "Auto"}
+											{zoomMode === "manual"
+											? translate("timeline.item.manual", "Manual")
+											: translate("timeline.item.auto", "Auto")}
 										</span>
 									</span>
 								</>
@@ -404,7 +407,7 @@ export default function Item({
 										<MessageSquare className="size-3 shrink-0" />
 									)}
 									<span className="truncate">
-										{isTrim ? "Trim" : isSpeed ? `${speedValue}×` : children}
+										{isTrim ? translate("timeline.item.trim", "Trim") : isSpeed ? `${speedValue}×` : children}
 									</span>
 								</>
 							)}

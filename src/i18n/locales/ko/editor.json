@@ -1,33 +1,33 @@
 {
 	"cloud": {
-		"signInRequired": "공유 링크를 만들기 전에 Recordly에 로그인하세요.",
-		"prepareFailed": "현재 편집본을 공유할 준비를 하지 못했습니다.",
-		"uploadFailed": "클라우드 업로드에 실패했습니다.",
-		"linkCreated": "공유 링크가 생성되었습니다",
-		"linkCopied": "링크가 복사되었습니다",
-		"copyFailed": "링크를 복사하지 못했습니다. 직접 선택하여 복사하세요.",
+		"signInRequired": "공유 링크를 만들려면 먼저 Recordly에 로그인해 주세요.",
+		"prepareFailed": "현재 편집본을 공유할 준비를 하지 못했어요.",
+		"uploadFailed": "클라우드 업로드에 실패했어요.",
+		"linkCreated": "공유 링크를 만들었어요",
+		"linkCopied": "링크를 복사했어요",
+		"copyFailed": "링크를 복사하지 못했어요. 직접 선택해서 복사해 주세요.",
 		"copied": "복사됨",
 		"copy": "복사",
 		"preparing": "현재 편집본 준비 중…",
 		"createLink": "링크 만들기",
 		"heading": "클라우드에 공유",
-		"ready": "동영상을 공유할 준비가 되었습니다.",
+		"ready": "영상을 공유할 준비가 됐어요.",
 		"openPage": "공유 페이지 열기",
 		"notes": "메모",
 		"publish": "게시하고 링크 만들기",
-		"createLinkTitle": "공유 가능한 링크 만들기",
-		"notesPlaceholder": "시청자를 위한 설명, 안내 또는 간단한 요약을 추가하세요…",
-		"description": "현재 편집본을 Recordly 시청 및 피드백 페이지에 게시합니다. 다운로드할 필요가 없습니다. 공유 동영상은 최대 1080p로 준비됩니다.",
+		"createLinkTitle": "공유 링크 만들기",
+		"notesPlaceholder": "시청자에게 전할 설명, 안내, 간단한 요약을 적어 보세요…",
+		"description": "현재 편집본을 Recordly 시청·피드백 페이지에 게시해요. 다운로드 없이 볼 수 있고, 공유 영상은 최대 1080p로 만들어져요.",
 		"uploading": "업로드 중… {progress}%",
-		"googleUnavailable": "Google 로그인이 아직 활성화되지 않았습니다. 이메일을 사용하거나 Recordly 관리자에게 Google 연결을 요청하세요.",
-		"xUnavailable": "X 로그인이 아직 활성화되지 않았습니다. 이메일을 사용하거나 Recordly 관리자에게 X 연결을 요청하세요.",
-		"providerUnavailable": "이 로그인 방식은 아직 활성화되지 않았습니다. 이메일을 사용하세요.",
-		"enterEmail": "먼저 이메일 주소를 입력하세요.",
-		"resetSent": "비밀번호 재설정 이메일을 보냈습니다.",
+		"googleUnavailable": "Google 로그인은 아직 사용할 수 없어요. 지금은 이메일을 사용하거나 Recordly 관리자에게 Google 연결을 요청해 주세요.",
+		"xUnavailable": "X 로그인은 아직 사용할 수 없어요. 지금은 이메일을 사용하거나 Recordly 관리자에게 X 연결을 요청해 주세요.",
+		"providerUnavailable": "이 로그인 방식은 아직 사용할 수 없어요. 지금은 이메일을 사용해 주세요.",
+		"enterEmail": "먼저 이메일 주소를 입력해 주세요.",
+		"resetSent": "비밀번호 재설정 이메일을 보냈어요.",
 		"accountHeading": "내 Recordly 계정",
 		"signInHeading": "Recordly에 로그인",
-		"signInShareDescription": "이 동영상을 게시하고 공유 링크를 관리하려면 로그인하세요.",
-		"signInDescription": "녹화 및 공유 링크에 접근하세요.",
+		"signInShareDescription": "이 영상을 게시하고 공유 링크를 관리하려면 로그인하세요.",
+		"signInDescription": "내 녹화와 공유 링크를 확인해요.",
 		"signingOut": "로그아웃 중…",
 		"signOut": "로그아웃",
 		"signingIn": "로그인 중…",
@@ -36,22 +36,60 @@
 		"email": "이메일",
 		"password": "비밀번호",
 		"forgotPassword": "비밀번호를 잊으셨나요?",
-		"unavailable": "이 버전에서는 아직 클라우드 로그인을 사용할 수 없습니다. 동영상은 계속 컴퓨터에 저장할 수 있습니다.",
+		"unavailable": "이 버전에서는 아직 클라우드 로그인을 쓸 수 없어요. 영상은 컴퓨터에 계속 저장할 수 있어요.",
 		"createShareLink": "공유 링크 만들기",
 		"done": "완료",
-		"addingVideo": "동영상 추가 중…",
-		"preparingFootage": "타임라인에 사용할 영상과 오디오를 준비하고 있습니다."
+		"addingVideo": "영상 추가 중…",
+		"preparingFootage": "타임라인에 쓸 영상과 오디오를 준비하고 있어요."
 	},
 	"library": {
-		"videos": "동영상"
+		"videos": "영상",
+		"previewUnavailable": "미리보기를 쓸 수 없어요",
+		"previewLoading": "미리보기 이미지 불러오는 중",
+		"removeFailed": "영상을 삭제하지 못했어요:",
+		"restoreFailed": "영상을 복원하지 못했어요:",
+		"stopImportFailed": "가져오기 작업을 멈추지 못했어요:",
+		"projectChanged": "가져오는 중에 프로젝트가 바뀌었어요. 녹화 파일을 다시 추가해 주세요.",
+		"finalizeFailed": "가져온 미디어를 마무리하지 못했어요",
+		"addedOne": "영상을 타임라인에 추가했어요",
+		"addedMany": "영상 {{count}}개를 타임라인에 추가했어요",
+		"addFailed": "영상을 추가하지 못했어요:",
+		"panel": "클립 라이브러리",
+		"title": "클립",
+		"actions": "클립 라이브러리 작업",
+		"openFolder": "녹화 폴더 열기",
+		"trashAll": "모두 휴지통으로 이동",
+		"close": "클립 닫기",
+		"search": "영상 검색",
+		"selectAll": "영상 모두 선택",
+		"selectedCount": "{{count}}개 선택됨",
+		"recordingCount": "녹화 {{count}}개",
+		"trashSelectedAria": "선택한 영상을 휴지통으로 이동",
+		"trashSelected": "선택 항목 휴지통으로 이동",
+		"loading": "영상 불러오는 중…",
+		"retry": "다시 시도",
+		"noMatch": "일치하는 영상이 없어요",
+		"emptyTitle": "녹화한 영상이 여기에 표시돼요",
+		"tryAnother": "다른 검색어를 입력해 보세요.",
+		"emptyHint": "영상을 녹화해서 시작해 보세요.",
+		"selectOne": "{{name}} 선택",
+		"addNamed": "{{name}}을(를) 타임라인에 추가",
+		"add": "타임라인에 추가",
+		"movedToTrash": "휴지통으로 이동했어요",
+		"dragHint": "타임라인으로 끌어다 놓거나 +를 눌러 추가해요.",
+		"undoTitle": "실행 취소 (⌘Z / Ctrl+Z)",
+		"undo": "실행 취소"
 	},
 	"playback": {
 		"play": "재생",
-		"pause": "일시 정지",
+		"pause": "일시정지",
 		"skipBack": "뒤로 건너뛰기",
 		"skipForward": "앞으로 건너뛰기",
 		"muteUnmute": "음소거/해제",
-		"volume": "미리보기 볼륨"
+		"volume": "미리보기 볼륨",
+		"seek": "재생 위치",
+		"editCurrentCaption": "현재 자막 편집",
+		"videoLoadFailed": "영상을 불러오지 못했어요 ({{detail}})"
 	},
 	"annotations": {
 		"settings": "주석 설정",
@@ -59,16 +97,15 @@
 		"text": "텍스트",
 		"image": "이미지",
 		"arrow": "화살표",
-		"blur": "흐리게",
+		"blur": "블러",
 		"textContent": "텍스트 내용",
-
 		"textPlaceholder": "텍스트를 입력하세요...",
 		"fontStyle": "글꼴 스타일",
 		"selectStyle": "스타일 선택",
 		"size": "크기",
-		"toggleBold": "굵게 전환",
-		"toggleItalic": "기울임꼴 전환",
-		"toggleUnderline": "밑줄 전환",
+		"toggleBold": "굵게",
+		"toggleItalic": "기울임",
+		"toggleUnderline": "밑줄",
 		"alignLeft": "왼쪽 정렬",
 		"alignCenter": "가운데 정렬",
 		"alignRight": "오른쪽 정렬",
@@ -83,16 +120,26 @@
 		"arrowColor": "화살표 색상",
 		"deleteAnnotation": "주석 삭제",
 		"shortcutsAndTips": "단축키 및 팁",
-		"tipSelectAnnotation": "재생 헤드를 겹치는 주석 구간으로 이동한 뒤 항목을 선택하세요.",
-		"tipCycleForward": "Tab 키로 겹치는 항목을 순환할 수 있습니다.",
-		"tipCycleBackward": "Shift+Tab으로 이전 항목으로 이동할 수 있습니다.",
-		"imageUploadSuccess": "이미지를 업로드했습니다!",
-		"imageUploadError": "JPG, PNG, GIF 또는 WebP 이미지 파일을 업로드해 주세요.",
+		"tipSelectAnnotation": "재생 헤드를 겹치는 주석 구간으로 옮긴 뒤 항목을 선택하세요.",
+		"tipCycleForward": "Tab 키로 겹친 항목을 차례로 선택할 수 있어요.",
+		"tipCycleBackward": "Shift+Tab으로 거꾸로 선택할 수 있어요.",
+		"imageUploadSuccess": "이미지를 업로드했어요!",
+		"imageUploadError": "JPG, PNG, GIF, WebP 이미지 파일을 업로드해 주세요.",
 		"blurStrength": "블러 강도: {{strength}}",
-		"solidColor": "단색 (검열)",
-		"borderRadius": "테두리 반경"
+		"solidColor": "단색 (가림)",
+		"borderRadius": "모서리 둥글기",
+		"imageUploadErrorDescription": "JPG, PNG, GIF, WebP 이미지 파일만 올릴 수 있어요.",
+		"imageUploadFailed": "이미지 업로드 실패",
+		"imageUploadFailedDescription": "이미지 파일을 읽지 못했어요. 다시 시도해 주세요.",
+		"arrowDirectionOption": "화살표 방향: {{direction}}",
+		"customColor": "직접 지정한 색상",
+		"altAnnotation": "주석",
+		"noImage": "이미지 없음",
+		"noArrowData": "화살표 데이터 없음",
+		"typeLabel": "주석 종류",
+		"customFonts": "내 글꼴",
+		"altUploaded": "업로드한 주석"
 	},
-
 	"fontStyles": {
 		"classic": "클래식",
 		"editor": "에디터",
@@ -104,35 +151,36 @@
 		"clean": "클린"
 	},
 	"format": {
-		"mp4Video": "MP4 비디오",
-		"mp4Description": "고화질 비디오 파일",
+		"mp4Video": "MP4 영상",
+		"mp4Description": "고화질 영상 파일",
 		"gifAnimation": "GIF 애니메이션",
-		"gifDescription": "공유용 애니메이션 이미지"
+		"gifDescription": "공유용 애니메이션 이미지",
+		"title": "내보내기 형식"
 	},
 	"gifOptions": {
 		"frameRate": "프레임 속도",
 		"outputSize": "출력 크기",
 		"outputDimensions": "출력: {{width}} × {{height}}px",
 		"loopAnimation": "반복 재생",
-		"loopDescription": "GIF가 계속 반복 재생됩니다"
+		"loopDescription": "GIF가 계속 반복 재생돼요"
 	},
 	"tutorial": {
-		"howTrimmingWorks": "트림 사용법",
-		"title": "트림 작동 방식",
-		"understanding": "비디오에서 원하지 않는 부분을 잘라내는 방법을 알아보세요.",
-		"descriptionP1": "트림 도구는 제거하고 싶은 구간을",
-		"descriptionRemove": "삭제",
-		"descriptionP2": "하도록 설정합니다.",
-		"descriptionP3": "타임라인에서 빨간 트림 구간으로 덮인 부분은 내보낼 때 잘려 나갑니다.",
-		"visualExample": "예시 보기",
+		"howTrimmingWorks": "자르기 사용법",
+		"title": "자르기 사용법",
+		"understanding": "영상에서 필요 없는 부분을 잘라내는 방법을 알아보세요.",
+		"descriptionP1": "자르기 도구로 영상에서",
+		"descriptionRemove": "삭제할 구간을 지정해요",
+		"descriptionP2": "를 지정해요.",
+		"descriptionP3": "타임라인에서 빨간 자르기 구간으로 덮인 부분은 내보낼 때 잘려 나가요.",
+		"visualExample": "예시",
 		"removed": "제거됨",
 		"kept": "유지됨",
-		"finalVideo": "최종 비디오",
+		"finalVideo": "최종 영상",
 		"part": "파트 {{number}}",
-		"addTrimStep": "1. 트림 추가",
-		"addTrimDesc": "T 키를 누르거나 가위 아이콘을 클릭해 제거할 구간을 표시하세요.",
+		"addTrimStep": "1. 자르기 추가",
+		"addTrimDesc": "T 키를 누르거나 가위 아이콘을 눌러 삭제할 구간을 표시하세요.",
 		"adjustStep": "2. 조정",
-		"adjustDesc": "빨간 구간의 가장자리를 드래그해 정확히 잘라낼 범위를 지정하세요."
+		"adjustDesc": "빨간 구간의 가장자리를 드래그해서 잘라낼 범위를 정확히 맞추세요."
 	},
 	"feedback": {
 		"trigger": "피드백",
@@ -141,14 +189,14 @@
 		"emailLabel": "이메일",
 		"xLabel": "X",
 		"reportIssue": "이슈 등록 / 피드백 보내기",
-		"openFailed": "링크를 열지 못했습니다."
+		"openFailed": "링크를 열지 못했어요."
 	},
 	"keyboardShortcuts": {
 		"trigger": "단축키",
 		"title": "키보드 단축키",
-		"description": "타임라인과 편집기 컨트롤에 대한 빠른 참고입니다.",
-		"customizeTooltip": "단축키 사용자 지정",
-		"customize": "사용자 지정",
+		"description": "타임라인과 편집기 단축키를 한눈에 볼 수 있어요.",
+		"customizeTooltip": "단축키 변경",
+		"customize": "변경",
 		"panTimeline": "타임라인 이동",
 		"zoomTimeline": "타임라인 확대/축소",
 		"cycleAnnotations": "주석 순환",
@@ -160,41 +208,294 @@
 	},
 	"project": {
 		"untitled": "제목 없음",
-		"unsavedChangesTitle": "저장되지 않은 변경 사항",
-		"unsavedChangesDescription": "{{action}} 전에 현재 프로젝트를 저장하시겠습니까?",
+		"unsavedChangesTitle": "저장하지 않은 변경 사항",
+		"unsavedChangesDescription": "{{action}} 전에 현재 프로젝트를 저장할까요?",
 		"discardChanges": "변경 사항 버리기",
-		"saveProject": "프로젝트 저장"
+		"saveProject": "프로젝트 저장",
+		"saveTitle": "프로젝트 저장",
+		"saveDescription": "프로젝트 이름을 정해 주세요. Recordly 프로젝트 폴더에 저장돼요.",
+		"saveNameLabel": "프로젝트 이름",
+		"saving": "저장 중...",
+		"renameInput": "프로젝트 이름",
+		"renameTitle": "프로젝트 이름 바꾸기"
 	},
 	"exportTips": {
-		"autoZooms": "팁: 설정에서 자동 적용 확대를 끌 수 있습니다",
-		"experimentalBuilds": "팁: 설정에서 실험적 빌드 액세스를 켜 보세요",
-		"cursorAppearance": "팁: 커서 모양을 사용자 지정할 수 있습니다"
+		"autoZooms": "팁: 설정에서 자동 줌 적용을 끌 수 있어요",
+		"experimentalBuilds": "팁: 설정에서 실험 업데이트를 켜면 새 기능을 먼저 써볼 수 있어요",
+		"cursorAppearance": "팁: 커서 모양을 원하는 대로 바꿀 수 있어요"
 	},
-	"account": { "title": "계정", "comingSoon": "계정 기능 준비 중" },
+	"account": {
+		"title": "계정",
+		"comingSoon": "계정 기능 준비 중"
+	},
 	"nativeCaptureUnavailable": {
-		"title": "문제가 생긴 것은 아니지만, 애니메이션 커서 오버레이를 렌더링할 수 없습니다.",
-		"description": "이 장치는 네이티브 캡처를 지원하지 않습니다. 아직 확인하지 못한 여러 이유가 있을 수 있습니다. Recordly는 계속 작동하지만 커서 스무딩은 사용할 수 없습니다.",
+		"title": "문제가 생긴 건 아니지만, 애니메이션 커서 효과를 렌더링할 수 없어요.",
+		"description": "이 기기는 내장 캡처를 지원하지 않아요. 아직 원인을 다 파악하지 못했어요. Recordly는 계속 쓸 수 있지만 커서 부드럽게 기능은 사용할 수 없어요.",
 		"confirm": "확인"
 	},
 	"exportStatus": {
 		"exporting": "내보내는 중",
-		"renderingFile": "파일을 렌더링하고 있습니다.",
+		"renderingFile": "파일을 렌더링하고 있어요.",
 		"preparing": "내보내기를 준비하는 중...",
 		"completePercent": "{{percent}}% 완료",
-		"issue": "내보내기 오류",
+		"issue": "내보내기 문제",
 		"complete": "내보내기 완료",
-		"savedSuccessfully": "파일이 성공적으로 저장되었습니다."
+		"savedSuccessfully": "파일을 저장했어요.",
+		"renderSpeed": "렌더링 속도 {{fps}} FPS",
+		"saving": "저장 창 여는 중...",
+		"renderingAudio": "오디오 렌더링 {{percent}}%",
+		"muxingAndSaving": "오디오 합치고 파일 저장 중...",
+		"muxingAndSavingPercent": "합치고 저장하는 중 {{percent}}%",
+		"finalizingPercent": "마무리하는 중 {{percent}}%",
+		"errorCopied": "오류를 복사했어요",
+		"errorCopyFailed": "복사하지 못했어요. 오류 문구를 직접 선택해서 복사해 주세요.",
+		"copyError": "오류 복사"
 	},
 	"export": {
-		"processingAudioEdits": "속도/오버레이 편집으로 오디오 처리 중"
+		"processingAudioEdits": "속도·오버레이 편집을 반영해 오디오 처리 중",
+		"tooSlow": "내보내기가 느린가요? 취소하고 라이트닝 내보내기를 써 보세요!",
+		"pathLabel": "경로: {{path}}",
+		"nativeSkipped": "네이티브 내보내기 건너뜀: {{reason}}",
+		"nativeSkippedMore": " (외 {{count}}건)",
+		"encodingUnsupported": "이 시스템에서는 영상 인코딩을 지원하지 않아요. 코덱 {{codec}}, {{fps}} FPS, 최대 {{width}}x{{height}}로 시도했어요."
 	},
 	"toolbar": {
 		"addLayer": "레이어 추가",
-		"splitClip": "클립 분할 (C)"
+		"splitClip": "클립 나누기 (C)"
 	},
 	"timeline": {
 		"expand": "타임라인 펼치기",
-		"collapse": "타임라인 접기"
+		"collapse": "타임라인 접기",
+		"unsupportedSpeed": "이 기기에서는 이 속도로 미리보기를 할 수 없어요."
 	},
-	"openRecordingsFolder": "녹화 폴더 열기"
+	"openRecordingsFolder": "녹화 폴더 열기",
+	"theme": {
+		"appearance": "화면 테마",
+		"light": "라이트",
+		"dark": "다크",
+		"system": "시스템"
+	},
+	"common": {
+		"app": {
+			"discord": "디스코드 참여"
+		}
+	},
+	"presets": {
+		"open": "프리셋 열기",
+		"label": "프리셋",
+		"saveCurrentAs": "현재 설정을 프리셋으로 저장",
+		"namePlaceholder": "프리셋 이름",
+		"savedList": "저장된 프리셋",
+		"empty": "아직 프리셋이 없어요.",
+		"deleteAriaLabel": "프리셋 {{name}} 삭제",
+		"toasts": {
+			"applied": "프리셋 \"{{name}}\"을(를) 적용했어요",
+			"saved": "프리셋 \"{{name}}\"을(를) 저장했어요",
+			"deleted": "프리셋 \"{{name}}\"을(를) 삭제했어요"
+		},
+		"errors": {
+			"nameRequired": "프리셋 이름을 입력해 주세요.",
+			"duplicateName": "같은 이름의 프리셋이 이미 있어요.",
+			"saveFailed": "프리셋을 저장하지 못했어요. 브라우저 저장소 설정을 확인하고 다시 시도해 주세요.",
+			"deleteFailed": "프리셋을 삭제하지 못했어요. 브라우저 저장소 설정을 확인하고 다시 시도해 주세요."
+		}
+	},
+	"dashboard": {
+		"sidebar": {
+			"nav": "라이브러리 탐색",
+			"home": "홈",
+			"raw": "원본",
+			"folders": "폴더",
+			"newFolder": "새 폴더",
+			"untitledFolder": "제목 없는 폴더",
+			"settings": "설정"
+		},
+		"filters": {
+			"time": "기간 필터",
+			"all": "전체",
+			"week": "최근 7일",
+			"month": "최근 30일",
+			"selectRaw": "삭제할 원본 파일 선택",
+			"selectProjects": "삭제할 프로젝트 선택",
+			"sortRaw": "원본 파일 정렬",
+			"sortProjects": "프로젝트 정렬",
+			"lastCreated": "최근 생성순",
+			"lastEdited": "최근 수정순",
+			"name": "이름순",
+			"selectAll": "전체 선택",
+			"selectedCount": "{{count}}개 선택됨",
+			"remove": "제거",
+			"delete": "삭제",
+			"cancel": "취소"
+		},
+		"grid": {
+			"loadingRecordings": "녹화 파일을 불러오는 중…",
+			"noMatchingRaw": "일치하는 원본 파일이 없어요",
+			"noRaw": "아직 원본 녹화가 없어요",
+			"noMatchingProjects": "일치하는 프로젝트가 없어요",
+			"empty": "아직 아무것도 없어요...",
+			"rawList": "원본 파일",
+			"projectList": "내 프로젝트",
+			"retry": "다시 시도",
+			"clearSearch": "검색 지우기"
+		},
+		"toolbar": {
+			"searchRaw": "원본 파일 검색",
+			"searchProjects": "프로젝트 검색",
+			"searchRawPlaceholder": "원본 파일 검색…",
+			"searchProjectsPlaceholder": "프로젝트 검색…",
+			"import": "가져오기"
+		},
+		"title": "프로젝트 대시보드",
+		"announcements": {
+			"openFailed": "공지를 열지 못했어요",
+			"label": "공지사항",
+			"previous": "이전 공지",
+			"choose": "공지 선택",
+			"slide": "공지 {{n}}",
+			"next": "다음 공지"
+		},
+		"folderColors": {
+			"change": "{{name}} 색상 변경",
+			"dialog": "폴더 색상",
+			"swatches": "폴더 색상 목록",
+			"hex": "HEX 색상",
+			"removeCustom": "직접 지정한 색상 삭제",
+			"saveCustom": "직접 지정한 색상 저장"
+		},
+		"folderRow": {
+			"name": "폴더 이름",
+			"optionsFor": "{{name}} 옵션",
+			"options": "폴더 옵션",
+			"remove": "폴더 삭제"
+		},
+		"rename": "이름 바꾸기",
+		"loadingProjects": "프로젝트 불러오는 중",
+		"rawPreview": "원본 파일 미리보기",
+		"recordFirst": "첫 영상을 녹화해 보세요",
+		"recordNew": "새로 녹화",
+		"chips": {
+			"remove": "{{folder}}에서 {{name}} 빼기",
+			"foldersFor": "{{name}}의 폴더"
+		},
+		"card": {
+			"rawName": "원본 파일 이름",
+			"projectName": "프로젝트 이름",
+			"addFolderTo": "{{name}}에 폴더 추가",
+			"addFolder": "폴더 추가",
+			"assignFolder": "프로젝트 폴더 지정",
+			"removeFromFolders": "모든 폴더에서 빼기",
+			"createFolderHint": "사이드바에서 폴더를 만들어 주세요",
+			"options": "프로젝트 옵션",
+			"open": "프로젝트 열기",
+			"previewFile": "파일 미리보기",
+			"revealNamed": "{{name}} 폴더에서 보기",
+			"reveal": "폴더에서 보기",
+			"removeFromLibrary": "라이브러리에서 제거",
+			"delete": "프로젝트 삭제"
+		},
+		"settings": {
+			"changeFailed": "녹화 폴더를 바꾸지 못했어요",
+			"protectionFailed": "캡처 보호 설정을 바꾸지 못했어요",
+			"openFailed": "프로젝트 폴더를 열지 못했어요",
+			"label": "대시보드 설정",
+			"openTitle": "영상 또는 프로젝트 열기",
+			"openFile": "파일 열기",
+			"recordingsFolder": "녹화 폴더",
+			"changeFolder": "폴더 변경",
+			"hideHud": "녹화에서 컨트롤바 숨기기",
+			"hideHudHint": "녹화 중에만 적용돼요. 대기 중인 컨트롤바는 캡처에 그대로 보여요.",
+			"projectsFolder": "프로젝트 폴더",
+			"autosave": "이름을 정한 프로젝트는 자동으로 저장돼요.",
+			"showFolder": "폴더 보기",
+			"autosaveHint": "이름을 정한 프로젝트는 자동으로 저장돼요. 프로젝트로 돌아오면 미리보기가 새로고침돼요."
+		},
+		"actionFailed": "작업을 완료하지 못했어요",
+		"foldersSaveFailed": "폴더를 저장하지 못했어요",
+		"prefsSaveFailed": "라이브러리 설정을 저장하지 못했어요"
+	},
+	"header": {
+		"home": "홈",
+		"clips": "클립"
+	},
+	"shell": {
+		"openProjects": "프로젝트 열기"
+	},
+	"sidebar": {
+		"advanced": "고급",
+		"advancedSettings": "고급 설정"
+	},
+	"loading": {
+		"editor": "편집기 불러오는 중"
+	},
+	"preview": {
+		"loadingPreview": "미리보기 불러오는 중",
+		"volume": "미리보기 볼륨"
+	},
+	"extensions": {
+		"unavailableTitle": "확장 기능은 더 이상 제공되지 않아요",
+		"unavailableBody": "확장 설치와 마켓플레이스 이용이 중단됐어요. 이 영역은 기존 프로젝트와 메뉴 구성을 위해 자리만 남겨 뒀어요."
+	},
+	"projectBrowser": {
+		"title": "프로젝트",
+		"import": "가져오기",
+		"noPreview": "미리보기 없음",
+		"current": "현재 프로젝트",
+		"empty": "저장된 프로젝트가 아직 없어요"
+	},
+	"audio": {
+		"companionLoadFailedWith": "보조 오디오를 불러오지 못했어요: {{error}}",
+		"companionLoadFailed": "보조 오디오를 불러오지 못했어요. 재생과 내보내기에서 마이크 소리가 빠질 수 있어요.",
+		"companionSingleLoadFailedWith": "보조 오디오를 불러오지 못했어요: {{error}}"
+	},
+	"messages": {
+		"whisperExecutableSelected": "Whisper 실행 파일을 선택했어요",
+		"whisperModelSelected": "Whisper 모델을 선택했어요",
+		"whisperSmallModelDeleted": "Whisper small 모델을 삭제했어요",
+		"selectAWhisperModelOrDownload": "Whisper 모델을 선택하거나 small 모델을 먼저 내려받아 주세요",
+		"noSourceVideoIsLoaded": "불러온 원본 영상이 없어요",
+		"recordingChangedGeneratedCaptionsWereNot": "녹화가 바뀌어서 만든 자막을 적용하지 않았어요.",
+		"failedToDownloadWhisperSmallModel": "Whisper small 모델을 내려받지 못했어요",
+		"failedToDeleteWhisperSmallModel": "Whisper small 모델을 삭제하지 못했어요",
+		"failedToGenerateCaptions": "자막을 만들지 못했어요",
+		"failedToRevealItemInFolder": "폴더에서 항목을 보여주지 못했어요.",
+		"noVideoLoaded": "불러온 영상이 없어요",
+		"videoNotReady": "영상이 아직 준비되지 않았어요",
+		"videoMetadataIsStillLoading": "영상 정보를 아직 불러오는 중이에요",
+		"exportCanceled": "내보내기를 취소했어요",
+		"saveCanceledYouCanTryAgain": "저장을 취소했어요. 다시 시도할 수 있어요.",
+		"failedToSaveVideo": "영상을 저장하지 못했어요",
+		"saveCanceledYouCanSaveAgain": "저장을 취소했어요. 다시 내보내지 않고 저장할 수 있어요.",
+		"failedToSaveGif": "GIF를 저장하지 못했어요",
+		"gifExportFailed": "GIF 내보내기에 실패했어요",
+		"exportFailed": "내보내기에 실패했어요",
+		"couldNotLoadProjectInvalidProject": "프로젝트를 불러오지 못했어요: 프로젝트 파일 형식이 올바르지 않아요",
+		"noMediaFileSelected": "선택한 미디어 파일이 없어요",
+		"mediaImported": "미디어를 가져왔어요",
+		"failedToLoadProject": "프로젝트를 불러오지 못했어요",
+		"failedToImportFile": "파일을 가져오지 못했어요",
+		"couldNotRenameProject": "프로젝트 이름을 바꾸지 못했어요",
+		"projectSaveCanceled": "프로젝트 저장을 취소했어요",
+		"projectNameIsRequired": "프로젝트 이름을 입력해 주세요",
+		"projectRenamedButLibraryPreferencesCould": "프로젝트 이름은 바뀌었지만 라이브러리 설정을 갱신하지 못했어요",
+		"failedToSaveProject": "프로젝트를 저장하지 못했어요",
+		"generatedCaptions": "자막 {{count}}개를 만들었어요",
+		"exportedTo": "{{path}}에 내보냈어요",
+		"showInFolder": "폴더에서 보기",
+		"revealError": "폴더를 여는 중 오류가 났어요: {{error}}",
+		"revealFailed": "폴더에서 항목을 보여주지 못했어요: {{error}}",
+		"projectLoadedFrom": "{{path}}에서 프로젝트를 불러왔어요",
+		"couldNotLoadProject": "프로젝트를 불러오지 못했어요: {{error}}",
+		"couldNotLoadFile": "파일을 불러오지 못했어요: {{error}}",
+		"couldNotSaveProject": "프로젝트를 저장하지 못했어요: {{error}}",
+		"errorLoadingVideo": "영상을 불러오는 중 오류가 났어요: {{error}}",
+		"projectLoaded": "프로젝트를 불러왔어요",
+		"saveDialogCanceled": "저장 창을 닫았어요. 다시 저장을 누르면 다시 렌더링하지 않고 저장할 수 있어요.",
+		"noPendingExport": "저장할 내보내기 결과가 없어요",
+		"exportNoOutput": "내보내기 결과물이 만들어지지 않았어요"
+	},
+	"aspect": {
+		"native": "원본 비율",
+		"custom": "직접 지정 {{ratio}}"
+	}
 }

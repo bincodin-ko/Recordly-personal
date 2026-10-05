@@ -43,7 +43,42 @@
 		"preparingFootage": "Video und Audio werden für die Zeitleiste vorbereitet."
 	},
 	"library": {
-		"videos": "Videos"
+		"videos": "Videos",
+		"previewUnavailable": "Preview unavailable",
+		"previewLoading": "Loading preview image",
+		"removeFailed": "Could not remove videos:",
+		"restoreFailed": "Could not restore videos:",
+		"stopImportFailed": "Could not stop import processing:",
+		"projectChanged": "The project changed while importing. Add the recordings again.",
+		"finalizeFailed": "Could not finalize imported media",
+		"addedOne": "Video added to timeline",
+		"addedMany": "{{count}} videos added to timeline",
+		"addFailed": "Could not add video:",
+		"panel": "Clips library",
+		"title": "Clips",
+		"actions": "Clip library actions",
+		"openFolder": "Open recordings folder",
+		"trashAll": "Move all to Trash",
+		"close": "Close Clips",
+		"search": "Search videos",
+		"selectAll": "Select all videos",
+		"selectedCount": "{{count}} selected",
+		"recordingCount": "{{count}} recordings",
+		"trashSelectedAria": "Move selected videos to Trash",
+		"trashSelected": "Move selected to Trash",
+		"loading": "Loading videos…",
+		"retry": "Retry",
+		"noMatch": "No matching videos",
+		"emptyTitle": "Your recordings appear here",
+		"tryAnother": "Try another search.",
+		"emptyHint": "Record a video to get started.",
+		"selectOne": "Select {{name}}",
+		"addNamed": "Add {{name}} to timeline",
+		"add": "Add to timeline",
+		"movedToTrash": "Moved to Trash",
+		"dragHint": "Drag to the timeline or click + to add.",
+		"undoTitle": "Undo (⌘Z / Ctrl+Z)",
+		"undo": "Undo"
 	},
 	"playback": {
 		"play": "Wiedergabe",
@@ -51,7 +86,10 @@
 		"skipBack": "Zurück springen",
 		"skipForward": "Vorwärts springen",
 		"muteUnmute": "Stummschalten/Stummschaltung aufheben",
-		"volume": "Vorschaulautstärke"
+		"volume": "Vorschaulautstärke",
+		"seek": "Playback position",
+		"editCurrentCaption": "Edit current caption",
+		"videoLoadFailed": "Failed to load video ({{detail}})"
 	},
 	"annotations": {
 		"settings": "Einstellungen für Anmerkungen",
@@ -89,7 +127,18 @@
 		"imageUploadError": "Bitte lade eine JPG-, PNG-, GIF- oder WebP-Bilddatei hoch.",
 		"blurStrength": "Unschärfestärke: {{strength}}",
 		"solidColor": "Einfarbig (Zensur)",
-		"borderRadius": "Randradius"
+		"borderRadius": "Randradius",
+		"imageUploadErrorDescription": "Please upload a JPG, PNG, GIF, or WebP image file.",
+		"imageUploadFailed": "Image upload failed",
+		"imageUploadFailedDescription": "Could not read the image file. Please try again.",
+		"arrowDirectionOption": "Arrow direction: {{direction}}",
+		"customColor": "Custom color",
+		"altAnnotation": "Annotation",
+		"noImage": "No image",
+		"noArrowData": "No arrow data",
+		"typeLabel": "Annotation type",
+		"customFonts": "Custom Fonts",
+		"altUploaded": "Uploaded annotation"
 	},
 	"fontStyles": {
 		"classic": "Klassisch",
@@ -105,7 +154,8 @@
 		"mp4Video": "MP4-Video",
 		"mp4Description": "Hochwertige Videodatei",
 		"gifAnimation": "GIF-Animation",
-		"gifDescription": "Animiertes Bild zum Teilen"
+		"gifDescription": "Animiertes Bild zum Teilen",
+		"title": "Export format"
 	},
 	"gifOptions": {
 		"frameRate": "Bildfrequenz",
@@ -161,14 +211,23 @@
 		"unsavedChangesTitle": "Ungespeicherte Änderungen",
 		"unsavedChangesDescription": "Möchtest du dein aktuelles Projekt speichern, bevor du {{action}}?",
 		"discardChanges": "Änderungen verwerfen",
-		"saveProject": "Projekt speichern"
+		"saveProject": "Projekt speichern",
+		"saveTitle": "Save Project",
+		"saveDescription": "Name this project. It will be saved in your Recordly Projects folder.",
+		"saveNameLabel": "Project name",
+		"saving": "Saving...",
+		"renameInput": "Project name",
+		"renameTitle": "Rename project"
 	},
 	"exportTips": {
 		"autoZooms": "Tipp: Automatisch angewendete Zooms können in den Einstellungen deaktiviert werden",
 		"experimentalBuilds": "Tipp: Aktiviere den Zugriff auf experimentelle Builds in den Einstellungen",
 		"cursorAppearance": "Tipp: Du kannst das Aussehen deines Cursors anpassen"
 	},
-	"account": { "title": "Konto", "comingSoon": "Konto demnächst verfügbar" },
+	"account": {
+		"title": "Konto",
+		"comingSoon": "Konto demnächst verfügbar"
+	},
 	"nativeCaptureUnavailable": {
 		"title": "Es ist nichts kaputt, aber wir können kein animiertes Cursor-Overlay rendern.",
 		"description": "Ihr Gerät unterstützt keine native Erfassung. Dies kann verschiedene Gründe haben, die wir noch nicht ermittelt haben. Recordly funktioniert weiterhin, aber eine Cursor-Glättung ist nicht möglich.",
@@ -181,10 +240,24 @@
 		"completePercent": "{{percent}} % abgeschlossen",
 		"issue": "Problem beim Export",
 		"complete": "Export abgeschlossen",
-		"savedSuccessfully": "Deine Datei wurde erfolgreich gespeichert."
+		"savedSuccessfully": "Deine Datei wurde erfolgreich gespeichert.",
+		"renderSpeed": "Render speed {{fps}} FPS",
+		"saving": "Opening save dialog...",
+		"renderingAudio": "Rendering audio {{percent}}%",
+		"muxingAndSaving": "Muxing audio and saving file...",
+		"muxingAndSavingPercent": "Muxing and saving {{percent}}%",
+		"finalizingPercent": "Finalizing {{percent}}%",
+		"errorCopied": "Error copied",
+		"errorCopyFailed": "Couldn't copy. Select the error text and copy it manually.",
+		"copyError": "Copy error"
 	},
 	"export": {
-		"processingAudioEdits": "Audio mit Geschwindigkeits-/Overlay-Bearbeitungen wird verarbeitet"
+		"processingAudioEdits": "Audio mit Geschwindigkeits-/Overlay-Bearbeitungen wird verarbeitet",
+		"tooSlow": "Export too slow? Cancel and try Lightning export!",
+		"pathLabel": "Path: {{path}}",
+		"nativeSkipped": "Native skipped: {{reason}}",
+		"nativeSkippedMore": " (+{{count}} more)",
+		"encodingUnsupported": "Video encoding not supported on this system. Tried codec {{codec}} at {{fps}} FPS up to {{width}}x{{height}}."
 	},
 	"toolbar": {
 		"addLayer": "Ebene hinzufügen",
@@ -192,7 +265,237 @@
 	},
 	"timeline": {
 		"expand": "Zeitleiste erweitern",
-		"collapse": "Zeitleiste reduzieren"
+		"collapse": "Zeitleiste reduzieren",
+		"unsupportedSpeed": "This speed is not supported for preview on this device."
 	},
-	"openRecordingsFolder": "Aufnahmeordner öffnen"
+	"openRecordingsFolder": "Aufnahmeordner öffnen",
+	"theme": {
+		"appearance": "Appearance",
+		"light": "Light",
+		"dark": "Dark",
+		"system": "System"
+	},
+	"common": {
+		"app": {
+			"discord": "Join Discord"
+		}
+	},
+	"presets": {
+		"open": "Open presets",
+		"label": "Presets",
+		"saveCurrentAs": "Save current preset as",
+		"namePlaceholder": "Preset name",
+		"savedList": "Saved presets",
+		"empty": "No presets yet.",
+		"deleteAriaLabel": "Delete preset {{name}}",
+		"toasts": {
+			"applied": "Applied preset \"{{name}}\"",
+			"saved": "Saved preset \"{{name}}\"",
+			"deleted": "Deleted preset \"{{name}}\""
+		},
+		"errors": {
+			"nameRequired": "Enter a preset name.",
+			"duplicateName": "A preset with that name already exists.",
+			"saveFailed": "Could not save that preset. Check your browser storage settings and try again.",
+			"deleteFailed": "Could not delete that preset. Check your browser storage settings and try again."
+		}
+	},
+	"dashboard": {
+		"sidebar": {
+			"nav": "Library navigation",
+			"home": "Home",
+			"raw": "Raw",
+			"folders": "Folders",
+			"newFolder": "New folder",
+			"untitledFolder": "Untitled folder",
+			"settings": "Settings"
+		},
+		"filters": {
+			"time": "Time filters",
+			"all": "All",
+			"week": "Last 7 days",
+			"month": "Last 30 days",
+			"selectRaw": "Select raw files to remove",
+			"selectProjects": "Select projects to delete",
+			"sortRaw": "Sort raw files",
+			"sortProjects": "Sort projects",
+			"lastCreated": "Last created",
+			"lastEdited": "Last edited",
+			"name": "Name",
+			"selectAll": "Select all",
+			"selectedCount": "{{count}} selected",
+			"remove": "Remove",
+			"delete": "Delete",
+			"cancel": "Cancel"
+		},
+		"grid": {
+			"loadingRecordings": "Loading recordings…",
+			"noMatchingRaw": "No matching raw files",
+			"noRaw": "No raw recordings yet",
+			"noMatchingProjects": "No matching projects",
+			"empty": "It's looking empty in here...",
+			"rawList": "Raw files",
+			"projectList": "Your projects",
+			"retry": "Retry",
+			"clearSearch": "Clear search"
+		},
+		"toolbar": {
+			"searchRaw": "Search raw files",
+			"searchProjects": "Search projects",
+			"searchRawPlaceholder": "Search raw files…",
+			"searchProjectsPlaceholder": "Search projects…",
+			"import": "Import"
+		},
+		"title": "Projects dashboard",
+		"announcements": {
+			"openFailed": "Could not open announcement",
+			"label": "Announcements",
+			"previous": "Previous announcement",
+			"choose": "Choose announcement",
+			"slide": "Announcement {{n}}",
+			"next": "Next announcement"
+		},
+		"folderColors": {
+			"change": "Change color for {{name}}",
+			"dialog": "Folder color",
+			"swatches": "Folder colors",
+			"hex": "Hex color",
+			"removeCustom": "Remove custom color",
+			"saveCustom": "Save custom color"
+		},
+		"folderRow": {
+			"name": "Folder name",
+			"optionsFor": "Options for {{name}}",
+			"options": "Folder options",
+			"remove": "Remove folder"
+		},
+		"rename": "Rename",
+		"loadingProjects": "Loading projects",
+		"rawPreview": "Raw file preview",
+		"recordFirst": "Record your first video",
+		"recordNew": "Record new",
+		"chips": {
+			"remove": "Remove {{name}} from {{folder}}",
+			"foldersFor": "Folders for {{name}}"
+		},
+		"card": {
+			"rawName": "Raw file name",
+			"projectName": "Project name",
+			"addFolderTo": "Add folder to {{name}}",
+			"addFolder": "Add folder",
+			"assignFolder": "Assign project folder",
+			"removeFromFolders": "Remove from all folders",
+			"createFolderHint": "Create a folder in the sidebar",
+			"options": "Project options",
+			"open": "Open project",
+			"previewFile": "Preview file",
+			"revealNamed": "Show {{name}} in folder",
+			"reveal": "Show in folder",
+			"removeFromLibrary": "Remove from library",
+			"delete": "Delete project"
+		},
+		"settings": {
+			"changeFailed": "Could not change recordings folder",
+			"protectionFailed": "Could not update capture protection",
+			"openFailed": "Could not open projects folder",
+			"label": "Dashboard settings",
+			"openTitle": "Open video or project",
+			"openFile": "Open file",
+			"recordingsFolder": "Recordings folder",
+			"changeFolder": "Change folder",
+			"hideHud": "Hide HUD from recordings",
+			"hideHudHint": "Only while recording. The idle HUD stays visible in captures.",
+			"projectsFolder": "Projects folder",
+			"autosave": "Named projects save automatically.",
+			"showFolder": "Show folder",
+			"autosaveHint": "Named projects save automatically. Previews refresh when you return to Projects."
+		},
+		"actionFailed": "Could not complete action",
+		"foldersSaveFailed": "Could not save folders",
+		"prefsSaveFailed": "Could not save library preferences"
+	},
+	"header": {
+		"home": "Home",
+		"clips": "Clips"
+	},
+	"shell": {
+		"openProjects": "Open Projects"
+	},
+	"sidebar": {
+		"advanced": "Advanced",
+		"advancedSettings": "Advanced settings"
+	},
+	"loading": {
+		"editor": "Loading editor"
+	},
+	"preview": {
+		"loadingPreview": "Loading preview",
+		"volume": "Preview volume"
+	},
+	"extensions": {
+		"unavailableTitle": "Extensions are no longer available",
+		"unavailableBody": "Extension installation and marketplace access have been disabled. This area is kept as a placeholder for existing projects and navigation."
+	},
+	"projectBrowser": {
+		"title": "Projects",
+		"import": "Import",
+		"noPreview": "No preview",
+		"current": "Current project",
+		"empty": "No saved projects yet"
+	},
+	"audio": {
+		"companionLoadFailedWith": "Could not load companion audio sources: {{error}}",
+		"companionLoadFailed": "Could not load companion audio sources. Playback and export may miss microphone audio.",
+		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}"
+	},
+	"messages": {
+		"whisperExecutableSelected": "Whisper executable selected",
+		"whisperModelSelected": "Whisper model selected",
+		"whisperSmallModelDeleted": "Whisper small model deleted",
+		"selectAWhisperModelOrDownload": "Select a Whisper model or download the small model first",
+		"noSourceVideoIsLoaded": "No source video is loaded",
+		"recordingChangedGeneratedCaptionsWereNot": "Recording changed; generated captions were not applied.",
+		"failedToDownloadWhisperSmallModel": "Failed to download Whisper small model",
+		"failedToDeleteWhisperSmallModel": "Failed to delete Whisper small model",
+		"failedToGenerateCaptions": "Failed to generate captions",
+		"failedToRevealItemInFolder": "Failed to reveal item in folder.",
+		"noVideoLoaded": "No video loaded",
+		"videoNotReady": "Video not ready",
+		"videoMetadataIsStillLoading": "Video metadata is still loading",
+		"exportCanceled": "Export canceled",
+		"saveCanceledYouCanTryAgain": "Save canceled. You can try again.",
+		"failedToSaveVideo": "Failed to save video",
+		"saveCanceledYouCanSaveAgain": "Save canceled. You can save again without re-exporting.",
+		"failedToSaveGif": "Failed to save GIF",
+		"gifExportFailed": "GIF export failed",
+		"exportFailed": "Export failed",
+		"couldNotLoadProjectInvalidProject": "Could not load project: invalid project file format",
+		"noMediaFileSelected": "No media file selected",
+		"mediaImported": "Media imported",
+		"failedToLoadProject": "Failed to load project",
+		"failedToImportFile": "Failed to import file",
+		"couldNotRenameProject": "Could not rename project",
+		"projectSaveCanceled": "Project save canceled",
+		"projectNameIsRequired": "Project name is required",
+		"projectRenamedButLibraryPreferencesCould": "Project renamed, but library preferences could not be updated",
+		"failedToSaveProject": "Failed to save project",
+		"generatedCaptions": "Generated {{count}} captions",
+		"exportedTo": "Exported successfully to {{path}}",
+		"showInFolder": "Show in Folder",
+		"revealError": "Error revealing in folder: {{error}}",
+		"revealFailed": "Failed to reveal item in folder: {{error}}",
+		"projectLoadedFrom": "Project loaded from {{path}}",
+		"couldNotLoadProject": "Could not load project: {{error}}",
+		"couldNotLoadFile": "Could not load file: {{error}}",
+		"couldNotSaveProject": "Could not save project: {{error}}",
+		"errorLoadingVideo": "Error loading video: {{error}}",
+		"projectLoaded": "Project loaded",
+		"saveDialogCanceled": "Save dialog canceled. Click Save Again to save without re-rendering.",
+		"noPendingExport": "No pending export to save",
+		"exportNoOutput": "Export produced no output"
+	},
+	"aspect": {
+		"native": "Native",
+		"custom": "Custom {{ratio}}"
+	}
 }

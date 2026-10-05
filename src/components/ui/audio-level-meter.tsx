@@ -1,8 +1,9 @@
+import { translate } from "@/contexts/I18nContext";
 import { Meter } from "@heroui/react";
 export function AudioLevelMeter({ level, className }: { level: number; className?: string }) {
 	return (
 		<Meter
-			aria-label="Microphone level"
+			aria-label={translate("launch.a11y.microphoneLevel", "Microphone level")}
 			value={Math.min(100, Math.max(0, level))}
 			minValue={0}
 			maxValue={100}

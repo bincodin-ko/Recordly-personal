@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 /* biome-ignore-all lint/correctness/useExhaustiveDependencies: editor state setters are stable and initial source loading intentionally runs once per launch configuration. */
 import { type MutableRefObject, useEffect, useRef } from "react";
 import { fromFileUrl, resolveVideoUrl } from "../projectPersistence";
@@ -201,7 +202,7 @@ export function useInitialEditorSource({
 					timeOffsetMs: DEFAULT_WEBCAM_TIME_OFFSET_MS,
 				}));
 			} catch (error) {
-				project.setError(`Error loading video: ${String(error)}`);
+				project.setError(translate("editor.messages.errorLoadingVideo", "Error loading video: {{error}}", { error: String(error) }));
 			} finally {
 				project.setLoading(false);
 			}

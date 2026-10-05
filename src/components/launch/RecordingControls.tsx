@@ -36,7 +36,7 @@ export function RecordingControls({
 	const t = useScopedT("launch");
 	const actionClass = `size-9 min-w-9 rounded-full ${styles.electronNoDrag}`;
 	return (
-		<div role="group" aria-label="Recording controls" className="flex items-center gap-2">
+		<div role="group" aria-label={t("a11y.recordingControls", "Recording controls")} className="flex items-center gap-2">
 			<Button
 				isIconOnly
 				variant="ghost"
@@ -67,7 +67,7 @@ export function RecordingControls({
 					variant="ghost"
 					isDisabled
 					className={actionClass}
-					aria-label={microphoneEnabled ? "Microphone on" : "Microphone off"}
+					aria-label={microphoneEnabled ? t("a11y.microphoneOn", "Microphone on") : t("a11y.microphoneOff", "Microphone off")}
 				>
 					{microphoneEnabled ? (
 						<MicrophoneIcon weight="fill" className="size-4" />

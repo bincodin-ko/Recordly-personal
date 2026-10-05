@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 export const SHORTCUT_ACTIONS = [
 	"addZoom",
 	"splitClip",
@@ -26,19 +27,19 @@ export interface FixedShortcut {
 }
 
 export const FIXED_SHORTCUTS: FixedShortcut[] = [
-	{ label: "Cycle Annotations Forward", display: "Tab", bindings: [{ key: "tab" }] },
+	{ get label() { return translate("shortcuts.actions.cycleForward", "Cycle Annotations Forward"); }, display: "Tab", bindings: [{ key: "tab" }] },
 	{
-		label: "Cycle Annotations Backward",
+		get label() { return translate("shortcuts.actions.cycleBackward", "Cycle Annotations Backward"); },
 		display: "Shift + Tab",
 		bindings: [{ key: "tab", shift: true }],
 	},
 	{
-		label: "Delete Selected (alt)",
+		get label() { return translate("shortcuts.actions.deleteSelectedAlt", "Delete Selected (alt)"); },
 		display: "Del / ⌫",
 		bindings: [{ key: "delete" }, { key: "backspace" }],
 	},
-	{ label: "Pan Timeline", display: "Shift + Scroll", bindings: [] },
-	{ label: "Zoom Timeline", display: "Ctrl + Scroll", bindings: [] },
+	{ get label() { return translate("shortcuts.actions.panTimeline", "Pan Timeline"); }, display: "Shift + Scroll", bindings: [] },
+	{ get label() { return translate("shortcuts.actions.zoomTimeline", "Zoom Timeline"); }, display: "Ctrl + Scroll", bindings: [] },
 ];
 
 export type ShortcutConflict =
@@ -82,12 +83,12 @@ export const DEFAULT_SHORTCUTS: ShortcutsConfig = {
 };
 
 export const SHORTCUT_LABELS: Record<ShortcutAction, string> = {
-	addZoom: "Add Zoom",
-	splitClip: "Split Clip",
-	addAnnotation: "Add Annotation",
-	addKeyframe: "Add Keyframe",
-	deleteSelected: "Delete Selected",
-	playPause: "Play / Pause",
+	get addZoom() { return translate("shortcuts.actions.addZoom", "Add Zoom"); },
+	get splitClip() { return translate("shortcuts.actions.splitClip", "Split Clip"); },
+	get addAnnotation() { return translate("shortcuts.actions.addAnnotation", "Add Annotation"); },
+	get addKeyframe() { return translate("shortcuts.actions.addKeyframe", "Add Keyframe"); },
+	get deleteSelected() { return translate("shortcuts.actions.deleteSelected", "Delete Selected"); },
+	get playPause() { return translate("shortcuts.actions.playPause", "Play / Pause"); },
 };
 
 export function matchesShortcut(

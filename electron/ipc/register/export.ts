@@ -864,11 +864,11 @@ export function registerExportHandlers() {
 				// Determine file type from extension
 				const isGif = fileName.toLowerCase().endsWith(".gif");
 				const filters = isGif
-					? [{ name: "GIF Image", extensions: ["gif"] }]
-					: [{ name: "MP4 Video", extensions: ["mp4"] }];
+					? [{ name: "GIF 이미지", extensions: ["gif"] }]
+					: [{ name: "MP4 영상", extensions: ["mp4"] }];
 				const parentWindow = BrowserWindow.fromWebContents(event.sender);
 				const saveDialogOptions: SaveDialogOptions = {
-					title: isGif ? "Save Exported GIF" : "Save Exported Video",
+					title: isGif ? "내보낸 GIF 저장" : "내보낸 영상 저장",
 					defaultPath: path.join(app.getPath("downloads"), fileName),
 					filters,
 					properties: ["createDirectory", "showOverwriteConfirmation"],
@@ -882,7 +882,7 @@ export function registerExportHandlers() {
 					return {
 						success: false,
 						canceled: true,
-						message: "Export canceled",
+						message: "내보내기를 취소했어요",
 					};
 				}
 
@@ -905,7 +905,7 @@ export function registerExportHandlers() {
 				console.error("Failed to save exported video:", error);
 				return {
 					success: false,
-					message: "Failed to save exported video",
+					message: "내보낸 영상을 저장하지 못했어요",
 					error: String(error),
 				};
 			}
@@ -954,7 +954,7 @@ export function registerExportHandlers() {
 				console.error("Failed to write exported video to path:", error);
 				return {
 					success: false,
-					message: "Failed to write exported video",
+					message: "내보낸 영상을 쓰지 못했어요",
 					canceled: false,
 					error: String(error),
 				};
@@ -1019,11 +1019,11 @@ export function registerExportHandlers() {
 
 				const isGif = fileName.toLowerCase().endsWith(".gif");
 				const filters = isGif
-					? [{ name: "GIF Image", extensions: ["gif"] }]
-					: [{ name: "MP4 Video", extensions: ["mp4"] }];
+					? [{ name: "GIF 이미지", extensions: ["gif"] }]
+					: [{ name: "MP4 영상", extensions: ["mp4"] }];
 				const parentWindow = BrowserWindow.fromWebContents(event.sender);
 				const saveDialogOptions: SaveDialogOptions = {
-					title: isGif ? "Save Exported GIF" : "Save Exported Video",
+					title: isGif ? "내보낸 GIF 저장" : "내보낸 영상 저장",
 					defaultPath: path.join(app.getPath("downloads"), fileName),
 					filters,
 					properties: ["createDirectory", "showOverwriteConfirmation"],
@@ -1039,7 +1039,7 @@ export function registerExportHandlers() {
 					return {
 						success: false,
 						canceled: true,
-						message: "Export canceled",
+						message: "내보내기를 취소했어요",
 					};
 				}
 
@@ -1065,7 +1065,7 @@ export function registerExportHandlers() {
 				return {
 					success: false,
 					canceled: false,
-					message: "Failed to save exported video",
+					message: "내보낸 영상을 저장하지 못했어요",
 					error: String(error),
 				};
 			}

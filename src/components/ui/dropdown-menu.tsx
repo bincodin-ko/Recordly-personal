@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { Dropdown, Label, Separator, Kbd } from "@heroui/react";
 import { type ComponentProps, type ReactNode } from "react";
 export function DropdownMenu({
@@ -25,7 +26,7 @@ export function DropdownMenuContent({
 			placement={align === "center" ? "bottom" : `bottom ${align}`}
 			offset={sideOffset}
 		>
-			<Dropdown.Menu aria-label="Actions">{children}</Dropdown.Menu>
+			<Dropdown.Menu aria-label={translate("common.a11y.actions", "Actions")}>{children}</Dropdown.Menu>
 		</Dropdown.Popover>
 	);
 }

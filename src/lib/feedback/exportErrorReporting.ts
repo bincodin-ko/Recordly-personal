@@ -54,7 +54,7 @@ export function buildExportErrorReport(
 	const failure = decodeAttempt(bounded);
 	const inputDecoding = failure.code !== "UNKNOWN";
 	if (!inputDecoding) {
-		failure.code = /Failed to save (?:video|GIF)|No pending export to save/i.test(bounded)
+		failure.code = /Failed to save (?:video|GIF)|No pending export to save|(?:영상|GIF)를 저장하지 못했어요|저장할 내보내기 결과가 없어요/i.test(bounded)
 			? "SAVE_FAILED"
 			: /audio/i.test(bounded)
 				? "AUDIO_FAILED"
@@ -70,7 +70,7 @@ export function buildExportErrorReport(
 		stage:
 			inputDecoding || /Failure stage: Input video decoding/.test(bounded)
 				? "input_decoding"
-				: /Failed to save (?:video|GIF)|No pending export to save/i.test(bounded)
+				: /Failed to save (?:video|GIF)|No pending export to save|(?:영상|GIF)를 저장하지 못했어요|저장할 내보내기 결과가 없어요/i.test(bounded)
 					? "saving"
 					: "export",
 		initialDecoder: initial ? decodeAttempt(initial) : undefined,

@@ -235,7 +235,7 @@ export function EditorShell(props: Props) {
 						onClick={openActions.handleOpenProjectBrowser}
 						className="px-3 py-1.5 text-sm"
 					>
-						Open Projects
+						{t("editor.shell.openProjects", "Open Projects")}
 					</Button>
 				</div>
 				<RecordlySignInDialog

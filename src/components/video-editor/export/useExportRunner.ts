@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useCallback, useRef } from "react";
 import { toast } from "@/components/ui/toast";
 import { getMp4ExportBitrate } from "@/lib/exporter/exportBitrate";
@@ -74,13 +75,13 @@ export function useExportRunner(input: ExportRunnerInput) {
 				cancelledExportRunIdRef,
 			} = exportSession;
 			if (!videoPath) {
-				toast.error("No video loaded");
+				toast.error(translate("editor.messages.noVideoLoaded", "No video loaded"));
 				return;
 			}
 
 			const video = videoPlaybackRef.current?.video;
 			if (!video) {
-				toast.error("Video not ready");
+				toast.error(translate("editor.messages.videoNotReady", "Video not ready"));
 				return;
 			}
 
@@ -191,7 +192,7 @@ export function useExportRunner(input: ExportRunnerInput) {
 							setExportError(
 								"Save dialog canceled. Click Save Again to save without re-rendering.",
 							);
-							toast.info("Save canceled. You can save again without re-exporting.");
+							toast.info(translate("editor.messages.saveCanceledYouCanSaveAgain", "Save canceled. You can save again without re-exporting."));
 							keepExportDialogOpen = true;
 						} else if (saveResult.success && saveResult.path) {
 							if (smokeExportStartedAt !== null) {
@@ -206,16 +207,16 @@ export function useExportRunner(input: ExportRunnerInput) {
 								return;
 							}
 						} else {
-							setExportError(saveResult.message || "Failed to save GIF");
-							toast.error(saveResult.message || "Failed to save GIF");
+							setExportError(saveResult.message || translate("editor.messages.failedToSaveGif", "Failed to save GIF"));
+							toast.error(saveResult.message || translate("editor.messages.failedToSaveGif", "Failed to save GIF"));
 							if (smokeExportConfig.enabled) {
 								window.close();
 								return;
 							}
 						}
 					} else {
-						setExportError(result.error || "GIF export failed");
-						toast.error(result.error || "GIF export failed");
+						setExportError(result.error || translate("editor.messages.gifExportFailed", "GIF export failed"));
+						toast.error(result.error || translate("editor.messages.gifExportFailed", "GIF export failed"));
 						if (smokeExportConfig.enabled) {
 							window.close();
 							return;
@@ -415,7 +416,7 @@ export function useExportRunner(input: ExportRunnerInput) {
 							saveResult = blobSave.saveResult;
 							pendingOnCancel = blobSave.pendingSave;
 						} else {
-							saveResult = { success: false, message: "Export produced no output" };
+							saveResult = { success: false, message: translate("editor.messages.exportNoOutput", "Export produced no output") };
 							pendingOnCancel = { fileName };
 						}
 
@@ -440,7 +441,7 @@ export function useExportRunner(input: ExportRunnerInput) {
 							setExportError(
 								"Save dialog canceled. Click Save Again to save without re-rendering.",
 							);
-							toast.info("Save canceled. You can save again without re-exporting.");
+							toast.info(translate("editor.messages.saveCanceledYouCanSaveAgain", "Save canceled. You can save again without re-exporting."));
 							keepExportDialogOpen = true;
 						} else if (saveResult.success && saveResult.path) {
 							if (smokeExportConfig.enabled) {
@@ -480,13 +481,13 @@ export function useExportRunner(input: ExportRunnerInput) {
 									encodingMode,
 									shadowIntensity: effectiveShadowIntensity,
 									elapsedMs: smokeExportElapsedMs,
-									error: saveResult.message || "Failed to save video",
+									error: saveResult.message || translate("editor.messages.failedToSaveVideo", "Failed to save video"),
 									progressSamples: smokeProgressSamples,
 									metrics: result.metrics,
 								});
 							}
-							setExportError(saveResult.message || "Failed to save video");
-							showExportErrorToast(saveResult.message || "Failed to save video");
+							setExportError(saveResult.message || translate("editor.messages.failedToSaveVideo", "Failed to save video"));
+							showExportErrorToast(saveResult.message || translate("editor.messages.failedToSaveVideo", "Failed to save video"));
 							// Keep the pending-save entry so the user can retry without
 							// re-rendering. The temp file is still on disk (the main
 							// process only moves/deletes it on success) and the
@@ -512,13 +513,13 @@ export function useExportRunner(input: ExportRunnerInput) {
 								encodingMode,
 								shadowIntensity: effectiveShadowIntensity,
 								elapsedMs: smokeExportElapsedMs,
-								error: result.error || "Export failed",
+								error: result.error || translate("editor.messages.exportFailed", "Export failed"),
 								progressSamples: smokeProgressSamples,
 								metrics: result.metrics,
 							});
 						}
-						setExportError(result.error || "Export failed");
-						showExportErrorToast(result.error || "Export failed");
+						setExportError(result.error || translate("editor.messages.exportFailed", "Export failed"));
+						showExportErrorToast(result.error || translate("editor.messages.exportFailed", "Export failed"));
 						keepExportDialogOpen = options?.destination !== "share";
 						if (smokeExportConfig.enabled) {
 							window.close();

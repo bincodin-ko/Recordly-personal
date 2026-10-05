@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { ChoiceGroup, ChoiceItem } from "@/components/ui/choice-group";
 
@@ -27,7 +28,7 @@ export function SettingsSections({
 		<SettingsCategoryContext.Provider value={active}>
 			<div className="space-y-6">
 				<ChoiceGroup
-					aria-label="Settings sections"
+					aria-label={translate("settings.sections.ariaLabel", "Settings sections")}
 					value={active}
 					onValueChange={(value) => setSelected(value as Category)}
 					size="sm"

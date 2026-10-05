@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { removeProjectShareLinks } from "../cloud/projectShareLinks";
 import { useRawLibrary } from "./useRawLibrary";
 import { useEffect, useMemo, useState } from "react";
@@ -87,13 +88,18 @@ export function useDashboardModel({
 				),
 		[libraryEntries, query, period, sort, folders, section],
 	);
+	const { t } = useI18n();
 	const run = async (action: () => Promise<void>) => {
 		if (busy) return;
 		setBusy(true);
 		try {
 			await action();
 		} catch (e) {
-			toast.error(e instanceof Error ? e.message : "Could not complete action");
+			toast.error(
+				e instanceof Error
+					? e.message
+					: t("editor.dashboard.actionFailed", "Could not complete action"),
+			);
 		} finally {
 			setBusy(false);
 		}

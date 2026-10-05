@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import {
 	ColorArea,
 	ColorField,
@@ -21,7 +22,7 @@ export function ColorPalette({ color = "#000000", colors, onChange }: PalettePro
 	return (
 		<div className="flex flex-col gap-3">
 			<ColorSwatchPicker
-				aria-label="Colors"
+				aria-label={translate("common.colorPicker.colors", "Colors")}
 				value={color}
 				onChange={(value) => onChange({ hex: value.toString("hex") })}
 			>
@@ -76,7 +77,7 @@ export function ColorControl({
 						</ColorSlider.Track>
 					</ColorSlider>
 					{colors && (
-						<ColorSwatchPicker aria-label="Preset colors">
+						<ColorSwatchPicker aria-label={translate("common.colorPicker.presetColors", "Preset colors")}>
 							{colors.map((color) => (
 								<ColorSwatchPicker.Item key={color} color={color}>
 									<ColorSwatchPicker.Swatch />
@@ -86,12 +87,12 @@ export function ColorControl({
 						</ColorSwatchPicker>
 					)}
 					<ColorField>
-						<Label>Hex color</Label>
+						<Label>{translate("common.colorPicker.hexColor", "Hex color")}</Label>
 						<Input />
 					</ColorField>
 					{onClear && (
 						<Button variant="ghost" onClick={onClear}>
-							Clear background
+							{translate("common.colorPicker.clearBackground", "Clear background")}
 						</Button>
 					)}
 				</Popover.Dialog>

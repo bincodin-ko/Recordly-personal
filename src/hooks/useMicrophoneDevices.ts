@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useEffect, useState } from "react";
 
 export interface MicrophoneDevice {
@@ -85,7 +86,7 @@ export function useMicrophoneDevices(enabled: boolean = true, preferredDeviceId?
 					const message =
 						error instanceof Error
 							? error.message
-							: "Failed to enumerate audio devices";
+							: translate("launch.messages.audioDevicesFailed", "Failed to enumerate audio devices");
 					setError(message);
 					setIsLoading(false);
 					console.error("Error loading microphone devices:", error);

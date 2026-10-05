@@ -413,7 +413,7 @@ export function registerRecordingHandlers(
 				if (!windowsCaptureAvailable) {
 					return {
 						success: false,
-						message: "Native Windows capture is not available on this system.",
+						message: "이 시스템에서는 Windows 내장 캡처를 쓸 수 없어요.",
 					};
 				}
 
@@ -431,7 +431,7 @@ export function registerRecordingHandlers(
 				if (windowsCaptureProcess) {
 					return {
 						success: false,
-						message: "A native Windows screen recording is already active.",
+						message: "Windows 내장 화면 녹화가 이미 진행 중이에요.",
 					};
 				}
 
@@ -502,6 +502,7 @@ export function registerRecordingHandlers(
 						config.displayW = Math.round(captureTarget.bounds.width);
 						config.displayH = Math.round(captureTarget.bounds.height);
 					}
+
 
 					if (options?.capturesSystemAudio) {
 						systemAudioPath = path.join(
@@ -649,7 +650,7 @@ export function registerRecordingHandlers(
 					setWindowsCapturePaused(false);
 					return {
 						success: false,
-						message: "Failed to start native Windows capture",
+						message: "Windows 내장 캡처를 시작하지 못했어요",
 						error: String(error),
 					};
 				}
@@ -674,7 +675,7 @@ export function registerRecordingHandlers(
 			}
 
 			if (nativeCaptureProcess) {
-				return { success: false, message: "A native screen recording is already active." };
+				return { success: false, message: "내장 화면 녹화가 이미 진행 중이에요." };
 			}
 
 			let captProc: ChildProcessWithoutNullStreams | null = null;
@@ -838,11 +839,11 @@ export function registerRecordingHandlers(
 				) {
 					const { response } = await dialog.showMessageBox({
 						type: "warning",
-						title: "Screen Recording Permission Required",
+						title: "화면 녹화 권한이 필요해요",
 						message:
-							"Recordly needs screen recording permission to capture your screen.",
-						detail: "Please open System Settings > Privacy & Security > Screen Recording, make sure Recordly is toggled ON, then try recording again.",
-						buttons: ["Open System Settings", "Cancel"],
+							"화면을 녹화하려면 Recordly에 화면 녹화 권한이 필요해요.",
+						detail: "시스템 설정 > 개인정보 보호 및 보안 > 화면 녹화에서 Recordly를 켜 놓고 다시 녹화해 주세요.",
+						buttons: ["시스템 설정 열기", "취소"],
 						defaultId: 0,
 						cancelId: 1,
 					});
@@ -872,10 +873,10 @@ export function registerRecordingHandlers(
 				if (errorStr.includes("MICROPHONE_PERMISSION_DENIED")) {
 					const { response } = await dialog.showMessageBox({
 						type: "warning",
-						title: "Microphone Permission Required",
-						message: "Recordly needs microphone permission to record audio.",
-						detail: "Please open System Settings > Privacy & Security > Microphone, make sure Recordly is toggled ON, then try recording again.",
-						buttons: ["Open System Settings", "Cancel"],
+						title: "마이크 권한이 필요해요",
+						message: "소리를 녹음하려면 Recordly에 마이크 권한이 필요해요.",
+						detail: "시스템 설정 > 개인정보 보호 및 보안 > 마이크에서 Recordly를 켜 놓고 다시 녹화해 주세요.",
+						buttons: ["시스템 설정 열기", "취소"],
 						defaultId: 0,
 						cancelId: 1,
 					});

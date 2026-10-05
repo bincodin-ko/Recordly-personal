@@ -54,7 +54,9 @@
 			"upToDateTitle": "Recordly {{version}} 已是最新版本。",
 			"availableTitle": "Recordly {{version}} 可更新。",
 			"availableGenericTitle": "有可用更新。"
-		}
+		},
+		"preparing": "Preparing recording",
+		"preparingSubtitle": "Opening the editor in a moment"
 	},
 	"sourceSelector": {
 		"loadingSources": "正在加载源...",
@@ -92,5 +94,45 @@
 		"updateNow": "立即更新",
 		"restartToUpdate": "重新启动以更新",
 		"tryAgain": "重试"
+	},
+	"common": {
+		"loading": "Refreshing..."
+	},
+	"messages": {
+		"pleaseSelectASourceToRecord": "Please select a source to record",
+		"nativeWindowsCaptureIsUnavailableFalling": "Native Windows capture is unavailable. Falling back to browser capture.",
+		"unableToCheckNativeWindowsCapture": "Unable to check native Windows capture. Falling back to browser capture.",
+		"nativeWindowsCaptureFailedToStart": "Native Windows capture failed to start. Falling back to browser capture.",
+		"systemAudioIsNotAvailableFor": "System audio is not available for this source. Recording will continue without system audio.",
+		"microphoneAccessWasDeniedRecordingWill": "Microphone access was denied. Recording will continue without microphone audio.",
+		"failedToSaveTheFallbackMicrophone": "Failed to save the fallback microphone audio track",
+		"failedToStoreTheRecording": "Failed to store the recording.",
+		"screenPermissionStartup": "Recordly needs Screen Recording permission before you start. System Settings has been opened. After enabling it, quit and reopen Recordly.",
+		"screenPermissionMissing": "Screen Recording permission is still missing. System Settings has been opened again. Enable it, then quit and reopen Recordly before recording.",
+		"accessibilityPermissionStartup": "Recordly also needs Accessibility permission for cursor tracking. System Settings has been opened. After enabling it, quit and reopen Recordly.",
+		"accessibilityPermissionMissing": "Accessibility permission is still missing. System Settings has been opened again. Enable it, then quit and reopen Recordly before recording.",
+		"savedWithoutMicTrack": "{{error}}. Recording was saved without the fallback microphone track.",
+		"micPermissionDenied": "Microphone permission denied. Recording will continue without microphone audio.",
+		"micErrorContinue": "{{error}}. Recording will continue without microphone audio.",
+		"startFailedWithError": "Failed to start recording: {{error}}",
+		"startFailed": "Failed to start recording",
+		"videoTrackUnavailable": "Video track is not available.",
+		"mediaStreamUnavailable": "Media stream is not available.",
+		"saveRecordingFailed": "Failed to save the recording.",
+		"finalizeFailed": "Failed to finalize the recording. {{error}}",
+		"finishMacFailed": "Failed to finish the macOS recording, so the editor was not opened.",
+		"finishFailed": "Failed to finish the recording, so the editor was not opened.",
+		"unexpectedError": "An unexpected error occurred",
+		"nativeStartFailed": "Failed to start native screen recording",
+		"audioDevicesFailed": "Failed to enumerate audio devices",
+		"videoDevicesFailed": "Failed to enumerate video devices"
+	},
+	"a11y": {
+		"microphoneLevel": "Microphone level",
+		"recordingControls": "Recording controls",
+		"microphoneOn": "Microphone on",
+		"microphoneOff": "Microphone off",
+		"recordlyUpdate": "Recordly update",
+		"downloadingUpdate": "Downloading update"
 	}
 }

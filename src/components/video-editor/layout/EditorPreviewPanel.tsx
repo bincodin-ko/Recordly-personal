@@ -185,7 +185,7 @@ export function EditorPreviewPanel(props: Props) {
 							>
 								{videoPath && !isPreviewReady && (
 									<Skeleton
-										aria-label="Loading preview"
+										aria-label={t("editor.preview.loadingPreview", "Loading preview")}
 										className="pointer-events-none absolute inset-0 z-20 h-full w-full rounded-xl"
 									/>
 								)}
@@ -363,7 +363,7 @@ export function EditorPreviewPanel(props: Props) {
 						<PopoverContent
 							side="top"
 							sideOffset={10}
-							aria-label="Preview volume"
+							aria-label={t("editor.preview.volume", "Preview volume")}
 							className="flex w-14 flex-col items-center gap-3 p-3"
 						>
 							<span className="text-[10px] tabular-nums text-muted-foreground">

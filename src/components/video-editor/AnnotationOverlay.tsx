@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useRef } from "react";
 import { Rnd } from "react-rnd";
 import { cn } from "@/lib/utils";
@@ -153,7 +154,7 @@ export function AnnotationOverlay({
 					return (
 						<img
 							src={annotation.content}
-							alt="Annotation"
+							alt={translate("editor.annotations.altAnnotation", "Annotation")}
 							className="w-full h-full object-contain"
 							draggable={false}
 						/>
@@ -161,7 +162,7 @@ export function AnnotationOverlay({
 				}
 				return (
 					<div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
-						No image
+						{translate("editor.annotations.noImage", "No image")}
 					</div>
 				);
 
@@ -169,7 +170,7 @@ export function AnnotationOverlay({
 				if (!annotation.figureData) {
 					return (
 						<div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">
-							No arrow data
+							{translate("editor.annotations.noArrowData", "No arrow data")}
 						</div>
 					);
 				}

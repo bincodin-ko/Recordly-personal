@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { Avatar } from "@heroui/react";
 import { createContext, useContext } from "react";
 import type { User } from "@supabase/supabase-js";
@@ -5,7 +6,7 @@ import type { User } from "@supabase/supabase-js";
 export const AccountProfileContext = createContext<User | null>(null);
 export function getAccountProfile(user: User | null, fallback?: string) {
 	const metadata = user?.user_metadata;
-	const name = [metadata?.full_name, metadata?.name, user?.email, fallback, "Local profile"].find(
+	const name = [metadata?.full_name, metadata?.name, user?.email, fallback, translate("common.account.localProfile", "Local profile")].find(
 		(value) => typeof value === "string" && value.trim(),
 	) as string;
 	const initials = name

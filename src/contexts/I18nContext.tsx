@@ -223,29 +223,6 @@ function normalizeLocale(locale: string | null | undefined): AppLocale {
 	return DEFAULT_LOCALE;
 }
 
-function getSystemLocale(): AppLocale {
-	if (typeof navigator === "undefined") {
-		return DEFAULT_LOCALE;
-	}
-
-	const preferredLocales = Array.isArray(navigator.languages)
-		? navigator.languages
-		: [navigator.language];
-
-	for (const locale of preferredLocales) {
-		if (typeof locale !== "string" || locale.trim().length === 0) {
-			continue;
-		}
-
-		const normalized = normalizeLocale(locale);
-		if (normalized !== DEFAULT_LOCALE || locale.toLowerCase().startsWith(DEFAULT_LOCALE)) {
-			return normalized;
-		}
-	}
-
-	return DEFAULT_LOCALE;
-}
-
 function getInitialLocale(): AppLocale {
 	if (typeof window === "undefined") {
 		return DEFAULT_LOCALE;
@@ -256,7 +233,8 @@ function getInitialLocale(): AppLocale {
 		return normalizeLocale(storedLocale);
 	}
 
-	return getSystemLocale();
+	// 저장된 선택이 없으면 한국어가 기본값
+	return "ko";
 }
 
 function getMessageValue(source: unknown, key: string): string | undefined {
@@ -307,8 +285,19 @@ function translateForLocale(
 	return interpolate(rawValue, vars);
 }
 
+// 훅/비-React 모듈에서 쓰는 번역 함수. 현재 언어는 Provider가 갱신한다.
+let activeLocale: AppLocale = DEFAULT_LOCALE;
+export function translate(
+	key: string,
+	fallback?: string,
+	vars?: Record<string, string | number>,
+) {
+	return translateForLocale(activeLocale, key, fallback, vars);
+}
+
 export function I18nProvider({ children }: { children: ReactNode }) {
 	const [locale, setLocaleState] = useState<AppLocale>(getInitialLocale);
+	activeLocale = locale;
 
 	const setLocale = useCallback((nextLocale: AppLocale) => {
 		setLocaleState(nextLocale);

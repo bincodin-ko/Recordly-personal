@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { Button, Card, Link } from "@heroui/react";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight } from "@/components/ui/icons";
@@ -11,6 +12,7 @@ export function DashboardAnnouncements({
 }) {
 	const { enabled, banners } = config;
 	const [index, setIndex] = useState(0);
+	const { t } = useI18n();
 	if (!enabled || !banners.length) return null;
 	const active = index % banners.length;
 	const banner = banners[active];
@@ -28,7 +30,7 @@ export function DashboardAnnouncements({
 	const href = banner.href && /^https?:\/\//.test(banner.href) ? banner.href : undefined;
 	return (
 		<Card
-			aria-label="Announcements"
+			aria-label={t("editor.dashboard.announcements.label", "Announcements")}
 			aria-roledescription="carousel"
 			className="relative mx-7 mt-7 shrink-0 overflow-hidden rounded-2xl p-0 shadow-none lg:mx-10"
 		>
@@ -42,7 +44,7 @@ export function DashboardAnnouncements({
 							event.preventDefault();
 							void window.electronAPI
 								.openExternalUrl(href)
-								.catch(() => toast.error("Could not open announcement"));
+								.catch(() => toast.error(t("editor.dashboard.announcements.openFailed", "Could not open announcement")));
 						}}
 					>
 						{image}
@@ -57,21 +59,21 @@ export function DashboardAnnouncements({
 						isIconOnly
 						size="sm"
 						variant="secondary"
-						aria-label="Previous announcement"
+						aria-label={t("editor.dashboard.announcements.previous", "Previous announcement")}
 						onPress={() => setIndex((active + banners.length - 1) % banners.length)}
 					>
 						<ArrowLeft className="size-4" />
 					</Button>
 					<div
 						className="flex gap-2 rounded-full bg-black/30 px-2 py-0.5"
-						aria-label="Choose announcement"
+						aria-label={t("editor.dashboard.announcements.choose", "Choose announcement")}
 					>
 						{banners.map((banner, slide) => (
 							<Button
 								key={`${slide}:${banner.src}`}
 								isIconOnly
 								variant="ghost"
-								aria-label={`Announcement ${slide + 1}`}
+								aria-label={t("editor.dashboard.announcements.slide", "Announcement {{n}}", { n: slide + 1 })}
 								aria-pressed={slide === active}
 								onPress={() => setIndex(slide)}
 								className="!size-6 !min-h-6 !min-w-6 rounded-full p-0"
@@ -86,7 +88,7 @@ export function DashboardAnnouncements({
 						isIconOnly
 						size="sm"
 						variant="secondary"
-						aria-label="Next announcement"
+						aria-label={t("editor.dashboard.announcements.next", "Next announcement")}
 						onPress={() => setIndex((active + 1) % banners.length)}
 					>
 						<ArrowRight className="size-4" />

@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import type { Dispatch, MutableRefObject, RefObject, SetStateAction } from "react";
 import { useCallback } from "react";
 import { toast } from "@/components/ui/toast";
@@ -61,7 +62,7 @@ export function useTimelineEditingController(input: Input) {
 	const { timeline } = input;
 	const handleSourceFallbackLoadError = useCallback((error: unknown) => {
 		toast.warning(
-			`Could not load companion audio source: ${summarizeErrorMessage(getErrorMessage(error))}`,
+			translate("editor.audio.companionSingleLoadFailedWith", "Could not load companion audio source: {{error}}", { error: summarizeErrorMessage(getErrorMessage(error)) }),
 			{ duration: 10000 },
 		);
 	}, []);

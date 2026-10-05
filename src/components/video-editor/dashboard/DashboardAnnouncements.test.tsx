@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { renderToStaticMarkup } from "react-dom/server";
+import { renderToStaticMarkup as render } from "react-dom/server";
+import type { ReactElement } from "react";
+import { I18nProvider } from "@/contexts/I18nContext";
 import { DashboardAnnouncements } from "./DashboardAnnouncements";
 
+const renderToStaticMarkup = (node: ReactElement) =>
+	render(<I18nProvider>{node}</I18nProvider>);
 const banner = { src: "/banner.svg", alt: "Product news", href: "https://example.com/news" };
 describe("announcement configuration", () => {
 	it("hides disabled or empty announcements", () => {

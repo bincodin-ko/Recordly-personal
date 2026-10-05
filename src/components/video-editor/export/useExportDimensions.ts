@@ -18,6 +18,7 @@ import {
 } from "../exportDimensions";
 import type { CropRegion } from "../types";
 import type { VideoPlaybackRef } from "../VideoPlayback";
+import { translate } from "@/contexts/I18nContext";
 
 const MP4_CROP_PROBE_DEBOUNCE_MS = 200;
 
@@ -96,7 +97,16 @@ export function useExportDimensions({
 			});
 			if (!result.encoderPath) {
 				throw new Error(
-					`Video encoding not supported on this system. Tried codec ${DEFAULT_MP4_CODEC} at ${frameRate} FPS up to ${desiredSourceDimensions.width}x${desiredSourceDimensions.height}.`,
+					translate(
+						"editor.export.encodingUnsupported",
+						`Video encoding not supported on this system. Tried codec ${DEFAULT_MP4_CODEC} at ${frameRate} FPS up to ${desiredSourceDimensions.width}x${desiredSourceDimensions.height}.`,
+						{
+							codec: DEFAULT_MP4_CODEC,
+							fps: frameRate,
+							width: desiredSourceDimensions.width,
+							height: desiredSourceDimensions.height,
+						},
+					),
 				);
 			}
 			return result;

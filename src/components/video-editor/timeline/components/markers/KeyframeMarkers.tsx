@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useTimelinePresentation } from "../../core/TimelinePresentation";
 import { getPlayheadDisplayTime, getTimeAtClipSeam } from "../../core/clipPresentation";
 import { useTimelineContext } from "dnd-timeline";
@@ -98,7 +99,7 @@ const KeyframeMarkers: React.FC<KeyframeMarkersProps> = ({
 							e.stopPropagation();
 							setSelectedKeyframeId(kf.id);
 						}}
-						title={`Keyframe @ ${Math.round(kf.time)}ms (drag to move, Delete/Backspace to remove)`}
+						title={translate("timeline.markers.keyframe", "Keyframe @ {{ms}}ms (drag to move, Delete/Backspace to remove)", { ms: Math.round(kf.time) })}
 					>
 						<div
 							style={{

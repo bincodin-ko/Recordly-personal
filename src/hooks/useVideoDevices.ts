@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useEffect, useState } from "react";
 
 export interface VideoDevice {
@@ -60,7 +61,7 @@ export function useVideoDevices(enabled: boolean = true) {
 					const message =
 						error instanceof Error
 							? error.message
-							: "Failed to enumerate video devices";
+							: translate("launch.messages.videoDevicesFailed", "Failed to enumerate video devices");
 					setError(message);
 					console.error("Error loading video devices:", error);
 				}

@@ -6,7 +6,12 @@
 		"modeAuto": "Automatique",
 		"modeManual": "Manuel",
 		"modeManualDescription": "Définir un point de focus fixe pour ce zoom",
-		"modeAutoDescription": "La caméra suit automatiquement le curseur"
+		"modeAutoDescription": "La caméra suit automatiquement le curseur",
+		"mode": "Mode",
+		"amount": "Amount",
+		"globalSettings": "Animation",
+		"modeLabel": "Zoom mode",
+		"levelLabel": "Zoom level"
 	},
 	"trim": {
 		"deleteRegion": "Supprimer la zone de découpe"
@@ -15,7 +20,8 @@
 		"playbackSpeed": "Vitesse de lecture",
 		"selectRegion": "Sélectionnez une zone de vitesse à ajuster",
 		"deleteRegion": "Supprimer la zone de vitesse",
-		"label": "Vitesse"
+		"label": "Vitesse",
+		"unsupported": "Not supported for preview on this device"
 	},
 	"clip": {
 		"title": "Clip",
@@ -151,7 +157,32 @@
 		"paddingBottom": "Bas",
 		"paddingLeft": "Gauche",
 		"paddingRight": "Droite",
-		"removeBackground": "Supprimer l’arrière-plan"
+		"removeBackground": "Supprimer l’arrière-plan",
+		"devSection": "Dev",
+		"devSectionHint": "Temporary testing controls for native capture and motion tuning.",
+		"nativeCaptureWarningTester": "Native capture warning",
+		"nativeCaptureWarningTesterUnavailable": "This project is currently marked as native capture unavailable.",
+		"nativeCaptureWarningTesterAvailable": "This project is not marked as unsupported, but you can still open the modal for UI testing.",
+		"openNativeCaptureWarning": "Open warning",
+		"cameraDebugTuning": "Camera Debug Tuning",
+		"cameraDebugTuningHint": "Development-only spring tuning controls for camera motion.",
+		"cameraSpringStiffnessMultiplier": "Camera stiffness",
+		"cameraSpringDampingMultiplier": "Camera damping",
+		"cameraSpringMassMultiplier": "Camera mass",
+		"cursorDebugTuning": "Cursor Debug Tuning",
+		"cursorDebugTuningHint": "Development-only spring tuning controls.",
+		"cursorSpringStiffnessMultiplier": "Spring stiffness",
+		"cursorSpringDampingMultiplier": "Spring damping",
+		"cursorSpringMassMultiplier": "Spring mass",
+		"classicZoom": "Classic Animation",
+		"cursorDebugMovedToDev": "Cursor spring tuning is available in Settings > Dev.",
+		"webcamPosition": "Position",
+		"webcamCustomPosition": "Custom position",
+		"webcamHorizontal": "Horizontal",
+		"webcamVertical": "Vertical",
+		"webcamMargin": "Margin",
+		"customEffectColor": "Custom effect color",
+		"devBadge": "DEV"
 	},
 	"sections": {
 		"scene": "Scène",
@@ -161,7 +192,11 @@
 		"cursor": "Curseur",
 		"webcam": "Webcam",
 		"frame": "Cadre",
-		"crop": "Recadrage"
+		"crop": "Recadrage",
+		"appearance": "Appearance",
+		"settings": "Settings",
+		"title": "Editor tools",
+		"ariaLabel": "Settings sections"
 	},
 	"captions": {
 		"selectOnTimeline": "Sélectionnez un sous-titre sur la timeline pour le modifier.",
@@ -198,7 +233,24 @@
 			"split": "Split",
 			"merge": "Merge",
 			"delete": "Delete"
-		}
+		},
+		"generation": "Generation",
+		"useCustomModel": "Use custom",
+		"generatingStatus": "Generating captions. This can take a moment.",
+		"editSaved": "Caption updated",
+		"languageOptions": {
+			"auto": "Auto Detect",
+			"en": "English",
+			"es": "Spanish",
+			"fr": "French",
+			"de": "German",
+			"it": "Italian",
+			"pt": "Portuguese",
+			"zh": "Chinese (Simplified)",
+			"ja": "Japanese",
+			"ko": "Korean"
+		},
+		"downloadingModel": "Downloading caption model"
 	},
 	"crop": {
 		"title": "Recadrer la vidéo",
@@ -218,7 +270,16 @@
 		"uploadCustom": "Importer un fond personnalisé",
 		"uploadSuccess": "Image personnalisée importée avec succès !",
 		"uploadError": "Veuillez importer un fichier image JPG ou JPEG.",
-		"uploadErrorDescription": "Seules les images JPG et JPEG sont prises en charge."
+		"uploadErrorDescription": "Seules les images JPG et JPEG sont prises en charge.",
+		"video": "Video",
+		"addWallpaper": "Add wallpaper",
+		"addVideoWallpaper": "Add video wallpaper",
+		"customWallpaper": "Custom wallpaper",
+		"unsupportedFormat": "Unsupported format",
+		"unsupportedFormatDesc": "Please select a video file (mp4, webm, mov, etc.)",
+		"videoAdded": "Video background added",
+		"videoImportFailed": "Failed to import video background",
+		"customColor": "Custom color"
 	},
 	"export": {
 		"title": "Exportation",
@@ -240,7 +301,24 @@
 		"saveProject": "Enregistrer le projet",
 		"exportVideo": "Exporter en {{format}}",
 		"reportBug": "Signaler un bug",
-		"starOnGithub": "Mettre une étoile sur GitHub"
+		"starOnGithub": "Mettre une étoile sur GitHub",
+		"format": "Format",
+		"qualityTitle": "Quality",
+		"encodingTitle": "Encoding",
+		"nvidiaCuda": {
+			"title": "NVIDIA CUDA"
+		},
+		"captionSidecar": {
+			"title": "Export captions file",
+			"hint": "Save .srt and .vtt files next to your exported video."
+		},
+		"size": "Size",
+		"encoding": {
+			"fast": "Fast",
+			"balanced": "Balanced",
+			"quality": "Quality"
+		},
+		"formatVideo": "Video"
 	},
 	"audio": {
 		"title": "Audio",
@@ -258,5 +336,15 @@
 		"title": "Mises à jour",
 		"experimental": "Mises à jour expérimentales",
 		"saveFailed": "Impossible de changer le canal de mise à jour."
+	},
+	"annotation": {
+		"delete": "Delete Annotation"
+	},
+	"padding": {
+		"linkSides": "Link padding sides"
+	},
+	"general": {
+		"onboarding": "Onboarding",
+		"showOnboarding": "Show onboarding"
 	}
 }

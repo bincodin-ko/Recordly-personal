@@ -188,33 +188,33 @@ async function ensureNamedProjectSaveDoesNotOverwriteDifferentProject(
 
 			return {
 				success: false,
-				message: "A different project already uses this name",
+				message: "같은 이름의 다른 프로젝트가 이미 있어요",
 			};
 		}
 
 		if (existingVideoPath && incomingVideoPath && existingVideoPath !== incomingVideoPath) {
 			return {
 				success: false,
-				message: "A different project already uses this name",
+				message: "같은 이름의 다른 프로젝트가 이미 있어요",
 			};
 		}
 
 		if (!existingProjectId && !incomingProjectId && existingVideoPath && incomingVideoPath) {
 			return {
 				success: false,
-				message: "Unable to verify project identity for the chosen name",
+				message: "선택한 이름의 프로젝트를 확인하지 못했어요",
 			};
 		}
 
 		return {
 			success: false,
-			message: "Unable to verify project identity for the chosen name",
+			message: "선택한 이름의 프로젝트를 확인하지 못했어요",
 		};
 	} catch (error) {
 		console.error("Failed to verify existing named project before overwrite:", error);
 		return {
 			success: false,
-			message: "Unable to verify project identity for the chosen name",
+			message: "선택한 이름의 프로젝트를 확인하지 못했어요",
 		};
 	}
 }
@@ -378,7 +378,7 @@ export function registerProjectHandlers() {
 				return {
 					success: false,
 					error: openPathResult,
-					message: "Failed to open recordings folder.",
+					message: "녹화 폴더를 열지 못했어요.",
 				};
 			}
 
@@ -388,7 +388,7 @@ export function registerProjectHandlers() {
 			return {
 				success: false,
 				error: String(error),
-				message: "Failed to open recordings folder.",
+				message: "녹화 폴더를 열지 못했어요.",
 			};
 		}
 	});
@@ -415,7 +415,7 @@ export function registerProjectHandlers() {
 		try {
 			const current = await getRecordingsDir();
 			const result = await dialog.showOpenDialog({
-				title: "Choose recordings folder",
+				title: "녹화 폴더 선택",
 				defaultPath: current,
 				properties: ["openDirectory", "createDirectory", "promptToCreate"],
 			});
@@ -438,7 +438,7 @@ export function registerProjectHandlers() {
 			return {
 				success: false,
 				error: String(error),
-				message: "Failed to set recordings folder",
+				message: "녹화 폴더를 설정하지 못했어요",
 			};
 		}
 	});
@@ -476,7 +476,7 @@ export function registerProjectHandlers() {
 						success: true,
 						path: trustedExistingProjectPath,
 						projectId: preparedProject.projectId,
-						message: "Project saved successfully",
+						message: "프로젝트를 저장했어요",
 					};
 				}
 
@@ -492,10 +492,10 @@ export function registerProjectHandlers() {
 				const defaultName = `${safeName}.${PROJECT_FILE_EXTENSION}`;
 
 				const result = await dialog.showSaveDialog({
-					title: "Save Recordly Project",
+					title: "Recordly 프로젝트 저장",
 					defaultPath: path.join(projectsDir, defaultName),
 					filters: [
-						{ name: "Recordly Project", extensions: [PROJECT_FILE_EXTENSION] },
+						{ name: "Recordly 프로젝트", extensions: [PROJECT_FILE_EXTENSION] },
 						{ name: "JSON", extensions: ["json"] },
 					],
 					properties: ["createDirectory", "showOverwriteConfirmation"],
@@ -505,7 +505,7 @@ export function registerProjectHandlers() {
 					return {
 						success: false,
 						canceled: true,
-						message: "Save project canceled",
+						message: "프로젝트 저장을 취소했어요",
 					};
 				}
 
@@ -521,13 +521,13 @@ export function registerProjectHandlers() {
 					success: true,
 					path: result.filePath,
 					projectId: preparedProject.projectId,
-					message: "Project saved successfully",
+					message: "프로젝트를 저장했어요",
 				};
 			} catch (error) {
 				console.error("Failed to save project file:", error);
 				return {
 					success: false,
-					message: "Failed to save project file",
+					message: "프로젝트 파일을 저장하지 못했어요",
 					error: String(error),
 				};
 			}
@@ -548,7 +548,7 @@ export function registerProjectHandlers() {
 				if (!normalizedProjectName) {
 					return {
 						success: false,
-						message: "Project name is required",
+						message: "프로젝트 이름을 입력해 주세요",
 					};
 				}
 
@@ -628,13 +628,13 @@ export function registerProjectHandlers() {
 					success: true,
 					path: targetProjectPath,
 					projectId: preparedProject.projectId,
-					message: "Project saved successfully",
+					message: "프로젝트를 저장했어요",
 				};
 			} catch (error) {
 				console.error("Failed to save named project file:", error);
 				return {
 					success: false,
-					message: "Failed to save project file",
+					message: "프로젝트 파일을 저장하지 못했어요",
 					error: String(error),
 				};
 			}
@@ -645,21 +645,21 @@ export function registerProjectHandlers() {
 		try {
 			const projectsDir = await getProjectsDir();
 			const result = await dialog.showOpenDialog({
-				title: "Open Recordly Project",
+				title: "Recordly 프로젝트 열기",
 				defaultPath: projectsDir,
 				filters: [
 					{
-						name: "Recordly Project",
+						name: "Recordly 프로젝트",
 						extensions: [PROJECT_FILE_EXTENSION, ...LEGACY_PROJECT_FILE_EXTENSIONS],
 					},
 					{ name: "JSON", extensions: ["json"] },
-					{ name: "All Files", extensions: ["*"] },
+					{ name: "모든 파일", extensions: ["*"] },
 				],
 				properties: ["openFile"],
 			});
 
 			if (result.canceled || result.filePaths.length === 0) {
-				return { success: false, canceled: true, message: "Open project canceled" };
+				return { success: false, canceled: true, message: "프로젝트 열기를 취소했어요" };
 			}
 
 			return await loadProjectFromPath(result.filePaths[0]);
@@ -667,7 +667,7 @@ export function registerProjectHandlers() {
 			console.error("Failed to load project file:", error);
 			return {
 				success: false,
-				message: "Failed to load project file",
+				message: "프로젝트 파일을 불러오지 못했어요",
 				error: String(error),
 			};
 		}
@@ -676,7 +676,7 @@ export function registerProjectHandlers() {
 	ipcMain.handle("load-current-project-file", async () => {
 		try {
 			if (!currentProjectPath) {
-				return { success: false, message: "No active project" };
+				return { success: false, message: "열려 있는 프로젝트가 없어요" };
 			}
 
 			return await loadProjectFromPath(currentProjectPath);
@@ -684,7 +684,7 @@ export function registerProjectHandlers() {
 			console.error("Failed to load current project file:", error);
 			return {
 				success: false,
-				message: "Failed to load current project file",
+				message: "현재 프로젝트 파일을 불러오지 못했어요",
 				error: String(error),
 			};
 		}
@@ -776,7 +776,7 @@ export function registerProjectHandlers() {
 			console.error("Failed to open project file at path:", error);
 			return {
 				success: false,
-				message: "Failed to open project file",
+				message: "프로젝트 파일을 열지 못했어요",
 				error: String(error),
 			};
 		}
@@ -790,7 +790,7 @@ export function registerProjectHandlers() {
 				return {
 					success: false,
 					error: openPathResult,
-					message: "Failed to open projects folder.",
+					message: "프로젝트 폴더를 열지 못했어요.",
 				};
 			}
 
@@ -800,7 +800,7 @@ export function registerProjectHandlers() {
 			return {
 				success: false,
 				error: String(error),
-				message: "Failed to open projects folder.",
+				message: "프로젝트 폴더를 열지 못했어요.",
 			};
 		}
 	});
@@ -912,7 +912,7 @@ export function registerProjectHandlers() {
 	ipcMain.handle("delete-recording-file", async (_, filePath: string) => {
 		try {
 			if (!filePath) {
-				return { success: false, error: "Only auto-generated recordings can be deleted" };
+				return { success: false, error: "자동 생성된 녹화만 삭제할 수 있어요" };
 			}
 			const resolvedPath = await fs.realpath(filePath).catch(() => path.resolve(filePath));
 			const recordingsDirRaw = await getRecordingsDir();
@@ -923,7 +923,7 @@ export function registerProjectHandlers() {
 				!isPathInsideDirectory(resolvedPath, recordingsDir) ||
 				!isAutoRecordingPath(resolvedPath)
 			) {
-				return { success: false, error: "Only auto-generated recordings can be deleted" };
+				return { success: false, error: "자동 생성된 녹화만 삭제할 수 있어요" };
 			}
 			await fs.unlink(resolvedPath);
 			// Also delete the cursor telemetry sidecar if it exists

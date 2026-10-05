@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import type { useAppearanceState } from "../state/useAppearanceState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "@/components/ui/toast";
@@ -25,6 +26,7 @@ export function useRecordingLibrary(
 	const [selected, setSelected] = useState<Set<string>>(new Set());
 	const [loading, setLoading] = useState(false);
 	const [busy, setBusy] = useState(false);
+	const { t } = useI18n();
 	const [error, setError] = useState<string | null>(null);
 	const [removed, setRemoved] = useState<string[][]>([]);
 	const lock = useRef(false);
@@ -66,7 +68,7 @@ export function useRecordingLibrary(
 			setEntries((previous) => previous.filter((entry) => !paths.includes(entry.path)));
 			setSelected(new Set());
 		} catch (error) {
-			toast.error(`Could not remove videos: ${String(error)}`);
+			toast.error(`${t("editor.library.removeFailed", "Could not remove videos:")} ${String(error)}`);
 		} finally {
 			lock.current = false;
 			setBusy(false);
@@ -83,7 +85,7 @@ export function useRecordingLibrary(
 			setRemoved((previous) => previous.slice(0, -1));
 			await refresh();
 		} catch (error) {
-			toast.error(`Could not restore videos: ${String(error)}`);
+			toast.error(`${t("editor.library.restoreFailed", "Could not restore videos:")} ${String(error)}`);
 		} finally {
 			lock.current = false;
 			setBusy(false);
@@ -98,7 +100,7 @@ export function useRecordingLibrary(
 		try {
 			await window.electronAPI.cancelRecordingImport();
 		} catch (error) {
-			toast.error(`Could not stop import processing: ${String(error)}`);
+			toast.error(`${t("editor.library.stopImportFailed", "Could not stop import processing:")} ${String(error)}`);
 		}
 	};
 	const addToTimeline = async (paths: string | string[], index?: number) => {
@@ -131,9 +133,7 @@ export function useRecordingLibrary(
 				}
 				completed++;
 				if (current.current.project.videoSourcePath !== source)
-					throw new Error(
-						"The project changed while importing. Add the recordings again.",
-					);
+					throw new Error(t("editor.library.projectChanged", "The project changed while importing. Add the recordings again."));
 				media = result.value;
 				sourcePath = media.path;
 				if (media.webcam) webcam = { ...webcam, ...media.webcam, enabled: true };
@@ -183,13 +183,13 @@ export function useRecordingLibrary(
 			if (!media) return;
 			const { project, timeline, ui, appearance } = current.current;
 			if (project.videoSourcePath !== source)
-				throw new Error("The project changed while importing. Add the recordings again.");
+				throw new Error(t("editor.library.projectChanged", "The project changed while importing. Add the recordings again."));
 			// Prepare cleanup while retaining rollback ownership until the project check passes.
 			const prepared = await window.electronAPI.finishRecordingImport(media.path);
 			if (!prepared.success)
-				throw new Error(prepared.error || "Could not finalize imported media");
+				throw new Error(prepared.error || t("editor.library.finalizeFailed", "Could not finalize imported media"));
 			if (current.current.project.videoSourcePath !== source)
-				throw new Error("The project changed while importing. Add the recordings again.");
+				throw new Error(t("editor.library.projectChanged", "The project changed while importing. Add the recordings again."));
 			// Send acceptance before synchronous project state updates; no await can switch projects here.
 			void window.electronAPI
 				.finishRecordingImport(media.path, true)
@@ -220,11 +220,11 @@ export function useRecordingLibrary(
 			ui.setPreviewVersion((version) => version + 1);
 			toast.success(
 				completed === 1
-					? "Video added to timeline"
-					: `${completed} videos added to timeline`,
+					? t("editor.library.addedOne", "Video added to timeline")
+					: t("editor.library.addedMany", "{{count}} videos added to timeline", { count: completed }),
 			);
 		} catch (error) {
-			if (!cancelled.current) toast.error(`Could not add video: ${String(error)}`);
+			if (!cancelled.current) toast.error(`${t("editor.library.addFailed", "Could not add video:")} ${String(error)}`);
 		} finally {
 			try {
 				const cleanup = await window.electronAPI.finishRecordingImport(

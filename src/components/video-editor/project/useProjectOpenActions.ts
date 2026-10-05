@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import {
 	type Dispatch,
 	type MutableRefObject,
@@ -67,11 +68,11 @@ export function useProjectOpenActions({
 				const result = await window.electronAPI.openProjectFileAtPath(projectPath);
 				if (result.canceled) return;
 				if (!result.success) {
-					project.setError(result.error || result.message || "Failed to load project");
+					project.setError(result.error || result.message || translate("editor.messages.failedToLoadProject", "Failed to load project"));
 					return;
 				}
 				if (!(await applyLoadedProject(result.project, result.path ?? null))) {
-					project.setError("Could not load project: invalid project file format");
+					project.setError(translate("editor.messages.couldNotLoadProjectInvalidProject", "Could not load project: invalid project file format"));
 					return;
 				}
 				project.setProjectBrowserOpen(false);
@@ -79,7 +80,7 @@ export function useProjectOpenActions({
 				return true;
 			} catch (error) {
 				project.setError(
-					`Could not load project: ${error instanceof Error ? error.message : String(error)}`,
+					translate("editor.messages.couldNotLoadProject", "Could not load project: {{error}}", { error: error instanceof Error ? error.message : String(error) }),
 				);
 			}
 		},
@@ -97,23 +98,25 @@ export function useProjectOpenActions({
 			const result = await window.electronAPI.openVideoFilePicker({ includeProjects: true });
 			if (result.canceled) return;
 			if (!result.success) {
-				toast.error(result.message || "Failed to import file");
+				toast.error(result.message || translate("editor.messages.failedToImportFile", "Failed to import file"));
 				return;
 			}
 			if (result.kind === "project" || result.project) {
 				if (!(await applyLoadedProject(result.project, result.path ?? null))) {
-					project.setError("Could not load project: invalid project file format");
+					project.setError(translate("editor.messages.couldNotLoadProjectInvalidProject", "Could not load project: invalid project file format"));
 					return;
 				}
 				project.setProjectBrowserOpen(false);
 				await refreshProjectLibrary();
 				toast.success(
-					result.path ? `Project loaded from ${result.path}` : "Project loaded",
+					result.path
+						? translate("editor.messages.projectLoadedFrom", "Project loaded from {{path}}", { path: result.path })
+						: translate("editor.messages.projectLoaded", "Project loaded"),
 				);
 				return;
 			}
 			if (!result.path) {
-				toast.error("No media file selected");
+				toast.error(translate("editor.messages.noMediaFileSelected", "No media file selected"));
 				return;
 			}
 
@@ -148,10 +151,10 @@ export function useProjectOpenActions({
 			applySessionPresentation(null);
 			project.setProjectBrowserOpen(false);
 			await refreshProjectLibrary();
-			toast.success("Media imported");
+			toast.success(translate("editor.messages.mediaImported", "Media imported"));
 		} catch (error) {
 			project.setError(
-				`Could not load file: ${error instanceof Error ? error.message : String(error)}`,
+				translate("editor.messages.couldNotLoadFile", "Could not load file: {{error}}", { error: error instanceof Error ? error.message : String(error) }),
 			);
 		}
 	}, [
@@ -241,7 +244,7 @@ export function useProjectOpenActions({
 		async (path: string, name: string) => {
 			const result = await window.electronAPI.renameLibraryProject(path, name);
 			if (!result.success || !result.path)
-				throw new Error(result.error || "Could not rename project");
+				throw new Error(result.error || translate("editor.messages.couldNotRenameProject", "Could not rename project"));
 			if (project.currentProjectPath === path) project.setCurrentProjectPath(result.path);
 			await refreshProjectLibrary();
 			return result.path;

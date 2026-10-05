@@ -16,11 +16,34 @@
 		"save": "Сохранить",
 		"undo": "Отменить",
 		"delete": "Удалить",
-		"done": "Готово"
+		"done": "Готово",
+		"copy": "Copy"
 	},
 	"errors": {
 		"invalidFileType": "Неверный формат файла",
 		"failedToUploadImage": "Не удалось загрузить изображение",
-		"fileReadError": "Произошла ошибка при чтении файла."
+		"fileReadError": "Произошла ошибка при чтении файла.",
+		"copyFailed": "Could not copy error"
+	},
+	"announcements": {
+		"openFailed": "Failed to open link.",
+		"carousel": "Announcements",
+		"previous": "Previous announcement",
+		"show": "Show announcement",
+		"next": "Next announcement",
+		"dismiss": "Dismiss"
+	},
+	"colorPicker": {
+		"colors": "Colors",
+		"presetColors": "Preset colors",
+		"hexColor": "Hex color",
+		"clearBackground": "Clear background"
+	},
+	"a11y": {
+		"actions": "Actions",
+		"selectOption": "Select option"
+	},
+	"account": {
+		"localProfile": "Local profile"
 	}
 }

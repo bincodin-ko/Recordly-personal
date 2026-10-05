@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useTimelineContext } from "dnd-timeline";
 import { useEffect, useState, type RefObject } from "react";
 import { cn } from "@/lib/utils";
@@ -107,7 +108,7 @@ export default function PlaybackCursor({
 			>
 				<button
 					type="button"
-					aria-label={`Playhead ${formatPlayheadTime(clampedTime)}`}
+					aria-label={translate("timeline.playhead", "Playhead {{time}}", { time: formatPlayheadTime(clampedTime) })}
 					data-testid="playhead-cap"
 					onMouseEnter={() => setIsHovered(true)}
 					onMouseLeave={() => setIsHovered(false)}

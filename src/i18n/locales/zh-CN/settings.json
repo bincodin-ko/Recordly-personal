@@ -6,7 +6,12 @@
 		"modeAuto": "自动",
 		"modeManual": "手动",
 		"modeManualDescription": "为此缩放设置固定焦点",
-		"modeAutoDescription": "镜头会自动跟随光标"
+		"modeAutoDescription": "镜头会自动跟随光标",
+		"mode": "Mode",
+		"amount": "Amount",
+		"globalSettings": "Animation",
+		"modeLabel": "Zoom mode",
+		"levelLabel": "Zoom level"
 	},
 	"trim": {
 		"deleteRegion": "删除修剪区域"
@@ -15,7 +20,8 @@
 		"playbackSpeed": "播放速度",
 		"selectRegion": "选择变速区域以调整",
 		"deleteRegion": "删除变速区域",
-		"label": "速度"
+		"label": "速度",
+		"unsupported": "Not supported for preview on this device"
 	},
 	"clip": {
 		"title": "片段",
@@ -151,7 +157,32 @@
 		"paddingBottom": "下",
 		"paddingLeft": "左",
 		"paddingRight": "右",
-		"removeBackground": "移除背景"
+		"removeBackground": "移除背景",
+		"devSection": "Dev",
+		"devSectionHint": "Temporary testing controls for native capture and motion tuning.",
+		"nativeCaptureWarningTester": "Native capture warning",
+		"nativeCaptureWarningTesterUnavailable": "This project is currently marked as native capture unavailable.",
+		"nativeCaptureWarningTesterAvailable": "This project is not marked as unsupported, but you can still open the modal for UI testing.",
+		"openNativeCaptureWarning": "Open warning",
+		"cameraDebugTuning": "Camera Debug Tuning",
+		"cameraDebugTuningHint": "Development-only spring tuning controls for camera motion.",
+		"cameraSpringStiffnessMultiplier": "Camera stiffness",
+		"cameraSpringDampingMultiplier": "Camera damping",
+		"cameraSpringMassMultiplier": "Camera mass",
+		"cursorDebugTuning": "Cursor Debug Tuning",
+		"cursorDebugTuningHint": "Development-only spring tuning controls.",
+		"cursorSpringStiffnessMultiplier": "Spring stiffness",
+		"cursorSpringDampingMultiplier": "Spring damping",
+		"cursorSpringMassMultiplier": "Spring mass",
+		"classicZoom": "Classic Animation",
+		"cursorDebugMovedToDev": "Cursor spring tuning is available in Settings > Dev.",
+		"webcamPosition": "Position",
+		"webcamCustomPosition": "Custom position",
+		"webcamHorizontal": "Horizontal",
+		"webcamVertical": "Vertical",
+		"webcamMargin": "Margin",
+		"customEffectColor": "Custom effect color",
+		"devBadge": "DEV"
 	},
 	"sections": {
 		"scene": "场景",
@@ -161,7 +192,11 @@
 		"cursor": "光标",
 		"webcam": "摄像头",
 		"frame": "边框",
-		"crop": "裁剪"
+		"crop": "裁剪",
+		"appearance": "Appearance",
+		"settings": "Settings",
+		"title": "Editor tools",
+		"ariaLabel": "Settings sections"
 	},
 	"captions": {
 		"selectOnTimeline": "在时间轴上选择字幕进行编辑。",
@@ -198,7 +233,24 @@
 			"split": "Split",
 			"merge": "Merge",
 			"delete": "Delete"
-		}
+		},
+		"generation": "Generation",
+		"useCustomModel": "Use custom",
+		"generatingStatus": "Generating captions. This can take a moment.",
+		"editSaved": "Caption updated",
+		"languageOptions": {
+			"auto": "Auto Detect",
+			"en": "English",
+			"es": "Spanish",
+			"fr": "French",
+			"de": "German",
+			"it": "Italian",
+			"pt": "Portuguese",
+			"zh": "Chinese (Simplified)",
+			"ja": "Japanese",
+			"ko": "Korean"
+		},
+		"downloadingModel": "Downloading caption model"
 	},
 	"crop": {
 		"title": "裁剪视频",
@@ -218,7 +270,16 @@
 		"uploadCustom": "上传自定义",
 		"uploadSuccess": "自定义图片上传成功！",
 		"uploadError": "请上传 JPG 或 JPEG 图片文件。",
-		"uploadErrorDescription": "仅支持 JPG 和 JPEG 图片。"
+		"uploadErrorDescription": "仅支持 JPG 和 JPEG 图片。",
+		"video": "Video",
+		"addWallpaper": "Add wallpaper",
+		"addVideoWallpaper": "Add video wallpaper",
+		"customWallpaper": "Custom wallpaper",
+		"unsupportedFormat": "Unsupported format",
+		"unsupportedFormatDesc": "Please select a video file (mp4, webm, mov, etc.)",
+		"videoAdded": "Video background added",
+		"videoImportFailed": "Failed to import video background",
+		"customColor": "Custom color"
 	},
 	"export": {
 		"title": "导出",
@@ -240,7 +301,24 @@
 		"saveProject": "保存项目",
 		"exportVideo": "导出{{format}}",
 		"reportBug": "报告问题",
-		"starOnGithub": "在 GitHub 上点赞"
+		"starOnGithub": "在 GitHub 上点赞",
+		"format": "Format",
+		"qualityTitle": "Quality",
+		"encodingTitle": "Encoding",
+		"nvidiaCuda": {
+			"title": "NVIDIA CUDA"
+		},
+		"captionSidecar": {
+			"title": "Export captions file",
+			"hint": "Save .srt and .vtt files next to your exported video."
+		},
+		"size": "Size",
+		"encoding": {
+			"fast": "Fast",
+			"balanced": "Balanced",
+			"quality": "Quality"
+		},
+		"formatVideo": "Video"
 	},
 	"audio": {
 		"title": "音频",
@@ -258,5 +336,15 @@
 		"title": "更新",
 		"experimental": "实验性更新",
 		"saveFailed": "无法更改更新频道。"
+	},
+	"annotation": {
+		"delete": "Delete Annotation"
+	},
+	"padding": {
+		"linkSides": "Link padding sides"
+	},
+	"general": {
+		"onboarding": "Onboarding",
+		"showOnboarding": "Show onboarding"
 	}
 }

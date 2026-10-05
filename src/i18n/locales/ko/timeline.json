@@ -1,30 +1,30 @@
 {
 	"zoom": {
-		"cannotPlace": "여기에는 확대를 배치할 수 없습니다",
-		"existsOrNoSpace": "이 위치에는 이미 확대가 있거나 사용할 수 있는 공간이 부족합니다.",
-		"suggestHandlerUnavailable": "확대 추천 기능을 사용할 수 없습니다",
-		"noTelemetry": "사용 가능한 커서 텔레메트리가 없습니다",
-		"recordFirst": "커서 기반 추천을 만들려면 먼저 화면 녹화를 진행해 주세요.",
-		"noUsableTelemetry": "사용 가능한 커서 텔레메트리가 없습니다",
-		"notEnoughMovement": "이 녹화에는 충분한 커서 이동 데이터가 포함되어 있지 않습니다.",
-		"noInteractionMoments": "명확한 상호작용 지점을 찾지 못했습니다",
-		"tryRecording": "중요한 동작 주변에서 잠시 멈추거나 클릭하는 녹화를 시도해 보세요.",
-		"noAutoZoomSlots": "자동 확대를 배치할 수 있는 구간이 없습니다",
-		"dwellPointsOverlap": "감지된 머무름 지점이 기존 확대 구간과 겹칩니다.",
-		"addedSuggestions": "상호작용 기반 확대 추천 {{count}}개를 추가했습니다",
-		"label": "확대 {{index}}",
-		"addZoom": "확대 추가 (Z)",
-		"suggestZooms": "커서 기반 확대 추천"
+		"cannotPlace": "여기에는 줌을 넣을 수 없어요",
+		"existsOrNoSpace": "이 위치에 이미 줌이 있거나 공간이 부족해요.",
+		"suggestHandlerUnavailable": "줌 추천 기능을 사용할 수 없어요",
+		"noTelemetry": "커서 기록이 없어요",
+		"recordFirst": "커서 기반 추천을 받으려면 먼저 화면을 녹화해 주세요.",
+		"noUsableTelemetry": "사용할 수 있는 커서 기록이 없어요",
+		"notEnoughMovement": "이 녹화에는 커서 움직임 데이터가 충분하지 않아요.",
+		"noInteractionMoments": "뚜렷한 클릭·조작 지점을 찾지 못했어요",
+		"tryRecording": "중요한 동작 전후로 멈추거나 클릭한 녹화를 사용해 보세요.",
+		"noAutoZoomSlots": "자동 줌을 넣을 자리가 없어요",
+		"dwellPointsOverlap": "커서가 머문 지점이 기존 줌 구간과 겹쳐요.",
+		"addedSuggestions": "클릭·조작 기반 줌 추천 {{count}}개를 추가했어요",
+		"label": "줌 {{index}}",
+		"addZoom": "줌 추가 (Z)",
+		"suggestZooms": "커서 기반 줌 추천"
 	},
 	"trim": {
-		"cannotPlace": "여기에는 트림을 배치할 수 없습니다",
-		"existsOrNoSpace": "이 위치에는 이미 트림이 있거나 사용할 수 있는 공간이 부족합니다.",
-		"label": "트림 {{index}}",
-		"addTrim": "트림 추가 (T)"
+		"cannotPlace": "여기에는 자르기를 넣을 수 없어요",
+		"existsOrNoSpace": "이 위치에 이미 자르기 구간이 있거나 공간이 부족해요.",
+		"label": "자르기 {{index}}",
+		"addTrim": "자르기 추가 (T)"
 	},
 	"speed": {
-		"cannotPlace": "여기에는 속도 구간을 배치할 수 없습니다",
-		"existsOrNoSpace": "이 위치에는 이미 속도 구간이 있거나 사용할 수 있는 공간이 부족합니다.",
+		"cannotPlace": "여기에는 속도 구간을 넣을 수 없어요",
+		"existsOrNoSpace": "이 위치에 이미 속도 구간이 있거나 공간이 부족해요.",
 		"label": "속도"
 	},
 	"annotation": {
@@ -37,5 +37,57 @@
 	},
 	"addSpeed": "속도 추가 (S)",
 	"resizeLeft": "왼쪽 크기 조절",
-	"resizeRight": "오른쪽 크기 조절"
+	"resizeRight": "오른쪽 크기 조절",
+	"notify": {
+		"audioReadFailed": "오디오 파일을 읽지 못했어요",
+		"audioReadFailedDesc": "파일이 손상됐거나 지원하지 않는 형식일 수 있어요.",
+		"audioPlaceFailed": "여기에는 오디오를 넣을 수 없어요",
+		"audioNoSpace": "현재 재생 위치에 남은 공간이 없어요.",
+		"audioOverlap": "이 위치에 이미 오디오 구간이 있거나 공간이 부족해요.",
+		"captionPlaceFailed": "여기에는 자막을 넣을 수 없어요",
+		"captionExists": "이 위치에 이미 자막이 있어요.",
+		"zoomPlaceFailed": "여기에는 줌을 넣을 수 없어요",
+		"zoomNoRoom": "이미 줌 구간이 있거나, 다음 줌 또는 클립 끝까지 공간이 부족해요.",
+		"zoomSuggestLoop": "커서 반복이 켜져 있으면 줌 추천을 쓸 수 없어요.",
+		"zoomSuggestUnavailable": "줌 추천 기능을 쓸 수 없어요",
+		"noTelemetry": "커서 기록이 없어요",
+		"noTelemetryDesc": "커서 기반 추천을 받으려면 먼저 화면을 녹화해 주세요.",
+		"telemetryUnusable": "쓸 수 있는 커서 기록이 없어요",
+		"telemetryUnusableDesc": "녹화에 커서 움직임 데이터가 충분하지 않아요.",
+		"noInteractions": "뚜렷한 클릭·조작 지점을 찾지 못했어요",
+		"noInteractionsDesc": "중요한 동작 전후로 멈추거나 클릭한 녹화를 사용해 보세요.",
+		"noSlots": "자동 줌을 넣을 자리가 없어요",
+		"noSlotsDesc": "커서가 머문 지점이 기존 줌 구간과 겹쳐요.",
+		"zoomSuggestAdded": "클릭·조작 기반 줌 추천 {{count}}개를 추가했어요"
+	},
+	"labels": {
+		"emptyText": "빈 텍스트",
+		"image": "이미지",
+		"annotation": "주석",
+		"audio": "오디오",
+		"caption": "자막",
+		"zoomN": "줌 {{n}}",
+		"clipN": "클립 {{n}}"
+	},
+	"item": {
+		"resizeLeft": "왼쪽 크기 조절",
+		"resizeRight": "오른쪽 크기 조절",
+		"manual": "수동",
+		"auto": "자동",
+		"trim": "자르기",
+		"clip": "클립"
+	},
+	"empty": {
+		"title": "불러온 영상이 없어요",
+		"hint": "영상을 끌어다 놓으면 편집을 시작할 수 있어요"
+	},
+	"hints": {
+		"clip": "C 키로 클립 나누기",
+		"annotation": "A 키로 주석 추가",
+		"audio": "음악 아이콘을 눌러 오디오 추가"
+	},
+	"markers": {
+		"keyframe": "키프레임 @ {{ms}}ms (끌어서 이동, Delete/Backspace로 삭제)"
+	},
+	"playhead": "재생 헤드 {{time}}"
 }

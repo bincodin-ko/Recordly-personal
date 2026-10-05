@@ -286,8 +286,7 @@ export function EditorExportMenu(props: Props) {
 												) : null}
 												{isLegacyExportInProgress ? (
 													<p className="mt-1 text-[11px] text-muted-foreground/70">
-														Export too slow? Cancel and try Lightning
-														export!
+														{t("editor.export.tooSlow", "Export too slow? Cancel and try Lightning export!")}
 													</p>
 												) : null}
 											</div>
@@ -340,7 +339,7 @@ export function EditorExportMenu(props: Props) {
 										) : null}
 										{exportRuntimeLabel ? (
 											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												Path: {exportRuntimeLabel}
+												{t("editor.export.pathLabel", "Path: {{path}}", { path: exportRuntimeLabel })}
 											</p>
 										) : null}
 										{exportNativeSkipLabel ? (
@@ -356,7 +355,7 @@ export function EditorExportMenu(props: Props) {
 										</p>
 										{exportRuntimeLabel ? (
 											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												Path: {exportRuntimeLabel}
+												{t("editor.export.pathLabel", "Path: {{path}}", { path: exportRuntimeLabel })}
 											</p>
 										) : null}
 										<p className="mt-1 select-text whitespace-pre-wrap break-words text-xs leading-relaxed text-muted-foreground">
@@ -427,7 +426,7 @@ export function EditorExportMenu(props: Props) {
 										</p>
 										{exportRuntimeLabel ? (
 											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												Path: {exportRuntimeLabel}
+												{t("editor.export.pathLabel", "Path: {{path}}", { path: exportRuntimeLabel })}
 											</p>
 										) : null}
 										<p className="mt-3 truncate text-xs text-muted-foreground/70">

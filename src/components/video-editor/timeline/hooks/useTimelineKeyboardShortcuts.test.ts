@@ -2,7 +2,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_SHORTCUTS } from "@/lib/shortcuts";
 import { useTimelineKeyboardShortcuts } from "./useTimelineKeyboardShortcuts";
 
-vi.mock("react", () => ({ useEffect: (effect: () => void) => effect() }));
+vi.mock("react", () => ({
+	createContext: () => ({}),
+	useEffect: (effect: () => void) => effect(),
+}));
 class Element {
 	isContentEditable = false;
 	inOverlay = false;

@@ -5,7 +5,7 @@ import type {
 	SourceAudioTrackMeta,
 	SourceAudioTrackSettings,
 } from "@/components/video-editor/audio/audioTypes";
-import { useScopedT } from "@/contexts/I18nContext";
+import { translate, useScopedT } from "@/contexts/I18nContext";
 import { useShortcuts } from "@/contexts/ShortcutsContext";
 import { fromFileUrl } from "../projectPersistence";
 import type {
@@ -410,9 +410,9 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 						<Plus className="w-6 h-6 text-muted-foreground" />
 					</div>
 					<div className="text-center">
-						<p className="text-sm font-medium text-muted-foreground">No Video Loaded</p>
+						<p className="text-sm font-medium text-muted-foreground">{translate("timeline.empty.title", "No Video Loaded")}</p>
 						<p className="text-xs text-muted-foreground/70 mt-1">
-							Drag and drop a video to start editing
+							{translate("timeline.empty.hint", "Drag and drop a video to start editing")}
 						</p>
 					</div>
 				</div>

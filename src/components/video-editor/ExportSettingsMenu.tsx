@@ -271,7 +271,7 @@ export function ExportSettingsMenu({
 					<Button size="lg" onClick={onExport} className="w-full">
 						<Download />
 						{tSettings("export.exportVideo", undefined, {
-							format: exportFormat === "gif" ? "GIF" : "Video",
+							format: exportFormat === "gif" ? "GIF" : tSettings("export.formatVideo", "Video"),
 						})}
 					</Button>
 				</Card.Footer>

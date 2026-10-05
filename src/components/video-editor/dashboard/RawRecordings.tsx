@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { Modal } from "@heroui/react";
 import { useEffect, useRef, useState } from "react";
 import { MusicNotes } from "@/components/ui/icons";
@@ -70,6 +71,7 @@ export function RawPreview({
 	entry: ProjectLibraryEntry | null;
 	onClose: () => void;
 }) {
+	const { t } = useI18n();
 	return (
 		<Modal
 			isOpen={!!entry}
@@ -79,7 +81,7 @@ export function RawPreview({
 		>
 			<Modal.Backdrop>
 				<Modal.Container size="lg">
-					<Modal.Dialog aria-label="Raw file preview">
+					<Modal.Dialog aria-label={t("editor.dashboard.rawPreview", "Raw file preview")}>
 						<Modal.CloseTrigger />
 						<Modal.Header>
 							<Modal.Heading>{entry?.name}</Modal.Heading>

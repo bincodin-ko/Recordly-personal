@@ -25,13 +25,13 @@ export function registerCaptionHandlers() {
 			const includeProjects = Boolean(options?.includeProjects);
 			const recordingsDir = await getRecordingsDir();
 			const result = await dialog.showOpenDialog({
-				title: includeProjects ? "Import Media or Recordly Project" : "Select Video File",
+				title: includeProjects ? "미디어 또는 Recordly 프로젝트 가져오기" : "영상 파일 선택",
 				defaultPath: recordingsDir,
 				filters: [
 					...(includeProjects
 						? [
 								{
-									name: "Media or Recordly Projects",
+									name: "미디어 또는 Recordly 프로젝트",
 									extensions: [
 										...VIDEO_FILE_EXTENSIONS,
 										...PROJECT_FILE_EXTENSIONS,
@@ -43,7 +43,7 @@ export function registerCaptionHandlers() {
 					...(includeProjects
 						? [{ name: "Recordly Projects", extensions: PROJECT_FILE_EXTENSIONS }]
 						: []),
-					{ name: "All Files", extensions: ["*"] },
+					{ name: "모든 파일", extensions: ["*"] },
 				],
 				properties: ["openFile"],
 			});
@@ -73,7 +73,7 @@ export function registerCaptionHandlers() {
 			console.error("Failed to open file picker:", error);
 			return {
 				success: false,
-				message: "Failed to open file picker",
+				message: "파일 선택창을 열지 못했어요",
 				error: String(error),
 			};
 		}
@@ -82,13 +82,13 @@ export function registerCaptionHandlers() {
 	ipcMain.handle("open-audio-file-picker", async () => {
 		try {
 			const result = await dialog.showOpenDialog({
-				title: "Select Audio File",
+				title: "오디오 파일 선택",
 				filters: [
 					{
-						name: "Audio Files",
+						name: "오디오 파일",
 						extensions: ["mp3", "wav", "aac", "m4a", "flac", "ogg"],
 					},
-					{ name: "All Files", extensions: ["*"] },
+					{ name: "모든 파일", extensions: ["*"] },
 				],
 				properties: ["openFile"],
 			});
@@ -106,7 +106,7 @@ export function registerCaptionHandlers() {
 			console.error("Failed to open audio file picker:", error);
 			return {
 				success: false,
-				message: "Failed to open audio file picker",
+				message: "오디오 파일 선택창을 열지 못했어요",
 				error: String(error),
 			};
 		}
@@ -115,13 +115,13 @@ export function registerCaptionHandlers() {
 	ipcMain.handle("open-whisper-executable-picker", async () => {
 		try {
 			const result = await dialog.showOpenDialog({
-				title: "Select Whisper Executable",
+				title: "Whisper 실행 파일 선택",
 				filters: [
 					{
-						name: "Executables",
+						name: "실행 파일",
 						extensions: process.platform === "win32" ? ["exe", "cmd", "bat"] : ["*"],
 					},
-					{ name: "All Files", extensions: ["*"] },
+					{ name: "모든 파일", extensions: ["*"] },
 				],
 				properties: ["openFile"],
 			});
@@ -141,10 +141,10 @@ export function registerCaptionHandlers() {
 	ipcMain.handle("open-whisper-model-picker", async () => {
 		try {
 			const result = await dialog.showOpenDialog({
-				title: "Select Whisper Model",
+				title: "Whisper 모델 선택",
 				filters: [
-					{ name: "Whisper Models", extensions: ["bin"] },
-					{ name: "All Files", extensions: ["*"] },
+					{ name: "Whisper 모델", extensions: ["bin"] },
+					{ name: "모든 파일", extensions: ["*"] },
 				],
 				properties: ["openFile"],
 			});

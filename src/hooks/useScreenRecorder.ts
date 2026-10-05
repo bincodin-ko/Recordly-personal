@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { fixWebmDuration } from "@fix-webm-duration/fix";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "@/components/ui/toast";
@@ -178,7 +179,7 @@ function getErrorMessage(error: unknown) {
 		}
 	}
 
-	return "An unexpected error occurred";
+	return translate("launch.messages.unexpectedError", "An unexpected error occurred");
 }
 
 export function normalizeBrowserMicrophoneProfile(value?: string | null): BrowserMicrophoneProfile {
@@ -557,8 +558,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 			await window.electronAPI.openScreenRecordingPreferences();
 			alert(
 				options.startup
-					? "Recordly needs Screen Recording permission before you start. System Settings has been opened. After enabling it, quit and reopen Recordly."
-					: "Screen Recording permission is still missing. System Settings has been opened again. Enable it, then quit and reopen Recordly before recording.",
+					? translate("launch.messages.screenPermissionStartup", "Recordly needs Screen Recording permission before you start. System Settings has been opened. After enabling it, quit and reopen Recordly.")
+					: translate("launch.messages.screenPermissionMissing", "Screen Recording permission is still missing. System Settings has been opened again. Enable it, then quit and reopen Recordly before recording."),
 			);
 			return false;
 		}
@@ -580,8 +581,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 		await window.electronAPI.openAccessibilityPreferences();
 		alert(
 			options.startup
-				? "Recordly also needs Accessibility permission for cursor tracking. System Settings has been opened. After enabling it, quit and reopen Recordly."
-				: "Accessibility permission is still missing. System Settings has been opened again. Enable it, then quit and reopen Recordly before recording.",
+				? translate("launch.messages.accessibilityPermissionStartup", "Recordly also needs Accessibility permission for cursor tracking. System Settings has been opened. After enabling it, quit and reopen Recordly.")
+				: translate("launch.messages.accessibilityPermissionMissing", "Accessibility permission is still missing. System Settings has been opened again. Enable it, then quit and reopen Recordly before recording."),
 		);
 
 		return false;
@@ -916,17 +917,17 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 				);
 				if (!result.success) {
 					const errorMessage =
-						result.error || "Failed to save the fallback microphone audio track";
+						result.error || translate("launch.messages.failedToSaveTheFallbackMicrophone", "Failed to save the fallback microphone audio track");
 					console.warn("Failed to store microphone sidecar:", errorMessage);
 					toast.error(
-						`${errorMessage}. Recording was saved without the fallback microphone track.`,
+						translate("launch.messages.savedWithoutMicTrack", "{{error}}. Recording was saved without the fallback microphone track.", { error: errorMessage }),
 						{ id: MICROPHONE_SIDECAR_ERROR_TOAST_ID, duration: 10000 },
 					);
 				}
 			} catch (error) {
 				console.warn("Failed to store microphone sidecar:", error);
 				toast.error(
-					`${getErrorMessage(error)}. Recording was saved without the fallback microphone track.`,
+					translate("launch.messages.savedWithoutMicTrack", "{{error}}. Recording was saved without the fallback microphone track.", { error: getErrorMessage(error) }),
 					{ id: MICROPHONE_SIDECAR_ERROR_TOAST_ID, duration: 10000 },
 				);
 			} finally {
@@ -1132,7 +1133,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 		const selectedSource =
 			existingSource ?? (platform === "linux" ? LINUX_PORTAL_SOURCE : null);
 		if (!selectedSource) {
-			alert("Please select a source to record");
+			alert(translate("launch.messages.pleaseSelectASourceToRecord", "Please select a source to record"));
 			return null;
 		}
 
@@ -1173,7 +1174,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 					void logNativeCaptureDiagnostics("is-native-windows-capture-available");
 					hasShownNativeWindowsFallbackToast.current = true;
 					toast.info(
-						"Native Windows capture is unavailable. Falling back to browser capture.",
+						translate("launch.messages.nativeWindowsCaptureIsUnavailableFalling", "Native Windows capture is unavailable. Falling back to browser capture."),
 					);
 				}
 			} catch {
@@ -1181,7 +1182,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 				if (!hasShownNativeWindowsFallbackToast.current) {
 					hasShownNativeWindowsFallbackToast.current = true;
 					toast.info(
-						"Unable to check native Windows capture. Falling back to browser capture.",
+						translate("launch.messages.unableToCheckNativeWindowsCapture", "Unable to check native Windows capture. Falling back to browser capture."),
 					);
 				}
 			}
@@ -1348,8 +1349,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 					const failureMessage = await buildNativeCaptureFailureMessage(
 						"stop-native-screen-recording",
 						isMacOS
-							? "Failed to finish the macOS recording, so the editor was not opened."
-							: "Failed to finish the recording, so the editor was not opened.",
+							? translate("launch.messages.finishMacFailed", "Failed to finish the macOS recording, so the editor was not opened.")
+							: translate("launch.messages.finishFailed", "Failed to finish the recording, so the editor was not opened."),
 					);
 					await notifyRecordingFinalizationFailure(failureMessage);
 					return;
@@ -1740,14 +1741,14 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 						if (!hasShownNativeWindowsFallbackToast.current) {
 							hasShownNativeWindowsFallbackToast.current = true;
 							toast.warning(
-								"Native Windows capture failed to start. Falling back to browser capture.",
+								translate("launch.messages.nativeWindowsCaptureFailedToStart", "Native Windows capture failed to start. Falling back to browser capture."),
 							);
 						}
 					} else if (!nativeResult.userNotified) {
 						throw new Error(
 							nativeResult.error ??
 								nativeResult.message ??
-								"Failed to start native screen recording",
+								translate("launch.messages.nativeStartFailed", "Failed to start native screen recording"),
 						);
 					} else {
 						setRecording(false);
@@ -1878,8 +1879,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 									micError.name === "SecurityError");
 							toast.error(
 								permissionDenied
-									? "Microphone permission denied. Recording will continue without microphone audio."
-									: `${getErrorMessage(micError)}. Recording will continue without microphone audio.`,
+									? translate("launch.messages.micPermissionDenied", "Microphone permission denied. Recording will continue without microphone audio.")
+									: translate("launch.messages.micErrorContinue", "{{error}}. Recording will continue without microphone audio.", { error: getErrorMessage(micError) }),
 								{ id: MICROPHONE_FALLBACK_ERROR_TOAST_ID, duration: 10000 },
 							);
 						}
@@ -2005,7 +2006,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 							audioError,
 						);
 						alert(
-							"System audio is not available for this source. Recording will continue without system audio.",
+							translate("launch.messages.systemAudioIsNotAvailableFor", "System audio is not available for this source. Recording will continue without system audio."),
 						);
 						screenMediaStream = useLinuxPortal
 							? await acquireLinuxPortalStream(false)
@@ -2028,7 +2029,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 
 				videoTrack = screenMediaStream.getVideoTracks()[0];
 				if (!videoTrack) {
-					throw new Error("Video track is not available.");
+					throw new Error(translate("launch.messages.videoTrackUnavailable", "Video track is not available."));
 				}
 
 				stream.current.addTrack(videoTrack);
@@ -2044,7 +2045,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 					} catch (audioError) {
 						console.warn("Failed to get microphone access:", audioError);
 						alert(
-							"Microphone access was denied. Recording will continue without microphone audio.",
+							translate("launch.messages.microphoneAccessWasDeniedRecordingWill", "Microphone access was denied. Recording will continue without microphone audio."),
 						);
 						setMicrophoneEnabled(false);
 					}
@@ -2106,7 +2107,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 			}
 
 			if (!stream.current || !videoTrack) {
-				throw new Error("Media stream is not available.");
+				throw new Error(translate("launch.messages.mediaStreamUnavailable", "Media stream is not available."));
 			}
 
 			try {
@@ -2190,7 +2191,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 					if (!videoResult.success) {
 						console.error("Failed to store video:", videoResult.message);
 						await notifyRecordingFinalizationFailure(
-							videoResult.message || "Failed to store the recording.",
+							videoResult.message || translate("launch.messages.failedToStoreTheRecording", "Failed to store the recording."),
 						);
 						return;
 					}
@@ -2228,13 +2229,13 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 							}
 						})();
 					} else {
-						await notifyRecordingFinalizationFailure("Failed to save the recording.");
+						await notifyRecordingFinalizationFailure(translate("launch.messages.saveRecordingFailed", "Failed to save the recording."));
 					}
 				} catch (error) {
 					console.error("Error saving recording:", error);
 					const message = error instanceof Error ? error.message : String(error);
 					await notifyRecordingFinalizationFailure(
-						`Failed to finalize the recording. ${message}`,
+						translate("launch.messages.finalizeFailed", "Failed to finalize the recording. {{error}}", { error: message }),
 					);
 				}
 			};
@@ -2257,8 +2258,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 			console.error("Failed to start recording:", error);
 			alert(
 				error instanceof Error
-					? `Failed to start recording: ${error.message}`
-					: "Failed to start recording",
+					? translate("launch.messages.startFailedWithError", "Failed to start recording: {{error}}", { error: error.message })
+					: translate("launch.messages.startFailed", "Failed to start recording"),
 			);
 			setRecording(false);
 			if (nativeScreenRecording.current) {

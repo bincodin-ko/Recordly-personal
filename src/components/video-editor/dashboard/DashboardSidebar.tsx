@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { FeedbackDialog } from "@/components/feedback/FeedbackDialog";
 import { RecordNewButton } from "./RecordNewButton";
 import { SidebarCards } from "./SidebarCards";
@@ -37,10 +38,11 @@ export function DashboardSidebar({
 	| "onSignIn"
 	| "accountLabel"
 >) {
+	const { t } = useI18n();
 	return (
 		<>
 			<aside
-				aria-label="Library navigation"
+				aria-label={t("editor.dashboard.sidebar.nav", "Library navigation")}
 				className="flex w-48 shrink-0 flex-col bg-transparent px-4 pb-5 pt-12 lg:w-56"
 			>
 				<div className="mb-4 flex h-10 items-center gap-2.5 px-3">
@@ -60,7 +62,7 @@ export function DashboardSidebar({
 						onClick={() => setSection("projects")}
 					>
 						<House weight="fill" className="size-[18px]" />
-						Home
+						{t("editor.dashboard.sidebar.home", "Home")}
 					</Button>
 					<Button
 						variant="ghost"
@@ -84,23 +86,24 @@ export function DashboardSidebar({
 							weight={section === "raw" ? "fill" : "regular"}
 							className="size-[18px]"
 						/>
-						Raw
+						{t("editor.dashboard.sidebar.raw", "Raw")}
 					</Button>
 				</nav>
 				<div className="mb-2 mt-9 flex items-center justify-between pl-3">
 					<h2 className="text-[13px] font-semibold tracking-tight text-foreground/80">
-						Folders
+						{t("editor.dashboard.sidebar.folders", "Folders")}
 					</h2>
 					<Button
 						variant="ghost"
 						size="icon"
 						className="size-7 min-w-7"
-						aria-label="New folder"
+						aria-label={t("editor.dashboard.sidebar.newFolder", "New folder")}
 						onClick={() => {
-							let name = "Untitled folder",
+							const base = t("editor.dashboard.sidebar.untitledFolder", "Untitled folder");
+							let name = base,
 								index = 1;
 							while (folders.some((folder) => folder.name === name))
-								name = `Untitled folder ${index++}`;
+								name = `${base} ${index++}`;
 							save([
 								...folders,
 								{
@@ -147,7 +150,7 @@ export function DashboardSidebar({
 							weight={section === "settings" ? "fill" : "regular"}
 							className="size-[18px]"
 						/>
-						Settings
+						{t("editor.dashboard.sidebar.settings", "Settings")}
 					</Button>
 					<Button variant="ghost" className={navClass(false)} onClick={onSignIn}>
 						<UserCircle weight="fill" className="size-[18px] shrink-0" />

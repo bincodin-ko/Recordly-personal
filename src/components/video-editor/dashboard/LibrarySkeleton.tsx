@@ -1,8 +1,10 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { Skeleton } from "@heroui/react";
 export function LibrarySkeleton() {
+	const { t } = useI18n();
 	return (
 		<div
-			aria-label="Loading projects"
+			aria-label={t("editor.dashboard.loadingProjects", "Loading projects")}
 			aria-busy="true"
 			className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-x-7 gap-y-10 lg:gap-x-9"
 		>

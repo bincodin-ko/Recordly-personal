@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { useEffect, useState } from "react";
 import { toast } from "@/components/ui/toast";
 export const FOLDER_COLORS = ["#929292", "#de85ac", "#d6ad58", "#70ad8a", "#759bd2", "#a68ccc"];
@@ -38,13 +39,14 @@ export function useProjectFolders() {
 		window.addEventListener("recordly-folders-changed", refresh);
 		return () => window.removeEventListener("recordly-folders-changed", refresh);
 	}, []);
+	const { t } = useI18n();
 	const save = (next: ProjectFolder[]) => {
 		try {
 			localStorage.setItem(KEY, JSON.stringify(next));
 			setFolders(next);
 			window.dispatchEvent(new CustomEvent("recordly-folders-changed", { detail: next }));
 		} catch {
-			toast.error("Could not save folders");
+			toast.error(t("editor.dashboard.foldersSaveFailed", "Could not save folders"));
 		}
 	};
 	return { folders, save };

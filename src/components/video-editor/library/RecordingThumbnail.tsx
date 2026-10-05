@@ -1,8 +1,10 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { useEffect, useRef, useState } from "react";
 import { FilmStrip } from "@/components/ui/icons";
 import type { RecordingLibraryEntry } from "@/types/recordingLibrary";
 
 export function RecordingThumbnail({ entry }: { entry: RecordingLibraryEntry }) {
+	const { t } = useI18n();
 	const host = useRef<HTMLSpanElement>(null);
 	const [src, setSrc] = useState<string>();
 	const [failed, setFailed] = useState(false);
@@ -51,11 +53,11 @@ export function RecordingThumbnail({ entry }: { entry: RecordingLibraryEntry }) 
 					}}
 				/>
 			) : failed ? (
-				<FilmStrip className="size-5" aria-label="Preview unavailable" />
+				<FilmStrip className="size-5" aria-label={t("editor.library.previewUnavailable", "Preview unavailable")} />
 			) : (
 				<span
 					className="size-full animate-pulse bg-default"
-					aria-label="Loading preview image"
+					aria-label={t("editor.library.previewLoading", "Loading preview image")}
 				/>
 			)}
 		</span>

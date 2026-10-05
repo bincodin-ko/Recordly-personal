@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 export const ASPECT_RATIOS = [
 	"native",
 	"16:9",
@@ -84,10 +85,10 @@ export function getAspectRatioDimensions(
 
 export function getAspectRatioLabel(aspectRatio: AspectRatio): string {
 	if (aspectRatio === "native") {
-		return "Native";
+		return translate("editor.aspect.native", "Native");
 	}
 	if (isCustomAspectRatio(aspectRatio)) {
-		return `Custom ${aspectRatio}`;
+		return translate("editor.aspect.custom", "Custom {{ratio}}", { ratio: aspectRatio });
 	}
 	return aspectRatio;
 }

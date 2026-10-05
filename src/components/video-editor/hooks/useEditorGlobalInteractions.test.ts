@@ -3,6 +3,7 @@ import { DEFAULT_SHORTCUTS } from "@/lib/shortcuts";
 import { useEditorGlobalInteractions } from "./useEditorGlobalInteractions";
 
 vi.mock("react", () => ({
+	createContext: () => ({}),
 	useEffect: (effect: () => void) => effect(),
 	useRef: (current: unknown) => ({ current }),
 }));

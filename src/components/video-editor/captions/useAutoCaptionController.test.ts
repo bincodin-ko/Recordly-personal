@@ -2,6 +2,7 @@ import { beforeEach, afterEach, expect, it, vi } from "vitest";
 import { useAutoCaptionController } from "./useAutoCaptionController";
 const state = vi.hoisted(() => ({ refs: [] as { current: unknown }[], index: 0 }));
 vi.mock("react", () => ({
+	createContext: () => ({}),
 	useCallback: (callback: unknown) => callback,
 	useEffect: () => {},
 	useRef: (current: unknown) => {
@@ -9,6 +10,10 @@ vi.mock("react", () => ({
 		state.refs[index] ??= { current };
 		return state.refs[index];
 	},
+}));
+vi.mock("@/contexts/I18nContext", () => ({
+	translate: (_key: string, fallback: string, vars: Record<string, unknown> = {}) =>
+		fallback.replace(/\{\{(\w+)\}\}/g, (_m, k) => String(vars[k])),
 }));
 vi.mock("@/components/ui/toast", () => ({
 	toast: { error: vi.fn(), info: vi.fn(), success: vi.fn() },

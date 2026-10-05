@@ -16,11 +16,34 @@
 		"save": "保存",
 		"undo": "撤銷",
 		"delete": "刪除",
-		"done": "完成"
+		"done": "完成",
+		"copy": "Copy"
 	},
 	"errors": {
 		"invalidFileType": "無效的檔案類型",
 		"failedToUploadImage": "上傳圖片失敗",
-		"fileReadError": "讀取檔案時出錯。"
+		"fileReadError": "讀取檔案時出錯。",
+		"copyFailed": "Could not copy error"
+	},
+	"announcements": {
+		"openFailed": "Failed to open link.",
+		"carousel": "Announcements",
+		"previous": "Previous announcement",
+		"show": "Show announcement",
+		"next": "Next announcement",
+		"dismiss": "Dismiss"
+	},
+	"colorPicker": {
+		"colors": "Colors",
+		"presetColors": "Preset colors",
+		"hexColor": "Hex color",
+		"clearBackground": "Clear background"
+	},
+	"a11y": {
+		"actions": "Actions",
+		"selectOption": "Select option"
+	},
+	"account": {
+		"localProfile": "Local profile"
 	}
 }

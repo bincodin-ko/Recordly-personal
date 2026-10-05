@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { Card, Popover } from "@heroui/react";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -59,10 +60,10 @@ export default function ProjectBrowserDialog({
 			className={`${renderMode === "inline" ? "w-full" : "w-[340px]"} min-w-0 max-w-[calc(100vw-24px)] rounded-none bg-transparent p-3 shadow-none`}
 		>
 			<Card.Header className="flex-row items-center justify-between gap-3">
-				<Card.Title>Projects</Card.Title>
+				<Card.Title>{translate("editor.projectBrowser.title", "Projects")}</Card.Title>
 				{onImportFile && (
 					<Button size="sm" variant="secondary" onClick={onImportFile}>
-						Import
+						{translate("editor.projectBrowser.import", "Import")}
 					</Button>
 				)}
 			</Card.Header>
@@ -92,7 +93,7 @@ export default function ProjectBrowserDialog({
 										/>
 									) : (
 										<span className="flex h-full items-center justify-center text-[10px] text-muted">
-											No preview
+											{translate("editor.projectBrowser.noPreview", "No preview")}
 										</span>
 									)}
 								</div>
@@ -100,7 +101,7 @@ export default function ProjectBrowserDialog({
 									<span className="truncate text-[13px]">{entry.name}</span>
 									<span className="text-[11px] text-muted">
 										{entry.isCurrent
-											? "Current project"
+											? translate("editor.projectBrowser.current", "Current project")
 											: new Date(entry.updatedAt).toLocaleDateString()}
 									</span>
 								</span>
@@ -108,7 +109,7 @@ export default function ProjectBrowserDialog({
 						))}
 					</div>
 				) : (
-					<p className="py-8 text-center text-sm text-muted">No saved projects yet</p>
+					<p className="py-8 text-center text-sm text-muted">{translate("editor.projectBrowser.empty", "No saved projects yet")}</p>
 				)}
 			</Card.Content>
 		</Card>
@@ -121,7 +122,7 @@ export default function ProjectBrowserDialog({
 				triggerRef={anchorRef}
 				placement={preferredDirection === "up" ? "top end" : "bottom start"}
 			>
-				<Popover.Dialog aria-label="Projects" className="p-0">
+				<Popover.Dialog aria-label={translate("editor.projectBrowser.title", "Projects")} className="p-0">
 					{content}
 				</Popover.Dialog>
 			</Popover.Content>

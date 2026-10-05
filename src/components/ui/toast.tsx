@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { Toast, toast as heroToast } from "@heroui/react";
 import { isValidElement, type ReactNode } from "react";
 
@@ -42,12 +43,12 @@ function notify(title: ReactNode, options: Options = {}, variant: Variant = "def
 				}
 			: variant === "danger" && errorText
 				? {
-						children: "Copy",
+						children: translate("common.actions.copy", "Copy"),
 						onPress: () => {
 							void navigator.clipboard.writeText(errorText).then(
-								() => heroToast.success("Error copied"),
+								() => heroToast.success(translate("editor.exportStatus.errorCopied", "Error copied")),
 								() =>
-									heroToast.danger("Could not copy error", {
+									heroToast.danger(translate("common.errors.copyFailed", "Could not copy error"), {
 										description: errorText,
 									}),
 							);

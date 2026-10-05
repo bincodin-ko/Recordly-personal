@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import type { ExportFormat, ExportPipelineModel, ExportProgress } from "@/lib/exporter";
 
 export type ExportStatusModel = {
@@ -84,8 +85,10 @@ export function resolveExportStatusModel({
 				: [];
 	const nativeSkipLabel =
 		nativeSkipReasons.length > 0
-			? `Native skipped: ${nativeSkipReasons[0]}${
-					nativeSkipReasons.length > 1 ? ` (+${nativeSkipReasons.length - 1} more)` : ""
+			? `${translate("editor.export.nativeSkipped", "Native skipped: {{reason}}", { reason: nativeSkipReasons[0] })}${
+					nativeSkipReasons.length > 1
+						? translate("editor.export.nativeSkippedMore", " (+{{count}} more)", { count: nativeSkipReasons.length - 1 })
+						: ""
 				}`
 			: null;
 

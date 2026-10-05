@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { formatClipSpeedLabel } from "../../clipSpeedChange";
 import type {
 	AnnotationRegion,
@@ -20,13 +21,13 @@ import type { TimelineRegionSpan, TimelineRenderItem } from "../core/timelineTyp
 
 export function getAnnotationLabel(region: AnnotationRegion): string {
 	if (region.type === "text") {
-		const preview = region.content.trim() || "Empty text";
+		const preview = region.content.trim() || translate("timeline.labels.emptyText", "Empty text");
 		return preview.length > 20 ? `${preview.substring(0, 20)}...` : preview;
 	}
 	if (region.type === "image") {
-		return "Image";
+		return translate("timeline.labels.image", "Image");
 	}
-	return "Annotation";
+	return translate("timeline.labels.annotation", "Annotation");
 }
 
 export function getAudioLabel(region: AudioRegion): string {
@@ -34,12 +35,12 @@ export function getAudioLabel(region: AudioRegion): string {
 		region.audioPath
 			.split(/[\\/]/)
 			.pop()
-			?.replace(/\.[^.]+$/, "") || "Audio"
+			?.replace(/\.[^.]+$/, "") || translate("timeline.labels.audio", "Audio")
 	);
 }
 
 function getCaptionLabel(cue: CaptionCue): string {
-	const preview = cue.text.trim() || "Caption";
+	const preview = cue.text.trim() || translate("timeline.labels.caption", "Caption");
 	return preview.length > 24 ? `${preview.substring(0, 24)}...` : preview;
 }
 
@@ -55,7 +56,7 @@ export function buildTimelineItems(params: {
 		id: region.id,
 		rowId: ZOOM_ROW_ID,
 		span: { start: region.startMs, end: region.endMs },
-		label: `Zoom ${index + 1}`,
+		label: translate("timeline.labels.zoomN", "Zoom {{n}}", { n: index + 1 }),
 		zoomDepth: region.depth,
 		zoomMode: region.mode ?? "auto",
 		variant: "zoom",
@@ -71,7 +72,9 @@ export function buildTimelineItems(params: {
 			rowId: CLIP_ROW_ID,
 			span: { start: region.startMs, end: region.endMs },
 			sourceSpan: { start: getClipSourceStartMs(region), end: sourceEndMs },
-			label: speedLabel ? `Clip ${index + 1} ${speedLabel}` : `Clip ${index + 1}`,
+			label: speedLabel
+				? `${translate("timeline.labels.clipN", "Clip {{n}}", { n: index + 1 })} ${speedLabel}`
+				: translate("timeline.labels.clipN", "Clip {{n}}", { n: index + 1 }),
 			speedValue: speedLabel ? speed : undefined,
 			showSourceAudio: region.showSourceAudio,
 			muted: Boolean(region.muted),

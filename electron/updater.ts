@@ -588,14 +588,14 @@ async function showAvailableUpdateDialog(
 	const isExperimental = options?.isExperimental ?? getExperimentalUpdatesEnabled();
 	const result = await showMessageBox(getMainWindow, {
 		type: "info",
-		title: isExperimental ? "Experimental Update Available" : "Update Available",
-		message: `Recordly ${version} is available${isExperimental ? " on the experimental channel" : ""}.`,
+		title: isExperimental ? "실험 업데이트가 있어요" : "업데이트가 있어요",
+		message: `Recordly ${version}을(를) 사용할 수 있어요${isExperimental ? " (실험 채널)" : ""}.`,
 		detail: isPreview
-			? `${isExperimental ? EXPERIMENTAL_UPDATE_DESCRIPTION : "This is a development preview of the standard update flow."} No real update will be installed.`
+			? `${isExperimental ? EXPERIMENTAL_UPDATE_DESCRIPTION : "일반 업데이트 흐름의 개발용 미리보기예요."} 실제 업데이트는 설치되지 않아요.`
 			: isExperimental
 				? EXPERIMENTAL_UPDATE_DESCRIPTION
-				: "Install and restart now, or remind me later.",
-		buttons: ["Install & Restart", "Later"],
+				: "지금 설치하고 다시 시작하거나, 나중에 알려 드릴게요.",
+		buttons: ["설치 후 다시 시작", "나중에"],
 		defaultId: 0,
 		cancelId: 1,
 		noLink: true,
@@ -605,9 +605,9 @@ async function showAvailableUpdateDialog(
 		if (isPreview) {
 			await showMessageBox(getMainWindow, {
 				type: "info",
-				title: "Preview Only",
-				message: "No real update was installed.",
-				detail: "This was only a manual development preview of the update prompt.",
+				title: "미리보기 전용",
+				message: "실제 업데이트는 설치되지 않았어요.",
+				detail: "업데이트 안내창을 직접 띄워 본 개발용 미리보기예요.",
 			});
 			return;
 		}
@@ -631,14 +631,14 @@ async function showDownloadedUpdateDialog(
 	const isPreview = Boolean(options?.isPreview);
 	const result = await showMessageBox(getMainWindow, {
 		type: "info",
-		title: "Update Ready",
+		title: "업데이트 준비 완료",
 		message: isPreview
-			? `Recordly ${version} is ready to install.`
-			: `Recordly ${version} has been downloaded.`,
+			? `Recordly ${version}을(를) 설치할 준비가 됐어요.`
+			: `Recordly ${version}을(를) 내려받았어요.`,
 		detail: isPreview
-			? "Development preview of the native update prompt. No real update will be installed."
-			: "Install and restart now, or remind me later.",
-		buttons: ["Install & Restart", "Later"],
+			? "기본 업데이트 안내창의 개발용 미리보기예요. 실제 업데이트는 설치되지 않아요."
+			: "지금 설치하고 다시 시작하거나, 나중에 알려 드릴게요.",
+		buttons: ["설치 후 다시 시작", "나중에"],
 		defaultId: 0,
 		cancelId: 1,
 		noLink: true,
@@ -648,9 +648,9 @@ async function showDownloadedUpdateDialog(
 		if (isPreview) {
 			await showMessageBox(getMainWindow, {
 				type: "info",
-				title: "Preview Only",
-				message: "No real update was installed.",
-				detail: "This was only a manual development preview of the update prompt.",
+				title: "미리보기 전용",
+				message: "실제 업데이트는 설치되지 않았어요.",
+				detail: "업데이트 안내창을 직접 띄워 본 개발용 미리보기예요.",
 			});
 			return;
 		}
@@ -685,10 +685,10 @@ async function showUpdateErrorDialog(
 ) {
 	await showMessageBox(getMainWindow, {
 		type: "error",
-		title: "Update Failed",
-		message: `Recordly ${version} could not be downloaded.`,
+		title: "업데이트 실패",
+		message: `Recordly ${version}을(를) 내려받지 못했어요.`,
 		detail: String(error),
-		buttons: ["OK"],
+		buttons: ["확인"],
 		defaultId: 0,
 		noLink: true,
 	});
@@ -705,11 +705,11 @@ export async function checkForAppUpdates(
 		if (options?.manual) {
 			await showMessageBox(getMainWindow, {
 				type: "info",
-				title: "Updates Not Enabled",
-				message: "Auto-updates are only available in packaged releases.",
+				title: "업데이트를 사용할 수 없어요",
+				message: "자동 업데이트는 배포용 빌드에서만 쓸 수 있어요.",
 				detail: AUTO_UPDATES_DISABLED
-					? "This build disabled auto-updates through RECORDLY_DISABLE_AUTO_UPDATES=1."
-					: "Development builds do not ship the packaged update metadata required by electron-updater.",
+					? "이 빌드는 RECORDLY_DISABLE_AUTO_UPDATES=1 설정으로 자동 업데이트가 꺼져 있어요."
+					: "개발 빌드에는 electron-updater에 필요한 업데이트 정보가 없어요.",
 			});
 		}
 		return;

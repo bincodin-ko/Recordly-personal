@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { useLayoutEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FolderSimple } from "@/components/ui/icons";
@@ -48,13 +49,14 @@ export function ProjectFolderChips({
 			observer.disconnect();
 		};
 	}, [folders]);
+	const { t } = useI18n();
 	const chip = (folder: Folder, measuring = false) => (
 		<Button
 			key={folder.id}
 			variant="ghost"
 			size="sm"
 			tabIndex={measuring ? -1 : undefined}
-			aria-label={`Remove ${name} from ${folder.name}`}
+			aria-label={t("editor.dashboard.chips.remove", "Remove {{name}} from {{folder}}", { name, folder: folder.name })}
 			title={folder.name}
 			onClick={measuring ? undefined : () => onRemove(folder.id)}
 			className="h-6 min-w-0 max-w-28 shrink gap-1.5 rounded-full bg-default/40 px-2.5 text-[11px]"
@@ -71,7 +73,7 @@ export function ProjectFolderChips({
 	return (
 		<div
 			ref={host}
-			aria-label={`Folders for ${name}`}
+			aria-label={t("editor.dashboard.chips.foldersFor", "Folders for {{name}}", { name })}
 			className="relative flex min-w-0 flex-1 items-center gap-1.5"
 		>
 			{folders.slice(0, visible).map((folder) => chip(folder))}

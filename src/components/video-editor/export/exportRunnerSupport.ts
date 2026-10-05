@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import type { RefObject } from "react";
 import { useCallback } from "react";
 import { toast } from "@/components/ui/toast";
@@ -47,9 +48,9 @@ export function showExportErrorToast(message: string) {
 
 export function useExportSuccessToast() {
 	return useCallback((filePath: string) => {
-		toast.success(`Exported successfully to ${filePath}`, {
+		toast.success(translate("editor.messages.exportedTo", "Exported successfully to {{path}}", { path: filePath }), {
 			action: {
-				label: "Show in Folder",
+				label: translate("editor.messages.showInFolder", "Show in Folder"),
 				onClick: async () => {
 					try {
 						const result = await window.electronAPI.revealInFolder(filePath);
@@ -57,11 +58,11 @@ export function useExportSuccessToast() {
 							toast.error(
 								result.error ||
 									result.message ||
-									"Failed to reveal item in folder.",
+									translate("editor.messages.failedToRevealItemInFolder", "Failed to reveal item in folder."),
 							);
 						}
 					} catch (error) {
-						toast.error(`Error revealing in folder: ${String(error)}`);
+						toast.error(translate("editor.messages.revealError", "Error revealing in folder: {{error}}", { error: String(error) }));
 					}
 				},
 			},

@@ -1154,7 +1154,8 @@ export function SettingsPanel({
 	>({});
 
 	const cursorPreviewUrls = builtInCursorPreviewUrls;
-	const showDevMotionControls = import.meta.env.DEV;
+	// Personal build: keep fine motion tuning available outside dev mode.
+	const showDevMotionControls = true;
 	const cursorStyleOptions = BUILTIN_CURSOR_STYLE_OPTIONS;
 
 	useEffect(() => {
@@ -1572,16 +1573,21 @@ export function SettingsPanel({
 			if (!result?.success || !result.path) return;
 			const filePath = result.path;
 			if (!isVideoWallpaperSource(filePath)) {
-				toast.error("Unsupported format", {
-					description: "Please select a video file (mp4, webm, mov, etc.)",
+				toast.error(tSettings("background.unsupportedFormat", "Unsupported format"), {
+					description: tSettings(
+						"background.unsupportedFormatDesc",
+						"Please select a video file (mp4, webm, mov, etc.)",
+					),
 				});
 				return;
 			}
 			setCustomImages((prev) => [filePath, ...prev]);
 			onWallpaperChange(filePath);
-			toast.success("Video background added");
+			toast.success(tSettings("background.videoAdded", "Video background added"));
 		} catch {
-			toast.error("Failed to import video background");
+			toast.error(
+				tSettings("background.videoImportFailed", "Failed to import video background"),
+			);
 		}
 	};
 
@@ -1721,7 +1727,7 @@ export function SettingsPanel({
 										}}
 									/>
 									<ColorControl
-										label="Custom color"
+										label={tSettings("background.customColor", "Custom color")}
 										value={selectedColor}
 										onChange={(color) => {
 											setSelectedColor(color);
@@ -1852,9 +1858,9 @@ export function SettingsPanel({
 				<div className="flex flex-col gap-3 pt-0.5">
 					{advanced && (
 						<div className="flex items-center justify-between gap-3">
-							<Label>Link padding sides</Label>
+							<Label>{tSettings("padding.linkSides", "Link padding sides")}</Label>
 							<Switch
-								aria-label="Link padding sides"
+								aria-label={tSettings("padding.linkSides", "Link padding sides")}
 								checked={padding.linked !== false}
 								onCheckedChange={togglePaddingLink}
 							/>
@@ -2035,7 +2041,7 @@ export function SettingsPanel({
 						<SelectContent>
 							{CAPTION_LANGUAGE_OPTIONS.map((option) => (
 								<SelectItem key={option.value} value={option.value}>
-									{option.label}
+									{tSettings(`captions.languageOptions.${option.value}`, option.label)}
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -2059,7 +2065,10 @@ export function SettingsPanel({
 						<SelectContent>
 							{CAPTION_ANIMATION_OPTIONS.map((option) => (
 								<SelectItem key={option.value} value={option.value}>
-									{option.label}
+									{tSettings(
+										`captions.animation${option.value === "none" ? "Off" : option.value[0].toUpperCase() + option.value.slice(1)}`,
+										option.label,
+									)}
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -2122,7 +2131,7 @@ export function SettingsPanel({
 									"Generating captions. This can take a moment.",
 								)}
 							</div>
-							<ProgressBar aria-label="Downloading caption model" isIndeterminate>
+							<ProgressBar aria-label={tSettings("captions.downloadingModel", "Downloading caption model")} isIndeterminate>
 								<ProgressBar.Track>
 									<ProgressBar.Fill />
 								</ProgressBar.Track>
@@ -2254,9 +2263,9 @@ export function SettingsPanel({
 			>
 				<SettingsCategory category="general">
 					{onShowOnboarding && (
-						<SettingsRow title="Onboarding">
+						<SettingsRow title={tSettings("general.onboarding", "Onboarding")}>
 							<Button variant="secondary" size="sm" onClick={onShowOnboarding}>
-								Show onboarding
+								{tSettings("general.showOnboarding", "Show onboarding")}
 							</Button>
 						</SettingsRow>
 					)}
@@ -2400,7 +2409,7 @@ export function SettingsPanel({
 									</div>
 								</div>
 								<span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-medium uppercase tracking-wider text-accent">
-									DEV
+									{tSettings("effects.devBadge", "DEV")}
 								</span>
 							</div>
 
@@ -2578,7 +2587,7 @@ export function SettingsPanel({
 						<SectionLabel>{tSettings("zoom.mode", "Mode")}</SectionLabel>
 						<div className="mb-1">
 							<ChoiceGroup
-								aria-label="Zoom mode"
+								aria-label={tSettings("zoom.modeLabel", "Zoom mode")}
 								value={selectedZoomMode ?? "auto"}
 								onValueChange={(value) => onZoomModeChange?.(value as ZoomMode)}
 								className="grid grid-cols-2 gap-2"
@@ -2604,7 +2613,7 @@ export function SettingsPanel({
 						</div>
 						<SectionLabel>{tSettings("zoom.amount", "Amount")}</SectionLabel>
 						<ChoiceGroup
-							aria-label="Zoom level"
+							aria-label={tSettings("zoom.levelLabel", "Zoom level")}
 							value={String(selectedZoomDepth)}
 							onValueChange={(value) =>
 								onZoomDepthChange?.(Number(value) as ZoomDepth)
@@ -2842,8 +2851,8 @@ export function SettingsPanel({
 										<ChoiceItem
 											key={option.value}
 											value={option.value}
-											title={option.label}
-											aria-label={option.label}
+											title={tSettings(`effects.cursorStyleOptions.${option.value}`, option.label)}
+											aria-label={tSettings(`effects.cursorStyleOptions.${option.value}`, option.label)}
 											className={cn(
 												"group aspect-square h-auto min-w-0 p-3 text-left",
 											)}
@@ -2897,7 +2906,7 @@ export function SettingsPanel({
 												}
 											/>
 											<ColorControl
-												label="Custom effect color"
+												label={tSettings("effects.customEffectColor", "Custom effect color")}
 												value={cursorClickEffectColor}
 												onChange={(color) =>
 													onCursorClickEffectColorChange?.(color)

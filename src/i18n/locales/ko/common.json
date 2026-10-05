@@ -2,7 +2,7 @@
 	"app": {
 		"name": "Recordly",
 		"editorTitle": "Recordly 편집기",
-		"subtitle": "화면 녹화 및 편집",
+		"subtitle": "화면 녹화와 편집",
 		"language": "언어",
 		"manageRecordings": "녹화 폴더 열기"
 	},
@@ -16,11 +16,34 @@
 		"save": "저장",
 		"undo": "실행 취소",
 		"delete": "삭제",
-		"done": "완료"
+		"done": "완료",
+		"copy": "복사"
 	},
 	"errors": {
-		"invalidFileType": "잘못된 파일 형식입니다",
-		"failedToUploadImage": "이미지 업로드에 실패했습니다",
-		"fileReadError": "파일을 읽는 중 오류가 발생했습니다."
+		"invalidFileType": "지원하지 않는 파일 형식이에요",
+		"failedToUploadImage": "이미지를 업로드하지 못했어요",
+		"fileReadError": "파일을 읽는 중 오류가 발생했어요.",
+		"copyFailed": "오류를 복사하지 못했어요"
+	},
+	"announcements": {
+		"openFailed": "링크를 열지 못했어요.",
+		"carousel": "공지사항",
+		"previous": "이전 공지",
+		"show": "공지 보기",
+		"next": "다음 공지",
+		"dismiss": "닫기"
+	},
+	"colorPicker": {
+		"colors": "색상",
+		"presetColors": "기본 색상",
+		"hexColor": "HEX 색상",
+		"clearBackground": "배경 지우기"
+	},
+	"a11y": {
+		"actions": "작업",
+		"selectOption": "옵션 선택"
+	},
+	"account": {
+		"localProfile": "로컬 프로필"
 	}
 }

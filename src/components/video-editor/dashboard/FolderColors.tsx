@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import {
 	ColorArea,
 	ColorField,
@@ -24,20 +25,21 @@ export function FolderColors({
 	onCustomChange: (colors: string[]) => void;
 	name: string;
 }) {
+	const { t } = useI18n();
 	const colors = [...new Set([...FOLDER_COLORS, ...custom])];
 	return (
 		<ColorPicker value={value} onChange={(color) => onChange(color.toString("hex"))}>
 			<Button
 				variant="ghost"
 				size="icon"
-				aria-label={`Change color for ${name}`}
+				aria-label={t("editor.dashboard.folderColors.change", "Change color for {{name}}", { name })}
 				className="size-8 min-w-8 rounded-md"
 			>
 				<FolderSimple weight="fill" className="size-[18px]" style={{ color: value }} />
 			</Button>
 			<ColorPicker.Popover>
-				<Popover.Dialog aria-label="Folder color" className="flex w-60 flex-col gap-3 p-3">
-					<ColorSwatchPicker aria-label="Folder colors">
+				<Popover.Dialog aria-label={t("editor.dashboard.folderColors.dialog", "Folder color")} className="flex w-60 flex-col gap-3 p-3">
+					<ColorSwatchPicker aria-label={t("editor.dashboard.folderColors.swatches", "Folder colors")}>
 						{colors.map((color) => (
 							<ColorSwatchPicker.Item key={color} color={color}>
 								<ColorSwatchPicker.Swatch />
@@ -59,14 +61,16 @@ export function FolderColors({
 						</ColorSlider.Track>
 					</ColorSlider>
 					<div className="flex items-center gap-2">
-						<ColorField aria-label="Hex color" className="min-w-0 flex-1">
-							<Input aria-label="Hex color" className="h-8 text-xs" />
+						<ColorField aria-label={t("editor.dashboard.folderColors.hex", "Hex color")} className="min-w-0 flex-1">
+							<Input aria-label={t("editor.dashboard.folderColors.hex", "Hex color")} className="h-8 text-xs" />
 						</ColorField>
 						<Button
 							variant="ghost"
 							size="icon"
 							aria-label={
-								custom.includes(value) ? "Remove custom color" : "Save custom color"
+								custom.includes(value)
+									? t("editor.dashboard.folderColors.removeCustom", "Remove custom color")
+									: t("editor.dashboard.folderColors.saveCustom", "Save custom color")
 							}
 							disabled={FOLDER_COLORS.includes(value)}
 							className="size-8 min-w-8"

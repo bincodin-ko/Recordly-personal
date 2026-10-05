@@ -194,12 +194,12 @@ export async function resolveProjectMediaSources(
 
 	const rawVideoPath = (project as { videoPath?: unknown }).videoPath;
 	if (typeof rawVideoPath !== "string") {
-		return { success: false, message: "Project file is missing a video path" };
+		return { success: false, message: "프로젝트 파일에 영상 경로가 없어요" };
 	}
 
 	const normalizedVideoPath = normalizeVideoSourcePath(rawVideoPath);
 	if (!normalizedVideoPath) {
-		return { success: false, message: "Project file is missing a valid video path" };
+		return { success: false, message: "프로젝트 파일의 영상 경로가 올바르지 않아요" };
 	}
 
 	try {
@@ -207,7 +207,7 @@ export async function resolveProjectMediaSources(
 	} catch {
 		return {
 			success: false,
-			message: `Project video file not found: ${normalizedVideoPath}`,
+			message: `프로젝트 영상 파일을 찾을 수 없어요: ${normalizedVideoPath}`,
 		};
 	}
 
@@ -519,7 +519,7 @@ export async function loadProjectFromPath(projectPath: string) {
 		return {
 			success: false,
 			canceled: false,
-			message: `Failed to read project file: ${error instanceof Error ? error.message : String(error)}`,
+			message: `프로젝트 파일을 읽지 못했어요: ${error instanceof Error ? error.message : String(error)}`,
 		};
 	}
 	if (!isLoadableProjectData(project)) {

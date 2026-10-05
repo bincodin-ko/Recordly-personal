@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import type { Span } from "dnd-timeline";
 import { useCallback } from "react";
 import type { CaptionCue } from "../../../types";
@@ -68,8 +69,8 @@ export function useTimelineCaptionActions({
 			const startPos = Math.max(0, Math.min(startMs, totalMs));
 			if (!canPlaceCaptionAtMs(startPos)) {
 				timelineNotifications.error(
-					"Cannot place caption here",
-					"A caption already exists at this position.",
+					translate("timeline.notify.captionPlaceFailed", "Cannot place caption here"),
+					translate("timeline.notify.captionExists", "A caption already exists at this position."),
 				);
 				return;
 			}

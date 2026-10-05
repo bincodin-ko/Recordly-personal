@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { Select as HeroSelect, ListBox, Label, Separator } from "@heroui/react";
 import { type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -18,7 +19,7 @@ export function Select({
 	return (
 		<HeroSelect
 			{...props}
-			aria-label={props["aria-label"] ?? "Select option"}
+			aria-label={props["aria-label"] ?? translate("common.a11y.selectOption", "Select option")}
 			value={value || null}
 			defaultValue={defaultValue}
 			onChange={(key) => onValueChange?.(String(key ?? ""))}

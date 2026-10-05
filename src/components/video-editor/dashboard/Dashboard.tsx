@@ -1,3 +1,4 @@
+import { useI18n } from "@/contexts/I18nContext";
 import { DashboardAnnouncements } from "./DashboardAnnouncements";
 import { Card, Modal } from "@heroui/react";
 import { DashboardFilters } from "./DashboardFilters";
@@ -8,6 +9,7 @@ import type { DashboardProps } from "./types";
 import { useDashboardModel } from "./useDashboardModel";
 export function Dashboard(props: DashboardProps) {
 	const model = useDashboardModel(props);
+	const { t } = useI18n();
 	const view = { ...props, ...model };
 	return (
 		<>
@@ -15,7 +17,7 @@ export function Dashboard(props: DashboardProps) {
 				<Modal.Backdrop>
 					<Modal.Container size="full">
 						<Modal.Dialog
-							aria-label="Projects dashboard"
+							aria-label={t("editor.dashboard.title", "Projects dashboard")}
 							className="dashboard-surface dashboard-shell flex h-full flex-row gap-0 rounded-none bg-background p-0 text-foreground"
 						>
 							<DashboardSidebar {...view} />

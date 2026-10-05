@@ -16,11 +16,34 @@
 		"save": "Opslaan",
 		"undo": "Ongedaan maken",
 		"delete": "Verwijderen",
-		"done": "Klaar"
+		"done": "Klaar",
+		"copy": "Copy"
 	},
 	"errors": {
 		"invalidFileType": "Ongeldig bestandstype",
 		"failedToUploadImage": "Afbeelding uploaden mislukt",
-		"fileReadError": "Er is een fout opgetreden bij het lezen van het bestand."
+		"fileReadError": "Er is een fout opgetreden bij het lezen van het bestand.",
+		"copyFailed": "Could not copy error"
+	},
+	"announcements": {
+		"openFailed": "Failed to open link.",
+		"carousel": "Announcements",
+		"previous": "Previous announcement",
+		"show": "Show announcement",
+		"next": "Next announcement",
+		"dismiss": "Dismiss"
+	},
+	"colorPicker": {
+		"colors": "Colors",
+		"presetColors": "Preset colors",
+		"hexColor": "Hex color",
+		"clearBackground": "Clear background"
+	},
+	"a11y": {
+		"actions": "Actions",
+		"selectOption": "Select option"
+	},
+	"account": {
+		"localProfile": "Local profile"
 	}
 }

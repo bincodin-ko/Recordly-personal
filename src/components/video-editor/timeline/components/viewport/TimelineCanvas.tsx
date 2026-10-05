@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useTimelinePresentation } from "../../core/TimelinePresentation";
 import { Plus } from "@/components/ui/icons";
 import { useTimelineContext } from "dnd-timeline";
@@ -50,9 +51,6 @@ import {
 } from "../../timelineLayout";
 import PlaybackCursor from "../playhead/PlaybackCursor";
 
-const HINT_CLIP = "Press C to split clip";
-const HINT_ANNOTATION = "Press A to add annotation";
-const HINT_AUDIO = "Click music icon to add audio";
 
 interface TimelineCanvasProps {
 	videoPath?: string | null;
@@ -703,7 +701,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 					})}
 				</Row>
 			)}
-			<Row filmstrip id={CLIP_ROW_ID} isEmpty={clipItems.length === 0} hint={HINT_CLIP}>
+			<Row filmstrip id={CLIP_ROW_ID} isEmpty={clipItems.length === 0} hint={translate("timeline.hints.clip", "Press C to split clip")}>
 				{clipPresentation.map((item) => (
 					<Item
 						id={item.id}
@@ -854,7 +852,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 					key={rowId}
 					id={rowId}
 					isEmpty={rowItems.length === 0}
-					hint={index === 0 ? HINT_ANNOTATION : undefined}
+					hint={index === 0 ? translate("timeline.hints.annotation", "Press A to add annotation") : undefined}
 				>
 					{rowItems.map((item) => (
 						<Item
@@ -877,7 +875,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 					key={rowId}
 					id={rowId}
 					isEmpty={rowItems.length === 0}
-					hint={index === 0 ? HINT_AUDIO : undefined}
+					hint={index === 0 ? translate("timeline.hints.audio", "Click music icon to add audio") : undefined}
 				>
 					{rowItems.map((item) => (
 						<AudioItemWithWaveform

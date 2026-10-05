@@ -146,10 +146,10 @@ export function EditorSidebar({
 												[activeSection]: value,
 											}))
 										}
-										aria-label="Advanced settings"
+										aria-label={t("editor.sidebar.advancedSettings", "Advanced settings")}
 									>
 										<Switch.Content>
-											<Label className="text-xs">Advanced</Label>
+											<Label className="text-xs">{t("editor.sidebar.advanced", "Advanced")}</Label>
 											<Switch.Control>
 												<Switch.Thumb />
 											</Switch.Control>

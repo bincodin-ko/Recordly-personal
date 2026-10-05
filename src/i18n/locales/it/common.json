@@ -16,11 +16,34 @@
 		"save": "Salva",
 		"undo": "Annulla",
 		"delete": "Elimina",
-		"done": "Fatto"
+		"done": "Fatto",
+		"copy": "Copy"
 	},
 	"errors": {
 		"invalidFileType": "Tipo di file non valido",
 		"failedToUploadImage": "Caricamento immagine non riuscito",
-		"fileReadError": "Si è verificato un errore durante la lettura del file."
+		"fileReadError": "Si è verificato un errore durante la lettura del file.",
+		"copyFailed": "Could not copy error"
+	},
+	"announcements": {
+		"openFailed": "Failed to open link.",
+		"carousel": "Announcements",
+		"previous": "Previous announcement",
+		"show": "Show announcement",
+		"next": "Next announcement",
+		"dismiss": "Dismiss"
+	},
+	"colorPicker": {
+		"colors": "Colors",
+		"presetColors": "Preset colors",
+		"hexColor": "Hex color",
+		"clearBackground": "Clear background"
+	},
+	"a11y": {
+		"actions": "Actions",
+		"selectOption": "Select option"
+	},
+	"account": {
+		"localProfile": "Local profile"
 	}
 }

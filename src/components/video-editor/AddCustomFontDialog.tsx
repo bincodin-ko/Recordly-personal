@@ -117,7 +117,7 @@ export function AddCustomFontDialog({ onFontAdded }: AddCustomFontDialogProps) {
 				return;
 			}
 
-			const errorMessage = error instanceof Error ? error.message : "Failed to load font";
+			const errorMessage = error instanceof Error ? error.message : t("addFont.loadFailed", "Failed to load font");
 			toast.error(t("addFont.addFailed"), {
 				description: errorMessage.includes("timeout")
 					? t("addFont.loadTimeout")

@@ -37,5 +37,57 @@
 	},
 	"addSpeed": "Adicionar velocidade (S)",
 	"resizeLeft": "Redimensionar para a esquerda",
-	"resizeRight": "Redimensionar para a direita"
+	"resizeRight": "Redimensionar para a direita",
+	"notify": {
+		"audioReadFailed": "Could not read audio file",
+		"audioReadFailedDesc": "The selected file may be corrupted or in an unsupported format.",
+		"audioPlaceFailed": "Cannot place audio here",
+		"audioNoSpace": "There is no remaining space at the current playhead position.",
+		"audioOverlap": "Audio region already exists at this location or not enough space available.",
+		"captionPlaceFailed": "Cannot place caption here",
+		"captionExists": "A caption already exists at this position.",
+		"zoomPlaceFailed": "Cannot place zoom here",
+		"zoomNoRoom": "Zoom already exists here or there is not enough room before the next zoom or clip end.",
+		"zoomSuggestLoop": "Suggested zooms are unavailable while cursor looping is enabled.",
+		"zoomSuggestUnavailable": "Zoom suggestion handler unavailable",
+		"noTelemetry": "No cursor telemetry available",
+		"noTelemetryDesc": "Record a screencast first to generate cursor-based suggestions.",
+		"telemetryUnusable": "No usable cursor telemetry",
+		"telemetryUnusableDesc": "The recording does not include enough cursor movement data.",
+		"noInteractions": "No clear interaction moments found",
+		"noInteractionsDesc": "Try a recording with pauses or clicks around important actions.",
+		"noSlots": "No auto-zoom slots available",
+		"noSlotsDesc": "Detected dwell points overlap existing zoom regions.",
+		"zoomSuggestAdded": "Added {{count}} interaction-based zoom suggestion(s)"
+	},
+	"labels": {
+		"emptyText": "Empty text",
+		"image": "Image",
+		"annotation": "Annotation",
+		"audio": "Audio",
+		"caption": "Caption",
+		"zoomN": "Zoom {{n}}",
+		"clipN": "Clip {{n}}"
+	},
+	"item": {
+		"resizeLeft": "Resize left",
+		"resizeRight": "Resize right",
+		"manual": "Manual",
+		"auto": "Auto",
+		"trim": "Trim",
+		"clip": "Clip"
+	},
+	"empty": {
+		"title": "No Video Loaded",
+		"hint": "Drag and drop a video to start editing"
+	},
+	"hints": {
+		"clip": "Press C to split clip",
+		"annotation": "Press A to add annotation",
+		"audio": "Click music icon to add audio"
+	},
+	"markers": {
+		"keyframe": "Keyframe @ {{ms}}ms (drag to move, Delete/Backspace to remove)"
+	},
+	"playhead": "Playhead {{time}}"
 }

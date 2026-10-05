@@ -1,3 +1,4 @@
+import { translate } from "@/contexts/I18nContext";
 import { useCallback, useMemo } from "react";
 import { resolveMediaElementSource } from "@/lib/exporter/localMediaSource";
 import type { TimelineAudioRegion } from "../../core/timelineTypes";
@@ -101,8 +102,8 @@ export function useTimelineAudioActions({
 			const audioDurationMs = await deps.probeAudioDurationMs(audioPath);
 			if (audioDurationMs <= 0) {
 				deps.reportError(
-					"Could not read audio file",
-					"The selected file may be corrupted or in an unsupported format.",
+					translate("timeline.notify.audioReadFailed", "Could not read audio file"),
+					translate("timeline.notify.audioReadFailedDesc", "The selected file may be corrupted or in an unsupported format."),
 				);
 				return;
 			}
@@ -110,8 +111,8 @@ export function useTimelineAudioActions({
 			const startPos = Math.max(0, Math.min(currentTimeMs, totalMs));
 			if (totalMs - startPos <= 0) {
 				deps.reportError(
-					"Cannot place audio here",
-					"There is no remaining space at the current playhead position.",
+					translate("timeline.notify.audioPlaceFailed", "Cannot place audio here"),
+					translate("timeline.notify.audioNoSpace", "There is no remaining space at the current playhead position."),
 				);
 				return;
 			}
@@ -125,8 +126,8 @@ export function useTimelineAudioActions({
 			});
 			if (!placement) {
 				deps.reportError(
-					"Cannot place audio here",
-					"Audio region already exists at this location or not enough space available.",
+					translate("timeline.notify.audioPlaceFailed", "Cannot place audio here"),
+					translate("timeline.notify.audioOverlap", "Audio region already exists at this location or not enough space available."),
 				);
 				return;
 			}
