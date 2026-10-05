@@ -1,4 +1,9 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
+import { globalShortcut } from "electron";
+import { recordFlag } from "../cursor/keystrokes";
+import { getCursorCaptureElapsedMs, isCursorCapturePaused } from "../cursor/telemetry";
+
+const RECORDING_FLAG_SHORTCUT = "Control+Alt+F";
 import {
 	isAndroidRecordingActive,
 	startAndroidRecording,
@@ -1899,7 +1904,13 @@ export function registerRecordingHandlers(
 			sampleCursorPoint();
 			startCursorSampling();
 			void startInteractionCapture();
+			// Recording flag: mark "this moment" for the editor timeline.
+			globalShortcut.unregister(RECORDING_FLAG_SHORTCUT);
+			globalShortcut.register(RECORDING_FLAG_SHORTCUT, () => {
+				if (!isCursorCapturePaused()) recordFlag(getCursorCaptureElapsedMs());
+			});
 		} else {
+			globalShortcut.unregister(RECORDING_FLAG_SHORTCUT);
 			setIsCursorCaptureActive(false);
 			stopCursorCapture();
 			stopInteractionCapture();
@@ -1936,6 +1947,17 @@ export function registerRecordingHandlers(
 		resumeCursorCapture(normalizeRendererTimestampMs(resumedAtMs));
 		sampleCursorPoint();
 		return { success: true };
+	});
+
+	ipcMain.handle("get-recording-flags", async () => {
+		const target = normalizeVideoSourcePath(currentVideoPath);
+		if (!target) return [];
+		try {
+			const parsed = JSON.parse(await fs.readFile(`${target}.flags.json`, "utf-8")) as { flags?: unknown };
+			return Array.isArray(parsed.flags) ? parsed.flags.filter((t) => typeof t === "number") : [];
+		} catch {
+			return [];
+		}
 	});
 
 	ipcMain.handle("get-cursor-telemetry", async (_, videoPath?: string) => {

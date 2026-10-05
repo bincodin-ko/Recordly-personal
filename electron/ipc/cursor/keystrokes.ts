@@ -86,6 +86,15 @@ export function toKeystrokeSample(event: HookKeyEvent, timeMs: number): Keystrok
 
 export function resetKeystrokeCapture() {
 	activeSamples = [];
+	activeFlags = [];
+}
+
+// Recording flags (Ctrl+Alt+F while recording) → `<video>.flags.json`, shown as timeline markers.
+let activeFlags: number[] = [];
+let pendingFlags: number[] = [];
+
+export function recordFlag(timeMs: number) {
+	activeFlags.push(Math.max(0, Math.round(timeMs)));
 }
 
 export function recordKeystroke(event: HookKeyEvent, timeMs: number) {
@@ -96,11 +105,17 @@ export function recordKeystroke(event: HookKeyEvent, timeMs: number) {
 }
 
 export function snapshotKeystrokesForPersistence() {
+	const lastFlag = pendingFlags[pendingFlags.length - 1] ?? -1;
+	pendingFlags = [...pendingFlags, ...activeFlags.filter((t) => t > lastFlag)];
 	const last = pendingSamples[pendingSamples.length - 1]?.timeMs ?? -1;
 	pendingSamples = [...pendingSamples, ...activeSamples.filter((s) => s.timeMs > last)];
 }
 
 export async function persistPendingKeystrokes(videoPath: string) {
+	if (pendingFlags.length > 0) {
+		await fs.writeFile(`${videoPath}.flags.json`, JSON.stringify({ version: 1, flags: pendingFlags }), "utf-8");
+	}
+	pendingFlags = [];
 	if (pendingSamples.length > 0) {
 		await fs.writeFile(
 			`${videoPath}.keys.json`,

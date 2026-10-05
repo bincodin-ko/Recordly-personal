@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { TimelineRegion } from "../core/timelineTypes";
 
 interface UseTimelineSelectionParams {
@@ -49,6 +49,22 @@ export function useTimelineSelection({
 	const [keyframes, setKeyframes] = useState<{ id: string; time: number }[]>([]);
 	const [selectedKeyframeId, setSelectedKeyframeId] = useState<string | null>(null);
 	const [selectAllBlocksActive, setSelectAllBlocksActive] = useState(false);
+	// Recording flags (Ctrl+Alt+F while recording) appear as markers once the video loads.
+	useEffect(() => {
+		if (totalMs <= 0 || !window.electronAPI?.getRecordingFlags) return;
+		let cancelled = false;
+		void window.electronAPI.getRecordingFlags().then((flags) => {
+			if (cancelled || flags.length === 0) return;
+			setKeyframes(
+				flags
+					.filter((t) => t <= totalMs)
+					.map((time) => ({ id: globalThis.crypto.randomUUID(), time })),
+			);
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, [totalMs]);
 	const hasAnyZoomBlocks = useMemo(() => zoomRegions.length > 0, [zoomRegions.length]);
 
 	const addKeyframe = useCallback(() => {
