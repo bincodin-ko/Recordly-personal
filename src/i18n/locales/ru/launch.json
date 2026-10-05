@@ -166,5 +166,29 @@
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
 		"placeholder": "Paste or type your script here, then press Start."
+	},
+	"recordingSettings": {
+		"title": "Настройки записи",
+		"showQuickExport": "Показывать виджет быстрого экспорта после записи",
+		"hideDesktopIcons": "Скрывать значки рабочего стола во время записи"
+	},
+	"windowSize": {
+		"title": "Размер окна",
+		"hd": "720p (16:9)",
+		"fullHd": "1080p (16:9)",
+		"wide": "16:10",
+		"vertical": "Вертикально (9:16)",
+		"failed": "Не удалось изменить размер окна",
+		"clamped": "Изменено на {{width}}×{{height}} (ограничено экраном или приложением)"
+	},
+	"quickExport": {
+		"save": "Сохранить",
+		"copy": "Копировать",
+		"edit": "Редактировать",
+		"close": "Закрыть",
+		"saved": "Сохранено",
+		"copied": "Скопировано в буфер обмена",
+		"copyFailed": "Не удалось скопировать",
+		"doubleClickToEdit": "Дважды щёлкните, чтобы открыть в редакторе"
 	}
 }

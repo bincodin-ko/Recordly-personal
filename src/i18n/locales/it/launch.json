@@ -166,5 +166,29 @@
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
 		"placeholder": "Paste or type your script here, then press Start."
+	},
+	"recordingSettings": {
+		"title": "Impostazioni di registrazione",
+		"showQuickExport": "Mostra il widget di esportazione rapida dopo la registrazione",
+		"hideDesktopIcons": "Nascondi le icone del desktop durante la registrazione"
+	},
+	"windowSize": {
+		"title": "Ridimensiona finestra",
+		"hd": "720p (16:9)",
+		"fullHd": "1080p (16:9)",
+		"wide": "16:10",
+		"vertical": "Verticale (9:16)",
+		"failed": "Impossibile ridimensionare questa finestra",
+		"clamped": "Ridimensionata a {{width}}×{{height}} (limitata dallo schermo o dall’app)"
+	},
+	"quickExport": {
+		"save": "Salva",
+		"copy": "Copia",
+		"edit": "Modifica",
+		"close": "Chiudi",
+		"saved": "Salvato",
+		"copied": "Copiato negli appunti",
+		"copyFailed": "Copia non riuscita",
+		"doubleClickToEdit": "Doppio clic per aprire nell’editor"
 	}
 }

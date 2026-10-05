@@ -166,5 +166,29 @@
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
 		"placeholder": "Paste or type your script here, then press Start."
+	},
+	"recordingSettings": {
+		"title": "Aufnahmeeinstellungen",
+		"showQuickExport": "Schnellexport-Widget nach der Aufnahme anzeigen",
+		"hideDesktopIcons": "Desktopsymbole während der Aufnahme ausblenden"
+	},
+	"windowSize": {
+		"title": "Fenstergröße ändern",
+		"hd": "720p (16:9)",
+		"fullHd": "1080p (16:9)",
+		"wide": "16:10",
+		"vertical": "Hochformat (9:16)",
+		"failed": "Größe dieses Fensters kann nicht geändert werden",
+		"clamped": "Auf {{width}}×{{height}} geändert (durch Bildschirm oder App begrenzt)"
+	},
+	"quickExport": {
+		"save": "Speichern",
+		"copy": "Kopieren",
+		"edit": "Bearbeiten",
+		"close": "Schließen",
+		"saved": "Gespeichert",
+		"copied": "In die Zwischenablage kopiert",
+		"copyFailed": "Kopieren fehlgeschlagen",
+		"doubleClickToEdit": "Doppelklicken, um im Editor zu öffnen"
 	}
 }

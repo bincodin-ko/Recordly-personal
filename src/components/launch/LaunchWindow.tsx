@@ -1,6 +1,8 @@
 import {
 	ArrowClockwiseIcon,
+	BoundingBox,
 	CaretUpIcon,
+	GearSix,
 	House,
 	DotsThreeVerticalIcon,
 	MicrophoneIcon,
@@ -39,6 +41,7 @@ import {
 	useLaunchPopoverCoordinator,
 } from "./popovers/LaunchPopoverCoordinator";
 import { MicPopover } from "./popovers/MicPopover";
+import { RecordingSettingsPopover, WindowSizePopover } from "./popovers/RecordingSettingsPopover";
 import { SourcePopover } from "./popovers/SourcePopover";
 import { WebcamPopover } from "./popovers/WebcamPopover";
 import { RecordingControls } from "./RecordingControls";
@@ -83,8 +86,13 @@ function LaunchWindowContent() {
 	const hudContentRef = useRef<HTMLDivElement>(null);
 	const hudBarRef = useRef<HTMLDivElement>(null);
 
-	const { selectedSource, hasSelectedSource, handleSourceSelect, syncSelectedSource } =
-		useLaunchWindowActions();
+	const {
+		selectedSource,
+		hasSelectedSource,
+		isWindowSourceSelected,
+		handleSourceSelect,
+		syncSelectedSource,
+	} = useLaunchWindowActions();
 
 	const showWebcamControls = webcamEnabled && !recording;
 	const { devices, selectedDeviceId, setSelectedDeviceId } = useMicrophoneDevices(
@@ -253,6 +261,24 @@ function LaunchWindowContent() {
 						}
 					/>
 
+					{platform === "win32" && isWindowSourceSelected ? (
+						<WindowSizePopover
+							trigger={
+								<Button
+									variant="ghost"
+									size="icon"
+									iconSize="lg"
+									title={t("windowSize.title", "Resize window")}
+								>
+									<BoundingBox
+										weight={openId === "window-size" ? "fill" : "regular"}
+										className="size-5"
+									/>
+								</Button>
+							}
+						/>
+					) : null}
+
 					<Separator orientation="vertical" className="mx-[5px] h-6 self-center" />
 				</>
 			)}
@@ -405,6 +431,23 @@ function LaunchWindowContent() {
 			</Button>
 
 			<Separator orientation="vertical" className="mx-[5px] h-6 self-center" />
+
+			<RecordingSettingsPopover
+				platform={platform}
+				trigger={
+					<Button
+						variant="ghost"
+						size="icon"
+						iconSize="lg"
+						title={t("recordingSettings.title", "Recording settings")}
+					>
+						<GearSix
+							weight={openId === "recording-settings" ? "fill" : "regular"}
+							className="size-5"
+						/>
+					</Button>
+				}
+			/>
 
 			{homeButton}
 

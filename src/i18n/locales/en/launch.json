@@ -166,5 +166,29 @@
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
 		"placeholder": "Paste or type your script here, then press Start."
+	},
+	"recordingSettings": {
+		"title": "Recording settings",
+		"showQuickExport": "Show quick export widget after recording",
+		"hideDesktopIcons": "Hide desktop icons while recording"
+	},
+	"windowSize": {
+		"title": "Resize window",
+		"hd": "720p (16:9)",
+		"fullHd": "1080p (16:9)",
+		"wide": "16:10",
+		"vertical": "Vertical (9:16)",
+		"failed": "Couldn’t resize this window",
+		"clamped": "Resized to {{width}}×{{height}} (limited by the screen or app)"
+	},
+	"quickExport": {
+		"save": "Save",
+		"copy": "Copy",
+		"edit": "Edit",
+		"close": "Close",
+		"saved": "Saved",
+		"copied": "Copied to clipboard",
+		"copyFailed": "Couldn’t copy",
+		"doubleClickToEdit": "Double-click to open in the editor"
 	}
 }

@@ -20,6 +20,11 @@ const UpdateToastWindow = lazy(() =>
 		default: module.UpdateToastWindow,
 	})),
 );
+const QuickExportWidget = lazy(() =>
+	import("./components/launch/QuickExportWidget").then((module) => ({
+		default: module.QuickExportWidget,
+	})),
+);
 const EditorWindow = lazy(() => import("./components/video-editor/EditorWindow"));
 
 export default function App() {
@@ -36,7 +41,8 @@ export default function App() {
 			windowType === "hud-overlay" ||
 			windowType === "source-selector" ||
 			windowType === "countdown" ||
-			windowType === "update-toast"
+			windowType === "update-toast" ||
+			windowType === "quick-export"
 		) {
 			document.body.style.background = "transparent";
 			document.documentElement.style.background = "transparent";
@@ -75,6 +81,9 @@ export default function App() {
 			break;
 		case "update-toast":
 			content = <UpdateToastWindow />;
+			break;
+		case "quick-export":
+			content = <QuickExportWidget />;
 			break;
 		case "prompter":
 			content = <PrompterWindow />;

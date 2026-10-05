@@ -1114,6 +1114,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	getCountdownDelay: () => ipcRenderer.invoke("get-countdown-delay"),
 	setCountdownDelay: (delay: number) => ipcRenderer.invoke("set-countdown-delay", delay),
 	finishRecordingStartup: () => ipcRenderer.invoke("finish-recording-startup"),
+	resizeSelectedWindow: (width: number, height: number) =>
+		ipcRenderer.invoke("resize-selected-window", width, height),
+	desktopIconsBeforeRecording: () => ipcRenderer.invoke("desktop-icons-before-recording"),
+	desktopIconsAfterStartup: () => ipcRenderer.invoke("desktop-icons-after-startup"),
+	showQuickExportWidget: (videoPath: string) =>
+		ipcRenderer.invoke("show-quick-export-widget", videoPath),
+	quickExportGetVideo: () => ipcRenderer.invoke("quick-export-get-video"),
+	quickExportSave: () => ipcRenderer.invoke("quick-export-save"),
+	quickExportCopy: () => ipcRenderer.invoke("quick-export-copy"),
+	quickExportClose: () => ipcRenderer.invoke("quick-export-close"),
 	startCountdown: (seconds: number) => ipcRenderer.invoke("start-countdown", seconds),
 	cancelCountdown: () => ipcRenderer.invoke("cancel-countdown"),
 	getActiveCountdown: () => ipcRenderer.invoke("get-active-countdown"),
