@@ -2,6 +2,7 @@
 #include <mfapi.h>
 #include <mferror.h>
 #include <codecapi.h>
+#include <strmif.h>
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
@@ -75,6 +76,8 @@ bool MFEncoder::initialize(const std::wstring& outputPath, int width, int height
     outputType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_H264);
     const UINT32 videoBitrate = calculateScreenRecordingBitrate(width_, height_, fps_);
     outputType->SetUINT32(MF_MT_AVG_BITRATE, videoBitrate);
+    // Media Foundation defaults to Baseline; High keeps more detail per bit (OpenScreen #922).
+    outputType->SetUINT32(MF_MT_MPEG2_PROFILE, eAVEncH264VProfile_High);
     MFSetAttributeSize(outputType.Get(), MF_MT_FRAME_SIZE, width_, height_);
     MFSetAttributeRatio(outputType.Get(), MF_MT_FRAME_RATE, fps_, 1);
     MFSetAttributeRatio(outputType.Get(), MF_MT_PIXEL_ASPECT_RATIO, 1, 1);
@@ -121,6 +124,19 @@ bool MFEncoder::initialize(const std::wstring& outputPath, int width, int height
     if (FAILED(hr)) {
         std::cerr << "ERROR: SetInputMediaType failed: 0x" << std::hex << hr << std::endl;
         return false;
+    }
+
+    // Best-effort: favour quality over speed. Unsupported encoders just ignore it.
+    {
+        ComPtr<ICodecAPI> codecApi;
+        if (SUCCEEDED(sinkWriter_->GetServiceForStream(streamIndex_, GUID_NULL, IID_PPV_ARGS(&codecApi))) && codecApi) {
+            VARIANT value;
+            VariantInit(&value);
+            value.vt = VT_UI4;
+            value.ulVal = 100;
+            const HRESULT qvs = codecApi->SetValue(&CODECAPI_AVEncCommonQualityVsSpeed, &value);
+            std::cerr << "Encoder tuning: qualityVsSpeed=" << (SUCCEEDED(qvs) ? "ok" : "unsupported") << std::endl;
+        }
     }
 
     hr = sinkWriter_->BeginWriting();
