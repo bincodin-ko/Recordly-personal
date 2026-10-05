@@ -60,6 +60,7 @@ import {
 	reassertHudOverlayMousePassthrough as reassertHudOverlayMouseState,
 	setHudOverlayRecordingActive,
 	showUpdateToastWindow,
+	preloadPrompterWindow,
 } from "./windows";
 
 const electronMainDir = path.dirname(fileURLToPath(import.meta.url));
@@ -341,6 +342,8 @@ function createWindow() {
 
 	isCreatingMainWindow = true;
 	const createdHudWindow = createHudOverlayWindow();
+	// Warm the teleprompter in the background so opening it is instant.
+	setTimeout(() => preloadPrompterWindow(), 3000);
 	mainWindow = createdHudWindow;
 	createdHudWindow.once("closed", () => {
 		if (mainWindow === createdHudWindow) {

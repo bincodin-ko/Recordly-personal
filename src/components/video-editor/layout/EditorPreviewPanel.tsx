@@ -16,7 +16,7 @@ import {
 	SpeakerLow,
 	SpeakerX,
 } from "@/components/ui/icons";
-import type { Dispatch, RefObject, SetStateAction } from "react";
+import { type Dispatch, type RefObject, type SetStateAction, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -343,6 +343,10 @@ export function EditorPreviewPanel(props: Props) {
 				</div>
 
 				<div className="editor-playback-volume z-10 ml-auto flex items-center">
+					<AudioSyncControl
+						t={t}
+						onChanged={() => timeline.setSourceAudioFallbackRefreshKey((k) => k + 1)}
+					/>
 					<Popover>
 						<PopoverTrigger asChild>
 							<Button
@@ -384,5 +388,63 @@ export function EditorPreviewPanel(props: Props) {
 				</div>
 			</div>
 		</div>
+	);
+}
+
+/** Shift recorded sound vs. picture after recording (saved next to the video). */
+function AudioSyncControl({ t, onChanged }: { t: Props["t"]; onChanged: () => void }) {
+	const [offsetMs, setOffsetMs] = useState(0);
+	useEffect(() => {
+		void window.electronAPI?.getAudioSyncOffset?.().then((value) => setOffsetMs(value ?? 0));
+	}, []);
+	const commit = async (value: number) => {
+		setOffsetMs(await window.electronAPI.setAudioSyncOffset(value));
+		onChanged();
+	};
+	return (
+		<Popover>
+			<PopoverTrigger asChild>
+				<Button
+					variant="ghost"
+					size="sm"
+					className="h-8 px-2 text-xs tabular-nums"
+					title={t("editor.audioSync.title", "Sound sync")}
+				>
+					{t("editor.audioSync.short", "Sync")} {offsetMs > 0 ? "+" : ""}
+					{offsetMs}ms
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent side="top" sideOffset={10} className="flex w-72 flex-col gap-3 p-3">
+				<div className="text-xs font-medium">{t("editor.audioSync.title", "Sound sync")}</div>
+				<div className="text-[11px] text-muted-foreground">
+					{t("editor.audioSync.hint", "+ makes sound later, - makes it earlier.")}
+				</div>
+				<Slider
+					min={-1000}
+					max={1000}
+					step={5}
+					value={[offsetMs]}
+					onValueChange={([value]) => setOffsetMs(value)}
+					onValueCommit={([value]) => void commit(value)}
+				/>
+				<div className="flex items-center gap-2">
+					{[-50, -10, 10, 50].map((delta) => (
+						<Button
+							key={delta}
+							variant="outline"
+							size="sm"
+							className="h-7 px-2 text-xs"
+							onClick={() => void commit(offsetMs + delta)}
+						>
+							{delta > 0 ? "+" : ""}
+							{delta}
+						</Button>
+					))}
+					<Button variant="ghost" size="sm" className="ml-auto h-7 px-2 text-xs" onClick={() => void commit(0)}>
+						{t("editor.audioSync.reset", "Reset")}
+					</Button>
+				</div>
+			</PopoverContent>
+		</Popover>
 	);
 }

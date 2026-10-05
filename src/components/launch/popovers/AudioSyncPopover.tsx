@@ -44,10 +44,16 @@ export function AudioSyncPopover({ trigger }: { trigger: ReactElement }) {
 			?.getSources({ types: ["window"], thumbnailSize: { width: 1, height: 1 } })
 			.then((sources) => {
 				const seen = new Set<string>();
+				// One entry per app: window titles end with " - AppName" (Chrome, VS Code, …).
 				setApps(
 					sources
-						.map((s) => ({ windowId: s.id, name: String(s.appName || s.name) }))
-						.filter((s) => s.windowId.startsWith("window:") && !seen.has(s.name) && seen.add(s.name)),
+						.filter((s) => s.id.startsWith("window:"))
+						.map((s) => {
+							const title = String(s.appName || s.name);
+							const app = title.includes(" - ") ? title.split(" - ").pop()!.trim() : title;
+							return { windowId: s.id, name: app };
+						})
+						.filter((s) => s.name && !seen.has(s.name) && seen.add(s.name)),
 				);
 			})
 			.catch(() => setApps([]));

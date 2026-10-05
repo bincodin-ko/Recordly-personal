@@ -1,4 +1,5 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
+import { readAudioSyncOffsetMs, writeAudioSyncOffsetMs } from "../recording/diagnostics";
 import { globalShortcut } from "electron";
 import { recordFlag } from "../cursor/keystrokes";
 import { getCursorCaptureElapsedMs, isCursorCapturePaused } from "../cursor/telemetry";
@@ -1966,6 +1967,15 @@ export function registerRecordingHandlers(
 		resumeCursorCapture(normalizeRendererTimestampMs(resumedAtMs));
 		sampleCursorPoint();
 		return { success: true };
+	});
+
+	ipcMain.handle("get-audio-sync-offset", async () => {
+		const target = normalizeVideoSourcePath(currentVideoPath);
+		return target ? readAudioSyncOffsetMs(target) : 0;
+	});
+	ipcMain.handle("set-audio-sync-offset", async (_, offsetMs: number) => {
+		const target = normalizeVideoSourcePath(currentVideoPath);
+		return target ? writeAudioSyncOffsetMs(target, Number(offsetMs) || 0) : 0;
 	});
 
 	ipcMain.handle("get-recording-flags", async () => {

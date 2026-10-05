@@ -1178,9 +1178,23 @@ let prompterWindow: BrowserWindow | null = null;
 /** Teleprompter: always on top and excluded from screen capture, so it never appears in recordings. */
 export function togglePrompterWindow(): boolean {
 	if (prompterWindow && !prompterWindow.isDestroyed()) {
-		prompterWindow.close();
-		return false;
+		if (prompterWindow.isVisible()) {
+			prompterWindow.hide();
+			return false;
+		}
+		prompterWindow.show();
+		return true;
 	}
+	createPrompterWindow(true);
+	return true;
+}
+
+/** Loads the prompter in the background (hidden) so the first open is instant. */
+export function preloadPrompterWindow() {
+	if (!prompterWindow || prompterWindow.isDestroyed()) createPrompterWindow(false);
+}
+
+function createPrompterWindow(showWhenReady: boolean) {
 	const { workArea } = getScreen().getPrimaryDisplay();
 	const win = new BrowserWindow({
 		width: 720,
@@ -1191,6 +1205,7 @@ export function togglePrompterWindow(): boolean {
 		skipTaskbar: false,
 		title: "Recordly 프롬프터",
 		autoHideMenuBar: true,
+		show: false,
 		backgroundColor: "#111118",
 		webPreferences: {
 			preload: path.join(electronWindowsDir, "preload.mjs"),
@@ -1201,13 +1216,25 @@ export function togglePrompterWindow(): boolean {
 	win.setContentProtection(true);
 	win.setAlwaysOnTop(true, "floating");
 	prompterWindow = win;
+	// Closing just hides it, so it stays loaded for the next open.
+	win.on("close", (event) => {
+		if (!appIsQuitting) {
+			event.preventDefault();
+			win.hide();
+		}
+	});
 	win.on("closed", () => {
 		if (prompterWindow === win) prompterWindow = null;
 	});
+	if (showWhenReady) win.once("ready-to-show", () => win.show());
 	if (VITE_DEV_SERVER_URL) {
 		win.loadURL(VITE_DEV_SERVER_URL + "?windowType=prompter");
 	} else {
 		win.loadFile(path.join(RENDERER_DIST, "index.html"), { query: { windowType: "prompter" } });
 	}
-	return true;
 }
+
+let appIsQuitting = false;
+app.on("before-quit", () => {
+	appIsQuitting = true;
+});

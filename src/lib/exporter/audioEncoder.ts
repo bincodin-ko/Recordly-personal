@@ -140,7 +140,7 @@ export class AudioProcessor extends AudioTranscodeProcessor {
 			routingPolicy.playbackPaths.length === 1 &&
 			routingPolicy.playbackPaths[0]?.toLowerCase().endsWith(".mic.m4a") === true;
 		const hasTimedCompanionAudio = routingPolicy.playbackPaths.some(
-			(audioPath) => (sourceAudioFallbackStartDelayMsByPath?.[audioPath] ?? 0) > 0,
+			(audioPath) => (sourceAudioFallbackStartDelayMsByPath?.[audioPath] ?? 0) !== 0,
 		);
 		const needsSourceAudioMixing =
 			routingPolicy.playbackPaths.length > 1 ||

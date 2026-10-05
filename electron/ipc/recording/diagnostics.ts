@@ -570,13 +570,16 @@ export async function getCompanionAudioFallbackInfo(videoPath: string) {
 		);
 	}
 
+	// User sync adjustment from the editor (<video>.sync.json, ms; + = later, - = earlier).
+	const userOffsetMs = await readAudioSyncOffsetMs(videoPath);
 	const metadataEntries = await Promise.all(
 		paths.map(async (audioPath) => {
-			const startDelayMs = await getCompanionAudioStartDelayMs(audioPath);
-			if (!Number.isFinite(startDelayMs)) {
+			if (audioPath === videoPath) return null;
+			const recordedMs = await getCompanionAudioStartDelayMs(audioPath);
+			if (!Number.isFinite(recordedMs) && userOffsetMs === 0) {
 				return null;
 			}
-
+			const startDelayMs = (typeof recordedMs === "number" && Number.isFinite(recordedMs) ? recordedMs : 0) + userOffsetMs;
 			return [audioPath, startDelayMs] as const;
 		}),
 	);
@@ -634,4 +637,20 @@ export async function validateRecordedVideo(videoPath: string) {
 		fileSizeBytes: stat.size,
 		durationSeconds,
 	};
+}
+
+export async function readAudioSyncOffsetMs(videoPath: string): Promise<number> {
+	try {
+		const parsed = JSON.parse(await fs.readFile(`${videoPath}.sync.json`, "utf-8")) as { offsetMs?: unknown };
+		const value = Number(parsed.offsetMs);
+		return Number.isFinite(value) ? Math.max(-2000, Math.min(2000, Math.round(value))) : 0;
+	} catch {
+		return 0;
+	}
+}
+
+export async function writeAudioSyncOffsetMs(videoPath: string, offsetMs: number) {
+	const value = Math.max(-2000, Math.min(2000, Math.round(offsetMs)));
+	await fs.writeFile(`${videoPath}.sync.json`, JSON.stringify({ offsetMs: value }), "utf-8");
+	return value;
 }

@@ -56,8 +56,9 @@ export function estimateCompanionAudioStartDelaySeconds(
 	audioDuration?: number | null,
 	recordedStartDelayMs?: number | null,
 ): number {
-	if (Number.isFinite(recordedStartDelayMs) && (recordedStartDelayMs ?? 0) >= 0) {
-		return Math.max(0, recordedStartDelayMs ?? 0) / 1000;
+	// Negative values come from the editor's sync adjustment (audio moved earlier).
+	if (Number.isFinite(recordedStartDelayMs)) {
+		return (recordedStartDelayMs ?? 0) / 1000;
 	}
 
 	if (!Number.isFinite(timelineDuration) || !Number.isFinite(audioDuration)) {

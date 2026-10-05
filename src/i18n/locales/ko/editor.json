@@ -497,5 +497,11 @@
 	"aspect": {
 		"native": "원본 비율",
 		"custom": "직접 지정 {{ratio}}"
+	},
+	"audioSync": {
+		"title": "소리 싱크 조정",
+		"short": "싱크",
+		"hint": "+ 는 소리를 늦게, - 는 소리를 빠르게 해요.",
+		"reset": "초기화"
 	}
 }

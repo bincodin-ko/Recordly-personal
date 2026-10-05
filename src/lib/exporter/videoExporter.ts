@@ -550,7 +550,7 @@ export class VideoExporter {
 		);
 		const hasTimedSourceAudioFallback = sourceAudioFallbackPaths.some(
 			(audioPath) =>
-				(this.config.sourceAudioFallbackStartDelayMsByPath?.[audioPath] ?? 0) > 0,
+				(this.config.sourceAudioFallbackStartDelayMsByPath?.[audioPath] ?? 0) !== 0,
 		);
 		const localVideoSourcePath = this.getNativeVideoSourcePath();
 		const primaryAudioSourcePath =

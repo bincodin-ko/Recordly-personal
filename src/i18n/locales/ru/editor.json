@@ -497,5 +497,11 @@
 	"aspect": {
 		"native": "Native",
 		"custom": "Custom {{ratio}}"
+	},
+	"audioSync": {
+		"title": "Sound sync",
+		"short": "Sync",
+		"hint": "+ makes sound later, - makes it earlier.",
+		"reset": "Reset"
 	}
 }

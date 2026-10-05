@@ -6,11 +6,12 @@ import { useScopedT } from "@/contexts/I18nContext";
 const STORAGE_KEY = "recordly.prompter";
 
 type PrompterState = { text: string; speed: number; fontSize: number; opacity: number };
-const DEFAULTS: PrompterState = { text: "", speed: 30, fontSize: 28, opacity: 0.9 };
+const DEFAULTS: PrompterState = { text: "", speed: 20, fontSize: 28, opacity: 0.9 };
 
 function loadState(): PrompterState {
 	try {
-		return { ...DEFAULTS, ...JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}") };
+		const saved = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}") };
+		return { ...saved, speed: Math.min(80, Math.max(2, Number(saved.speed) || DEFAULTS.speed)) };
 	} catch {
 		return DEFAULTS;
 	}
@@ -30,13 +31,16 @@ export function PrompterWindow() {
 		}
 	}, [state]);
 
-	// Scroll at `speed` px/s while playing.
+	// Scroll at `speed` px/s while playing. scrollTop only takes whole pixels, so the
+	// position is accumulated as a float (slow speeds otherwise rounded to 0 per frame).
 	useEffect(() => {
 		if (!playing) return;
 		let last = performance.now();
+		let position = scrollRef.current?.scrollTop ?? 0;
 		let frame = requestAnimationFrame(function step(now) {
 			const el = scrollRef.current;
-			if (el) el.scrollTop += ((now - last) / 1000) * state.speed;
+			position += ((now - last) / 1000) * state.speed;
+			if (el) el.scrollTop = Math.round(position);
 			last = now;
 			frame = requestAnimationFrame(step);
 		});
@@ -70,7 +74,7 @@ export function PrompterWindow() {
 				</button>
 				<label className="flex items-center gap-1">
 					{t("prompter.speed", "Speed")}
-					<input type="range" min={5} max={150} value={state.speed} onChange={(e) => set({ speed: Number(e.target.value) })} />
+					<input type="range" min={2} max={80} value={state.speed} onChange={(e) => set({ speed: Number(e.target.value) })} />
 				</label>
 				<label className="flex items-center gap-1">
 					{t("prompter.fontSize", "Text size")}
