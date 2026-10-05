@@ -1,3 +1,4 @@
+import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
 import GIF from "gif.js";
 import type {
 	AnnotationRegion,
@@ -87,6 +88,7 @@ interface GifExporterConfig {
 	cursorClickBounce?: number;
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
+	cursorExtras?: CursorExtrasRenderOptions;
 	previewWidth?: number;
 	previewHeight?: number;
 	maxDecodeQueue?: number;
@@ -192,6 +194,7 @@ export function buildGifFrameRendererConfig(
 		cursorClickBounce: config.cursorClickBounce,
 		cursorClickBounceDuration: config.cursorClickBounceDuration,
 		cursorSway: config.cursorSway,
+		cursorExtras: config.cursorExtras,
 	};
 }
 

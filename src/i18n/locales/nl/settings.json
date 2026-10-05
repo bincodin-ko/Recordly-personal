@@ -33,7 +33,8 @@
 		"mutedState": "Audio is gedempt",
 		"unmutedState": "Audio wordt afgespeeld",
 		"separateClipFromAudio": "Clip van audio scheiden",
-		"delete": "Clip verwijderen"
+		"delete": "Clip verwijderen",
+		"hideCursor": "Cursor verbergen"
 	},
 	"effects": {
 		"title": "Video-effecten",
@@ -185,7 +186,11 @@
 		"webcamVertical": "Vertical",
 		"webcamMargin": "Margin",
 		"customEffectColor": "Custom effect color",
-		"devBadge": "DEV"
+		"devBadge": "DEV",
+		"hideIdleCursor": "Cursor verbergen als hij niet beweegt",
+		"idleCursorDelay": "Verbergen na",
+		"clickSound": "Klikgeluid",
+		"clickSoundVolume": "Volume klikgeluid"
 	},
 	"sections": {
 		"scene": "Scène",
@@ -350,5 +355,18 @@
 	"general": {
 		"onboarding": "Onboarding",
 		"showOnboarding": "Show onboarding"
+	},
+	"shortcuts": {
+		"title": "Sneltoetsen",
+		"show": "Sneltoetsen tonen",
+		"singleKeys": "Losse toetsen tonen",
+		"size": "Grootte sneltoetslabels",
+		"position": "Positie sneltoetsen",
+		"noneRecorded": "Er zijn geen sneltoetsen opgenomen in deze video.",
+		"positions": {
+			"bottom-left": "Links",
+			"bottom-center": "Midden",
+			"bottom-right": "Rechts"
+		}
 	}
 }

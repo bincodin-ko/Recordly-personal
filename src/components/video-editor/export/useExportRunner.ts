@@ -1,3 +1,4 @@
+import { buildClickSoundRegions } from "../cursorExtras";
 import { translate } from "@/contexts/I18nContext";
 import { useCallback, useRef } from "react";
 import { toast } from "@/components/ui/toast";
@@ -318,7 +319,14 @@ export function useExportRunner(input: ExportRunnerInput) {
 								setExportProgress(progress);
 							},
 						}),
-						audioRegions,
+						audioRegions: [
+							...audioRegions,
+							...buildClickSoundRegions(
+								effectiveCursorTelemetry,
+								clipRegions,
+								appearance.cursorExtras,
+							),
+						],
 						clipRegions,
 						sourceAudioFallbackPaths: audio.sourceAudioFallbackPaths,
 						sourceAudioFallbackStartDelayMsByPath:

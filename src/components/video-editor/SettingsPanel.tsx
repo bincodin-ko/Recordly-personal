@@ -1,3 +1,8 @@
+import {
+	type CursorExtrasSettings,
+	DEFAULT_CURSOR_EXTRAS,
+	type ShortcutOverlayPosition,
+} from "./cursorExtras";
 import { SettingsSections, SettingsCategory } from "./SettingsSections";
 import { Card, RadioGroup, Radio, Label, Description } from "@heroui/react";
 import { ProgressBar } from "@heroui/react";
@@ -440,6 +445,8 @@ interface SettingsPanelProps {
 	onResetClipAudio?: () => void;
 	onClipSpeedChange?: (speed: number) => void;
 	onClipMutedChange?: (muted: boolean) => void;
+	selectedClipHideCursor?: boolean;
+	onClipHideCursorChange?: (hideCursor: boolean) => void;
 	onClipDelete?: (id: string) => void;
 	selectedAudioId?: string | null;
 	selectedAudioVolume?: number | null;
@@ -512,6 +519,9 @@ interface SettingsPanelProps {
 	cursorClickBounceDuration?: number;
 	onCursorClickBounceDurationChange?: (duration: number) => void;
 	cursorSway?: number;
+	cursorExtras?: CursorExtrasSettings;
+	onCursorExtrasChange?: (patch: Partial<CursorExtrasSettings>) => void;
+	hasRecordedShortcuts?: boolean;
 	onCursorSwayChange?: (amount: number) => void;
 	borderRadius?: number;
 	onBorderRadiusChange?: (radius: number) => void;
@@ -901,6 +911,8 @@ export function SettingsPanel({
 	onResetClipAudio,
 	onClipSpeedChange,
 	onClipMutedChange,
+	selectedClipHideCursor = false,
+	onClipHideCursorChange,
 	onClipDelete,
 	selectedAudioId,
 	selectedAudioVolume,
@@ -961,6 +973,9 @@ export function SettingsPanel({
 	cursorClickBounceDuration = DEFAULT_CURSOR_CLICK_BOUNCE_DURATION,
 	onCursorClickBounceDurationChange,
 	cursorSway = DEFAULT_CURSOR_SWAY,
+	cursorExtras = DEFAULT_CURSOR_EXTRAS,
+	onCursorExtrasChange,
+	hasRecordedShortcuts = false,
 	onCursorSwayChange,
 	borderRadius = getDefaultBorderRadiusPercent(),
 	onBorderRadiusChange,
@@ -1457,6 +1472,7 @@ export function SettingsPanel({
 		onCursorClickBounceChange?.(initialEditorPreferences.cursorClickBounce);
 		onCursorClickBounceDurationChange?.(initialEditorPreferences.cursorClickBounceDuration);
 		onCursorSwayChange?.(initialEditorPreferences.cursorSway);
+		onCursorExtrasChange?.(initialEditorPreferences.cursorExtras);
 	};
 
 	const activeMotionPresetId = useMemo(() => {
@@ -2777,6 +2793,16 @@ export function SettingsPanel({
 						aria-label={tSettings("clip.mute", "Mute clip")}
 					/>
 				</label>
+				<label className="flex items-center justify-between py-2">
+					<span className="text-xs text-muted-foreground">
+						{tSettings("clip.hideCursor", "Hide cursor")}
+					</span>
+					<Switch
+						checked={selectedClipHideCursor}
+						onCheckedChange={(hideCursor) => onClipHideCursorChange?.(hideCursor)}
+						aria-label={tSettings("clip.hideCursor", "Hide cursor")}
+					/>
+				</label>
 				{hasClipAudioOverrides && onResetClipAudio && (
 					<Button type="button" variant="ghost" onClick={onResetClipAudio}>
 						{tSettings("clip.resetAudioSettings", "Reset audio settings")}
@@ -2914,6 +2940,29 @@ export function SettingsPanel({
 								onChange={(v) => onCursorSizeChange?.(v)}
 								formatValue={(v) => `${v.toFixed(2)}×`}
 							/>
+							<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+								<span>{tSettings("effects.hideIdleCursor")}</span>
+								<Switch
+									aria-label={tSettings("effects.hideIdleCursor")}
+									checked={cursorExtras.hideIdleCursor}
+									onCheckedChange={(hideIdleCursor) =>
+										onCursorExtrasChange?.({ hideIdleCursor })
+									}
+								/>
+							</label>
+							{cursorExtras.hideIdleCursor && (
+								<SliderControl
+									label={tSettings("effects.idleCursorDelay")}
+									value={cursorExtras.idleCursorDelaySec}
+									min={0.5}
+									max={10}
+									step={0.5}
+									onChange={(idleCursorDelaySec) =>
+										onCursorExtrasChange?.({ idleCursorDelaySec })
+									}
+									formatValue={(v) => `${v.toFixed(1)}s`}
+								/>
+							)}
 							<CursorClickEffectCards
 								title={tSettings(
 									"effects.cursorClickEffects.title",
@@ -2988,6 +3037,27 @@ export function SettingsPanel({
 									/>
 								</div>
 							) : null}
+							<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+								<span>{tSettings("effects.clickSound")}</span>
+								<Switch
+									aria-label={tSettings("effects.clickSound")}
+									checked={cursorExtras.clickSound}
+									onCheckedChange={(clickSound) => onCursorExtrasChange?.({ clickSound })}
+								/>
+							</label>
+							{cursorExtras.clickSound && (
+								<SliderControl
+									label={tSettings("effects.clickSoundVolume")}
+									value={cursorExtras.clickSoundVolume}
+									min={0}
+									max={1}
+									step={0.05}
+									onChange={(clickSoundVolume) =>
+										onCursorExtrasChange?.({ clickSoundVolume })
+									}
+									formatValue={(v) => `${Math.round(v * 100)}%`}
+								/>
+							)}
 							<SliderControl
 								label={tSettings("effects.cursorClickBounce")}
 								value={cursorClickBounce}
@@ -3036,6 +3106,74 @@ export function SettingsPanel({
 									</div>
 								</div>
 							) : null}
+						</div>
+						<div className="flex flex-col gap-3">
+							<SectionLabel>{tSettings("shortcuts.title")}</SectionLabel>
+							<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+								<span>{tSettings("shortcuts.show")}</span>
+								<Switch
+									aria-label={tSettings("shortcuts.show")}
+									checked={cursorExtras.showShortcuts}
+									onCheckedChange={(showShortcuts) =>
+										onCursorExtrasChange?.({ showShortcuts })
+									}
+								/>
+							</label>
+							{!hasRecordedShortcuts && (
+								<p className="text-xs text-muted-foreground/70">
+									{tSettings("shortcuts.noneRecorded")}
+								</p>
+							)}
+							{cursorExtras.showShortcuts && (
+								<>
+									<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+										<span>{tSettings("shortcuts.singleKeys")}</span>
+										<Switch
+											aria-label={tSettings("shortcuts.singleKeys")}
+											checked={cursorExtras.showSingleKeyShortcuts}
+											onCheckedChange={(showSingleKeyShortcuts) =>
+												onCursorExtrasChange?.({ showSingleKeyShortcuts })
+											}
+										/>
+									</label>
+									<SliderControl
+										label={tSettings("shortcuts.size")}
+										value={cursorExtras.shortcutsSize}
+										min={0.5}
+										max={2}
+										step={0.05}
+										onChange={(shortcutsSize) =>
+											onCursorExtrasChange?.({ shortcutsSize })
+										}
+										formatValue={(v) => `${v.toFixed(2)}×`}
+									/>
+									<ChoiceGroup
+										type="single"
+										value={cursorExtras.shortcutsPosition}
+										onValueChange={(value) => {
+											if (value) {
+												onCursorExtrasChange?.({
+													shortcutsPosition: value as ShortcutOverlayPosition,
+												});
+											}
+										}}
+										className="grid grid-cols-3 gap-2"
+										aria-label={tSettings("shortcuts.position")}
+									>
+										{(["bottom-left", "bottom-center", "bottom-right"] as const).map(
+											(position) => (
+												<ChoiceItem
+													key={position}
+													value={position}
+													className="h-auto min-w-0 px-2 py-2 text-xs"
+												>
+													{tSettings(`shortcuts.positions.${position}`)}
+												</ChoiceItem>
+											),
+										)}
+									</ChoiceGroup>
+								</>
+							)}
 						</div>
 					</section>
 				);

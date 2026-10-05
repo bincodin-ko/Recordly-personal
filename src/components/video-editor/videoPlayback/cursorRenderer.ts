@@ -15,6 +15,7 @@ import {
 	DEFAULT_CURSOR_STYLE,
 	normalizeCursorClickEffectColor,
 } from "../types";
+import { getCursorVisibility, type TimeRange } from "../cursorExtras";
 import { getCursorViewportScale } from "./cursorScale";
 import { computeCursorSwayRotation } from "./cursorSway";
 import { type CursorViewportRect, projectCursorPositionToViewport } from "./cursorViewport";
@@ -109,6 +110,10 @@ export interface CursorRenderConfig {
 	sway: number;
 	/** Cursor visual style. */
 	style: CursorStyle;
+	/** Fade the cursor out after this many idle milliseconds (0 = never). */
+	idleHideMs: number;
+	/** Source-time ranges where the cursor is hidden. */
+	hiddenRanges: TimeRange[];
 }
 
 const MIN_CURSOR_VIEWPORT_SCALE = 0;
@@ -151,6 +156,8 @@ export const DEFAULT_CURSOR_CONFIG: CursorRenderConfig = {
 	clickEffectDurationMs: DEFAULT_CURSOR_CLICK_EFFECT_DURATION_MS,
 	sway: 0,
 	style: DEFAULT_CURSOR_STYLE,
+	idleHideMs: 0,
+	hiddenRanges: [],
 };
 let cursorAssetsPromise: Promise<void> | null = null;
 let cursorPackAssetsPromise: Promise<void> | null = null;
@@ -1273,6 +1280,11 @@ export class PixiCursorOverlay {
 		this.config.clickBounceDuration = clamp(clickBounceDuration, 60, 500);
 	}
 
+	setVisibilityRules(idleHideMs: number, hiddenRanges: TimeRange[]) {
+		this.config.idleHideMs = Math.max(0, idleHideMs);
+		this.config.hiddenRanges = hiddenRanges;
+	}
+
 	setSway(sway: number) {
 		this.config.sway = clamp(sway, 0, 2);
 	}
@@ -1379,10 +1391,21 @@ export class PixiCursorOverlay {
 			projectedClickSample && projectedClickSample.visible
 				? viewport.y + projectedClickSample.cy * viewport.height
 				: viewport.y + projectedTarget.cy * viewport.height;
-		const shouldShowCursorSprite = visible && projectedTarget.visible;
+		const visibility = getCursorVisibility(
+			samples,
+			timeMs,
+			this.config.idleHideMs ?? 0,
+			this.config.hiddenRanges ?? [],
+		);
+		const insideHiddenRange = (this.config.hiddenRanges ?? []).some(
+			(range) => timeMs >= range.startMs && timeMs <= range.endMs,
+		);
+		const shouldShowCursorSprite =
+			visible && projectedTarget.visible && visibility.alpha > 0.001;
 		const shouldDrawClickEffect =
 			this.config.clickEffect !== "none" &&
 			clickProgress > 0 &&
+			!insideHiddenRange &&
 			Boolean(projectedClickSample?.visible);
 
 		if (!shouldShowCursorSprite && !shouldDrawClickEffect) {
@@ -1446,7 +1469,8 @@ export class PixiCursorOverlay {
 			0.72,
 			1 - Math.sin(clickBounceProgress * Math.PI) * (0.08 * this.config.clickBounce),
 		);
-		const scaledH = h * getCursorStyleSizeMultiplier(this.config.style);
+		const effectH = h * getCursorStyleSizeMultiplier(this.config.style);
+		const scaledH = effectH * visibility.scale;
 		const swayRotation = this.updateCursorSway(px, py, timeMs, shouldFreezeCursorMotion);
 
 		drawClickEffectGraphics(
@@ -1454,7 +1478,7 @@ export class PixiCursorOverlay {
 			this.config.clickEffect,
 			clickEffectPx,
 			clickEffectPy,
-			scaledH,
+			effectH,
 			clickProgress,
 			this.config.clickEffectScale,
 			this.config.clickEffectOpacity,
@@ -1491,10 +1515,11 @@ export class PixiCursorOverlay {
 				shadowSprite.width = scaledH * bounceScale * asset.aspectRatio;
 				shadowSprite.position.set(px + CURSOR_SHADOW_OFFSET_X, py + CURSOR_SHADOW_OFFSET_Y);
 				shadowSprite.rotation = swayRotation;
+				shadowSprite.alpha = CURSOR_SHADOW_ALPHA * visibility.alpha;
 			}
 
 			if (sprite) {
-				sprite.alpha = this.config.dotAlpha;
+				sprite.alpha = this.config.dotAlpha * visibility.alpha;
 				sprite.height = scaledH * bounceScale;
 				sprite.width = scaledH * bounceScale * asset.aspectRatio;
 				sprite.position.set(px, py);
@@ -1516,6 +1541,7 @@ export class PixiCursorOverlay {
 			this.customCursorShadowSprite.texture = asset.texture;
 			this.customCursorShadowSprite.anchor.set(asset.anchorX, asset.anchorY);
 			this.customCursorShadowSprite.visible = showSeparateShadow;
+			this.customCursorShadowSprite.alpha = CURSOR_SHADOW_ALPHA * visibility.alpha;
 			if (showSeparateShadow) {
 				this.customCursorShadowSprite.height = scaledH * bounceScale;
 				this.customCursorShadowSprite.width = scaledH * bounceScale * asset.aspectRatio;
@@ -1529,7 +1555,7 @@ export class PixiCursorOverlay {
 			this.customCursorSprite.texture = asset.texture;
 			this.customCursorSprite.anchor.set(asset.anchorX, asset.anchorY);
 			this.customCursorSprite.visible = true;
-			this.customCursorSprite.alpha = this.config.dotAlpha;
+			this.customCursorSprite.alpha = this.config.dotAlpha * visibility.alpha;
 			this.customCursorSprite.height = scaledH * bounceScale;
 			this.customCursorSprite.width = scaledH * bounceScale * asset.aspectRatio;
 			this.customCursorSprite.position.set(px, py);

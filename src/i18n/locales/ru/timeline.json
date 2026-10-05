@@ -75,7 +75,8 @@
 		"manual": "Manual",
 		"auto": "Auto",
 		"trim": "Trim",
-		"clip": "Clip"
+		"clip": "Clip",
+		"cursorHidden": "Курсор скрыт"
 	},
 	"empty": {
 		"title": "No Video Loaded",

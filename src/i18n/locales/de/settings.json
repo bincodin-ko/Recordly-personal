@@ -33,7 +33,8 @@
 		"mutedState": "Audio ist stummgeschaltet",
 		"unmutedState": "Audio wird wiedergegeben",
 		"separateClipFromAudio": "Clip vom Audio trennen",
-		"delete": "Clip löschen"
+		"delete": "Clip löschen",
+		"hideCursor": "Cursor ausblenden"
 	},
 	"effects": {
 		"title": "Videoeffekte",
@@ -185,7 +186,11 @@
 		"webcamVertical": "Vertical",
 		"webcamMargin": "Margin",
 		"customEffectColor": "Custom effect color",
-		"devBadge": "DEV"
+		"devBadge": "DEV",
+		"hideIdleCursor": "Cursor ausblenden, wenn er sich nicht bewegt",
+		"idleCursorDelay": "Ausblenden nach",
+		"clickSound": "Klickgeräusch",
+		"clickSoundVolume": "Lautstärke des Klickgeräuschs"
 	},
 	"sections": {
 		"scene": "Szene",
@@ -350,5 +355,18 @@
 	"general": {
 		"onboarding": "Onboarding",
 		"showOnboarding": "Show onboarding"
+	},
+	"shortcuts": {
+		"title": "Tastenkürzel",
+		"show": "Tastenkürzel anzeigen",
+		"singleKeys": "Einzeltasten anzeigen",
+		"size": "Größe der Tastenkürzel",
+		"position": "Position der Tastenkürzel",
+		"noneRecorded": "In diesem Video wurden keine Tastenkürzel aufgezeichnet.",
+		"positions": {
+			"bottom-left": "Links",
+			"bottom-center": "Mitte",
+			"bottom-right": "Rechts"
+		}
 	}
 }

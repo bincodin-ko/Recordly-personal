@@ -246,6 +246,8 @@ export interface ClipRegion {
 	speed: number;
 	muted?: boolean;
 	showSourceAudio?: boolean;
+	/** Hide the cursor while this clip plays (Screen Studio "hide cursor" on a fragment). */
+	hideCursor?: boolean;
 }
 
 export function getClipSourceStartMs(clip: ClipRegion): number {

@@ -1,3 +1,4 @@
+import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
 import { requiresClipTimelineRendering } from "./clipTimeline";
 import type {
 	AnnotationRegion,
@@ -88,6 +89,7 @@ interface VideoExporterConfig extends ExportConfig {
 	cursorClickBounce?: number;
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
+	cursorExtras?: CursorExtrasRenderOptions;
 	zoomSmoothness?: number;
 	audioRegions?: AudioRegion[];
 	clipRegions?: ClipRegion[];
@@ -262,6 +264,7 @@ export class VideoExporter {
 				cursorClickBounce: this.config.cursorClickBounce,
 				cursorClickBounceDuration: this.config.cursorClickBounceDuration,
 				cursorSway: this.config.cursorSway,
+				cursorExtras: this.config.cursorExtras,
 				zoomSmoothness: this.config.zoomSmoothness,
 			});
 			await this.renderer.initialize();

@@ -1,3 +1,4 @@
+import { normalizeCursorExtras } from "../cursorExtras";
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from "react";
 import type { AspectRatio } from "@/utils/aspectRatioUtils";
 import { type EditorPresetSnapshot, loadEditorPresets } from "../editorPreferences";
@@ -61,6 +62,7 @@ export function useVideoEditorPresets({
 			cursorClickBounce: appearance.cursorClickBounce,
 			cursorClickBounceDuration: appearance.cursorClickBounceDuration,
 			cursorSway: appearance.cursorSway,
+			cursorExtras: { ...appearance.cursorExtras },
 			borderRadius: appearance.borderRadius,
 			borderRadiusUnit: "percent",
 			padding: { ...appearance.padding },
@@ -109,6 +111,7 @@ export function useVideoEditorPresets({
 			appearance.setCursorClickBounce(snapshot.cursorClickBounce);
 			appearance.setCursorClickBounceDuration(snapshot.cursorClickBounceDuration);
 			appearance.setCursorSway(snapshot.cursorSway);
+			appearance.setCursorExtras(normalizeCursorExtras(snapshot.cursorExtras));
 			appearance.setBorderRadius(snapshot.borderRadius);
 			appearance.setPadding({ ...snapshot.padding });
 			appearance.setCropRegion({ ...snapshot.cropRegion });
