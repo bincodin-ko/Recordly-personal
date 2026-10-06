@@ -53,13 +53,13 @@ export function RecordingSettingsPopover({
 			</div>
 			<DropdownItem
 				icon={<FilmStrip size={16} />}
-				selected={showQuickExport}
+				selected={!showQuickExport}
 				onClick={() => {
 					setShowQuickExport(!showQuickExport);
 					saveAppSetting(QUICK_EXPORT_WIDGET_SETTING_KEY, !showQuickExport);
 				}}
 			>
-				{t("recordingSettings.showQuickExport", "Show quick export widget after recording")}
+				{t("recordingSettings.openEditorAfterRecording", "Open the editor right after recording")}
 			</DropdownItem>
 			{platform === "win32" ? (
 				<DropdownItem

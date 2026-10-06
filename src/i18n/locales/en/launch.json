@@ -169,8 +169,8 @@
 	},
 	"recordingSettings": {
 		"title": "Recording settings",
-		"showQuickExport": "Show quick export widget after recording",
-		"hideDesktopIcons": "Hide desktop icons while recording"
+		"hideDesktopIcons": "Hide desktop icons while recording",
+		"openEditorAfterRecording": "Open the editor right after recording"
 	},
 	"windowSize": {
 		"title": "Resize window",

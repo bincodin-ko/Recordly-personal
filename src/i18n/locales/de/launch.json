@@ -169,8 +169,8 @@
 	},
 	"recordingSettings": {
 		"title": "Aufnahmeeinstellungen",
-		"showQuickExport": "Schnellexport-Widget nach der Aufnahme anzeigen",
-		"hideDesktopIcons": "Desktopsymbole während der Aufnahme ausblenden"
+		"hideDesktopIcons": "Desktopsymbole während der Aufnahme ausblenden",
+		"openEditorAfterRecording": "Open the editor right after recording"
 	},
 	"windowSize": {
 		"title": "Fenstergröße ändern",

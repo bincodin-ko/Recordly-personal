@@ -1125,7 +1125,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	quickExportGetVideo: () => ipcRenderer.invoke("quick-export-get-video"),
 	quickExportSave: () => ipcRenderer.invoke("quick-export-save"),
 	quickExportCopy: () => ipcRenderer.invoke("quick-export-copy"),
-	quickExportClose: () => ipcRenderer.invoke("quick-export-close"),
+	quickExportClose: (options?: { toEditor?: boolean }) => ipcRenderer.invoke("quick-export-close", options),
 	startCountdown: (seconds: number) => ipcRenderer.invoke("start-countdown", seconds),
 	cancelCountdown: () => ipcRenderer.invoke("cancel-countdown"),
 	getActiveCountdown: () => ipcRenderer.invoke("get-active-countdown"),

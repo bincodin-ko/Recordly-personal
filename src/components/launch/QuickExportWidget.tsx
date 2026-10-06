@@ -1,57 +1,38 @@
 import { Copy, DownloadSimple, PencilSimple, XIcon } from "@/components/ui/icons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useScopedT } from "@/contexts/I18nContext";
 import { getRenderableVideoUrl } from "@/lib/assetPath";
 import "./launchTheme.css";
-
-const AUTO_DISMISS_MS = 15_000;
 
 /** Screen Studio-style quick export widget shown right after a recording stops. */
 export function QuickExportWidget() {
 	const t = useScopedT("launch");
 	const [videoUrl, setVideoUrl] = useState<string | null>(null);
 	const [status, setStatus] = useState<string | null>(null);
-	const dismissTimer = useRef<number | null>(null);
 
 	const close = useCallback(() => void window.electronAPI.quickExportClose(), []);
-	const stopAutoDismiss = useCallback(() => {
-		if (dismissTimer.current !== null) window.clearTimeout(dismissTimer.current);
-		dismissTimer.current = null;
-	}, []);
-	// Paused while hovered, like a notification.
-	const startAutoDismiss = useCallback(() => {
-		stopAutoDismiss();
-		dismissTimer.current = window.setTimeout(close, AUTO_DISMISS_MS);
-	}, [close, stopAutoDismiss]);
 
 	useEffect(() => {
 		void window.electronAPI.quickExportGetVideo().then(async (videoPath) => {
 			if (videoPath) setVideoUrl(await getRenderableVideoUrl(videoPath));
 		});
-		startAutoDismiss();
-		return stopAutoDismiss;
-	}, [startAutoDismiss, stopAutoDismiss]);
+	}, []);
 
 	const edit = async () => {
-		stopAutoDismiss();
 		await window.electronAPI.switchToEditor();
-		close();
+		void window.electronAPI.quickExportClose({ toEditor: true });
 	};
 	const save = async () => {
-		stopAutoDismiss();
 		const result = await window.electronAPI.quickExportSave();
 		if (result.success) setStatus(t("quickExport.saved", "Saved"));
-		startAutoDismiss();
 	};
 	const copy = async () => {
-		stopAutoDismiss();
 		const result = await window.electronAPI.quickExportCopy();
 		setStatus(
 			result.success
 				? t("quickExport.copied", "Copied to clipboard")
 				: t("quickExport.copyFailed", "Couldn’t copy"),
 		);
-		startAutoDismiss();
 	};
 
 	const actionClass =
@@ -60,8 +41,6 @@ export function QuickExportWidget() {
 	return (
 		<div
 			className="launch-theme h-screen w-screen p-2"
-			onMouseEnter={stopAutoDismiss}
-			onMouseLeave={startAutoDismiss}
 		>
 			<div className="flex h-full flex-col overflow-hidden rounded-2xl border border-[var(--launch-bar-border)] bg-[var(--launch-bar-bg)] p-2 shadow-[var(--launch-bar-shadow)]">
 				<div

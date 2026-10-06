@@ -169,8 +169,8 @@
 	},
 	"recordingSettings": {
 		"title": "Opname-instellingen",
-		"showQuickExport": "Snelle-exportwidget tonen na opname",
-		"hideDesktopIcons": "Bureaubladpictogrammen verbergen tijdens opname"
+		"hideDesktopIcons": "Bureaubladpictogrammen verbergen tijdens opname",
+		"openEditorAfterRecording": "Open the editor right after recording"
 	},
 	"windowSize": {
 		"title": "Venstergrootte aanpassen",

@@ -169,8 +169,8 @@
 	},
 	"recordingSettings": {
 		"title": "Настройки записи",
-		"showQuickExport": "Показывать виджет быстрого экспорта после записи",
-		"hideDesktopIcons": "Скрывать значки рабочего стола во время записи"
+		"hideDesktopIcons": "Скрывать значки рабочего стола во время записи",
+		"openEditorAfterRecording": "Open the editor right after recording"
 	},
 	"windowSize": {
 		"title": "Размер окна",

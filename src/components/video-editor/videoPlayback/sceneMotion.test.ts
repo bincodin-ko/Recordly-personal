@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { ZoomRegion } from "../types";
 import { createCursorFollowCameraState } from "./cursorFollowCamera";
 import {
+	getAutoFrameFillScale,
+	keepCursorInView,
 	resolvePreviewMotionMode,
 	resolveSceneZoomTarget,
 	shouldComposePreviewFrame,
@@ -162,5 +164,18 @@ describe("instant zoom and auto framing", () => {
 			},
 		});
 		expect(target.scale).toBe(1);
+	});
+});
+
+describe("keepCursorInView", () => {
+	it("pulls a lagging frame toward a cursor that left the inner area", () => {
+		const viewport = { stageSize: { width: 1080, height: 1920 }, mask: { width: 1920, height: 1080 } };
+		// visible half-width in normalized units = 1080 / (2 * scale * 1920)
+		const scale = getAutoFrameFillScale(viewport);
+		const reach = (1080 / (2 * scale * 1920)) * 0.7;
+		const out = keepCursorInView({ cx: 0.2, cy: 0.5 }, { cx: 0.9, cy: 0.5 }, scale, viewport);
+		expect(out.cx).toBeCloseTo(0.9 - reach);
+		const near = keepCursorInView({ cx: 0.5, cy: 0.5 }, { cx: 0.52, cy: 0.5 }, scale, viewport);
+		expect(near.cx).toBe(0.5);
 	});
 });

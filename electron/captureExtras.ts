@@ -10,7 +10,7 @@ import { readAppSetting } from "./appSettingsStore";
 import { createDesktopIconsController, type DesktopIconsMode } from "./desktopIconsController";
 import { selectedSource } from "./ipc/state";
 import { parseWindowId } from "./ipc/utils";
-import { createQuickExportWidgetWindow } from "./windows";
+import { createQuickExportWidgetWindow, getHudOverlayWindow } from "./windows";
 
 const execFileAsync = promisify(execFile);
 
@@ -162,6 +162,14 @@ function closeQuickExportWidget() {
 	quickExportWidget = null;
 }
 
+// Closed with [x] (not [Edit]): show the recording bar again so the app never looks gone.
+function restoreHudAfterWidget() {
+	const hud = getHudOverlayWindow();
+	if (!hud || hud.isDestroyed()) return;
+	if (hud.isMinimized()) hud.restore();
+	hud.show();
+}
+
 async function copyFileToClipboard(filePath: string) {
 	if (process.platform !== "win32") {
 		clipboard.writeText(filePath);
@@ -214,7 +222,10 @@ export function registerCaptureExtrasHandlers() {
 		return true;
 	});
 	ipcMain.handle("quick-export-get-video", () => quickExportVideoPath);
-	ipcMain.handle("quick-export-close", () => closeQuickExportWidget());
+	ipcMain.handle("quick-export-close", (_, options?: { toEditor?: boolean }) => {
+		closeQuickExportWidget();
+		if (!options?.toEditor) restoreHudAfterWidget();
+	});
 	ipcMain.handle("quick-export-save", async (event) => {
 		if (!quickExportVideoPath) return { success: false };
 		const owner = BrowserWindow.fromWebContents(event.sender) ?? undefined;

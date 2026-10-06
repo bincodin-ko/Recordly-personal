@@ -169,8 +169,8 @@
 	},
 	"recordingSettings": {
 		"title": "录制设置",
-		"showQuickExport": "录制后显示快速导出小窗",
-		"hideDesktopIcons": "录制时隐藏桌面图标"
+		"hideDesktopIcons": "录制时隐藏桌面图标",
+		"openEditorAfterRecording": "Open the editor right after recording"
 	},
 	"windowSize": {
 		"title": "调整窗口大小",

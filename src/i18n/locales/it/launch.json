@@ -169,8 +169,8 @@
 	},
 	"recordingSettings": {
 		"title": "Impostazioni di registrazione",
-		"showQuickExport": "Mostra il widget di esportazione rapida dopo la registrazione",
-		"hideDesktopIcons": "Nascondi le icone del desktop durante la registrazione"
+		"hideDesktopIcons": "Nascondi le icone del desktop durante la registrazione",
+		"openEditorAfterRecording": "Open the editor right after recording"
 	},
 	"windowSize": {
 		"title": "Ridimensiona finestra",

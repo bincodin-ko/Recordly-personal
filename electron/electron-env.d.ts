@@ -1058,7 +1058,7 @@ interface Window {
 		quickExportGetVideo: () => Promise<string | null>;
 		quickExportSave: () => Promise<{ success: boolean; canceled?: boolean; path?: string }>;
 		quickExportCopy: () => Promise<{ success: boolean; error?: string }>;
-		quickExportClose: () => Promise<void>;
+		quickExportClose: (options?: { toEditor?: boolean }) => Promise<void>;
 		startCountdown: (seconds: number) => Promise<{ success: boolean; cancelled?: boolean }>;
 		cancelCountdown: () => Promise<{ success: boolean }>;
 		getActiveCountdown: () => Promise<{ success: boolean; seconds: number | null }>;

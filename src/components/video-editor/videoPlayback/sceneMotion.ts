@@ -65,6 +65,26 @@ export function getSmoothedCursorFocus(
 	return sumW > 0 ? { cx: sumX / sumW, cy: sumY / sumW } : null;
 }
 
+/**
+ * The smoothed focus lags a fast cursor; pull the frame along so the real cursor
+ * always stays inside the inner 70% of the visible area.
+ */
+export function keepCursorInView(
+	focus: ZoomFocus,
+	cursor: { cx: number; cy: number },
+	scale: number,
+	{ stageSize, mask }: AutoFrameViewport,
+): ZoomFocus {
+	const follow = (value: number, target: number, stage: number, size: number) => {
+		const reach = (stage / (2 * scale * size)) * 0.7;
+		return Math.min(target + reach, Math.max(target - reach, value));
+	};
+	return {
+		cx: follow(focus.cx, cursor.cx, stageSize.width, mask.width),
+		cy: follow(focus.cy, cursor.cy, stageSize.height, mask.height),
+	};
+}
+
 /** Keep the scaled mask covering the stage so no background shows while reframed. */
 function clampFocusToCover(
 	focus: ZoomFocus,
@@ -165,8 +185,14 @@ export function resolveSceneZoomTarget({
 			? (blendedScale ?? ZOOM_DEPTH_SCALES[activeRegion.depth])
 			: 1;
 		const scale = fillScale * (1 + (regionScale - 1) * strength);
+		const smoothed = getSmoothedCursorFocus(cursorTelemetry, cursorTimeMs);
+		const rawCursor = cursorTelemetry?.length
+			? interpolateCursorPosition(cursorTelemetry, cursorTimeMs)
+			: null;
 		const cursorFocus =
-			getSmoothedCursorFocus(cursorTelemetry, cursorTimeMs) ??
+			(smoothed && rawCursor
+				? keepCursorInView(smoothed, rawCursor, scale, autoFrameViewport)
+				: smoothed) ??
 			activeRegion?.focus ??
 			DEFAULT_FOCUS;
 		const focus =
