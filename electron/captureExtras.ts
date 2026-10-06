@@ -170,17 +170,46 @@ function restoreHudAfterWidget() {
 	hud.show();
 }
 
+const COPY_FILE_SCRIPT = `
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -TypeDefinition @"
+using System; using System.IO; using System.Runtime.InteropServices;
+public static class RecordlyClip {
+  [DllImport("shell32.dll", CharSet=CharSet.Unicode)] static extern IntPtr ILCreateFromPathW(string p);
+  [DllImport("shell32.dll")] static extern uint ILGetSize(IntPtr p);
+  [DllImport("shell32.dll")] static extern void ILFree(IntPtr p);
+  public static MemoryStream Cida(string path) {
+    IntPtr pidl = ILCreateFromPathW(path);
+    if (pidl == IntPtr.Zero) throw new Exception("ILCreateFromPath failed");
+    int size = (int)ILGetSize(pidl); byte[] child = new byte[size]; Marshal.Copy(pidl, child, 0, size); ILFree(pidl);
+    var ms = new MemoryStream(); var w = new BinaryWriter(ms);
+    w.Write((uint)1); w.Write((uint)12); w.Write((uint)14); // cidl, offset parent, offset child
+    w.Write((ushort)0);                                    // parent = desktop (empty pidl)
+    w.Write(child); w.Flush(); return ms;
+  }
+}
+"@
+$path = (Get-Item -LiteralPath $env:RECORDLY_CLIPBOARD_FILE).FullName
+$files = New-Object System.Collections.Specialized.StringCollection; [void]$files.Add($path)
+$data = New-Object System.Windows.Forms.DataObject
+$data.SetFileDropList($files)
+$data.SetData("Preferred DropEffect", (New-Object System.IO.MemoryStream(,[byte[]](1,0,0,0))))
+$data.SetData("Shell IDList Array", [RecordlyClip]::Cida($path))
+[System.Windows.Forms.Clipboard]::SetDataObject($data, $true)
+`;
+
 async function copyFileToClipboard(filePath: string) {
 	if (process.platform !== "win32") {
 		clipboard.writeText(filePath);
 		return;
 	}
-	// CF_HDROP file list: pastes as a file into Explorer, Slack, Discord, mail, …
-	await execFileAsync(
-		"powershell.exe",
-		powershellArgs("Set-Clipboard -LiteralPath $env:RECORDLY_CLIPBOARD_FILE"),
-		{ timeout: 10000, env: { ...process.env, RECORDLY_CLIPBOARD_FILE: filePath } },
-	);
+	// Same formats Explorer's Ctrl+C puts on the clipboard. A bare file list (CF_HDROP)
+	// pastes into Explorer only; KakaoTalk, chat apps and browsers also want
+	// "Shell IDList Array" and "Preferred DropEffect".
+	await execFileAsync("powershell.exe", ["-STA", ...powershellArgs(COPY_FILE_SCRIPT)], {
+		timeout: 15000,
+		env: { ...process.env, RECORDLY_CLIPBOARD_FILE: filePath },
+	});
 }
 
 export function registerCaptureExtrasHandlers() {
