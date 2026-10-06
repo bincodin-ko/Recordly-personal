@@ -10,7 +10,12 @@ import { readAppSetting } from "./appSettingsStore";
 import { createDesktopIconsController, type DesktopIconsMode } from "./desktopIconsController";
 import { selectedSource } from "./ipc/state";
 import { parseWindowId } from "./ipc/utils";
-import { createQuickExportWidgetWindow, getHudOverlayWindow } from "./windows";
+import {
+	createHudOverlayWindow,
+	createQuickExportWidgetWindow,
+	getHudOverlayWindow,
+	setHudRecordingPreparationActive,
+} from "./windows";
 
 const execFileAsync = promisify(execFile);
 
@@ -164,38 +169,63 @@ function closeQuickExportWidget() {
 
 // Closed with [x] (not [Edit]): show the recording bar again so the app never looks gone.
 function restoreHudAfterWidget() {
+	// The recorder closes the HUD once a recording is finalized (the editor normally
+	// takes over), so bring back a fresh one when the widget is dismissed.
+	setHudRecordingPreparationActive(false);
 	const hud = getHudOverlayWindow();
-	if (!hud || hud.isDestroyed()) return;
+	if (!hud) {
+		createHudOverlayWindow();
+		return;
+	}
 	if (hud.isMinimized()) hud.restore();
 	hud.show();
 }
 
+// Puts the same shell data object Explorer uses for Ctrl+C (plus "Preferred DropEffect"),
+// flushed so it survives this PowerShell process exiting.
 const COPY_FILE_SCRIPT = `
-Add-Type -AssemblyName System.Windows.Forms
 Add-Type -TypeDefinition @"
-using System; using System.IO; using System.Runtime.InteropServices;
-public static class RecordlyClip {
+using System; using System.Runtime.InteropServices;
+public static class RecordlyShellClip {
   [DllImport("shell32.dll", CharSet=CharSet.Unicode)] static extern IntPtr ILCreateFromPathW(string p);
-  [DllImport("shell32.dll")] static extern uint ILGetSize(IntPtr p);
+  [DllImport("shell32.dll")] static extern IntPtr ILFindLastID(IntPtr p);
+  [DllImport("shell32.dll")] static extern bool ILRemoveLastID(IntPtr p);
+  [DllImport("shell32.dll")] static extern IntPtr ILClone(IntPtr p);
   [DllImport("shell32.dll")] static extern void ILFree(IntPtr p);
-  public static MemoryStream Cida(string path) {
-    IntPtr pidl = ILCreateFromPathW(path);
-    if (pidl == IntPtr.Zero) throw new Exception("ILCreateFromPath failed");
-    int size = (int)ILGetSize(pidl); byte[] child = new byte[size]; Marshal.Copy(pidl, child, 0, size); ILFree(pidl);
-    var ms = new MemoryStream(); var w = new BinaryWriter(ms);
-    w.Write((uint)1); w.Write((uint)12); w.Write((uint)14); // cidl, offset parent, offset child
-    w.Write((ushort)0);                                    // parent = desktop (empty pidl)
-    w.Write(child); w.Flush(); return ms;
+  [DllImport("shell32.dll")] static extern int SHCreateDataObject(IntPtr pidlFolder, uint cidl, IntPtr[] apidl, IntPtr pdtInner, ref Guid riid, out IntPtr ppv);
+  [DllImport("ole32.dll")] static extern int OleInitialize(IntPtr r);
+  [DllImport("ole32.dll")] static extern int OleSetClipboard(IntPtr pDataObj);
+  [DllImport("ole32.dll")] static extern int OleFlushClipboard();
+  [DllImport("user32.dll")] static extern bool OpenClipboard(IntPtr h);
+  [DllImport("user32.dll")] static extern bool CloseClipboard();
+  [DllImport("user32.dll")] static extern IntPtr SetClipboardData(uint f, IntPtr h);
+  [DllImport("user32.dll", CharSet=CharSet.Unicode)] static extern uint RegisterClipboardFormatW(string n);
+  [DllImport("kernel32.dll")] static extern IntPtr GlobalAlloc(uint flags, UIntPtr size);
+  [DllImport("kernel32.dll")] static extern IntPtr GlobalLock(IntPtr h);
+  [DllImport("kernel32.dll")] static extern bool GlobalUnlock(IntPtr h);
+  public static int Copy(string path) {
+    OleInitialize(IntPtr.Zero);
+    IntPtr full = ILCreateFromPathW(path); if (full == IntPtr.Zero) return -1;
+    IntPtr child = ILClone(ILFindLastID(full)); ILRemoveLastID(full);
+    Guid iid = new Guid("0000010e-0000-0000-C000-000000000046"); IntPtr obj;
+    int hr = SHCreateDataObject(full, 1, new IntPtr[]{ child }, IntPtr.Zero, ref iid, out obj);
+    ILFree(child); ILFree(full);
+    if (hr != 0) return hr;
+    // Explorer's Ctrl+C also marks the transfer as a copy ("Preferred DropEffect" = 1).
+    var data = (System.Runtime.InteropServices.ComTypes.IDataObject)Marshal.GetObjectForIUnknown(obj);
+    IntPtr mem = GlobalAlloc(0x0042, (UIntPtr)4);
+    Marshal.WriteInt32(GlobalLock(mem), 1); GlobalUnlock(mem);
+    var fmt = new System.Runtime.InteropServices.ComTypes.FORMATETC {
+      cfFormat = (short)RegisterClipboardFormatW("Preferred DropEffect"), dwAspect = System.Runtime.InteropServices.ComTypes.DVASPECT.DVASPECT_CONTENT,
+      lindex = -1, tymed = System.Runtime.InteropServices.ComTypes.TYMED.TYMED_HGLOBAL };
+    var med = new System.Runtime.InteropServices.ComTypes.STGMEDIUM { tymed = System.Runtime.InteropServices.ComTypes.TYMED.TYMED_HGLOBAL, unionmember = mem };
+    data.SetData(ref fmt, ref med, true);
+    hr = OleSetClipboard(obj); if (hr != 0) return hr;
+    return OleFlushClipboard();
   }
 }
 "@
-$path = (Get-Item -LiteralPath $env:RECORDLY_CLIPBOARD_FILE).FullName
-$files = New-Object System.Collections.Specialized.StringCollection; [void]$files.Add($path)
-$data = New-Object System.Windows.Forms.DataObject
-$data.SetFileDropList($files)
-$data.SetData("Preferred DropEffect", (New-Object System.IO.MemoryStream(,[byte[]](1,0,0,0))))
-$data.SetData("Shell IDList Array", [RecordlyClip]::Cida($path))
-[System.Windows.Forms.Clipboard]::SetDataObject($data, $true)
+exit [RecordlyShellClip]::Copy((Get-Item -LiteralPath $env:RECORDLY_CLIPBOARD_FILE).FullName)
 `;
 
 async function copyFileToClipboard(filePath: string) {
