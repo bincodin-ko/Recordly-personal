@@ -38,7 +38,8 @@
 		"unmutedState": "오디오가 재생돼요",
 		"separateClipFromAudio": "클립에서 오디오 분리",
 		"delete": "클립 삭제",
-		"hideCursor": "커서 숨기기"
+		"hideCursor": "커서 숨기기",
+		"volume": "볼륨"
 	},
 	"effects": {
 		"title": "영상 효과",

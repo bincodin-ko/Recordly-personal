@@ -113,6 +113,8 @@ export interface TimelineSlice {
 	sourceStartMs: number;
 	sourceEndMs: number;
 	speed: number;
+	/** Per-clip volume multiplier (unset = 1). */
+	volume?: number;
 }
 
 export interface PreparedOfflineRender {

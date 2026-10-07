@@ -5,6 +5,7 @@ import {
 	MusicNotes as Music,
 	Scissors,
 	SpeakerX,
+	SpeakerLow,
 	EyeSlash,
 } from "@/components/ui/icons";
 import { ClipFilmstrip } from "./components/filmstrip/ClipFilmstrip";
@@ -12,6 +13,7 @@ import type { Span, GetSpanFromDragEvent, GetSpanFromResizeEvent } from "dnd-tim
 import { useItem, useTimelineContext } from "dnd-timeline";
 import { useCallback, useMemo, useRef } from "react";
 import { useDndMonitor } from "@dnd-kit/core";
+import { useClipActions } from "./core/ClipActionsContext";
 import { useTimelinePresentation } from "./core/TimelinePresentation";
 import { getRegionDisplaySpan, snapRegionSpan } from "./core/clipPresentation";
 import { resolveDragEnd, resolveResizeEnd } from "./dnd/engine";
@@ -51,6 +53,8 @@ interface ItemProps {
 	waveformNormalize?: boolean;
 	muted?: boolean;
 	cursorHidden?: boolean;
+	/** Clip volume below 100% (0..1); shown as a small badge. */
+	volumeValue?: number;
 	variant?: "zoom" | "trim" | "clip" | "annotation" | "speed" | "audio" | "caption";
 	isLoading?: boolean;
 	loadingLabel?: string;
@@ -91,12 +95,14 @@ export default function Item({
 	waveformNormalize = false,
 	muted = false,
 	cursorHidden = false,
+	volumeValue,
 	variant = "zoom",
 	isLoading = false,
 	loadingLabel,
 	children,
 }: ItemProps) {
 	const timeline = useTimelineContext();
+	const clipActions = useClipActions();
 	const presentation = useTimelinePresentation();
 	const clipPresentation =
 		variant === "clip" ? undefined : (suppliedPresentation ?? presentation.clips);
@@ -282,6 +288,12 @@ export default function Item({
 					: undefined
 			}
 			onPointerDownCapture={handleSelect}
+			onContextMenu={(event) => {
+				if (variant !== "clip" || !clipActions) return;
+				event.preventDefault();
+				event.stopPropagation();
+				clipActions.openClipMenu(id, event.clientX, event.clientY);
+			}}
 			onDoubleClick={(event) => {
 				if (!onDoubleClick) return;
 				event.stopPropagation();
@@ -373,6 +385,19 @@ export default function Item({
 							title={translate("timeline.item.cursorHidden", "Cursor hidden")}
 						>
 							<EyeSlash className="w-3 h-3 text-white/90 shrink-0" />
+						</div>
+					)}
+					{isClip && volumeValue !== undefined && (
+						<div
+							data-testid="clip-volume-badge"
+							className="absolute right-1 top-1 z-20 flex items-center gap-0.5 rounded bg-black/65 px-1 py-0.5 text-[10px] font-medium text-white/90 pointer-events-none"
+						>
+							{volumeValue <= 0 ? (
+								<SpeakerX className="w-3 h-3 shrink-0" />
+							) : (
+								<SpeakerLow className="w-3 h-3 shrink-0" />
+							)}
+							{volumeValue > 0 && `${Math.round(volumeValue * 100)}%`}
 						</div>
 					)}
 					{/* Normal-speed clips show only the filmstrip and resize handles. */}

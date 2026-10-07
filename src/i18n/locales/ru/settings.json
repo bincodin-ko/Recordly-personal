@@ -38,7 +38,8 @@
 		"unmutedState": "Звук включен",
 		"separateClipFromAudio": "Отделить аудио от клипа",
 		"delete": "Удалить клип",
-		"hideCursor": "Скрыть курсор"
+		"hideCursor": "Скрыть курсор",
+		"volume": "Громкость"
 	},
 	"effects": {
 		"title": "Эффекты",

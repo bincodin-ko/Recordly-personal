@@ -8,6 +8,7 @@ import type {
 import {
 	getClipSourceEndMs,
 	getClipSourceStartMs,
+	getClipVolume,
 	getTimelineDurationMs,
 } from "@/components/video-editor/types";
 import { buildResolvedAudioPlan } from "@/lib/exporter/audioRoutingEngine";
@@ -164,6 +165,7 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 					sourceStartMs: getClipSourceStartMs(clip),
 					sourceEndMs: getClipSourceEndMs(clip),
 					speed: clip.speed,
+					...(getClipVolume(clip) !== 1 ? { volume: getClipVolume(clip) } : {}),
 					outputStartMs: clip.startMs,
 				}))
 			: this.buildTimelineSlices(sourceDurationMs, trimRegions, speedRegions);

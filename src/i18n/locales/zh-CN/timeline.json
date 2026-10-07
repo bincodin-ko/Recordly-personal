@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "停用所有“{{label}}”快捷键",
 		"enableAll": "启用所有“{{label}}”快捷键"
+	},
+	"clipEdit": {
+		"menuLabel": "片段菜单",
+		"setSpeed": "设置速度",
+		"setVolume": "设置音量",
+		"remove": "删除",
+		"normal": "正常",
+		"mute": "静音",
+		"typingTitle": "加快打字速度",
+		"typingBadge": "打字",
+		"typingInfo": "打字 {{seconds}} 秒（{{count}} 次按键）",
+		"typingSpeed": "速度",
+		"applySuggestion": "应用建议",
+		"applyAll": "应用全部建议（{{count}}）",
+		"typingApplied": "已加速 {{count}} 段打字",
+		"restoreTitle": "撤销裁剪",
+		"restoreConflict": "前后的编辑效果不同。要让恢复的部分沿用前面的效果还是后面的效果？",
+		"restoreBefore": "撤销裁剪后，前面的编辑效果会延续到这一段。要继续吗？",
+		"restoreAfter": "撤销裁剪后，后面的编辑效果会延续到这一段。要继续吗？",
+		"followBefore": "沿用前面的效果",
+		"followAfter": "沿用后面的效果",
+		"cancel": "取消",
+		"confirm": "确定",
+		"undoTrim": "撤销裁剪"
 	}
 }

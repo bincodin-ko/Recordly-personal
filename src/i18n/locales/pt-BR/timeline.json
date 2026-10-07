@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "Desativar todos os atalhos \"{{label}}\"",
 		"enableAll": "Ativar todos os atalhos \"{{label}}\""
+	},
+	"clipEdit": {
+		"menuLabel": "Menu do clipe",
+		"setSpeed": "Definir velocidade",
+		"setVolume": "Definir volume",
+		"remove": "Remover",
+		"normal": "Normal",
+		"mute": "Silenciar",
+		"typingTitle": "Acelerar digitação",
+		"typingBadge": "Digitação",
+		"typingInfo": "Digitando por {{seconds}} s ({{count}} teclas)",
+		"typingSpeed": "Velocidade",
+		"applySuggestion": "Aplicar sugestão",
+		"applyAll": "Aplicar todas as sugestões ({{count}})",
+		"typingApplied": "{{count}} trechos de digitação acelerados",
+		"restoreTitle": "Desfazer corte",
+		"restoreConflict": "Os efeitos antes e depois são diferentes. Deseja igualar a parte restaurada aos efeitos anteriores ou aos seguintes?",
+		"restoreBefore": "Ao desfazer o corte, os efeitos anteriores serão estendidos a esta parte. Continuar?",
+		"restoreAfter": "Ao desfazer o corte, os efeitos seguintes serão estendidos a esta parte. Continuar?",
+		"followBefore": "Seguir efeitos anteriores",
+		"followAfter": "Seguir efeitos seguintes",
+		"cancel": "Cancelar",
+		"confirm": "OK",
+		"undoTrim": "Desfazer corte"
 	}
 }

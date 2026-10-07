@@ -2,6 +2,8 @@
 // `<video>.keys.json` for the "show pressed keys" overlay.
 // Privacy: plain typing is never stored — only combos with Ctrl/Alt/Win and a
 // fixed set of non-text keys (Esc, Enter, Tab, arrows, F-keys, …).
+// Typing detection ("speed up typing") only stores a bare timestamp per text keypress
+// (`typing` in keys.json) — never which key it was.
 import fs from "node:fs/promises";
 
 export type KeystrokeSample = {
@@ -66,8 +68,18 @@ const TEXT_KEYS: Record<number, string> = {
 const MODIFIER_KEYCODES = new Set([29, 3613, 42, 54, 56, 3640, 3675, 3676]);
 
 const MAX_SAMPLES = 5000;
+const MAX_TYPING_TIMES = 20000;
 let activeSamples: KeystrokeSample[] = [];
 let pendingSamples: KeystrokeSample[] = [];
+let activeTyping: number[] = [];
+let pendingTyping: number[] = [];
+
+/** True for a plain text keypress (letters, digits, punctuation, Space, Backspace) without Ctrl/Alt/Win. */
+export function isTypingKey(event: HookKeyEvent): boolean {
+	if (event.ctrlKey || event.altKey || event.metaKey) return false;
+	const code = event.keycode;
+	return code in TEXT_KEYS || code === 57 || code === 14;
+}
 
 /** Returns the sample to store, or null for typing/modifier-only presses. */
 export function toKeystrokeSample(event: HookKeyEvent, timeMs: number): KeystrokeSample | null {
@@ -86,6 +98,7 @@ export function toKeystrokeSample(event: HookKeyEvent, timeMs: number): Keystrok
 
 export function resetKeystrokeCapture() {
 	activeSamples = [];
+	activeTyping = [];
 	activeFlags = [];
 }
 
@@ -98,6 +111,10 @@ export function recordFlag(timeMs: number) {
 }
 
 export function recordKeystroke(event: HookKeyEvent, timeMs: number) {
+	if (isTypingKey(event)) {
+		activeTyping.push(Math.max(0, Math.round(timeMs)));
+		if (activeTyping.length > MAX_TYPING_TIMES) activeTyping.shift();
+	}
 	const sample = toKeystrokeSample(event, timeMs);
 	if (!sample) return;
 	activeSamples.push(sample);
@@ -109,6 +126,8 @@ export function snapshotKeystrokesForPersistence() {
 	pendingFlags = [...pendingFlags, ...activeFlags.filter((t) => t > lastFlag)];
 	const last = pendingSamples[pendingSamples.length - 1]?.timeMs ?? -1;
 	pendingSamples = [...pendingSamples, ...activeSamples.filter((s) => s.timeMs > last)];
+	const lastTyping = pendingTyping[pendingTyping.length - 1] ?? -1;
+	pendingTyping = [...pendingTyping, ...activeTyping.filter((t) => t > lastTyping)];
 }
 
 export async function persistPendingKeystrokes(videoPath: string) {
@@ -116,12 +135,13 @@ export async function persistPendingKeystrokes(videoPath: string) {
 		await fs.writeFile(`${videoPath}.flags.json`, JSON.stringify({ version: 1, flags: pendingFlags }), "utf-8");
 	}
 	pendingFlags = [];
-	if (pendingSamples.length > 0) {
+	if (pendingSamples.length > 0 || pendingTyping.length > 0) {
 		await fs.writeFile(
 			`${videoPath}.keys.json`,
-			JSON.stringify({ version: 1, samples: pendingSamples }, null, 2),
+			JSON.stringify({ version: 1, samples: pendingSamples, typing: pendingTyping }, null, 2),
 			"utf-8",
 		);
 	}
 	pendingSamples = [];
+	pendingTyping = [];
 }

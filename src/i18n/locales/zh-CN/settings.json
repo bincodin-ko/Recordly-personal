@@ -38,7 +38,8 @@
 		"unmutedState": "音频正在播放",
 		"separateClipFromAudio": "将剪辑与音频分离",
 		"delete": "删除片段",
-		"hideCursor": "隐藏光标"
+		"hideCursor": "隐藏光标",
+		"volume": "音量"
 	},
 	"effects": {
 		"title": "视频效果",

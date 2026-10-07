@@ -19,6 +19,8 @@ export function useTimelineState() {
 	const [cursorTelemetry, setCursorTelemetry] = useState<CursorTelemetryPoint[]>([]);
 	const [cursorTelemetrySourcePath, setCursorTelemetrySourcePath] = useState<string | null>(null);
 	const [keystrokes, setKeystrokes] = useState<KeystrokeSample[]>([]);
+	/** Bare keypress times (source ms) from `<video>.keys.json`; drives "speed up typing". */
+	const [typingTimes, setTypingTimes] = useState<number[]>([]);
 	const [disabledShortcutTimes, setDisabledShortcutTimes] = useState<number[]>([]);
 	/** What the overlay renders: recorded shortcuts minus the ones switched off on the track. */
 	const enabledKeystrokes = useMemo(
@@ -56,6 +58,8 @@ export function useTimelineState() {
 		setCursorTelemetrySourcePath,
 		keystrokes,
 		setKeystrokes,
+		typingTimes,
+		setTypingTimes,
 		disabledShortcutTimes,
 		setDisabledShortcutTimes,
 		enabledKeystrokes,

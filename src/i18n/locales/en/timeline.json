@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "Disable all \"{{label}}\" shortcuts",
 		"enableAll": "Enable all \"{{label}}\" shortcuts"
+	},
+	"clipEdit": {
+		"menuLabel": "Clip menu",
+		"setSpeed": "Set speed",
+		"setVolume": "Set volume",
+		"remove": "Remove",
+		"normal": "Normal",
+		"mute": "Mute",
+		"typingTitle": "Speed up typing",
+		"typingBadge": "Typing",
+		"typingInfo": "Typing for {{seconds}}s ({{count}} keys)",
+		"typingSpeed": "Speed",
+		"applySuggestion": "Apply suggestion",
+		"applyAll": "Apply all suggestions ({{count}})",
+		"typingApplied": "Sped up {{count}} typing sections",
+		"restoreTitle": "Undo trim",
+		"restoreConflict": "Effects before and after differ. Match the restored part to the previous effects or the next ones?",
+		"restoreBefore": "Undoing the trim carries the previous effects into this part. Continue?",
+		"restoreAfter": "Undoing the trim carries the next effects into this part. Continue?",
+		"followBefore": "Follow previous effects",
+		"followAfter": "Follow next effects",
+		"cancel": "Cancel",
+		"confirm": "OK",
+		"undoTrim": "Undo trim"
 	}
 }

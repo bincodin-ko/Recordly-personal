@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "Desactivar todos los atajos \"{{label}}\"",
 		"enableAll": "Activar todos los atajos \"{{label}}\""
+	},
+	"clipEdit": {
+		"menuLabel": "Menú del clip",
+		"setSpeed": "Establecer velocidad",
+		"setVolume": "Establecer volumen",
+		"remove": "Eliminar",
+		"normal": "Normal",
+		"mute": "Silenciar",
+		"typingTitle": "Acelerar escritura",
+		"typingBadge": "Escritura",
+		"typingInfo": "Escribiendo durante {{seconds}} s ({{count}} teclas)",
+		"typingSpeed": "Velocidad",
+		"applySuggestion": "Aplicar sugerencia",
+		"applyAll": "Aplicar todas las sugerencias ({{count}})",
+		"typingApplied": "Se aceleraron {{count}} tramos de escritura",
+		"restoreTitle": "Deshacer recorte",
+		"restoreConflict": "Los efectos de antes y después son distintos. ¿Quieres igualar la parte restaurada a los efectos anteriores o a los siguientes?",
+		"restoreBefore": "Al deshacer el recorte, los efectos anteriores se extenderán a esta parte. ¿Continuar?",
+		"restoreAfter": "Al deshacer el recorte, los efectos siguientes se extenderán a esta parte. ¿Continuar?",
+		"followBefore": "Seguir efectos anteriores",
+		"followAfter": "Seguir efectos siguientes",
+		"cancel": "Cancelar",
+		"confirm": "Aceptar",
+		"undoTrim": "Deshacer recorte"
 	}
 }

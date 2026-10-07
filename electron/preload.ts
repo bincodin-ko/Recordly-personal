@@ -533,6 +533,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	getRecordingFlags: () => ipcRenderer.invoke("get-recording-flags"),
 	getRecordingKeystrokes: (videoPath?: string) =>
 		ipcRenderer.invoke("get-recording-keystrokes", videoPath),
+	getRecordingTypingTimes: (videoPath?: string) =>
+		ipcRenderer.invoke("get-recording-typing-times", videoPath),
 	togglePrompterWindow: () => ipcRenderer.invoke("toggle-prompter-window"),
 	getAudioSyncOffset: () => ipcRenderer.invoke("get-audio-sync-offset"),
 	setAudioSyncOffset: (offsetMs: number) => ipcRenderer.invoke("set-audio-sync-offset", offsetMs),

@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import type { SourceAudioTrackSettings } from "@/components/video-editor/audio/audioTypes";
 import { resolveSourceTrackRoutingPolicy } from "@/lib/exporter/sourceTrackRoutingPolicy";
 import type { AudioRegion, ClipRegion } from "../types";
-import { findClipAtTimelineTime } from "../types";
+import { findClipAtTimelineTime, getClipVolume } from "../types";
 import { isClipMutedById } from "./clipAudio";
 import { useAudioPreviewSync } from "./useAudioPreviewSync";
 import { useClipAudioSettingsController } from "./useClipAudioSettingsController";
@@ -94,6 +94,11 @@ export function useVideoEditorAudio({
 		[activeClipIdAtCurrentTime, clipRegions],
 	);
 
+	const currentClipVolume = useMemo(() => {
+		const clip = clipRegions.find((c) => c.id === activeClipIdAtCurrentTime);
+		return clip ? getClipVolume(clip) : 1;
+	}, [activeClipIdAtCurrentTime, clipRegions]);
+
 	const {
 		sourceAudioTrackMeta,
 		activeSourceAudioTrackSettings,
@@ -102,8 +107,8 @@ export function useVideoEditorAudio({
 		onSourceAudioTracksMetaChange,
 		onSelectedClipSourceAudioTrackVolumeChange,
 		onSelectedClipSourceAudioTrackNormalizeChange,
-		embeddedSourcePreviewGain,
-		getSourceTrackPreviewGain,
+		embeddedSourcePreviewGain: baseEmbeddedSourcePreviewGain,
+		getSourceTrackPreviewGain: baseGetSourceTrackPreviewGain,
 	} = useClipAudioSettingsController({
 		selectedClipId,
 		activeClipId: activeClipIdAtCurrentTime,
@@ -112,6 +117,13 @@ export function useVideoEditorAudio({
 		defaultSourceAudioTrackSettings,
 		setDefaultSourceAudioTrackSettings,
 	});
+
+	// Per-segment volume scales the recording's own audio (not imported audio tracks).
+	const embeddedSourcePreviewGain = baseEmbeddedSourcePreviewGain * currentClipVolume;
+	const getSourceTrackPreviewGain = useCallback(
+		(audioPath: string) => baseGetSourceTrackPreviewGain(audioPath) * currentClipVolume,
+		[baseGetSourceTrackPreviewGain, currentClipVolume],
+	);
 
 	const { playSourceAudioPreview } = useAudioPreviewSync({
 		audioRegions,

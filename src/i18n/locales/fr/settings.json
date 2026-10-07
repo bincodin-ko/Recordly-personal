@@ -38,7 +38,8 @@
 		"unmutedState": "Le son est activé",
 		"separateClipFromAudio": "Séparer le clip de l'audio",
 		"delete": "Supprimer le clip",
-		"hideCursor": "Masquer le curseur"
+		"hideCursor": "Masquer le curseur",
+		"volume": "Volume"
 	},
 	"effects": {
 		"title": "Effets vidéo",

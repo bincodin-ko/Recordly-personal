@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "Désactiver tous les raccourcis « {{label}} »",
 		"enableAll": "Activer tous les raccourcis « {{label}} »"
+	},
+	"clipEdit": {
+		"menuLabel": "Menu du clip",
+		"setSpeed": "Définir la vitesse",
+		"setVolume": "Définir le volume",
+		"remove": "Supprimer",
+		"normal": "Normale",
+		"mute": "Muet",
+		"typingTitle": "Accélérer la saisie",
+		"typingBadge": "Saisie",
+		"typingInfo": "Saisie pendant {{seconds}} s ({{count}} touches)",
+		"typingSpeed": "Vitesse",
+		"applySuggestion": "Appliquer la suggestion",
+		"applyAll": "Appliquer toutes les suggestions ({{count}})",
+		"typingApplied": "{{count}} passages de saisie accélérés",
+		"restoreTitle": "Annuler la coupe",
+		"restoreConflict": "Les effets avant et après sont différents. Faut-il aligner la partie restaurée sur les effets précédents ou suivants ?",
+		"restoreBefore": "Annuler la coupe étendra les effets précédents à cette partie. Continuer ?",
+		"restoreAfter": "Annuler la coupe étendra les effets suivants à cette partie. Continuer ?",
+		"followBefore": "Suivre les effets précédents",
+		"followAfter": "Suivre les effets suivants",
+		"cancel": "Annuler",
+		"confirm": "OK",
+		"undoTrim": "Annuler la coupe"
 	}
 }

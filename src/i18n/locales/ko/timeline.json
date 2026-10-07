@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "\"{{label}}\" 단축키 모두 끄기",
 		"enableAll": "\"{{label}}\" 단축키 모두 켜기"
+	},
+	"clipEdit": {
+		"menuLabel": "클립 메뉴",
+		"setSpeed": "속도 설정",
+		"setVolume": "볼륨 설정",
+		"remove": "삭제",
+		"normal": "보통",
+		"mute": "음소거",
+		"typingTitle": "타이핑 구간 빠르게",
+		"typingBadge": "타이핑",
+		"typingInfo": "{{seconds}}초 동안 타이핑 ({{count}}타)",
+		"typingSpeed": "속도",
+		"applySuggestion": "제안 적용",
+		"applyAll": "제안 모두 적용 ({{count}}개)",
+		"typingApplied": "타이핑 {{count}}곳을 빠르게 했어요",
+		"restoreTitle": "자르기 취소",
+		"restoreConflict": "앞뒤 편집 효과가 서로 달라요. 되살린 구간을 앞의 효과로 맞출까요, 뒤의 효과로 맞출까요?",
+		"restoreBefore": "자르기를 취소하면 앞에 있던 편집 효과가 이 구간까지 이어져 합쳐집니다. 괜찮으시겠어요?",
+		"restoreAfter": "자르기를 취소하면 뒤에 있던 편집 효과가 이 구간까지 이어져 합쳐집니다. 괜찮으시겠어요?",
+		"followBefore": "앞 효과 따르기",
+		"followAfter": "뒤 효과 따르기",
+		"cancel": "취소",
+		"confirm": "확인",
+		"undoTrim": "자르기 취소"
 	}
 }

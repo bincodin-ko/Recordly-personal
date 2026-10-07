@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toKeystrokeSample } from "./keystrokes";
+import { isTypingKey, toKeystrokeSample } from "./keystrokes";
 
 describe("toKeystrokeSample", () => {
 	it("keeps shortcuts and special keys, drops plain typing and lone modifiers", () => {
@@ -10,5 +10,16 @@ describe("toKeystrokeSample", () => {
 		expect(toKeystrokeSample({ keycode: 46, shiftKey: true }, 10)).toBeNull(); // "C" typing
 		expect(toKeystrokeSample({ keycode: 57 }, 10)).toBeNull(); // space typing
 		expect(toKeystrokeSample({ keycode: 29, ctrlKey: true }, 10)).toBeNull(); // Ctrl alone
+	});
+});
+
+describe("isTypingKey", () => {
+	it("counts plain text keys only", () => {
+		expect(isTypingKey({ keycode: 46 })).toBe(true);
+		expect(isTypingKey({ keycode: 46, shiftKey: true })).toBe(true);
+		expect(isTypingKey({ keycode: 57 })).toBe(true);
+		expect(isTypingKey({ keycode: 46, ctrlKey: true })).toBe(false);
+		expect(isTypingKey({ keycode: 1 })).toBe(false);
+		expect(isTypingKey({ keycode: 29 })).toBe(false);
 	});
 });

@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "Alle \"{{label}}\"-sneltoetsen uitschakelen",
 		"enableAll": "Alle \"{{label}}\"-sneltoetsen inschakelen"
+	},
+	"clipEdit": {
+		"menuLabel": "Clipmenu",
+		"setSpeed": "Snelheid instellen",
+		"setVolume": "Volume instellen",
+		"remove": "Verwijderen",
+		"normal": "Normaal",
+		"mute": "Dempen",
+		"typingTitle": "Typen versnellen",
+		"typingBadge": "Typen",
+		"typingInfo": "Typen gedurende {{seconds}} s ({{count}} toetsen)",
+		"typingSpeed": "Snelheid",
+		"applySuggestion": "Suggestie toepassen",
+		"applyAll": "Alle suggesties toepassen ({{count}})",
+		"typingApplied": "{{count}} typgedeeltes versneld",
+		"restoreTitle": "Inkorting ongedaan maken",
+		"restoreConflict": "De effecten ervoor en erna verschillen. Wil je het hersteld deel op de vorige of de volgende effecten afstemmen?",
+		"restoreBefore": "Als je de inkorting ongedaan maakt, worden de vorige effecten naar dit deel doorgetrokken. Doorgaan?",
+		"restoreAfter": "Als je de inkorting ongedaan maakt, worden de volgende effecten naar dit deel doorgetrokken. Doorgaan?",
+		"followBefore": "Vorige effecten volgen",
+		"followAfter": "Volgende effecten volgen",
+		"cancel": "Annuleren",
+		"confirm": "OK",
+		"undoTrim": "Inkorting ongedaan maken"
 	}
 }

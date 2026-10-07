@@ -2001,6 +2001,18 @@ export function registerRecordingHandlers(
 		}
 	});
 
+	// Bare keypress timestamps (no key identity) used to suggest "speed up typing" regions.
+	ipcMain.handle("get-recording-typing-times", async (_, videoPath?: string) => {
+		const target = normalizeVideoSourcePath(videoPath ?? currentVideoPath);
+		if (!target) return [];
+		try {
+			const parsed = JSON.parse(await fs.readFile(`${target}.keys.json`, "utf-8")) as { typing?: unknown };
+			return Array.isArray(parsed.typing) ? parsed.typing.filter((t) => typeof t === "number") : [];
+		} catch {
+			return [];
+		}
+	});
+
 	ipcMain.handle("get-cursor-telemetry", async (_, videoPath?: string) => {
 		const targetVideoPath = normalizeVideoSourcePath(videoPath ?? currentVideoPath);
 		if (!targetVideoPath) {

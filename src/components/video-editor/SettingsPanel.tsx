@@ -448,6 +448,8 @@ interface SettingsPanelProps {
 	onResetClipAudio?: () => void;
 	onClipSpeedChange?: (speed: number) => void;
 	onClipMutedChange?: (muted: boolean) => void;
+	selectedClipVolume?: number | null;
+	onClipVolumeChange?: (volume: number) => void;
 	selectedClipHideCursor?: boolean;
 	onClipHideCursorChange?: (hideCursor: boolean) => void;
 	onClipDelete?: (id: string) => void;
@@ -920,6 +922,8 @@ export function SettingsPanel({
 	selectedClipHideCursor = false,
 	onClipHideCursorChange,
 	onClipDelete,
+	selectedClipVolume,
+	onClipVolumeChange,
 	selectedAudioId,
 	selectedAudioVolume,
 	selectedAudioNormalize,
@@ -2815,6 +2819,15 @@ export function SettingsPanel({
 							)}
 						</p>
 					)}
+				<SliderControl
+					label={tSettings("clip.volume", "Volume")}
+					value={Math.round((selectedClipVolume ?? 1) * 100)}
+					min={0}
+					max={100}
+					step={5}
+					onChange={(value) => onClipVolumeChange?.(value / 100)}
+					formatValue={(value) => `${value}%`}
+				/>
 				<label className="flex items-center justify-between py-2">
 					<span className="text-xs text-muted-foreground">
 						{tSettings("clip.mute", "Mute clip")}

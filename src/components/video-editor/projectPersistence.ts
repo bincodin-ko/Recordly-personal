@@ -481,6 +481,9 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 								? region.showSourceAudio
 								: false,
 						...(region.hideCursor === true ? { hideCursor: true } : {}),
+						...(isFiniteNumber(region.volume) && region.volume >= 0 && region.volume < 1
+							? { volume: region.volume }
+							: {}),
 					};
 				})
 		: [];

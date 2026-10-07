@@ -7,7 +7,7 @@ import type {
 	ClipRegion,
 	ZoomRegion,
 } from "../../types";
-import { getClipSourceEndMs, getClipSourceStartMs } from "../../types";
+import { getClipSourceEndMs, getClipSourceStartMs, getClipVolume } from "../../types";
 import { CAPTION_ROW_ID, CLIP_ROW_ID, ZOOM_ROW_ID } from "../core/constants";
 import {
 	getAnnotationTrackIndex,
@@ -17,6 +17,7 @@ import {
 	isAnnotationTrackRowId,
 	isAudioTrackRowId,
 } from "../core/rows";
+import { layoutAnnotationTracks } from "../core/annotationTracks";
 import type { TimelineRegionSpan, TimelineRenderItem } from "../core/timelineTypes";
 
 export function getAnnotationLabel(region: AnnotationRegion): string {
@@ -79,13 +80,15 @@ export function buildTimelineItems(params: {
 			showSourceAudio: region.showSourceAudio,
 			muted: Boolean(region.muted),
 			cursorHidden: Boolean(region.hideCursor),
+			volumeValue: region.muted || getClipVolume(region) >= 1 ? undefined : getClipVolume(region),
 			variant: "clip",
 		};
 	});
 
+	const annotationTracks = layoutAnnotationTracks(annotationRegions);
 	const annotations: TimelineRenderItem[] = annotationRegions.map((region) => ({
 		id: region.id,
-		rowId: getAnnotationTrackRowId(region.trackIndex ?? 0),
+		rowId: getAnnotationTrackRowId(annotationTracks.get(region.id) ?? 0),
 		span: { start: region.startMs, end: region.endMs },
 		label: getAnnotationLabel(region),
 		variant: "annotation",
@@ -139,6 +142,7 @@ export function buildAllRegionSpans(params: {
 		end: r.endMs,
 		rowId: getAudioTrackRowId(r.trackIndex ?? 0),
 	}));
+	const annotationTracks = layoutAnnotationTracks(params.annotationRegions ?? []);
 	return [
 		...zooms,
 		...clips,
@@ -147,7 +151,7 @@ export function buildAllRegionSpans(params: {
 			id: r.id,
 			start: r.startMs,
 			end: r.endMs,
-			rowId: getAnnotationTrackRowId(r.trackIndex ?? 0),
+			rowId: getAnnotationTrackRowId(annotationTracks.get(r.id) ?? 0),
 		})),
 		...(params.captionCues ?? []).map((r) => ({
 			id: r.id,

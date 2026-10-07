@@ -28,7 +28,8 @@ export function useCursorTelemetry({
 	autoSuggestedVideoPathRef,
 }: UseCursorTelemetryInput) {
 	const pendingRetryTimeoutRef = useRef<number | null>(null);
-	const { setCursorTelemetry, setCursorTelemetrySourcePath, setKeystrokes } = timeline;
+	const { setCursorTelemetry, setCursorTelemetrySourcePath, setKeystrokes, setTypingTimes } =
+		timeline;
 
 	useEffect(() => {
 		let mounted = true;
@@ -52,6 +53,7 @@ export function useCursorTelemetry({
 				if (mounted) {
 					setCursorTelemetry([]);
 					setKeystrokes([]);
+					setTypingTimes([]);
 					setCursorTelemetrySourcePath(null);
 				}
 				return;
@@ -63,6 +65,11 @@ export function useCursorTelemetry({
 					.catch(() => []);
 				if (!mounted) return;
 				setKeystrokes(normalizeKeystrokeSamples(keystrokes ?? []));
+				const typing = await window.electronAPI
+					.getRecordingTypingTimes?.(videoSourcePath)
+					.catch(() => []);
+				if (!mounted) return;
+				setTypingTimes(typing ?? []);
 				const result = await window.electronAPI.getCursorTelemetry(videoSourcePath);
 				if (!mounted) return;
 				setCursorTelemetry(result.success ? result.samples : []);
@@ -95,6 +102,7 @@ export function useCursorTelemetry({
 		setCursorTelemetry,
 		setCursorTelemetrySourcePath,
 		setKeystrokes,
+		setTypingTimes,
 		pendingFreshRecordingAutoZoomPathRef,
 		autoSuggestedVideoPathRef,
 	]);

@@ -1,5 +1,7 @@
 import { translate } from "@/contexts/I18nContext";
 import { useTimelinePresentation } from "../../core/TimelinePresentation";
+import { useClipActions } from "../../core/ClipActionsContext";
+import { Keyboard, Scissors } from "@/components/ui/icons";
 import { Plus } from "@/components/ui/icons";
 import { useTimelineContext } from "dnd-timeline";
 import {
@@ -586,6 +588,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 	}, [items]);
 
 	const { clips } = useTimelinePresentation();
+	const clipActions = useClipActions();
 	const clipPresentation = useMemo(
 		() =>
 			clipItems.map((item) => ({
@@ -729,6 +732,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 						sourceSpan={item.sourceSpan ?? item.span}
 						speedValue={item.speedValue}
 						cursorHidden={item.cursorHidden}
+						volumeValue={item.volumeValue}
 					>
 						{item.label}
 					</Item>
@@ -752,6 +756,73 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 									valueToPixels(seam - rangeStart) - 2,
 							}}
 						/>
+					);
+				})}
+				{clipActions?.typingBadges.map((badge) => {
+					const span = getRegionDisplaySpan(
+						{ start: badge.startMs, end: badge.endMs },
+						clipPresentation,
+					);
+					const widthPx = Math.max(16, valueToPixels(span.end - span.start));
+					return (
+						<button
+							key={badge.id}
+							type="button"
+							data-testid="typing-suggestion"
+							title={translate("timeline.clipEdit.typingTitle", "Speed up typing")}
+							className="absolute top-0 z-30 flex h-[15px] items-center justify-center gap-1 overflow-hidden rounded-b bg-violet-500/85 px-1 text-[10px] font-medium text-white hover:bg-violet-400"
+							style={{
+								[direction === "rtl" ? "right" : "left"]: valueToPixels(
+									span.start - rangeStart,
+								),
+								width: widthPx,
+							}}
+							onPointerDown={(event) => event.stopPropagation()}
+							onClick={(event) => {
+								event.stopPropagation();
+								clipActions.openTypingPopover(badge.id, event.clientX, event.clientY + 12);
+							}}
+						>
+							<Keyboard className="size-3 shrink-0" />
+							{widthPx > 70 && (
+								<span className="truncate">
+									{translate("timeline.clipEdit.typingBadge", "Typing")}
+								</span>
+							)}
+						</button>
+					);
+				})}
+				{clipActions?.trimBubbles.map((bubble) => {
+					const left = clipPresentation.find((clip) => clip.id === bubble.leftClipId);
+					const right = clipPresentation.find((clip) => clip.id === bubble.rightClipId);
+					const edgeMs = left && right
+						? (left.displaySpan.end + right.displaySpan.start) / 2
+						: left
+							? left.displaySpan.end
+							: right
+								? right.displaySpan.start
+								: null;
+					if (edgeMs === null) return null;
+					const centerPx = valueToPixels(edgeMs - rangeStart);
+					return (
+						<button
+							key={bubble.id}
+							type="button"
+							data-testid="trim-bubble"
+							title={translate("timeline.clipEdit.undoTrim", "Undo trim")}
+							aria-label={translate("timeline.clipEdit.undoTrim", "Undo trim")}
+							className="absolute bottom-1 z-30 flex size-5 items-center justify-center rounded-full bg-amber-400 text-black shadow hover:bg-amber-300"
+							style={{
+								[direction === "rtl" ? "right" : "left"]: Math.max(0, centerPx - 10),
+							}}
+							onPointerDown={(event) => event.stopPropagation()}
+							onClick={(event) => {
+								event.stopPropagation();
+								clipActions.openTrimRestore(bubble.id);
+							}}
+						>
+							<Scissors className="size-3" />
+						</button>
 					);
 				})}
 			</Row>
