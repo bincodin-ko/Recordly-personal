@@ -118,5 +118,13 @@
 		"cancel": "Annulla",
 		"confirm": "OK",
 		"undoTrim": "Annulla taglio"
+	},
+	"cameraLayout": {
+		"fullscreen": "Webcam a schermo intero",
+		"split": "Schermo diviso",
+		"hidden": "Webcam nascosta",
+		"default": "Predefinito",
+		"hint": "Fai clic per aggiungere un layout webcam",
+		"delete": "Elimina layout"
 	}
 }

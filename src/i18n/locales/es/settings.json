@@ -204,7 +204,9 @@
 			"tick": "Tic",
 			"tap": "Toque",
 			"toggle": "Interruptor"
-		}
+		},
+		"webcamAvoidCursor": "Apartarse del cursor",
+		"webcamHideWhenSilent": "Ocultar en silencio"
 	},
 	"sections": {
 		"scene": "Escena",

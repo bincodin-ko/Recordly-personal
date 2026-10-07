@@ -204,7 +204,9 @@
 			"tick": "틱",
 			"tap": "톡",
 			"toggle": "딸깍"
-		}
+		},
+		"webcamAvoidCursor": "커서가 오면 비켜 주기",
+		"webcamHideWhenSilent": "말 안 할 때 숨기기"
 	},
 	"sections": {
 		"scene": "장면",

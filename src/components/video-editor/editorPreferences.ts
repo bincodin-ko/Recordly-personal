@@ -367,7 +367,8 @@ function normalizeEditorControls(
 		cursorExtras: normalized.cursorExtras,
 		borderRadius: normalized.borderRadius,
 		padding: normalized.padding,
-		webcam: normalized.webcam,
+		// Layout ranges belong to one recording; never carry them into other projects.
+		webcam: { ...normalized.webcam, layoutRegions: [] },
 		aspectRatio: normalized.aspectRatio,
 	};
 }

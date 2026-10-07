@@ -426,6 +426,8 @@ export function EditorShell(props: Props) {
 					handleSelectAnnotation={handleSelectAnnotation}
 					cursorExtras={appearance.cursorExtras}
 					sourceDurationMs={ui.duration * 1000}
+					webcam={appearance.webcam}
+					setWebcam={appearance.setWebcam}
 				/>
 			</div>
 			{library.importing && (

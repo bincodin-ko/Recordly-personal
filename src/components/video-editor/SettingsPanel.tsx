@@ -1546,7 +1546,7 @@ export function SettingsPanel({
 
 	const resetWebcamSection = () => {
 		if (!onWebcamChange) return;
-		onWebcamChange({ ...defaultWebcam });
+		onWebcamChange({ ...defaultWebcam, layoutRegions: webcam?.layoutRegions ?? [] });
 	};
 
 	const resetCropSection = () => {
@@ -3303,6 +3303,26 @@ export function SettingsPanel({
 									aria-label={tSettings("effects.show", "Show")}
 									checked={webcam?.enabled ?? false}
 									onCheckedChange={(enabled) => updateWebcam({ enabled })}
+								/>
+							</div>
+							<div className="flex items-center justify-between gap-3 py-2">
+								<span className="text-xs text-muted-foreground">
+									{tSettings("effects.webcamAvoidCursor", "Move away from cursor")}
+								</span>
+								<Switch
+									aria-label={tSettings("effects.webcamAvoidCursor", "Move away from cursor")}
+									checked={webcam?.avoidCursor ?? true}
+									onCheckedChange={(avoidCursor) => updateWebcam({ avoidCursor })}
+								/>
+							</div>
+							<div className="flex items-center justify-between gap-3 py-2">
+								<span className="text-xs text-muted-foreground">
+									{tSettings("effects.webcamHideWhenSilent", "Hide during silence")}
+								</span>
+								<Switch
+									aria-label={tSettings("effects.webcamHideWhenSilent", "Hide during silence")}
+									checked={webcam?.hideWhenSilent ?? false}
+									onCheckedChange={(hideWhenSilent) => updateWebcam({ hideWhenSilent })}
 								/>
 							</div>
 							{advanced && (

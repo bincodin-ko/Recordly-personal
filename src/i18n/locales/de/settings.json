@@ -204,7 +204,9 @@
 			"tick": "Tick",
 			"tap": "Tippen",
 			"toggle": "Umschalten"
-		}
+		},
+		"webcamAvoidCursor": "Dem Cursor ausweichen",
+		"webcamHideWhenSilent": "Bei Stille ausblenden"
 	},
 	"sections": {
 		"scene": "Szene",

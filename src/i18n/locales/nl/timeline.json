@@ -118,5 +118,13 @@
 		"cancel": "Annuleren",
 		"confirm": "OK",
 		"undoTrim": "Inkorting ongedaan maken"
+	},
+	"cameraLayout": {
+		"fullscreen": "Camera schermvullend",
+		"split": "Gesplitst scherm",
+		"hidden": "Camera verborgen",
+		"default": "Standaard",
+		"hint": "Klik om een cameralay-out toe te voegen",
+		"delete": "Lay-out verwijderen"
 	}
 }

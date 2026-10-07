@@ -118,5 +118,13 @@
 		"cancel": "Abbrechen",
 		"confirm": "OK",
 		"undoTrim": "Kürzung rückgängig"
+	},
+	"cameraLayout": {
+		"fullscreen": "Kamera im Vollbild",
+		"split": "Geteilter Bildschirm",
+		"hidden": "Kamera ausgeblendet",
+		"default": "Standard",
+		"hint": "Klicken, um ein Kameralayout hinzuzufügen",
+		"delete": "Layout löschen"
 	}
 }

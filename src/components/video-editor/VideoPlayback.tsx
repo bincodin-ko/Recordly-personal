@@ -80,8 +80,6 @@ import {
 	DEFAULT_CURSOR_STYLE,
 	DEFAULT_CURSOR_SWAY,
 	DEFAULT_PADDING,
-	DEFAULT_WEBCAM_REACT_TO_ZOOM,
-	DEFAULT_WEBCAM_ROUNDNESS,
 	DEFAULT_WEBCAM_SHADOW,
 	DEFAULT_WEBCAM_SIZE,
 	DEFAULT_ZOOM_IN_DURATION_MS,
@@ -149,12 +147,13 @@ import {
 } from "./videoPlayback/zoomTransform";
 import {
 	getCropMatchedWebcamHeightPercent,
-	getWebcamCornerRadiusPx,
 	getWebcamCropSourceRect,
-	getWebcamOverlayDimensionsPx,
-	getWebcamOverlayPosition,
-	scaleWebcamOverlayPixels,
 } from "./webcamOverlay";
+import {
+	type CameraFrameCache,
+	computeWebcamCameraFrame,
+	isIdentityCameraFrame,
+} from "./cameraLayout";
 
 type PlaybackAnimationState = {
 	scale: number;
@@ -817,15 +816,8 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		}, [activeCaptionLayout, autoCaptionSettings]);
 		const motionBlurStateRef = useRef<MotionBlurState>(createMotionBlurState());
 		const webcamEnabled = webcam?.enabled ?? false;
-		const webcamMargin = webcam?.margin ?? 24;
 		const webcamWidth = webcam?.width ?? webcam?.size ?? DEFAULT_WEBCAM_SIZE;
 		const rawWebcamHeight = webcam?.height ?? webcam?.size ?? DEFAULT_WEBCAM_SIZE;
-		const webcamReactToZoom = webcam?.reactToZoom ?? DEFAULT_WEBCAM_REACT_TO_ZOOM;
-		const webcamPositionPreset = webcam?.positionPreset ?? webcam?.corner ?? "bottom-right";
-		const webcamPositionX = webcam?.positionX ?? 1;
-		const webcamPositionY = webcam?.positionY ?? 1;
-		const webcamCorner = webcam?.corner ?? "bottom-right";
-		const webcamRoundness = webcam?.roundness ?? DEFAULT_WEBCAM_ROUNDNESS;
 		const webcamShadow = webcam?.shadow ?? DEFAULT_WEBCAM_SHADOW;
 		const webcamTimeOffsetMs = webcam?.timeOffsetMs;
 		const webcamCropRegion = webcam?.cropRegion;
@@ -837,32 +829,16 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			webcamVideoDimensions?.height,
 			webcamCropRegion,
 		);
-		const webcamCropPreviewContentStyle = useMemo<React.CSSProperties>(() => {
-			if (!webcamVideoDimensions) {
-				return { opacity: 0 };
+		const webcamCropContentRef = useRef<HTMLDivElement | null>(null);
+		const cameraFrameCacheRef = useRef<CameraFrameCache>({});
+
+		const resetScreenLayout = useCallback(() => {
+			const container = containerRef.current;
+			if (container) {
+				container.style.transform = "";
+				container.style.clipPath = "";
 			}
-
-			const { sx, sy, sw, sh } = getWebcamCropSourceRect(
-				webcamCropRegion,
-				webcamVideoDimensions.width,
-				webcamVideoDimensions.height,
-			);
-			const targetAspect = Math.max(0.01, webcamWidth) / Math.max(0.01, webcamHeight);
-			const coverScale = Math.max(targetAspect / sw, 1 / sh);
-			const drawWidth = webcamVideoDimensions.width * coverScale;
-			const drawHeight = webcamVideoDimensions.height * coverScale;
-			const drawX = (targetAspect - sw * coverScale) / 2 - sx * coverScale;
-			const drawY = (1 - sh * coverScale) / 2 - sy * coverScale;
-
-			return {
-				left: `${(drawX / targetAspect) * 100}%`,
-				top: `${drawY * 100}%`,
-				width: `${(drawWidth / targetAspect) * 100}%`,
-				height: `${drawHeight * 100}%`,
-				maxWidth: "none",
-				willChange: "left, top, width, height",
-			};
-		}, [webcamCropRegion, webcamHeight, webcamVideoDimensions, webcamWidth]);
+		}, []);
 
 		const applyWebcamBubbleLayout = useCallback(
 			(zoomScale: number) => {
@@ -873,6 +849,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 					!bubble ||
 					!bubbleInner ||
 					!overlay ||
+					!webcam ||
 					!webcamEnabled ||
 					!webcamVideoPath ||
 					!isWebcamVisibleAtSourceTime(webcam, currentTimeRef.current / 1000)
@@ -880,50 +857,60 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 					if (bubble) {
 						bubble.style.display = "none";
 					}
+					resetScreenLayout();
 					return;
 				}
-				const scaledMargin = scaleWebcamOverlayPixels(webcamMargin, overlay.clientWidth);
-
-				const scaledDimensions = getWebcamOverlayDimensionsPx({
-					containerWidth: overlay.clientWidth,
-					containerHeight: overlay.clientHeight,
+				const canvas = { width: overlay.clientWidth, height: overlay.clientHeight };
+				const frame = computeWebcamCameraFrame({
+					webcam,
+					canvas,
+					mask: baseMaskRef.current,
+					crop: cropRegion,
 					widthPercent: webcamWidth,
 					heightPercent: webcamHeight,
-					margin: scaledMargin,
 					zoomScale,
-					reactToZoom: webcamReactToZoom,
-				});
-				const scaledRadius = getWebcamCornerRadiusPx(
-					webcamRoundness,
-					scaledDimensions.width,
-					scaledDimensions.height,
-				);
-				const { x, y } = getWebcamOverlayPosition({
-					containerWidth: overlay.clientWidth,
-					containerHeight: overlay.clientHeight,
-					width: scaledDimensions.width,
-					height: scaledDimensions.height,
-					margin: scaledMargin,
-					positionPreset: webcamPositionPreset,
-					positionX: webcamPositionX,
-					positionY: webcamPositionY,
-					legacyCorner: webcamCorner,
+					timelineMs: timelineTimeRef.current * 1000,
+					cursorMs: currentTimeRef.current,
+					sourceMs: currentTimeRef.current,
+					cursorTelemetry: cursorTelemetryRef.current,
+					cues: autoCaptions,
+					cache: cameraFrameCacheRef.current,
 				});
 
-				bubble.style.display = "block";
+				const container = containerRef.current;
+				if (container) {
+					if (isIdentityCameraFrame(frame, canvas)) {
+						resetScreenLayout();
+					} else {
+						const { scale, x: tx, y: ty } = frame.screen;
+						const clip = frame.screenClip;
+						// clip-path is in the element's own (pre-transform) space.
+						const left = (clip.x - tx) / scale;
+						const top = (clip.y - ty) / scale;
+						const right = canvas.width - (clip.x + clip.width - tx) / scale;
+						const bottom = canvas.height - (clip.y + clip.height - ty) / scale;
+						container.style.transformOrigin = "0 0";
+						container.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+						container.style.clipPath = `inset(${top}px ${right}px ${bottom}px ${left}px)`;
+					}
+				}
+
+				const { x, y, width, height } = frame.camera;
+				bubble.style.display = frame.opacity > 0.001 ? "block" : "none";
+				bubble.style.opacity = `${frame.opacity}`;
 				bubble.style.left = `${x}px`;
 				bubble.style.top = `${y}px`;
-				bubble.style.width = `${scaledDimensions.width}px`;
-				bubble.style.height = `${scaledDimensions.height}px`;
-				bubble.style.aspectRatio = `${scaledDimensions.width} / ${scaledDimensions.height}`;
+				bubble.style.width = `${width}px`;
+				bubble.style.height = `${height}px`;
+				bubble.style.aspectRatio = `${width} / ${height}`;
 				const squirclePath = getSquircleSvgPath({
 					x: 0,
 					y: 0,
-					width: scaledDimensions.width,
-					height: scaledDimensions.height,
-					radius: scaledRadius,
+					width,
+					height,
+					radius: frame.radius,
 				});
-				const shadowSize = Math.min(scaledDimensions.width, scaledDimensions.height);
+				const shadowSize = Math.min(width, height);
 				bubble.style.filter = getWebcamShadowFilter(shadowSize, webcamShadow);
 				bubble.style.borderRadius = "0px";
 				bubble.style.boxShadow = "none";
@@ -933,19 +920,42 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				bubbleInner.style.contain = "paint";
 				bubbleInner.style.clipPath = `path('${squirclePath}')`;
 				bubbleInner.style.setProperty("-webkit-clip-path", `path('${squirclePath}')`);
+
+				const content = webcamCropContentRef.current;
+				if (content) {
+					if (!webcamVideoDimensions) {
+						content.style.opacity = "0";
+					} else {
+						const { sx, sy, sw, sh } = getWebcamCropSourceRect(
+							webcamCropRegion,
+							webcamVideoDimensions.width,
+							webcamVideoDimensions.height,
+						);
+						const targetAspect = Math.max(0.01, width) / Math.max(0.01, height);
+						const coverScale = Math.max(targetAspect / sw, 1 / sh);
+						const drawWidth = webcamVideoDimensions.width * coverScale;
+						const drawHeight = webcamVideoDimensions.height * coverScale;
+						const drawX = (targetAspect - sw * coverScale) / 2 - sx * coverScale;
+						const drawY = (1 - sh * coverScale) / 2 - sy * coverScale;
+						content.style.opacity = "";
+						content.style.left = `${(drawX / targetAspect) * 100}%`;
+						content.style.top = `${drawY * 100}%`;
+						content.style.width = `${(drawWidth / targetAspect) * 100}%`;
+						content.style.height = `${drawHeight * 100}%`;
+						content.style.maxWidth = "none";
+					}
+				}
 			},
 			[
-				webcamCorner,
-				webcamRoundness,
+				autoCaptions,
+				cropRegion,
+				resetScreenLayout,
 				webcam,
+				webcamCropRegion,
 				webcamEnabled,
-				webcamMargin,
-				webcamPositionPreset,
-				webcamPositionX,
-				webcamPositionY,
-				webcamReactToZoom,
 				webcamShadow,
 				webcamHeight,
+				webcamVideoDimensions,
 				webcamVideoPath,
 				webcamWidth,
 			],
@@ -2615,8 +2625,9 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 										}}
 									>
 										<div
+											ref={webcamCropContentRef}
 											className="pointer-events-none absolute"
-											style={webcamCropPreviewContentStyle}
+											style={{ opacity: 0 }}
 										>
 											<video
 												ref={webcamVideoRef}

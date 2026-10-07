@@ -1,3 +1,4 @@
+import type { CameraLayoutRegion } from "../cameraLayout";
 import { Plus } from "@/components/ui/icons";
 import type { Span } from "dnd-timeline";
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
@@ -90,6 +91,7 @@ export interface TimelineEditorProps {
 	onSourceAudioTracksMetaChange?: (tracks: SourceAudioTrackMeta) => void;
 	shortcutBlocks?: TimelineShortcutBlock[];
 	onShortcutDisabledChange?: (times: number[], disabled: boolean) => void;
+	cameraLayout?: { regions: CameraLayoutRegion[]; onChange: (regions: CameraLayoutRegion[]) => void } | null;
 }
 
 function extractLocalPathFromMediaServerUrl(input: string | null | undefined): string | null {
@@ -171,6 +173,7 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 			showSourceAudioTrack = false,
 			shortcutBlocks,
 			onShortcutDisabledChange,
+			cameraLayout,
 			sourceAudioResourceVersion = 0,
 			onSourceAudioAvailabilityChange,
 			sourceAudioTrackSettings = {},
@@ -525,6 +528,7 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 							isLoading={isLoading}
 							shortcutBlocks={shortcutBlocks}
 							onShortcutDisabledChange={onShortcutDisabledChange}
+							cameraLayout={cameraLayout}
 						/>
 					</TimelineWrapper>
 				</div>

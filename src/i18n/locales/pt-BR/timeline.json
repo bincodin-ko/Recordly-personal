@@ -118,5 +118,13 @@
 		"cancel": "Cancelar",
 		"confirm": "OK",
 		"undoTrim": "Desfazer corte"
+	},
+	"cameraLayout": {
+		"fullscreen": "Câmera em tela cheia",
+		"split": "Tela dividida",
+		"hidden": "Câmera oculta",
+		"default": "Padrão",
+		"hint": "Clique para adicionar um layout de câmera",
+		"delete": "Excluir layout"
 	}
 }

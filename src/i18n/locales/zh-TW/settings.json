@@ -204,7 +204,9 @@
 			"tick": "滴答",
 			"tap": "輕點",
 			"toggle": "切換"
-		}
+		},
+		"webcamAvoidCursor": "避開游標",
+		"webcamHideWhenSilent": "靜音時隱藏"
 	},
 	"sections": {
 		"scene": "場景",

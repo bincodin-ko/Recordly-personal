@@ -1,3 +1,4 @@
+import type { CameraLayoutRegion } from "./cameraLayout";
 export type ZoomDepth = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface ZoomFocus {
@@ -156,6 +157,12 @@ export interface WebcamOverlaySettings {
 	cornerRadius?: number;
 	shadow: number;
 	margin: number;
+	/** Layout track ranges (camera fullscreen / split screen / hidden), timeline ms. */
+	layoutRegions?: CameraLayoutRegion[];
+	/** Move the bubble to the mirrored corner when the cursor comes near it. */
+	avoidCursor?: boolean;
+	/** Fade the camera out while nobody is speaking (uses caption word timings). */
+	hideWhenSilent?: boolean;
 }
 
 export const DEFAULT_CURSOR_SIZE = 3.0;
@@ -220,6 +227,9 @@ export const DEFAULT_WEBCAM_OVERLAY: WebcamOverlaySettings = {
 	roundness: DEFAULT_WEBCAM_ROUNDNESS,
 	shadow: DEFAULT_WEBCAM_SHADOW,
 	margin: DEFAULT_WEBCAM_MARGIN,
+	layoutRegions: [],
+	avoidCursor: true,
+	hideWhenSilent: false,
 };
 
 export interface TrimRegion {
