@@ -2833,7 +2833,7 @@ export function SettingsPanel({
 						}
 					>
 						<SelectTrigger
-							className="h-8 w-[140px] text-xs"
+							className="h-8 w-[160px] text-xs"
 							aria-label={tSettings("audio.micMode", "Microphone audio mode")}
 						>
 							<SelectValue />
@@ -2848,7 +2848,7 @@ export function SettingsPanel({
 					</Select>
 				</label>
 				<p className="text-xs text-muted-foreground" role="status">
-					{micEnhanceStatus === "processing"
+					{micEnhanceStatus === "processing" && audioExtras.micMode !== "standard"
 						? tSettings("audio.micModeProcessing", "Processing microphone audio…")
 						: micEnhanceStatus === "no-mic"
 							? tSettings("audio.micModeNoMic", "This recording has no separate microphone track.")
@@ -2857,7 +2857,9 @@ export function SettingsPanel({
 								: micModeHint[audioExtras.micMode]}
 				</p>
 
-				<SectionLabel>{tSettings("audio.backgroundMusic", "Background audio")}</SectionLabel>
+				<div className="mt-3">
+					<SectionLabel>{tSettings("audio.backgroundMusic", "Background audio")}</SectionLabel>
+				</div>
 				<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
 					<span>{tSettings("audio.track", "Track")}</span>
 					<Select

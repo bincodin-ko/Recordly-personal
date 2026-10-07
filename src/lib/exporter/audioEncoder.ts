@@ -176,8 +176,10 @@ export class AudioProcessor extends AudioTranscodeProcessor {
 		if (!routingPolicy.hasEmbeddedSourceAudio && routingPolicy.playbackPaths.length === 1) {
 			const sidecarDemuxer = await this.loadAudioFileDemuxer(routingPolicy.playbackPaths[0]);
 			if (sidecarDemuxer) {
+				let wroteAudio = false;
 				try {
-					await this.processTrimOnlyAudio(sidecarDemuxer, muxer, sortedTrims);
+					// WAV (PCM) sidecars are not decodable by WebCodecs; render those offline.
+					wroteAudio = await this.processTrimOnlyAudio(sidecarDemuxer, muxer, sortedTrims);
 				} finally {
 					try {
 						sidecarDemuxer.destroy();
@@ -185,7 +187,7 @@ export class AudioProcessor extends AudioTranscodeProcessor {
 						/* cleanup */
 					}
 				}
-				return;
+				if (wroteAudio) return;
 			}
 			// Fallback to offline rendering if demuxer creation failed
 			console.warn(

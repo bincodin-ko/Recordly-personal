@@ -21,6 +21,9 @@ export function useSourceAudioFallback({
 	const [sourceAudioFallbackStartDelayMsByPath, setSourceAudioFallbackStartDelayMsByPath] =
 		useState<Record<string, number>>({});
 	const previousSourcePathRef = useRef<string | null>(null);
+	// Which lookup finished last, so export can wait for companion (mic) audio.
+	const lookupKey = `${currentSourcePath}|${refreshKey}`;
+	const [finishedLookupKey, setFinishedLookupKey] = useState<string | null>(null);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -41,8 +44,15 @@ export function useSourceAudioFallback({
 
 		void (async () => {
 			try {
+				await lookUp(currentSourcePath);
+			} finally {
+				if (!cancelled) setFinishedLookupKey(`${currentSourcePath}|${refreshKey}`);
+			}
+		})();
+		async function lookUp(sourcePath: string) {
+			try {
 				const result =
-					await window.electronAPI.getVideoAudioFallbackPaths(currentSourcePath);
+					await window.electronAPI.getVideoAudioFallbackPaths(sourcePath);
 				if (cancelled) {
 					return;
 				}
@@ -75,7 +85,7 @@ export function useSourceAudioFallback({
 					);
 				}
 			}
-		})();
+		}
 
 		return () => {
 			cancelled = true;
@@ -120,7 +130,9 @@ export function useSourceAudioFallback({
 
 	const enhancedPath = enhanceKey && enhanced.key === enhanceKey ? enhanced.path : null;
 	const micEnhanceStatus: "off" | "processing" | "ready" | "error" | "no-mic" =
-		micMode === "standard"
+		currentSourcePath && finishedLookupKey !== lookupKey
+			? "processing"
+			: micMode === "standard"
 			? "off"
 			: !micPath
 				? "no-mic"
