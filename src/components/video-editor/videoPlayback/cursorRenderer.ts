@@ -1317,6 +1317,11 @@ export class PixiCursorOverlay {
 		this.customCursorSprite.anchor.set(asset.anchorX, asset.anchorY);
 	}
 
+	/** Cursor tip drawn on the last update, in this overlay container's local space. */
+	getLastRenderedPoint(): { px: number; py: number } | null {
+		return this.lastRenderedPoint;
+	}
+
 	getSmoothedCursorSnapshot(): {
 		cx: number;
 		cy: number;

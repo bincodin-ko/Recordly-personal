@@ -44,6 +44,18 @@ describe("resolveSceneZoomTarget", () => {
 		expect(target.focus.cy).toBeCloseTo(1 / 3);
 		expect(target.progress).toBe(1);
 	});
+
+	it("keeps the camera still and returns a lens for a Glass Loupe zoom", () => {
+		const target = resolveSceneZoomTarget({
+			zoomRegions: [{ ...region, loupe: true }],
+			timeMs: 2000,
+			cursorFollowCamera: createCursorFollowCameraState(),
+		});
+
+		expect(target.scale).toBe(1);
+		expect(target.progress).toBe(0);
+		expect(target.loupe).toMatchObject({ scale: 1.5, strength: 1, followCursor: false });
+	});
 });
 
 describe("resolvePreviewMotionMode", () => {

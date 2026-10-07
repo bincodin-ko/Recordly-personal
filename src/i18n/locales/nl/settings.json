@@ -7,6 +7,7 @@
 		"modeManual": "Handmatig",
 		"modeManualDescription": "Stel een vast focuspunt in voor deze zoom",
 		"instantAnimation": "Directe animatie",
+		"glassLoupe": "Glass Loupe",
 		"autoFrame": "Altijd ingezoomd blijven",
 		"autoFrameDescription": "Vult de gekozen beeldverhouding en volgt de cursor",
 		"modeAutoDescription": "De camera volgt de cursor automatisch",

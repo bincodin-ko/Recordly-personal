@@ -76,7 +76,12 @@ import {
 	stepSpringValue,
 } from "@/components/video-editor/videoPlayback/motionSmoothing";
 import { getSceneEffectMetrics } from "@/components/video-editor/videoPlayback/sceneEffects";
-import { resolveSceneZoomTarget } from "@/components/video-editor/videoPlayback/sceneMotion";
+import {
+	resolveSceneZoomTarget,
+	type SceneZoomTarget,
+} from "@/components/video-editor/videoPlayback/sceneMotion";
+import { paintCssGradient } from "@/lib/cssGradient";
+import { createGlassLoupe } from "@/lib/glassLoupe";
 import {
 	CameraEffectsProcessor,
 	hasTransparentCameraBackground,
@@ -476,6 +481,8 @@ export class FrameRenderer {
 	private lastContentTimeMs: number | null = null;
 	/** Instant zooms cut the camera; a cut must not be smeared by zoom motion blur. */
 	private cameraCut = false;
+	private syncLoupe: ReturnType<typeof createGlassLoupe> | null = null;
+	private loupeTarget: SceneZoomTarget["loupe"];
 	private layoutCache: LayoutCache | null = null;
 	private currentVideoTime = 0;
 	private cursorOverlay: PixiCursorOverlay | null = null;
@@ -1191,6 +1198,7 @@ export class FrameRenderer {
 				return;
 			}
 
+			const isCssGradient = /^(linear|radial)-gradient/.test(wallpaper);
 			const bgCanvas = document.createElement("canvas");
 			bgCanvas.width = this.config.width;
 			bgCanvas.height = this.config.height;
@@ -1240,44 +1248,9 @@ export class FrameRenderer {
 			} else if (wallpaper.startsWith("#")) {
 				bgCtx.fillStyle = wallpaper;
 				bgCtx.fillRect(0, 0, this.config.width, this.config.height);
-			} else if (
-				wallpaper.startsWith("linear-gradient") ||
-				wallpaper.startsWith("radial-gradient")
-			) {
-				const gradientMatch = wallpaper.match(/(linear|radial)-gradient\((.+)\)/);
-				if (!gradientMatch) {
+			} else if (isCssGradient) {
+				if (!paintCssGradient(bgCtx, wallpaper, this.config.width, this.config.height)) {
 					bgCtx.fillStyle = "#000000";
-					bgCtx.fillRect(0, 0, this.config.width, this.config.height);
-				} else {
-					const [, type, params] = gradientMatch;
-					const parts = params.split(",").map((value) => value.trim());
-					const gradient =
-						type === "linear"
-							? bgCtx.createLinearGradient(0, 0, 0, this.config.height)
-							: bgCtx.createRadialGradient(
-									this.config.width / 2,
-									this.config.height / 2,
-									0,
-									this.config.width / 2,
-									this.config.height / 2,
-									Math.max(this.config.width, this.config.height) / 2,
-								);
-
-					parts.forEach((part, index) => {
-						if (type === "linear" && (part.startsWith("to ") || part.includes("deg"))) {
-							return;
-						}
-
-						const colorMatch = part.match(/^(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|[a-z]+)/);
-						if (!colorMatch) {
-							return;
-						}
-
-						const position = index / Math.max(parts.length - 1, 1);
-						gradient.addColorStop(position, colorMatch[1]);
-					});
-
-					bgCtx.fillStyle = gradient;
 					bgCtx.fillRect(0, 0, this.config.width, this.config.height);
 				}
 			} else {
@@ -1285,8 +1258,9 @@ export class FrameRenderer {
 				bgCtx.fillRect(0, 0, this.config.width, this.config.height);
 			}
 
+			// Blurring a smooth gradient changes nothing visible but would wash out its dither.
 			const blurredCanvas =
-				this.config.backgroundBlur > 0
+				this.config.backgroundBlur > 0 && !isCssGradient
 					? this.createPreblurredBackgroundCanvas(bgCanvas)
 					: null;
 			const backgroundSource = blurredCanvas ?? bgCanvas;
@@ -3122,6 +3096,13 @@ export class FrameRenderer {
 			motionBlurState: this.motionBlurState,
 			frameTimeMs: timeMs,
 		});
+		this.syncLoupe ??= createGlassLoupe(this.cameraContainer);
+		this.syncLoupe(
+			this.loupeTarget,
+			layoutCache.stageSize,
+			layoutCache.maskRect,
+			this.cursorOverlay,
+		);
 
 		this.updateAnnotationLayer(timeMs);
 		this.updateCaptionLayer(timestamp / 1000);
@@ -3310,6 +3291,7 @@ export class FrameRenderer {
 					}
 				: null,
 		});
+		this.loupeTarget = target.loupe;
 
 		const state = this.animationState;
 		const previousScale = state.appliedScale;

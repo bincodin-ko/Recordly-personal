@@ -180,6 +180,19 @@ export function useZoomRegionCommands({
 		},
 		[selectedZoomId, setZoomRegions],
 	);
+	const handleZoomLoupeChange = useCallback(
+		(loupe: boolean) => {
+			if (!selectedZoomId) return;
+			setZoomRegions((current) =>
+				current.map((region) =>
+					region.id === selectedZoomId
+						? { ...region, loupe: loupe || undefined }
+						: region,
+				),
+			);
+		},
+		[selectedZoomId, setZoomRegions],
+	);
 	const handleZoomDelete = useCallback(
 		(id: string) => {
 			setZoomRegions((current) => current.filter((region) => region.id !== id));
@@ -197,6 +210,7 @@ export function useZoomRegionCommands({
 		handleZoomDepthChange,
 		handleZoomModeChange,
 		handleZoomInstantChange,
+		handleZoomLoupeChange,
 		handleZoomDelete,
 	};
 }

@@ -415,6 +415,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 								? region.mode
 								: undefined,
 						instant: region.instant === true ? true : undefined,
+						loupe: region.loupe === true ? true : undefined,
 					};
 				})
 		: [];

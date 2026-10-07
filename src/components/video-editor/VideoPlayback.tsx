@@ -124,6 +124,7 @@ import {
 } from "./videoPlayback/motionSmoothing";
 import { updateOverlayIndicator } from "./videoPlayback/overlayUtils";
 import { supportsPreviewPlaybackRate } from "./videoPlayback/playbackRate";
+import { createGlassLoupe } from "@/lib/glassLoupe";
 import { createVideoSharpener } from "@/lib/videoSharpenFilter";
 import {
 	type ColorGradingSettings,
@@ -2184,6 +2185,9 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				}
 			};
 
+			const loupeTarget = cameraContainerRef.current;
+			if (!loupeTarget) return;
+			const syncLoupe = createGlassLoupe(loupeTarget);
 			const ticker = () => {
 				if (suspendRenderingRef.current) {
 					return;
@@ -2316,6 +2320,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 						isSeekingRef.current || shouldSnapPausedFrameRef.current,
 					);
 				}
+				syncLoupe(target.loupe, stageSizeRef.current, baseMaskRef.current, cursorOverlay);
 				drawPreviewShortcut(timeMs);
 				playPreviewClickSounds(timeMs);
 

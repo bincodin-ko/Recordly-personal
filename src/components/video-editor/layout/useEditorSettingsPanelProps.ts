@@ -97,6 +97,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 			timeline.selectedZoomId && zoomCommands.handleZoomModeChange(mode),
 		selectedZoomInstant: selectedZoom?.instant ?? false,
 		onZoomInstantChange: zoomCommands.handleZoomInstantChange,
+		selectedZoomLoupe: selectedZoom?.loupe ?? false,
+		onZoomLoupeChange: zoomCommands.handleZoomLoupeChange,
 		onZoomDelete: zoomCommands.handleZoomDelete,
 		selectedClipId: timeline.selectedClipId,
 		selectedClipSpeed: selectedClip?.speed ?? (timeline.selectedClipId ? 1 : null),
