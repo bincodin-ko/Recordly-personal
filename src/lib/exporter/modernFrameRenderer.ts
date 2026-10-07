@@ -60,6 +60,12 @@ import {
 } from "@/components/video-editor/videoPlayback/motionSmoothing";
 import { getSceneEffectMetrics } from "@/components/video-editor/videoPlayback/sceneEffects";
 import { resolveSceneZoomTarget } from "@/components/video-editor/videoPlayback/sceneMotion";
+import {
+	CameraEffectsProcessor,
+	hasTransparentCameraBackground,
+	isCameraEffectsActive,
+	loadCameraAi,
+} from "@/components/video-editor/cameraEffects";
 import { getWebcamMediaTargetTimeSeconds, isWebcamVisibleAtSourceTime } from "@/components/video-editor/videoPlayback/webcamSync";
 import {
 	applyZoomTransform,
@@ -413,6 +419,7 @@ export class FrameRenderer {
 	private webcamVideoElement: HTMLVideoElement | null = null;
 	private webcamSeekPromise: Promise<void> | null = null;
 	private webcamFrameCacheCanvas: HTMLCanvasElement | null = null;
+	private cameraEffects: CameraEffectsProcessor | null = null;
 	private webcamFrameCacheCtx: CanvasRenderingContext2D | null = null;
 	private sceneVideoFrameStagingCanvas: HTMLCanvasElement | null = null;
 	private sceneVideoFrameStagingCtx: CanvasRenderingContext2D | null = null;
@@ -2305,6 +2312,7 @@ export class FrameRenderer {
 		this.lastSyncedWebcamTime = null;
 
 		if (!this.config.webcam?.enabled || !webcamUrl) return;
+		if (isCameraEffectsActive(this.config.webcam)) await loadCameraAi();
 
 		try {
 			const frameSource = new ForwardFrameSource();
@@ -2401,6 +2409,29 @@ export class FrameRenderer {
 		width: number,
 		height: number,
 	): boolean {
+		const webcam = this.config.webcam;
+		if (webcam && isCameraEffectsActive(webcam)) {
+			if (!this.webcamFrameCacheCanvas && !this.ensureWebcamFrameCache(1, 1)) return false;
+			this.cameraEffects ??= new CameraEffectsProcessor();
+			const widthPercent = webcam.width ?? webcam.size ?? 50;
+			const heightPercent = getCropMatchedWebcamHeightPercent(
+				widthPercent,
+				webcam.height ?? webcam.size ?? 50,
+				width,
+				height,
+				webcam.cropRegion,
+			);
+			this.cameraEffects.render(
+				this.webcamFrameCacheCanvas as HTMLCanvasElement,
+				source as CanvasImageSource,
+				width,
+				height,
+				webcam,
+				widthPercent / heightPercent,
+				this.currentVideoTime,
+			);
+			return true;
+		}
 		const sourceRect = getWebcamCropSourceRect(this.config.webcam?.cropRegion, width, height);
 		if (!this.ensureWebcamFrameCache(sourceRect.sw, sourceRect.sh)) {
 			return false;
@@ -2457,6 +2488,7 @@ export class FrameRenderer {
 			const usesDefaultCropRegion = isWebcamCropRegionDefault(this.config.webcam?.cropRegion);
 			const needsCacheBackedSource =
 				!usesDefaultCropRegion ||
+				isCameraEffectsActive(this.config.webcam) ||
 				(typeof HTMLVideoElement !== "undefined" && liveSource instanceof HTMLVideoElement);
 
 			if (needsCacheBackedSource) {
@@ -2850,7 +2882,9 @@ export class FrameRenderer {
 			dimensions.width,
 			dimensions.height,
 		);
-		const shadowStrength = getWebcamShadowStrength(webcam.shadow ?? 0);
+		const shadowStrength = hasTransparentCameraBackground(webcam)
+			? 0
+			: getWebcamShadowStrength(webcam.shadow ?? 0);
 
 		this.webcamRootContainer.visible = true;
 

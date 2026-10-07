@@ -1058,6 +1058,17 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 			margin: isFiniteNumber(webcam.margin)
 				? clamp(webcam.margin, 0, 96)
 				: DEFAULT_WEBCAM_MARGIN,
+			backgroundRemoval: webcam.backgroundRemoval === true,
+			backgroundStyle:
+				webcam.backgroundStyle === "blur" || webcam.backgroundStyle === "color"
+					? webcam.backgroundStyle
+					: "transparent",
+			backgroundColor:
+				typeof webcam.backgroundColor === "string" &&
+				/^#[0-9a-f]{3,8}$/i.test(webcam.backgroundColor)
+					? webcam.backgroundColor
+					: DEFAULT_WEBCAM_OVERLAY.backgroundColor,
+			faceTracking: webcam.faceTracking === true,
 		},
 		sourceAudioTrackSettingsByClip:
 			editor.sourceAudioTrackSettingsByClip &&

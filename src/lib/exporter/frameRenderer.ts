@@ -46,6 +46,12 @@ import {
 } from "@/components/video-editor/videoPlayback/motionSmoothing";
 import { getSceneEffectMetrics } from "@/components/video-editor/videoPlayback/sceneEffects";
 import { resolveSceneZoomTarget } from "@/components/video-editor/videoPlayback/sceneMotion";
+import {
+	CameraEffectsProcessor,
+	hasTransparentCameraBackground,
+	isCameraEffectsActive,
+	loadCameraAi,
+} from "@/components/video-editor/cameraEffects";
 import { getWebcamMediaTargetTimeSeconds, isWebcamVisibleAtSourceTime } from "@/components/video-editor/videoPlayback/webcamSync";
 import {
 	applyZoomTransform,
@@ -268,6 +274,8 @@ export class FrameRenderer {
 	private webcamVideoElement: HTMLVideoElement | null = null;
 	private webcamSeekPromise: Promise<void> | null = null;
 	private webcamFrameCacheCanvas: HTMLCanvasElement | null = null;
+	private cameraEffects: CameraEffectsProcessor | null = null;
+	private cameraEffectsCanvas: HTMLCanvasElement | null = null;
 	private webcamFrameCacheCtx: CanvasRenderingContext2D | null = null;
 	private webcamBubbleCanvas: HTMLCanvasElement | null = null;
 	private webcamBubbleCtx: CanvasRenderingContext2D | null = null;
@@ -443,6 +451,9 @@ export class FrameRenderer {
 		// Setup background (render separately, not in PixiJS)
 		await this.setupBackground();
 		await this.setupWebcamSource();
+		if (this.config.webcam?.enabled && isCameraEffectsActive(this.config.webcam)) {
+			await loadCameraAi();
+		}
 
 		if ((this.config.zoomMotionBlur ?? 0) > 0) {
 			this.zoomBlurFilter = new ZoomBlurFilter({ strength: 0, maxKernelSize: 13 });
@@ -1922,11 +1933,30 @@ export class FrameRenderer {
 		bubbleCtx.clearRect(0, 0, bubbleCanvas.width, bubbleCanvas.height);
 		bubbleCtx.imageSmoothingEnabled = true;
 		bubbleCtx.imageSmoothingQuality = "high";
-		const { sx, sy, sw, sh } = getWebcamCropSourceRect(
+		let drawSource: CanvasImageSource = webcamFrameSource;
+		let { sx, sy, sw, sh } = getWebcamCropSourceRect(
 			webcam.cropRegion,
 			sourceWidth,
 			sourceHeight,
 		);
+		if (isCameraEffectsActive(webcam)) {
+			this.cameraEffects ??= new CameraEffectsProcessor();
+			this.cameraEffectsCanvas ??= document.createElement("canvas");
+			this.cameraEffects.render(
+				this.cameraEffectsCanvas,
+				webcamFrameSource,
+				sourceWidth,
+				sourceHeight,
+				webcam,
+				dimensions.width / dimensions.height,
+				this.currentVideoTime,
+			);
+			drawSource = this.cameraEffectsCanvas;
+			sx = 0;
+			sy = 0;
+			sw = this.cameraEffectsCanvas.width;
+			sh = this.cameraEffectsCanvas.height;
+		}
 		const coverScale = Math.max(dimensions.width / sw, dimensions.height / sh);
 		const drawWidth = sw * coverScale;
 		const drawHeight = sh * coverScale;
@@ -1947,7 +1977,7 @@ export class FrameRenderer {
 			bubbleCtx.translate(dimensions.width, 0);
 			bubbleCtx.scale(-1, 1);
 			bubbleCtx.drawImage(
-				webcamFrameSource,
+				drawSource,
 				sx,
 				sy,
 				sw,
@@ -1960,7 +1990,7 @@ export class FrameRenderer {
 			bubbleCtx.restore();
 		} else {
 			bubbleCtx.drawImage(
-				webcamFrameSource,
+				drawSource,
 				sx,
 				sy,
 				sw,
@@ -1973,7 +2003,7 @@ export class FrameRenderer {
 		}
 		bubbleCtx.restore();
 
-		if ((webcam.shadow ?? 0) > 0) {
+		if ((webcam.shadow ?? 0) > 0 && !hasTransparentCameraBackground(webcam)) {
 			const shadowSize = Math.min(dimensions.width, dimensions.height);
 			ctx.save();
 			ctx.filter = getWebcamShadowFilter(shadowSize, webcam.shadow);

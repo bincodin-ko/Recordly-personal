@@ -156,7 +156,15 @@ export interface WebcamOverlaySettings {
 	cornerRadius?: number;
 	shadow: number;
 	margin: number;
+	/** Remove the camera background (person kept) — Screen Studio's camera cutout. */
+	backgroundRemoval?: boolean;
+	backgroundStyle?: WebcamBackgroundStyle;
+	backgroundColor?: string;
+	/** Keep the face centred in the camera crop. */
+	faceTracking?: boolean;
 }
+
+export type WebcamBackgroundStyle = "transparent" | "blur" | "color";
 
 export const DEFAULT_CURSOR_SIZE = 3.0;
 export const DEFAULT_CURSOR_SMOOTHING = 0.67;
@@ -220,6 +228,10 @@ export const DEFAULT_WEBCAM_OVERLAY: WebcamOverlaySettings = {
 	roundness: DEFAULT_WEBCAM_ROUNDNESS,
 	shadow: DEFAULT_WEBCAM_SHADOW,
 	margin: DEFAULT_WEBCAM_MARGIN,
+	backgroundRemoval: false,
+	backgroundStyle: "transparent",
+	backgroundColor: "#FFFFFF",
+	faceTracking: false,
 };
 
 export interface TrimRegion {

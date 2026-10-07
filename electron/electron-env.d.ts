@@ -718,6 +718,11 @@ interface Window {
 			canceled?: boolean;
 			error?: string;
 		}>;
+		loadCameraAiRuntime: () => Promise<{
+			success: boolean;
+			files?: Record<"bundle" | "loader" | "wasm" | "segmenter" | "face", Uint8Array>;
+			error?: string;
+		}>;
 		getWhisperSmallModelStatus: () => Promise<{
 			success: boolean;
 			exists: boolean;

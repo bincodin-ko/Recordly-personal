@@ -12,7 +12,8 @@ import { ProgressBar } from "@heroui/react";
 import { ColorControl, ColorPalette } from "@/components/ui/color-picker";
 import { Palette, Trash as Trash2, UploadSimple as Upload } from "@/components/ui/icons";
 import { AnimatePresence, motion } from "motion/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { getCameraAiStatus, subscribeCameraAiStatus } from "./cameraEffects";
 import { toast } from "@/components/ui/toast";
 import minimalCursorUrl from "@/assets/cursors/custom/minimal-cursor.svg";
 import { Button } from "@/components/ui/button";
@@ -69,6 +70,7 @@ import type {
 	Padding,
 	WebcamOverlaySettings,
 	WebcamPositionPreset,
+	WebcamBackgroundStyle,
 	ZoomDepth,
 	ZoomMode,
 	ZoomTransitionEasing,
@@ -1544,6 +1546,7 @@ export function SettingsPanel({
 		removeBackgroundStateRef.current = null;
 	};
 
+	const cameraAiStatus = useSyncExternalStore(subscribeCameraAiStatus, getCameraAiStatus);
 	const resetWebcamSection = () => {
 		if (!onWebcamChange) return;
 		onWebcamChange({ ...defaultWebcam });
@@ -3305,6 +3308,85 @@ export function SettingsPanel({
 									onCheckedChange={(enabled) => updateWebcam({ enabled })}
 								/>
 							</div>
+							<div className="flex items-center justify-between py-2">
+								<span className="text-xs text-muted-foreground">
+									{tSettings("effects.webcamRemoveBackground", "Remove background")}
+								</span>
+								<Switch
+									aria-label={tSettings(
+										"effects.webcamRemoveBackground",
+										"Remove background",
+									)}
+									checked={webcam?.backgroundRemoval ?? false}
+									onCheckedChange={(backgroundRemoval) =>
+										updateWebcam({ backgroundRemoval })
+									}
+								/>
+							</div>
+							{webcam?.backgroundRemoval ? (
+								<div className="flex flex-col gap-2">
+									<ChoiceGroup
+										aria-label={tSettings(
+											"effects.webcamBackgroundStyle",
+											"Background",
+										)}
+										value={webcam.backgroundStyle ?? "transparent"}
+										onValueChange={(value) =>
+											updateWebcam({
+												backgroundStyle: value as WebcamBackgroundStyle,
+											})
+										}
+										className="grid grid-cols-3 gap-2"
+									>
+										<ChoiceItem value="transparent" textValue="transparent">
+											{tSettings("effects.webcamBackgroundNone", "None")}
+										</ChoiceItem>
+										<ChoiceItem value="blur" textValue="blur">
+											{tSettings("effects.webcamBackgroundBlur", "Blur")}
+										</ChoiceItem>
+										<ChoiceItem value="color" textValue="color">
+											{tSettings("effects.webcamBackgroundColor", "Color")}
+										</ChoiceItem>
+									</ChoiceGroup>
+									{webcam.backgroundStyle === "color" ? (
+										<ColorControl
+											compact
+											label={tSettings(
+												"effects.webcamBackgroundColor",
+												"Color",
+											)}
+											value={webcam.backgroundColor ?? "#FFFFFF"}
+											onChange={(backgroundColor) =>
+												updateWebcam({ backgroundColor })
+											}
+										/>
+									) : null}
+								</div>
+							) : null}
+							<div className="flex items-center justify-between py-2">
+								<span className="text-xs text-muted-foreground">
+									{tSettings("effects.webcamFaceTracking", "Face tracking")}
+								</span>
+								<Switch
+									aria-label={tSettings("effects.webcamFaceTracking", "Face tracking")}
+									checked={webcam?.faceTracking ?? false}
+									onCheckedChange={(faceTracking) => updateWebcam({ faceTracking })}
+								/>
+							</div>
+							{(webcam?.backgroundRemoval || webcam?.faceTracking) &&
+							(cameraAiStatus === "loading" || cameraAiStatus === "error") ? (
+								<p className="text-xs text-muted-foreground/70">
+									{cameraAiStatus === "loading"
+										? tSettings(
+												"effects.cameraAiLoading",
+												"Preparing camera AI (one-time download, about 14 MB)…",
+											)
+										: tSettings(
+												"effects.cameraAiFailed",
+												"Couldn't load camera AI. Check your internet connection and try again.",
+											)}
+								</p>
+							) : null}
 							{advanced && (
 								<>
 									<div className="flex items-center justify-between py-2">

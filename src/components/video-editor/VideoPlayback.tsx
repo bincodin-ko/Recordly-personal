@@ -155,6 +155,8 @@ import {
 	getWebcamOverlayPosition,
 	scaleWebcamOverlayPixels,
 } from "./webcamOverlay";
+import { hasTransparentCameraBackground, isCameraEffectsActive } from "./cameraEffects";
+import { WebcamEffectsCanvas } from "./WebcamEffectsCanvas";
 
 type PlaybackAnimationState = {
 	scale: number;
@@ -924,7 +926,9 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 					radius: scaledRadius,
 				});
 				const shadowSize = Math.min(scaledDimensions.width, scaledDimensions.height);
-				bubble.style.filter = getWebcamShadowFilter(shadowSize, webcamShadow);
+				bubble.style.filter = hasTransparentCameraBackground(webcam)
+					? "none"
+					: getWebcamShadowFilter(shadowSize, webcamShadow);
 				bubble.style.borderRadius = "0px";
 				bubble.style.boxShadow = "none";
 
@@ -2616,7 +2620,11 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 									>
 										<div
 											className="pointer-events-none absolute"
-											style={webcamCropPreviewContentStyle}
+											style={
+												isCameraEffectsActive(webcam)
+													? { ...webcamCropPreviewContentStyle, opacity: 0 }
+													: webcamCropPreviewContentStyle
+											}
 										>
 											<video
 												ref={webcamVideoRef}
@@ -2632,6 +2640,16 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 												onSeeked={handleWebcamMediaReady}
 											/>
 										</div>
+										{isCameraEffectsActive(webcam) ? (
+											<WebcamEffectsCanvas
+												videoRef={webcamVideoRef}
+												webcam={webcam}
+												targetAspect={
+													Math.max(0.01, webcamWidth) /
+													Math.max(0.01, webcamHeight)
+												}
+											/>
+										) : null}
 									</div>
 								</div>
 							</div>
