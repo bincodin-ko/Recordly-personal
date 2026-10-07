@@ -86,6 +86,7 @@ export function useTimelineEditingController(input: Input) {
 	});
 	const audio = useVideoEditorAudio({
 		currentSourcePath: input.currentSourcePath,
+		audioExtras: input.appearance.audioExtras,
 		selectedClipId: timeline.selectedClipId,
 		clipRegions: timeline.clipRegions,
 		audioRegions: timeline.audioRegions,

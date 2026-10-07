@@ -1,3 +1,8 @@
+import {
+	buildDuckCurve,
+	computeSpeechGate,
+	DUCK_STEP_SEC,
+} from "@/components/video-editor/audio/audioExtras";
 import { SOURCE_AUDIO_NORMALIZE_GAIN } from "@/components/video-editor/audio/audioTypes";
 import type {
 	AudioRegion,
@@ -105,6 +110,7 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 			startDelaySec: number;
 			gain: number;
 		}> = [];
+		let micEntry: { buffer: AudioBuffer; startDelaySec: number } | null = null;
 		const refDuration =
 			mainBuffer?.duration ??
 			(resolvedPlan.playbackPaths.length > 0 ? await this.getMediaDurationSec(videoUrl) : 0);
@@ -113,7 +119,7 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 			const buffer = await this.decodeAudioFromUrl(audioPath);
 			if (!buffer) continue;
 
-			companionEntries.push({
+			const entry = {
 				buffer,
 				gain: resolveSourceTrackGain(
 					sourceAudioTrackSettings,
@@ -124,7 +130,9 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 					buffer.duration,
 					sourceAudioFallbackStartDelayMsByPath?.[audioPath],
 				),
-			});
+			};
+			companionEntries.push(entry);
+			if (getSourceTrackIdFromPath(audioPath) === "mic") micEntry = entry;
 		}
 		if (this.cancelled) throw new Error("Export cancelled");
 
@@ -198,7 +206,28 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 				endSec: Math.max(0, clip.endMs / 1000),
 			}));
 
+		// Auto-ducking listens to the mic track; without one, to the recording's own audio.
+		let duckCurve: Float32Array | null = null;
+		if (regionEntries.some(({ region }) => region.duckUnderSpeech)) {
+			const speech =
+				micEntry ??
+				(mainBufferEntry ? { buffer: mainBufferEntry.buffer, startDelaySec: 0 } : null) ??
+				companionEntries[0] ??
+				null;
+			const gate = speech
+				? computeSpeechGate(
+						Array.from({ length: speech.buffer.numberOfChannels }, (_, ch) =>
+							speech.buffer.getChannelData(ch),
+						),
+						speech.buffer.sampleRate,
+						speech.startDelaySec,
+					)
+				: null;
+			duckCurve = buildDuckCurve(gate, slices, outputDurationMs);
+		}
+
 		return {
+			duckCurve,
 			usesClipTimeline: clipRegions !== undefined,
 			mainBufferEntry,
 			companionEntries,
@@ -366,6 +395,7 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 					outputOffsetSec,
 					chunkSec,
 					prepared.usesClipTimeline,
+					prepared.duckCurve,
 				);
 			}
 
@@ -389,6 +419,7 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 		chunkOutputStartSec: number,
 		chunkDurationSec: number,
 		usesClipTimeline = false,
+		duckCurve: Float32Array | null = null,
 	): void {
 		const outputStartMs = usesClipTimeline
 			? region.startMs
@@ -413,18 +444,42 @@ export class OfflineAudioProcessor extends AudioMediaProcessor {
 			localEndSec = chunkDurationSec;
 		}
 
-		const duration = Math.min(localEndSec - localStartSec, buffer.duration - bufferOffsetSec);
+		const duration = region.loop
+			? localEndSec - localStartSec
+			: Math.min(localEndSec - localStartSec, buffer.duration - bufferOffsetSec);
 		if (duration <= 0.001) return;
 
 		const gainNode = ctx.createGain();
 		const normalizeGain = region.normalize ? SOURCE_AUDIO_NORMALIZE_GAIN : 1;
-		gainNode.gain.value = Math.max(0, Math.min(1, region.volume * normalizeGain));
+		const level = Math.max(0, Math.min(1, region.volume * normalizeGain));
+		gainNode.gain.value = level;
+		if (region.duckUnderSpeech && duckCurve) {
+			const outputStartSec = chunkOutputStartSec + localStartSec;
+			const from = Math.floor(outputStartSec / DUCK_STEP_SEC);
+			const to = Math.min(
+				duckCurve.length,
+				Math.ceil((outputStartSec + duration) / DUCK_STEP_SEC) + 1,
+			);
+			const values = duckCurve.slice(from, Math.max(from + 2, to)).map((v) => v * level);
+			if (values.length >= 2) {
+				gainNode.gain.setValueCurveAtTime(
+					values,
+					localStartSec,
+					(values.length - 1) * DUCK_STEP_SEC,
+				);
+			}
+		}
 		gainNode.connect(ctx.destination);
 
 		const source = ctx.createBufferSource();
 		source.buffer = buffer;
+		source.loop = Boolean(region.loop);
 		source.connect(gainNode);
-		source.start(localStartSec, bufferOffsetSec, duration);
+		source.start(
+			localStartSec,
+			region.loop ? bufferOffsetSec % buffer.duration : bufferOffsetSec,
+			duration,
+		);
 	}
 
 	// Feed a rendered AudioBuffer chunk to an AudioEncoder with a timestamp offset.

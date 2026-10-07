@@ -53,6 +53,12 @@ import { loadEditorPreferences, saveEditorPreferences } from "./editorPreference
 import { getDefaultBorderRadiusPercent } from "./projectPersistence";
 import { SliderControl } from "./SliderControl";
 import { ColorLookControl } from "./ColorLookControl";
+import {
+	type AudioExtrasSettings,
+	BUILTIN_MUSIC_TRACKS,
+	DEFAULT_AUDIO_EXTRAS,
+	type MicAudioMode,
+} from "./audio/audioExtras";
 import { type ColorGradingSettings, DEFAULT_COLOR_GRADING } from "@/lib/colorGrading";
 import { WallpaperGrid } from "./WallpaperGrid";
 import { useShortcuts } from "@/contexts/ShortcutsContext";
@@ -537,6 +543,9 @@ interface SettingsPanelProps {
 	cursorExtras?: CursorExtrasSettings;
 	onCursorExtrasChange?: (patch: Partial<CursorExtrasSettings>) => void;
 	colorGrading?: ColorGradingSettings;
+	audioExtras?: AudioExtrasSettings;
+	onAudioExtrasChange?: (next: AudioExtrasSettings) => void;
+	micEnhanceStatus?: "off" | "processing" | "ready" | "error" | "no-mic";
 	onColorGradingChange?: (next: ColorGradingSettings) => void;
 	hasRecordedShortcuts?: boolean;
 	onCursorSwayChange?: (amount: number) => void;
@@ -1001,6 +1010,9 @@ export function SettingsPanel({
 	cursorExtras = DEFAULT_CURSOR_EXTRAS,
 	onCursorExtrasChange,
 	colorGrading = DEFAULT_COLOR_GRADING,
+	audioExtras = DEFAULT_AUDIO_EXTRAS,
+	onAudioExtrasChange,
+	micEnhanceStatus = "off",
 	onColorGradingChange,
 	hasRecordedShortcuts = false,
 	onCursorSwayChange,
@@ -2792,7 +2804,121 @@ export function SettingsPanel({
 			</section>
 		);
 
-		const audioSectionContent = (
+		const setMusic = (patch: Partial<AudioExtrasSettings["music"]>) =>
+			onAudioExtrasChange?.({ ...audioExtras, music: { ...audioExtras.music, ...patch } });
+		const customMusicPath =
+			audioExtras.music.path && !audioExtras.music.path.startsWith("/music/")
+				? audioExtras.music.path
+				: null;
+		const micModeHint: Record<MicAudioMode, string> = {
+			standard: tSettings("audio.micModeStandardHint", "Original microphone sound."),
+			"noise-reduction": tSettings(
+				"audio.micModeNoiseReductionHint",
+				"Removes keyboard, fan and room noise.",
+			),
+			podcast: tSettings(
+				"audio.micModePodcastHint",
+				"Noise reduction plus EQ, compression and loudness leveling, for talks and tutorials.",
+			),
+		};
+		const projectAudioContent = (
+			<section className="flex flex-col gap-3">
+				<SectionLabel>{tSettings("audio.microphone", "Microphone")}</SectionLabel>
+				<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+					<span>{tSettings("audio.micMode", "Microphone audio mode")}</span>
+					<Select
+						value={audioExtras.micMode}
+						onValueChange={(value) =>
+							onAudioExtrasChange?.({ ...audioExtras, micMode: value as MicAudioMode })
+						}
+					>
+						<SelectTrigger
+							className="h-8 w-[140px] text-xs"
+							aria-label={tSettings("audio.micMode", "Microphone audio mode")}
+						>
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="standard">{tSettings("audio.micModeStandard", "Standard")}</SelectItem>
+							<SelectItem value="noise-reduction">
+								{tSettings("audio.micModeNoiseReduction", "Noise reduction")}
+							</SelectItem>
+							<SelectItem value="podcast">{tSettings("audio.micModePodcast", "Podcast")}</SelectItem>
+						</SelectContent>
+					</Select>
+				</label>
+				<p className="text-xs text-muted-foreground" role="status">
+					{micEnhanceStatus === "processing"
+						? tSettings("audio.micModeProcessing", "Processing microphone audio…")
+						: micEnhanceStatus === "no-mic"
+							? tSettings("audio.micModeNoMic", "This recording has no separate microphone track.")
+							: micEnhanceStatus === "error"
+								? tSettings("audio.micModeError", "Couldn't process the microphone audio. Using the original.")
+								: micModeHint[audioExtras.micMode]}
+				</p>
+
+				<SectionLabel>{tSettings("audio.backgroundMusic", "Background audio")}</SectionLabel>
+				<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+					<span>{tSettings("audio.track", "Track")}</span>
+					<Select
+						value={audioExtras.music.path ?? "none"}
+						onValueChange={(value) => {
+							if (value === "upload") {
+								void window.electronAPI.openAudioFilePicker().then((result) => {
+									if (result.success && result.path) setMusic({ path: result.path });
+								});
+								return;
+							}
+							setMusic({ path: value === "none" ? null : value });
+						}}
+					>
+						<SelectTrigger
+							className="h-8 w-[160px] text-xs"
+							aria-label={tSettings("audio.backgroundMusic", "Background audio")}
+						>
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="none">{tSettings("audio.musicNone", "None")}</SelectItem>
+							{BUILTIN_MUSIC_TRACKS.map((track) => (
+								<SelectItem key={track.id} value={track.path}>
+									{track.label}
+								</SelectItem>
+							))}
+							{customMusicPath && (
+								<SelectItem value={customMusicPath}>
+									{customMusicPath.split(/[\\/]/).pop()}
+								</SelectItem>
+							)}
+							<SelectItem value="upload">{tSettings("audio.musicUpload", "Upload MP3/MP4…")}</SelectItem>
+						</SelectContent>
+					</Select>
+				</label>
+				{audioExtras.music.path && (
+					<>
+						<SliderControl
+							label={tSettings("audio.musicVolume", "Music volume")}
+							value={audioExtras.music.volume}
+							min={0}
+							max={1}
+							step={0.01}
+							onChange={(volume) => setMusic({ volume })}
+							formatValue={(v) => `${Math.round(v * 100)}%`}
+						/>
+						<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+							<span>{tSettings("audio.musicDucking", "Lower music while speaking")}</span>
+							<Switch
+								aria-label={tSettings("audio.musicDucking", "Lower music while speaking")}
+								checked={audioExtras.music.ducking}
+								onCheckedChange={(ducking) => setMusic({ ducking })}
+							/>
+						</label>
+					</>
+				)}
+			</section>
+		);
+
+		const audioRegionContent = (
 			<section className="flex flex-col gap-3">
 				<div className="flex items-center justify-between gap-3">
 					<SectionLabel>{tSettings("audio.volumeTitle", "Audio")}</SectionLabel>
@@ -2830,6 +2956,7 @@ export function SettingsPanel({
 				</div>
 			</section>
 		);
+		const audioSectionContent = selectedAudioId ? audioRegionContent : projectAudioContent;
 
 		const clipSectionContent = (
 			<section className="flex flex-col gap-3">

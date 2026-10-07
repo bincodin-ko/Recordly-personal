@@ -4,6 +4,7 @@ import { registerAssetHandlers } from "./register/assets";
 import { registerCaptionHandlers } from "./register/captions";
 import { registerCameraAiHandlers } from "./cameraAi";
 import { registerEditorExtrasHandlers } from "./register/editorExtras";
+import { registerMicEnhanceHandlers } from "./register/micEnhance";
 import { registerCloudShareHandlers } from "./register/cloudShare";
 import { registerExportHandlers } from "./register/export";
 import { registerPermissionHandlers } from "./register/permissions";
@@ -73,6 +74,7 @@ export function registerIpcHandlers(
 	registerExportHandlers();
 	registerCaptionHandlers();
 	registerEditorExtrasHandlers();
+	registerMicEnhanceHandlers();
 	registerCameraAiHandlers();
 	registerCloudShareHandlers();
 	registerProjectHandlers();

@@ -705,6 +705,10 @@ interface Window {
 			endMs: number;
 			speed?: number;
 		}) => Promise<{ success: boolean; path?: string; durationMs?: number; error?: string }>;
+		enhanceMicAudio: (request: {
+			path: string;
+			mode: string;
+		}) => Promise<{ success: boolean; path?: string; error?: string }>;
 		openAudioFilePicker: () => Promise<{ success: boolean; path?: string; canceled?: boolean }>;
 		openWhisperExecutablePicker: () => Promise<{
 			success: boolean;

@@ -1,16 +1,19 @@
 import { translate } from "@/contexts/I18nContext";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { MicAudioMode } from "./audioExtras";
 import { toast } from "@/components/ui/toast";
 import { SOURCE_AUDIO_FALLBACK_TOAST_ID } from "@/components/video-editor/audio/audioTypes";
 
 interface UseSourceAudioFallbackParams {
 	currentSourcePath: string | null;
+	micMode?: MicAudioMode;
 	refreshKey?: number;
 	summarizeErrorMessage: (message: string) => string;
 }
 
 export function useSourceAudioFallback({
 	currentSourcePath,
+	micMode = "standard",
 	refreshKey = 0,
 	summarizeErrorMessage,
 }: UseSourceAudioFallbackParams) {
@@ -79,5 +82,71 @@ export function useSourceAudioFallback({
 		};
 	}, [currentSourcePath, refreshKey, summarizeErrorMessage]);
 
-	return { sourceAudioFallbackPaths, sourceAudioFallbackStartDelayMsByPath };
+	// Mic audio mode: swap the mic sidecar for a cleaned copy rendered in the main
+	// process, so preview and export both play the enhanced file.
+	const micPath = sourceAudioFallbackPaths.find((audioPath) => /\.mic\./i.test(audioPath)) ?? null;
+	const [enhanced, setEnhanced] = useState<{ key: string; path: string | null; error?: string }>({
+		key: "",
+		path: null,
+	});
+	const enhanceKey = micPath && micMode !== "standard" ? `${micPath}|${micMode}|${refreshKey}` : "";
+	useEffect(() => {
+		if (!enhanceKey || !micPath) return;
+		let cancelled = false;
+		void window.electronAPI
+			.enhanceMicAudio({ path: micPath, mode: micMode })
+			.then((result) => {
+				if (cancelled) return;
+				setEnhanced({
+					key: enhanceKey,
+					path: result.success ? (result.path ?? null) : null,
+					error: result.success ? undefined : (result.error ?? "failed"),
+				});
+				if (!result.success) {
+					toast.error(
+						translate("settings.audio.micModeFailed", "Couldn't enhance the microphone audio: {{error}}", {
+							error: summarizeErrorMessage(result.error ?? ""),
+						}),
+					);
+				}
+			})
+			.catch((error) => {
+				if (!cancelled) setEnhanced({ key: enhanceKey, path: null, error: String(error) });
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [enhanceKey, micMode, micPath, summarizeErrorMessage]);
+
+	const enhancedPath = enhanceKey && enhanced.key === enhanceKey ? enhanced.path : null;
+	const micEnhanceStatus: "off" | "processing" | "ready" | "error" | "no-mic" =
+		micMode === "standard"
+			? "off"
+			: !micPath
+				? "no-mic"
+				: enhanced.key !== enhanceKey
+					? "processing"
+					: enhancedPath
+						? "ready"
+						: "error";
+
+	const effective = useMemo(() => {
+		if (!micPath || !enhancedPath) {
+			return { paths: sourceAudioFallbackPaths, delays: sourceAudioFallbackStartDelayMsByPath };
+		}
+		const delays = { ...sourceAudioFallbackStartDelayMsByPath };
+		if (micPath in delays) delays[enhancedPath] = delays[micPath];
+		return {
+			paths: sourceAudioFallbackPaths.map((audioPath) =>
+				audioPath === micPath ? enhancedPath : audioPath,
+			),
+			delays,
+		};
+	}, [enhancedPath, micPath, sourceAudioFallbackPaths, sourceAudioFallbackStartDelayMsByPath]);
+
+	return {
+		sourceAudioFallbackPaths: effective.paths,
+		sourceAudioFallbackStartDelayMsByPath: effective.delays,
+		micEnhanceStatus,
+	};
 }

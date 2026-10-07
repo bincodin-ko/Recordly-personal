@@ -1,3 +1,4 @@
+import { buildBackgroundMusicRegions } from "../audio/audioExtras";
 import { buildClickSoundRegions } from "../cursorExtras";
 import { translate } from "@/contexts/I18nContext";
 import { useCallback, useRef } from "react";
@@ -325,6 +326,11 @@ export function useExportRunner(input: ExportRunnerInput) {
 								effectiveCursorTelemetry,
 								clipRegions,
 								appearance.cursorExtras,
+							),
+							...buildBackgroundMusicRegions(
+								appearance.audioExtras,
+								clipRegions,
+								video.duration * 1000,
 							),
 						],
 						clipRegions,

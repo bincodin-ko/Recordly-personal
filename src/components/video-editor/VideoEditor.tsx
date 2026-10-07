@@ -378,6 +378,7 @@ export default function VideoEditor() {
 		setNativeCaptureUnavailableModalOpen,
 		handleUploadWebcam,
 		handleClearWebcam,
+		micEnhanceStatus: audio.micEnhanceStatus,
 	});
 	return (
 		<EditorShell

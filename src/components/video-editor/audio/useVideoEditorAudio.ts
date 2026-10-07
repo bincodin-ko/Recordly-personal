@@ -4,7 +4,9 @@ import { resolveSourceTrackRoutingPolicy } from "@/lib/exporter/sourceTrackRouti
 import type { AudioRegion, ClipRegion } from "../types";
 import { findClipAtTimelineTime, getClipVolume } from "../types";
 import { isClipMutedById } from "./clipAudio";
+import type { AudioExtrasSettings } from "./audioExtras";
 import { useAudioPreviewSync } from "./useAudioPreviewSync";
+import { useBackgroundMusicPreview } from "./useBackgroundMusicPreview";
 import { useClipAudioSettingsController } from "./useClipAudioSettingsController";
 import { useSourceAudioFallback } from "./useSourceAudioFallback";
 
@@ -25,6 +27,7 @@ function extractLocalPathFromMediaServerUrl(input: string | null | undefined): s
 
 interface UseVideoEditorAudioParams {
 	currentSourcePath: string | null;
+	audioExtras: AudioExtrasSettings;
 	selectedClipId: string | null;
 	clipRegions: ClipRegion[];
 	audioRegions: AudioRegion[];
@@ -48,6 +51,7 @@ interface UseVideoEditorAudioParams {
 
 export function useVideoEditorAudio({
 	currentSourcePath,
+	audioExtras,
 	selectedClipId,
 	clipRegions,
 	audioRegions,
@@ -69,9 +73,10 @@ export function useVideoEditorAudio({
 		[currentSourcePath],
 	);
 
-	const { sourceAudioFallbackPaths, sourceAudioFallbackStartDelayMsByPath } =
+	const { sourceAudioFallbackPaths, sourceAudioFallbackStartDelayMsByPath, micEnhanceStatus } =
 		useSourceAudioFallback({
 			currentSourcePath: fallbackLookupSourcePath,
+			micMode: audioExtras.micMode,
 			refreshKey: sourceAudioFallbackRefreshKey,
 			summarizeErrorMessage,
 		});
@@ -141,7 +146,20 @@ export function useVideoEditorAudio({
 		onSourceFallbackLoadError,
 	});
 
+	useBackgroundMusicPreview({
+		music: audioExtras.music,
+		speechSourcePath:
+			sourceAudioFallbackPaths.find((audioPath) => /\.mic\./i.test(audioPath)) ??
+			fallbackLookupSourcePath,
+		clipRegions,
+		duration,
+		timelineTime,
+		isPlaying,
+		previewVolume,
+	});
+
 	return {
+		micEnhanceStatus,
 		sourceAudioFallbackPaths,
 		sourceAudioFallbackStartDelayMsByPath,
 		previewSourceAudioFallbackPaths,

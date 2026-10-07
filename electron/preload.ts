@@ -736,6 +736,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	extractClipAudio: (request: { videoPath: string; startMs: number; endMs: number; speed?: number }) => {
 		return ipcRenderer.invoke("extract-clip-audio", request);
 	},
+	enhanceMicAudio: (request: { path: string; mode: string }) => {
+		return ipcRenderer.invoke("enhance-mic-audio", request);
+	},
 	openAudioFilePicker: () => {
 		return ipcRenderer.invoke("open-audio-file-picker");
 	},

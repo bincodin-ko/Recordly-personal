@@ -86,7 +86,7 @@ export function registerCaptionHandlers() {
 				filters: [
 					{
 						name: "오디오 파일",
-						extensions: ["mp3", "wav", "aac", "m4a", "flac", "ogg"],
+						extensions: ["mp3", "wav", "aac", "m4a", "flac", "ogg", "mp4"],
 					},
 					{ name: "모든 파일", extensions: ["*"] },
 				],

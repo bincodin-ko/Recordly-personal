@@ -560,6 +560,11 @@ export async function loadProjectFromPath(projectPath: string) {
 			}
 		}
 	}
+	const musicPath = (editorObj?.audioExtras as { music?: { path?: unknown } } | undefined)?.music
+		?.path;
+	if (typeof musicPath === "string" && !musicPath.startsWith("/music/")) {
+		approvedProjectPaths.push(musicPath);
+	}
 	await replaceApprovedSessionLocalReadPaths(approvedProjectPaths);
 	await rememberRecentProject(normalizedPath);
 
