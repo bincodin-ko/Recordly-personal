@@ -625,6 +625,10 @@ export interface AudioRegion {
 	volume: number;
 	normalize?: boolean;
 	trackIndex?: number;
+	/** Background music: repeat the file until endMs. */
+	loop?: boolean;
+	/** Background music: lower the level while someone is speaking. */
+	duckUnderSpeech?: boolean;
 }
 
 export interface CaptionCue {

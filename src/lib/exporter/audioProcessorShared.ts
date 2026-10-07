@@ -126,6 +126,8 @@ export interface PreparedOfflineRender {
 	slices: TimelineSlice[];
 	outputDurationMs: number;
 	numChannels: number;
+	/** Background-music gain per DUCK_STEP_SEC of output time (auto-ducking). */
+	duckCurve?: Float32Array | null;
 }
 
 export async function isAacAudioEncodingSupported(

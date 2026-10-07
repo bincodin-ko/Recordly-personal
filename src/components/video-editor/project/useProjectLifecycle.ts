@@ -10,6 +10,7 @@ import {
 } from "react";
 import { toast } from "@/components/ui/toast";
 import { DEFAULT_COLOR_GRADING } from "@/lib/colorGrading";
+import { DEFAULT_AUDIO_EXTRAS } from "../audio/audioExtras";
 import type { AspectRatio } from "@/utils/aspectRatioUtils";
 import type { UnsavedChangesDecision } from "../layout/EditorDialogs";
 import {
@@ -169,6 +170,7 @@ export function useProjectLifecycle(input: Input) {
 		appearance.setCursorSway(editor.cursorSway);
 		appearance.setCursorExtras(editor.cursorExtras);
 		appearance.setColorGrading(editor.colorGrading ?? DEFAULT_COLOR_GRADING);
+		appearance.setAudioExtras(editor.audioExtras ?? DEFAULT_AUDIO_EXTRAS);
 		appearance.setBorderRadius(editor.borderRadius);
 		appearance.setPadding(editor.padding);
 		appearance.setCropRegion(editor.cropRegion);

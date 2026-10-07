@@ -1,3 +1,4 @@
+import { buildBackgroundMusicRegions } from "../audio/audioExtras";
 import { buildClickSoundRegions } from "../cursorExtras";
 import { translate } from "@/contexts/I18nContext";
 import { useCallback, useRef } from "react";
@@ -32,6 +33,10 @@ export function useExportRunner(input: ExportRunnerInput) {
 			settings: ExportSettings,
 			options?: { destination?: "download" | "share" },
 		): Promise<string | undefined> => {
+			// Mic audio mode renders a cleaned copy first; export must use it, not the raw mic.
+			for (let i = 0; i < 600 && inputRef.current.audio.micEnhanceStatus === "processing"; i++) {
+				await new Promise((resolve) => setTimeout(resolve, 200));
+			}
 			const {
 				videoPath,
 				videoPlaybackRef,
@@ -325,6 +330,11 @@ export function useExportRunner(input: ExportRunnerInput) {
 								effectiveCursorTelemetry,
 								clipRegions,
 								appearance.cursorExtras,
+							),
+							...buildBackgroundMusicRegions(
+								appearance.audioExtras,
+								clipRegions,
+								video.duration * 1000,
 							),
 						],
 						clipRegions,

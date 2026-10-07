@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { type AudioExtrasSettings, DEFAULT_AUDIO_EXTRAS } from "../audio/audioExtras";
 import { type ColorGradingSettings, DEFAULT_COLOR_GRADING } from "@/lib/colorGrading";
 import { type CursorExtrasSettings, DEFAULT_CURSOR_EXTRAS } from "../cursorExtras";
 import type { EditorPreferences } from "../editorPreferences";
@@ -121,9 +122,12 @@ export function useAppearanceState(preferences: EditorPreferences) {
 		preferences.webcam ?? DEFAULT_WEBCAM_OVERLAY,
 	);
 	const [resolvedWebcamVideoUrl, setResolvedWebcamVideoUrl] = useState<string | null>(null);
+	const [audioExtras, setAudioExtras] = useState<AudioExtrasSettings>(DEFAULT_AUDIO_EXTRAS);
 	const [colorGrading, setColorGrading] = useState<ColorGradingSettings>(DEFAULT_COLOR_GRADING);
 
 	return {
+		audioExtras,
+		setAudioExtras,
 		colorGrading,
 		setColorGrading,
 		wallpaper,

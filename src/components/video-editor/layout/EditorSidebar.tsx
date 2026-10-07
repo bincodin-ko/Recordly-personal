@@ -7,6 +7,7 @@ import {
 	Gear,
 	FrameCorners,
 	MagnifyingGlassPlus,
+	SpeakerHigh,
 } from "@/components/ui/icons";
 import {
 	ToggleButtonGroup,
@@ -67,6 +68,7 @@ export function EditorSidebar({
 			},
 			{ id: "cursor" as const, label: t("settings.sections.cursor", "Cursor"), icon: Cursor },
 			{ id: "webcam" as const, label: t("settings.sections.webcam", "Webcam"), icon: Camera },
+			{ id: "audio" as const, label: t("settings.sections.audio", "Audio"), icon: SpeakerHigh },
 			{
 				id: "captions" as const,
 				label: t("settings.sections.captions", "Captions"),

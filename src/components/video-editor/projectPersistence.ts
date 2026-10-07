@@ -1,3 +1,4 @@
+import { type AudioExtrasSettings, normalizeAudioExtras } from "./audio/audioExtras";
 import { type ColorGradingSettings, normalizeColorGrading } from "@/lib/colorGrading";
 import { type CursorExtrasSettings, normalizeCursorExtras } from "./cursorExtras";
 import { getLocalMediaServerPath } from "@/lib/localMediaUrl";
@@ -126,6 +127,7 @@ export interface ProjectEditorState {
 	cursorSway: number;
 	cursorExtras: CursorExtrasSettings;
 	colorGrading?: ColorGradingSettings;
+	audioExtras?: AudioExtrasSettings;
 	borderRadius: number;
 	padding: Padding;
 	cropRegion: CropRegion;
@@ -915,6 +917,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 			? clamp((editor as Partial<ProjectEditorState>).cursorSway as number, 0, 2)
 			: DEFAULT_CURSOR_SWAY,
 		cursorExtras: normalizeCursorExtras((editor as Partial<ProjectEditorState>).cursorExtras),
+		audioExtras: normalizeAudioExtras((editor as Partial<ProjectEditorState>).audioExtras),
 		colorGrading: normalizeColorGrading((editor as Partial<ProjectEditorState>).colorGrading),
 		borderRadius: isFiniteNumber(editor.borderRadius)
 			? clamp(editor.borderRadius, 0, 50)

@@ -1,3 +1,4 @@
+import type { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
 import type { ComponentProps, Dispatch, SetStateAction } from "react";
 import type { AspectRatio } from "@/utils/aspectRatioUtils";
 import { useClipAudioReset } from "../audio/useClipAudioReset";
@@ -39,6 +40,7 @@ type Input = {
 	setNativeCaptureUnavailableModalOpen: Dispatch<SetStateAction<boolean>>;
 	handleUploadWebcam: () => void;
 	handleClearWebcam: () => void;
+	micEnhanceStatus: ReturnType<typeof useVideoEditorAudio>["micEnhanceStatus"];
 };
 
 export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof SettingsPanel> {
@@ -185,6 +187,9 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		cursorExtras: appearance.cursorExtras,
 		colorGrading: appearance.colorGrading,
 		onColorGradingChange: appearance.setColorGrading,
+		audioExtras: appearance.audioExtras,
+		onAudioExtrasChange: appearance.setAudioExtras,
+		micEnhanceStatus: input.micEnhanceStatus,
 		onCursorExtrasChange: (patch) =>
 			appearance.setCursorExtras((current) => ({ ...current, ...patch })),
 		hasRecordedShortcuts: timeline.keystrokes.length > 0,
