@@ -447,7 +447,11 @@
 		"loadingPreview": "Loading preview",
 		"volume": "Preview volume",
 		"reelMode": "Modo Reel",
-		"reelModeHint": "Prévia em 9:16 com elementos de tela do Instagram/TikTok"
+		"reelModeHint": "Prévia em 9:16 com elementos de tela do Instagram/TikTok",
+		"frameCopied": "Quadro copiado para a área de transferência",
+		"frameCopyFailed": "Não foi possível copiar o quadro",
+		"copyFrame": "Copiar quadro",
+		"copyFrameHint": "Copiar o quadro atual como imagem (Ctrl+C)"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",
@@ -463,7 +467,10 @@
 	"audio": {
 		"companionLoadFailedWith": "Could not load companion audio sources: {{error}}",
 		"companionLoadFailed": "Could not load companion audio sources. Playback and export may miss microphone audio.",
-		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}"
+		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}",
+		"separated": "O áudio original foi separado em uma faixa própria.",
+		"separateFailed": "Não foi possível separar o áudio.",
+		"separateNoAudio": "Este clipe não tem áudio original para separar."
 	},
 	"messages": {
 		"whisperExecutableSelected": "Whisper executable selected",
@@ -520,5 +527,31 @@
 		"short": "Sync",
 		"hint": "+ makes sound later, - makes it earlier.",
 		"reset": "Reset"
+	},
+	"commandMenu": {
+		"placeholder": "Buscar comandos...",
+		"empty": "Nenhum comando encontrado",
+		"hint": "Setas para mover, Enter para executar, Esc para fechar",
+		"title": "Menu de comandos",
+		"addZoom": "Adicionar zoom",
+		"autoZoom": "Criar zooms automaticamente",
+		"splitClip": "Dividir clipe",
+		"addAnnotation": "Adicionar anotação",
+		"addAudio": "Adicionar áudio",
+		"separateAudio": "Separar o áudio do clipe",
+		"copyFrame": "Copiar o quadro atual como imagem",
+		"playPause": "Reproduzir / Pausar",
+		"skipBack": "Ir para o ponto anterior",
+		"skipForward": "Ir para o próximo ponto",
+		"undo": "Desfazer",
+		"redo": "Refazer",
+		"save": "Salvar projeto",
+		"export": "Exportar",
+		"toggleCaptions": "Ativar/desativar legendas",
+		"toggleCursor": "Mostrar/ocultar cursor",
+		"crop": "Cortar",
+		"aspectRatio": "Proporção: {{ratio}}",
+		"openProjects": "Abrir projetos",
+		"goTo": "Abrir {{section}}"
 	}
 }

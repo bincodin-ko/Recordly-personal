@@ -450,6 +450,7 @@ interface SettingsPanelProps {
 	onClipMutedChange?: (muted: boolean) => void;
 	selectedClipHideCursor?: boolean;
 	onClipHideCursorChange?: (hideCursor: boolean) => void;
+	onClipSeparateAudio?: () => void;
 	onClipDelete?: (id: string) => void;
 	selectedAudioId?: string | null;
 	selectedAudioVolume?: number | null;
@@ -919,6 +920,7 @@ export function SettingsPanel({
 	onClipMutedChange,
 	selectedClipHideCursor = false,
 	onClipHideCursorChange,
+	onClipSeparateAudio,
 	onClipDelete,
 	selectedAudioId,
 	selectedAudioVolume,
@@ -2835,6 +2837,16 @@ export function SettingsPanel({
 						aria-label={tSettings("clip.hideCursor", "Hide cursor")}
 					/>
 				</label>
+				{onClipSeparateAudio && (
+					<Button
+						type="button"
+						variant="outline"
+						className="w-full whitespace-nowrap"
+						onClick={onClipSeparateAudio}
+					>
+						{tSettings("clip.separateClipFromAudio", "Separate clip from audio")}
+					</Button>
+				)}
 				{hasClipAudioOverrides && onResetClipAudio && (
 					<Button type="button" variant="ghost" onClick={onResetClipAudio}>
 						{tSettings("clip.resetAudioSettings", "Reset audio settings")}

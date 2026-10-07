@@ -165,7 +165,7 @@ export function AnnotationSettingsPanel({
 							<ChoiceItem
 								value="text"
 								aria-label={t("annotations.text")}
-								className="min-w-0 gap-1 px-1 text-xs"
+								className="h-auto min-w-0 flex-col gap-1 whitespace-nowrap px-1 py-2 text-xs"
 							>
 								<Type className="w-4 h-4" />
 								{t("annotations.text")}
@@ -173,7 +173,7 @@ export function AnnotationSettingsPanel({
 							<ChoiceItem
 								value="image"
 								aria-label={t("annotations.image")}
-								className="min-w-0 gap-1 px-1 text-xs"
+								className="h-auto min-w-0 flex-col gap-1 whitespace-nowrap px-1 py-2 text-xs"
 							>
 								<ImageIcon className="w-4 h-4" />
 								{t("annotations.image")}
@@ -181,7 +181,7 @@ export function AnnotationSettingsPanel({
 							<ChoiceItem
 								value="figure"
 								aria-label={t("annotations.arrow")}
-								className="min-w-0 gap-1 px-1 text-xs"
+								className="h-auto min-w-0 flex-col gap-1 whitespace-nowrap px-1 py-2 text-xs"
 							>
 								<svg
 									className="w-4 h-4"
@@ -201,7 +201,7 @@ export function AnnotationSettingsPanel({
 							<ChoiceItem
 								value="blur"
 								aria-label={t("annotations.blur")}
-								className="min-w-0 gap-1 px-1 text-xs"
+								className="h-auto min-w-0 flex-col gap-1 whitespace-nowrap px-1 py-2 text-xs"
 							>
 								<SquareDashed className="w-4 h-4" />
 								{t("annotations.blur")}
@@ -209,7 +209,7 @@ export function AnnotationSettingsPanel({
 							<ChoiceItem
 								value="highlight"
 								aria-label={t("annotations.highlight")}
-								className="min-w-0 gap-1 px-1 text-xs"
+								className="h-auto min-w-0 flex-col gap-1 whitespace-nowrap px-1 py-2 text-xs"
 							>
 								<SunIcon className="w-4 h-4" />
 								{t("annotations.highlight")}
@@ -748,7 +748,7 @@ export function AnnotationSettingsPanel({
 											key={shape}
 											value={shape}
 											aria-label={t(`annotations.shapes.${shape}`, shape)}
-											className="min-w-0 gap-1 px-1 text-xs"
+											className="h-auto min-w-0 flex-col gap-1 whitespace-nowrap px-1 py-2 text-xs"
 										>
 											<span
 												aria-hidden="true"

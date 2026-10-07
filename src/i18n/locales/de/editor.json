@@ -447,7 +447,11 @@
 		"loadingPreview": "Loading preview",
 		"volume": "Preview volume",
 		"reelMode": "Reel-Modus",
-		"reelModeHint": "Vorschau in 9:16 mit Instagram/TikTok-Bildschirmelementen"
+		"reelModeHint": "Vorschau in 9:16 mit Instagram/TikTok-Bildschirmelementen",
+		"frameCopied": "Bild in die Zwischenablage kopiert",
+		"frameCopyFailed": "Das Bild konnte nicht kopiert werden",
+		"copyFrame": "Bild kopieren",
+		"copyFrameHint": "Aktuelles Bild als Bild kopieren (Strg+C)"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",
@@ -463,7 +467,10 @@
 	"audio": {
 		"companionLoadFailedWith": "Could not load companion audio sources: {{error}}",
 		"companionLoadFailed": "Could not load companion audio sources. Playback and export may miss microphone audio.",
-		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}"
+		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}",
+		"separated": "Originalton wurde in eine eigene Spur getrennt.",
+		"separateFailed": "Das Audio konnte nicht getrennt werden.",
+		"separateNoAudio": "Dieser Clip hat keinen Originalton zum Trennen."
 	},
 	"messages": {
 		"whisperExecutableSelected": "Whisper executable selected",
@@ -520,5 +527,31 @@
 		"short": "Sync",
 		"hint": "+ makes sound later, - makes it earlier.",
 		"reset": "Reset"
+	},
+	"commandMenu": {
+		"placeholder": "Befehle suchen...",
+		"empty": "Keine passenden Befehle",
+		"hint": "Pfeiltasten zum Wählen, Enter zum Ausführen, Esc zum Schließen",
+		"title": "Befehlsmenü",
+		"addZoom": "Zoom hinzufügen",
+		"autoZoom": "Zooms automatisch erstellen",
+		"splitClip": "Clip teilen",
+		"addAnnotation": "Anmerkung hinzufügen",
+		"addAudio": "Audio hinzufügen",
+		"separateAudio": "Audio vom Clip trennen",
+		"copyFrame": "Aktuelles Bild als Bild kopieren",
+		"playPause": "Wiedergabe / Pause",
+		"skipBack": "Zum vorherigen Punkt springen",
+		"skipForward": "Zum nächsten Punkt springen",
+		"undo": "Rückgängig",
+		"redo": "Wiederholen",
+		"save": "Projekt speichern",
+		"export": "Exportieren",
+		"toggleCaptions": "Untertitel ein-/ausschalten",
+		"toggleCursor": "Cursor ein-/ausschalten",
+		"crop": "Zuschneiden",
+		"aspectRatio": "Seitenverhältnis: {{ratio}}",
+		"openProjects": "Projekte öffnen",
+		"goTo": "{{section}} öffnen"
 	}
 }

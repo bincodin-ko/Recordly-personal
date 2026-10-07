@@ -1,4 +1,4 @@
-import { type RefObject, useMemo } from "react";
+import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { buildShortcutBlocks, type CursorExtrasSettings } from "../cursorExtras";
 import type { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
 import { retimeCaptionFragment } from "../captionTimeline";
@@ -32,6 +32,7 @@ type Props = {
 	handleAutoSuggestZoomsConsumed: () => void;
 	disableSuggestedZooms: boolean;
 	currentTime: number;
+	isPlaying: boolean;
 	handleSelectAnnotation: (id: string | null) => void;
 	cursorExtras: CursorExtrasSettings;
 };
@@ -56,9 +57,70 @@ export function EditorTimelinePanel(props: Props) {
 		handleAutoSuggestZoomsConsumed,
 		disableSuggestedZooms,
 		currentTime,
+		isPlaying,
 		handleSelectAnnotation,
 		cursorExtras,
 	} = props;
+
+	// Hover scrub (Screen Studio): the preview shows the moment under the pointer while the
+	// playhead stays put; leaving, or clicking to seek, settles it again.
+	const [frozenPlayhead, setFrozenPlayhead] = useState<number | null>(null);
+	const restoreRef = useRef<number | null>(null);
+	const livePlayheadRef = useRef(projection.timelinePlayheadTime);
+	if (frozenPlayhead === null) livePlayheadRef.current = projection.timelinePlayheadTime;
+	const pendingScrubRef = useRef<number | null>(null);
+	const scrubFrameRef = useRef<number | null>(null);
+	const { handleSeek, handleTimelineSeek } = playback;
+	const handleHoverScrub = useCallback(
+		(timeMs: number | null) => {
+			if (timeMs === null) {
+				pendingScrubRef.current = null;
+				if (restoreRef.current !== null) {
+					const restore = restoreRef.current;
+					restoreRef.current = null;
+					setFrozenPlayhead(null);
+					handleSeek(restore);
+				}
+				return;
+			}
+			if (isPlaying) return;
+			if (restoreRef.current === null) {
+				restoreRef.current = livePlayheadRef.current;
+				setFrozenPlayhead(livePlayheadRef.current);
+			}
+			pendingScrubRef.current = timeMs / 1000;
+			if (scrubFrameRef.current !== null) return;
+			scrubFrameRef.current = requestAnimationFrame(() => {
+				scrubFrameRef.current = null;
+				const target = pendingScrubRef.current;
+				pendingScrubRef.current = null;
+				if (target !== null && restoreRef.current !== null) handleSeek(target);
+			});
+		},
+		[handleSeek, isPlaying],
+	);
+	const handleSeekFromTimeline = useCallback(
+		(time: number) => {
+			restoreRef.current = null;
+			pendingScrubRef.current = null;
+			livePlayheadRef.current = time;
+			setFrozenPlayhead(null);
+			handleTimelineSeek(time);
+		},
+		[handleTimelineSeek],
+	);
+	useEffect(() => {
+		if (isPlaying && restoreRef.current !== null) {
+			restoreRef.current = null;
+			setFrozenPlayhead(null);
+		}
+	}, [isPlaying]);
+	useEffect(
+		() => () => {
+			if (scrubFrameRef.current !== null) cancelAnimationFrame(scrubFrameRef.current);
+		},
+		[],
+	);
 	const shortcutBlocks = useMemo(
 		() =>
 			buildShortcutBlocks(
@@ -82,9 +144,10 @@ export function EditorTimelinePanel(props: Props) {
 			<TimelineEditor
 				ref={timelineRef}
 				videoDuration={projection.timelineDuration}
-				currentTime={currentTime}
-				playheadTime={projection.timelinePlayheadTime}
-				onSeek={playback.handleTimelineSeek}
+				currentTime={frozenPlayhead ?? currentTime}
+				playheadTime={frozenPlayhead ?? projection.timelinePlayheadTime}
+				onSeek={handleSeekFromTimeline}
+				onHoverScrub={handleHoverScrub}
 				videoPath={videoPath}
 				videoSourcePath={videoSourcePath}
 				cursorTelemetrySourcePath={cursorTelemetrySourcePath}

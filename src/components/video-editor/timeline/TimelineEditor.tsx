@@ -37,6 +37,7 @@ export interface TimelineEditorProps {
 	currentTime: number;
 	playheadTime?: number;
 	onSeek?: (time: number) => void;
+	onHoverScrub?: (timeMs: number | null) => void;
 	cursorTelemetry?: CursorTelemetryPoint[];
 	autoSuggestZoomsTrigger?: number;
 	onAutoSuggestZoomsConsumed?: () => void;
@@ -122,6 +123,7 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 			currentTime,
 			playheadTime,
 			onSeek,
+			onHoverScrub,
 			cursorTelemetry = [],
 			autoSuggestZoomsTrigger = 0,
 			onAutoSuggestZoomsConsumed,
@@ -493,6 +495,7 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 							videoDurationMs={totalMs}
 							currentTimeMs={currentTimeMs}
 							onSeek={onSeek}
+							onHoverScrub={onHoverScrub}
 							onAddZoomAtMs={addZoomAtMs}
 							canPlaceZoomAtMs={canPlaceZoomAtMs}
 							onAddCaptionAtMs={addCaptionAtMs}

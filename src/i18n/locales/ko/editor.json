@@ -447,7 +447,11 @@
 		"loadingPreview": "미리보기 불러오는 중",
 		"volume": "미리보기 볼륨",
 		"reelMode": "릴스 모드",
-		"reelModeHint": "인스타그램·틱톡 화면 요소를 덮어 9:16으로 미리 봐요"
+		"reelModeHint": "인스타그램·틱톡 화면 요소를 덮어 9:16으로 미리 봐요",
+		"frameCopied": "프레임을 클립보드에 복사했어요",
+		"frameCopyFailed": "프레임을 복사하지 못했어요",
+		"copyFrame": "프레임 복사",
+		"copyFrameHint": "현재 프레임을 이미지로 복사 (Ctrl+C)"
 	},
 	"extensions": {
 		"unavailableTitle": "확장 기능은 더 이상 제공되지 않아요",
@@ -463,7 +467,10 @@
 	"audio": {
 		"companionLoadFailedWith": "보조 오디오를 불러오지 못했어요: {{error}}",
 		"companionLoadFailed": "보조 오디오를 불러오지 못했어요. 재생과 내보내기에서 마이크 소리가 빠질 수 있어요.",
-		"companionSingleLoadFailedWith": "보조 오디오를 불러오지 못했어요: {{error}}"
+		"companionSingleLoadFailedWith": "보조 오디오를 불러오지 못했어요: {{error}}",
+		"separated": "원본 오디오를 별도 트랙으로 분리했어요",
+		"separateFailed": "오디오를 분리하지 못했어요",
+		"separateNoAudio": "이 클립에는 분리할 원본 오디오가 없어요"
 	},
 	"messages": {
 		"whisperExecutableSelected": "Whisper 실행 파일을 선택했어요",
@@ -520,5 +527,31 @@
 		"short": "싱크",
 		"hint": "+ 는 소리를 늦게, - 는 소리를 빠르게 해요.",
 		"reset": "초기화"
+	},
+	"commandMenu": {
+		"placeholder": "명령 검색… (예: 줌 추가, 내보내기)",
+		"empty": "일치하는 명령이 없어요",
+		"hint": "↑↓ 이동 · Enter 실행 · Esc 닫기",
+		"title": "명령 메뉴",
+		"addZoom": "줌 추가",
+		"autoZoom": "자동 줌 만들기",
+		"splitClip": "클립 나누기",
+		"addAnnotation": "주석 추가",
+		"addAudio": "오디오 추가",
+		"separateAudio": "클립에서 오디오 분리",
+		"copyFrame": "현재 프레임을 이미지로 복사",
+		"playPause": "재생 / 일시정지",
+		"skipBack": "이전 지점으로 이동",
+		"skipForward": "다음 지점으로 이동",
+		"undo": "실행 취소",
+		"redo": "다시 실행",
+		"save": "프로젝트 저장",
+		"export": "내보내기",
+		"toggleCaptions": "자막 켜기/끄기",
+		"toggleCursor": "커서 표시 켜기/끄기",
+		"crop": "화면 자르기",
+		"aspectRatio": "화면 비율: {{ratio}}",
+		"openProjects": "프로젝트 열기",
+		"goTo": "{{section}} 열기"
 	}
 }

@@ -11,6 +11,7 @@ import {
 	Smartphone,
 	UserCircle,
 	Crop,
+	Copy,
 	MagicWand,
 	MagnifyingGlassPlus,
 	Pause,
@@ -51,6 +52,7 @@ import type { useAppearanceState } from "../state/useAppearanceState";
 import type { useTimelineState } from "../state/useTimelineState";
 import type { TimelineEditorHandle } from "../timeline/TimelineEditor";
 import type { VideoPlaybackRef } from "../VideoPlayback";
+import { copyPreviewFrame } from "../copyFrame";
 import { EditorVideoPreview } from "./EditorVideoPreview";
 
 type Props = {
@@ -247,6 +249,18 @@ export function EditorPreviewPanel(props: Props) {
 							{isCropped ? (
 								<span className="h-1.5 w-1.5 rounded-full bg-[#2563EB]" />
 							) : null}
+						</Button>
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={() => void copyPreviewFrame(videoPlaybackRef.current?.containerRef.current)}
+							title={t("editor.preview.copyFrameHint", "Copy the current frame as an image (Ctrl+C)")}
+							className="h-7 gap-1.5 px-2 text-xs"
+						>
+							<Copy className="h-3.5 w-3.5" />
+							<span className="font-medium">
+								{t("editor.preview.copyFrame", "Copy frame")}
+							</span>
 						</Button>
 					</div>
 					<div

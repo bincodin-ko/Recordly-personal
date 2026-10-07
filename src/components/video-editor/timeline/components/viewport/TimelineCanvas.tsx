@@ -59,6 +59,8 @@ interface TimelineCanvasProps {
 	videoDurationMs: number;
 	currentTimeMs: number;
 	onSeek?: (time: number) => void;
+	/** Hover scrub: timeline ms under the pointer, or null when it leaves. */
+	onHoverScrub?: (timeMs: number | null) => void;
 	canPlaceZoomAtMs?: (startMs: number) => boolean;
 	onSelectZoom?: (id: string | null) => void;
 	onSelectClip?: (id: string | null) => void;
@@ -273,6 +275,7 @@ interface TimelineHoverParams {
 	captionQuickAddEnabled?: boolean;
 	isDragging: boolean;
 	valueToPixels: (value: number) => number;
+	onHoverScrub?: (timeMs: number | null) => void;
 }
 
 function useTimelineHover({
@@ -291,6 +294,7 @@ function useTimelineHover({
 	captionQuickAddEnabled = true,
 	isDragging,
 	valueToPixels,
+	onHoverScrub,
 }: TimelineHoverParams) {
 	const [isTimelineHovered, setIsTimelineHovered] = useState(false);
 	const [timelineHoverMs, setTimelineHoverMs] = useState<number | null>(null);
@@ -307,11 +311,24 @@ function useTimelineHover({
 			const clampedX = Math.max(0, Math.min(contentX, contentWidth));
 			const ratio = clampedX / contentWidth;
 			const nextMs = rangeStart + ratio * visibleDurationMs;
-			setTimelineHoverMs(
-				getTimeAtClipSeam(Math.max(0, Math.min(nextMs, videoDurationMs)), clipPresentation),
+			const hoverMs = getTimeAtClipSeam(
+				Math.max(0, Math.min(nextMs, videoDurationMs)),
+				clipPresentation,
 			);
+			setTimelineHoverMs(hoverMs);
+			// Left of the track labels there is no moment to preview.
+			onHoverScrub?.(contentX >= 0 && !isDragging ? hoverMs : null);
 		},
-		[direction, rangeStart, sidebarWidth, videoDurationMs, visibleDurationMs, clipPresentation],
+		[
+			direction,
+			rangeStart,
+			sidebarWidth,
+			videoDurationMs,
+			visibleDurationMs,
+			clipPresentation,
+			onHoverScrub,
+			isDragging,
+		],
 	);
 
 	const handleTimelineMouseEnter = useCallback(
@@ -362,9 +379,10 @@ function useTimelineHover({
 	const handleTimelineMouseLeave = useCallback(() => {
 		setIsTimelineHovered(false);
 		setTimelineHoverMs(null);
+		onHoverScrub?.(null);
 		zoom.reset();
 		caption.reset();
-	}, [zoom.reset, caption.reset]);
+	}, [zoom.reset, caption.reset, onHoverScrub]);
 
 	const timelineGhostOffsetPx =
 		timelineHoverMs === null
@@ -915,6 +933,7 @@ export default function TimelineCanvas({
 	videoDurationMs,
 	currentTimeMs,
 	onSeek,
+	onHoverScrub,
 	onAddZoomAtMs,
 	canPlaceZoomAtMs,
 	onAddCaptionAtMs,
@@ -1151,6 +1170,7 @@ export default function TimelineCanvas({
 		captionQuickAddEnabled,
 		isDragging,
 		valueToPixels,
+		onHoverScrub,
 	});
 
 	return (

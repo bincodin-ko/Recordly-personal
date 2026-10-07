@@ -447,7 +447,11 @@
 		"loadingPreview": "Loading preview",
 		"volume": "Preview volume",
 		"reelMode": "Reel-modus",
-		"reelModeHint": "Voorvertoning in 9:16 met Instagram/TikTok-schermelementen"
+		"reelModeHint": "Voorvertoning in 9:16 met Instagram/TikTok-schermelementen",
+		"frameCopied": "Frame naar het klembord gekopieerd",
+		"frameCopyFailed": "Het frame kon niet worden gekopieerd",
+		"copyFrame": "Frame kopiëren",
+		"copyFrameHint": "Huidig frame als afbeelding kopiëren (Ctrl+C)"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",
@@ -463,7 +467,10 @@
 	"audio": {
 		"companionLoadFailedWith": "Could not load companion audio sources: {{error}}",
 		"companionLoadFailed": "Could not load companion audio sources. Playback and export may miss microphone audio.",
-		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}"
+		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}",
+		"separated": "Originele audio is naar een eigen spoor gescheiden.",
+		"separateFailed": "De audio kon niet worden gescheiden.",
+		"separateNoAudio": "Deze clip heeft geen originele audio om te scheiden."
 	},
 	"messages": {
 		"whisperExecutableSelected": "Whisper executable selected",
@@ -520,5 +527,31 @@
 		"short": "Sync",
 		"hint": "+ makes sound later, - makes it earlier.",
 		"reset": "Reset"
+	},
+	"commandMenu": {
+		"placeholder": "Opdrachten zoeken...",
+		"empty": "Geen overeenkomende opdrachten",
+		"hint": "Pijltjes om te bewegen, Enter om uit te voeren, Esc om te sluiten",
+		"title": "Opdrachtmenu",
+		"addZoom": "Zoom toevoegen",
+		"autoZoom": "Zooms automatisch maken",
+		"splitClip": "Clip splitsen",
+		"addAnnotation": "Annotatie toevoegen",
+		"addAudio": "Audio toevoegen",
+		"separateAudio": "Audio van clip scheiden",
+		"copyFrame": "Huidig frame als afbeelding kopiëren",
+		"playPause": "Afspelen / Pauze",
+		"skipBack": "Naar vorig punt springen",
+		"skipForward": "Naar volgend punt springen",
+		"undo": "Ongedaan maken",
+		"redo": "Opnieuw",
+		"save": "Project opslaan",
+		"export": "Exporteren",
+		"toggleCaptions": "Ondertitels aan/uit",
+		"toggleCursor": "Cursor aan/uit",
+		"crop": "Bijsnijden",
+		"aspectRatio": "Beeldverhouding: {{ratio}}",
+		"openProjects": "Projecten openen",
+		"goTo": "{{section}} openen"
 	}
 }

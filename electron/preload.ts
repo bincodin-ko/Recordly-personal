@@ -728,6 +728,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	openVideoFilePicker: (options?: { includeProjects?: boolean }) => {
 		return ipcRenderer.invoke("open-video-file-picker", options);
 	},
+	copyPreviewFrameToClipboard: (rect: { x: number; y: number; width: number; height: number }) => {
+		return ipcRenderer.invoke("copy-preview-frame-to-clipboard", rect);
+	},
+	extractClipAudio: (request: { videoPath: string; startMs: number; endMs: number; speed?: number }) => {
+		return ipcRenderer.invoke("extract-clip-audio", request);
+	},
 	openAudioFilePicker: () => {
 		return ipcRenderer.invoke("open-audio-file-picker");
 	},

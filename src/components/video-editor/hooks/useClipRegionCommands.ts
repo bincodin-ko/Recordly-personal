@@ -35,6 +35,9 @@ interface UseClipRegionCommandsParams {
 	setSelectedCaptionId: Dispatch<SetStateAction<string | null>>;
 	setActiveEffectSection: Dispatch<SetStateAction<EditorEffectSection>>;
 	nextClipIdRef: MutableRefObject<number>;
+	nextAudioIdRef: MutableRefObject<number>;
+	/** Local path of the recording the clips read from. */
+	sourcePath: string | null;
 	t: Translator;
 }
 
@@ -53,6 +56,8 @@ export function useClipRegionCommands({
 	setSelectedCaptionId,
 	setActiveEffectSection,
 	nextClipIdRef,
+	nextAudioIdRef,
+	sourcePath,
 	t,
 }: UseClipRegionCommandsParams) {
 	const applySequence = useCallback(
@@ -195,6 +200,71 @@ export function useClipRegionCommands({
 		[selectedClipId, setClipRegions],
 	);
 
+	/** Screen Studio "separate audio": the clip's original sound becomes its own audio track. */
+	const handleClipSeparateAudio = useCallback(
+		async (clipId: string | null = selectedClipId) => {
+			const clip = clipRegions.find((value) => value.id === clipId);
+			if (!clip || !sourcePath) return;
+			const sourceStartMs = getClipSourceStartMs(clip);
+			const result = await window.electronAPI.extractClipAudio({
+				videoPath: sourcePath,
+				startMs: sourceStartMs,
+				endMs: sourceStartMs + (clip.endMs - clip.startMs) * clip.speed,
+				speed: clip.speed,
+			});
+			if (!result.success || !result.path) {
+				toast.error(
+					result.error === "no audio"
+						? t("editor.audio.separateNoAudio", "This clip has no original audio to separate.")
+						: t("editor.audio.separateFailed", "Could not separate the audio."),
+				);
+				return;
+			}
+			const id = `audio-${nextAudioIdRef.current++}`;
+			const audioPath = result.path;
+			setAudioRegions((current) => [
+				...current,
+				{
+					id,
+					startMs: clip.startMs,
+					endMs: clip.endMs,
+					audioPath,
+					volume: 1,
+					normalize: false,
+					trackIndex:
+						current.length > 0
+							? Math.max(...current.map((region) => region.trackIndex ?? 0)) + 1
+							: 0,
+				},
+			]);
+			setClipRegions((current) =>
+				current.map((value) => (value.id === clip.id ? { ...value, muted: true } : value)),
+			);
+			setSelectedClipId(null);
+			setSelectedZoomId(null);
+			setSelectedAnnotationId(null);
+			setSelectedCaptionId(null);
+			setSelectedAudioId(id);
+			setActiveEffectSection("audio");
+			toast.success(t("editor.audio.separated", "Original audio separated into its own track."));
+		},
+		[
+			clipRegions,
+			selectedClipId,
+			sourcePath,
+			nextAudioIdRef,
+			setAudioRegions,
+			setClipRegions,
+			setSelectedClipId,
+			setSelectedZoomId,
+			setSelectedAnnotationId,
+			setSelectedCaptionId,
+			setSelectedAudioId,
+			setActiveEffectSection,
+			t,
+		],
+	);
+
 	const handleClipDelete = useCallback(
 		(id: string) => {
 			applySequence(clipRegions.filter((clip) => clip.id !== id));
@@ -211,6 +281,7 @@ export function useClipRegionCommands({
 		handleClipMutedChange,
 		handleClipHideCursorChange,
 		handleClipShowSourceAudioChange,
+		handleClipSeparateAudio,
 		handleClipDelete,
 	};
 }

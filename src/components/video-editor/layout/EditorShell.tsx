@@ -24,7 +24,9 @@ import type { useAppearanceState } from "../state/useAppearanceState";
 import type { useEditorUiState } from "../state/useEditorUiState";
 import type { useProjectState } from "../state/useProjectState";
 import type { useTimelineState } from "../state/useTimelineState";
+import { useShortcuts } from "@/contexts/ShortcutsContext";
 import { CropEditorDialog } from "./CropEditorDialog";
+import { EditorCommandMenu } from "./EditorCommandMenu";
 import { EditorDialogs } from "./EditorDialogs";
 import { EditorLoadingSkeleton } from "./EditorLoadingSkeleton";
 import { EditorHeader } from "./EditorHeader";
@@ -62,6 +64,7 @@ export function EditorShell(props: Props) {
 	const [signInReason, setSignInReason] = useState<SignInReason>("account");
 	const [shareRequestNonce, setShareRequestNonce] = useState(0);
 	const auth = useRecordlyAuth();
+	const { isMac } = useShortcuts();
 	const requestSignIn = (reason: SignInReason) => {
 		if (reason === "share" && auth.user) {
 			setShareRequestNonce((value) => value + 1);
@@ -419,6 +422,7 @@ export function EditorShell(props: Props) {
 					handleAutoSuggestZoomsConsumed={handleAutoSuggestZoomsConsumed}
 					disableSuggestedZooms={!appearance.autoApplyFreshRecordingAutoZooms}
 					currentTime={ui.currentTime}
+					isPlaying={ui.isPlaying}
 					handleSelectAnnotation={handleSelectAnnotation}
 					cursorExtras={appearance.cursorExtras}
 				/>
@@ -466,6 +470,22 @@ export function EditorShell(props: Props) {
 				aspectRatio={ui.aspectRatio}
 				onCancel={ui.handleCancelCropEditor}
 				onDone={ui.handleCloseCropEditor}
+			/>
+			<EditorCommandMenu
+				t={t}
+				isMac={isMac}
+				timelineRef={ui.timelineRef}
+				videoPlaybackRef={ui.videoPlaybackRef}
+				timeline={timeline}
+				appearance={appearance}
+				ui={ui}
+				playback={playback}
+				clipCommands={clipCommands}
+				handleUndo={history.handleUndo}
+				handleRedo={history.handleRedo}
+				handleSave={() => void saveActions.handleSaveProject()}
+				handleOpenProjects={openActions.handleOpenProjectBrowser}
+				handleOpenExport={dialogActions.handleOpenExportDropdown}
 			/>
 			<Toaster className="pointer-events-auto" />
 		</div>

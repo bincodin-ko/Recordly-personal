@@ -447,7 +447,11 @@
 		"loadingPreview": "Loading preview",
 		"volume": "Preview volume",
 		"reelMode": "Reel mode",
-		"reelModeHint": "Preview in 9:16 with Instagram/TikTok screen elements"
+		"reelModeHint": "Preview in 9:16 with Instagram/TikTok screen elements",
+		"frameCopied": "Frame copied to the clipboard",
+		"frameCopyFailed": "Could not copy the frame",
+		"copyFrame": "Copy frame",
+		"copyFrameHint": "Copy the current frame as an image (Ctrl+C)"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",
@@ -463,7 +467,10 @@
 	"audio": {
 		"companionLoadFailedWith": "Could not load companion audio sources: {{error}}",
 		"companionLoadFailed": "Could not load companion audio sources. Playback and export may miss microphone audio.",
-		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}"
+		"companionSingleLoadFailedWith": "Could not load companion audio source: {{error}}",
+		"separated": "Original audio separated into its own track.",
+		"separateFailed": "Could not separate the audio.",
+		"separateNoAudio": "This clip has no original audio to separate."
 	},
 	"messages": {
 		"whisperExecutableSelected": "Whisper executable selected",
@@ -520,5 +527,31 @@
 		"short": "Sync",
 		"hint": "+ makes sound later, - makes it earlier.",
 		"reset": "Reset"
+	},
+	"commandMenu": {
+		"placeholder": "Search commands...",
+		"empty": "No matching commands",
+		"hint": "Up/Down to move, Enter to run, Esc to close",
+		"title": "Command menu",
+		"addZoom": "Add zoom",
+		"autoZoom": "Create zooms automatically",
+		"splitClip": "Split clip",
+		"addAnnotation": "Add annotation",
+		"addAudio": "Add audio",
+		"separateAudio": "Separate audio from clip",
+		"copyFrame": "Copy current frame as image",
+		"playPause": "Play / Pause",
+		"skipBack": "Jump to previous point",
+		"skipForward": "Jump to next point",
+		"undo": "Undo",
+		"redo": "Redo",
+		"save": "Save project",
+		"export": "Export",
+		"toggleCaptions": "Toggle captions",
+		"toggleCursor": "Toggle cursor",
+		"crop": "Crop",
+		"aspectRatio": "Aspect ratio: {{ratio}}",
+		"openProjects": "Open projects",
+		"goTo": "Open {{section}}"
 	}
 }

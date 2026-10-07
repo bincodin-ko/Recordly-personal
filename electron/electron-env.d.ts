@@ -692,6 +692,18 @@ interface Window {
 			canceled?: boolean;
 			error?: string;
 		}>;
+		copyPreviewFrameToClipboard: (rect: {
+			x: number;
+			y: number;
+			width: number;
+			height: number;
+		}) => Promise<{ success: boolean; width?: number; height?: number; error?: string }>;
+		extractClipAudio: (request: {
+			videoPath: string;
+			startMs: number;
+			endMs: number;
+			speed?: number;
+		}) => Promise<{ success: boolean; path?: string; durationMs?: number; error?: string }>;
 		openAudioFilePicker: () => Promise<{ success: boolean; path?: string; canceled?: boolean }>;
 		openWhisperExecutablePicker: () => Promise<{
 			success: boolean;
