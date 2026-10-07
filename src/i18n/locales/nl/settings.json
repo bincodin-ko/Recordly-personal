@@ -218,7 +218,9 @@
 		"appearance": "Appearance",
 		"settings": "Settings",
 		"title": "Editor tools",
-		"ariaLabel": "Settings sections"
+		"ariaLabel": "Settings sections",
+		"clip": "Clip",
+		"audio": "Audio"
 	},
 	"captions": {
 		"selectOnTimeline": "Selecteer een ondertitel op de tijdlijn om deze te bewerken.",
@@ -396,5 +398,25 @@
 		"pauseThreshold": "Pauzes langer dan",
 		"tightenPauses": "{{count}} pauzes inkorten",
 		"cutFailed": "Niets om te knippen."
+	},
+	"looks": {
+		"title": "Look",
+		"none": "Geen",
+		"natural": "Natuurlijk",
+		"warm": "Warm",
+		"cool": "Koel",
+		"vivid": "Levendig",
+		"soft": "Zacht",
+		"cinematic": "Filmisch",
+		"film": "Film",
+		"vintage": "Vintage",
+		"bright": "Helder",
+		"moody": "Somber",
+		"bw": "Z/W",
+		"noir": "Noir",
+		"importLut": "LUT importeren (.cube)",
+		"importFailed": "Dit LUT-bestand kon niet worden gelezen",
+		"intensity": "Intensiteit",
+		"sharpness": "Scherpte"
 	}
 }

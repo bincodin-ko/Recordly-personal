@@ -56,6 +56,7 @@ export function buildExportRenderOptions({
 		padding: appearance.padding,
 		cropRegion: appearance.cropRegion,
 		webcam: appearance.webcam,
+		colorGrading: appearance.colorGrading,
 		webcamUrl:
 			appearance.resolvedWebcamVideoUrl ??
 			(appearance.webcam.sourcePath ? toFileUrl(appearance.webcam.sourcePath) : null),

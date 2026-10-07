@@ -42,9 +42,12 @@ type Props = {
 	accountId?: string;
 };
 
+// Personal offline build: no cloud "Link" publishing; the header button is the local export.
+const LOCAL_EXPORT_ONLY = true;
+
 export function EditorExportMenu(props: Props) {
-	const { publishDestination: destination, setPublishDestination: setDestination } =
-		props.exportSettings;
+	const { publishDestination, setPublishDestination: setDestination } = props.exportSettings;
+	const destination = LOCAL_EXPORT_ONLY ? "local" : publishDestination;
 	const [shareBusy, setShareBusy] = useState(false);
 	const reducedMotion = useReducedMotion();
 	const handledShareRequest = useRef(0);
@@ -182,11 +185,13 @@ export function EditorExportMenu(props: Props) {
 						className="inline-flex h-9 min-w-[104px] items-center justify-center gap-2 px-4.5"
 					>
 						<Export className="h-4 w-4" />
-						<span className="text-sm font-semibold tracking-tight">Publish</span>
+						<span className="text-sm font-semibold tracking-tight">
+							{props.t("editor.header.export", "Export")}
+						</span>
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent
-					aria-label="Publish"
+					aria-label={props.t("editor.header.export", "Export")}
 					align="end"
 					sideOffset={10}
 					className="w-[360px] max-h-none overflow-hidden p-0"
@@ -201,41 +206,45 @@ export function EditorExportMenu(props: Props) {
 					>
 						<div ref={contentRef}>
 							<div className="p-5 space-y-3">
-								<h2 className="text-sm font-semibold">Publish</h2>
-								<TagGroup
-									aria-label="Publish destination"
-									selectionMode="single"
-									disallowEmptySelection
-									selectedKeys={[destination]}
-									onSelectionChange={(keys) => {
-										if (
-											keys !== "all" &&
-											keys.size > 0 &&
-											!isExporting &&
-											!shareBusy
-										)
-											setDestination(keys.has("link") ? "link" : "local");
-									}}
-								>
-									<TagGroup.List className="flex gap-2">
-										<Tag
-											id="link"
-											isDisabled={isExporting || shareBusy}
-											className="h-24 flex-1 flex-col justify-center gap-2 rounded-xl border border-foreground/10"
-										>
-											<LinkSimple className="size-6" />
-											Link
-										</Tag>
-										<Tag
-											id="local"
-											isDisabled={isExporting || shareBusy}
-											className="h-24 flex-1 flex-col justify-center gap-2 rounded-xl border border-foreground/10"
-										>
-											<HardDrive className="size-6" />
-											Local
-										</Tag>
-									</TagGroup.List>
-								</TagGroup>
+								<h2 className="text-sm font-semibold">
+									{props.t("editor.header.export", "Export")}
+								</h2>
+								{!LOCAL_EXPORT_ONLY && (
+									<TagGroup
+										aria-label="Publish destination"
+										selectionMode="single"
+										disallowEmptySelection
+										selectedKeys={[destination]}
+										onSelectionChange={(keys) => {
+											if (
+												keys !== "all" &&
+												keys.size > 0 &&
+												!isExporting &&
+												!shareBusy
+											)
+												setDestination(keys.has("link") ? "link" : "local");
+										}}
+									>
+										<TagGroup.List className="flex gap-2">
+											<Tag
+												id="link"
+												isDisabled={isExporting || shareBusy}
+												className="h-24 flex-1 flex-col justify-center gap-2 rounded-xl border border-foreground/10"
+											>
+												<LinkSimple className="size-6" />
+												Link
+											</Tag>
+											<Tag
+												id="local"
+												isDisabled={isExporting || shareBusy}
+												className="h-24 flex-1 flex-col justify-center gap-2 rounded-xl border border-foreground/10"
+											>
+												<HardDrive className="size-6" />
+												Local
+											</Tag>
+										</TagGroup.List>
+									</TagGroup>
+								)}
 							</div>
 							<div>
 								{destination === "link" ? (
@@ -286,7 +295,10 @@ export function EditorExportMenu(props: Props) {
 												) : null}
 												{isLegacyExportInProgress ? (
 													<p className="mt-1 text-[11px] text-muted-foreground/70">
-														{t("editor.export.tooSlow", "Export too slow? Cancel and try Lightning export!")}
+														{t(
+															"editor.export.tooSlow",
+															"Export too slow? Cancel and try Lightning export!",
+														)}
 													</p>
 												) : null}
 											</div>
@@ -339,7 +351,9 @@ export function EditorExportMenu(props: Props) {
 										) : null}
 										{exportRuntimeLabel ? (
 											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												{t("editor.export.pathLabel", "Path: {{path}}", { path: exportRuntimeLabel })}
+												{t("editor.export.pathLabel", "Path: {{path}}", {
+													path: exportRuntimeLabel,
+												})}
 											</p>
 										) : null}
 										{exportNativeSkipLabel ? (
@@ -355,7 +369,9 @@ export function EditorExportMenu(props: Props) {
 										</p>
 										{exportRuntimeLabel ? (
 											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												{t("editor.export.pathLabel", "Path: {{path}}", { path: exportRuntimeLabel })}
+												{t("editor.export.pathLabel", "Path: {{path}}", {
+													path: exportRuntimeLabel,
+												})}
 											</p>
 										) : null}
 										<p className="mt-1 select-text whitespace-pre-wrap break-words text-xs leading-relaxed text-muted-foreground">
@@ -426,7 +442,9 @@ export function EditorExportMenu(props: Props) {
 										</p>
 										{exportRuntimeLabel ? (
 											<p className="mt-1 text-[11px] text-muted-foreground/70">
-												{t("editor.export.pathLabel", "Path: {{path}}", { path: exportRuntimeLabel })}
+												{t("editor.export.pathLabel", "Path: {{path}}", {
+													path: exportRuntimeLabel,
+												})}
 											</p>
 										) : null}
 										<p className="mt-3 truncate text-xs text-muted-foreground/70">

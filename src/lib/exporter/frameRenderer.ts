@@ -1,6 +1,7 @@
 import { type CursorExtrasRenderOptions, drawShortcutOverlay } from "@/components/video-editor/cursorExtras";
 import { Application, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
 import { createVideoSharpener } from "@/lib/videoSharpenFilter";
+import { type ColorGradingSettings, createColorLookFilter } from "@/lib/colorGrading";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
 import { ZoomBlurFilter } from "pixi-filters/zoom-blur";
 import type {
@@ -138,6 +139,8 @@ interface FrameRenderConfig {
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
 	cursorExtras?: CursorExtrasRenderOptions;
+	/** Legacy/GIF path applies the screen look only (camera look/sharpen: modern pipeline). */
+	colorGrading?: ColorGradingSettings;
 }
 
 interface AnimationState {
@@ -1420,9 +1423,14 @@ export class FrameRenderer {
 		if (!this.videoSprite) {
 			const texture = Texture.from(videoFrame as unknown as PixiTextureInput);
 			this.videoSprite = new Sprite(texture);
+			const screenLook = createColorLookFilter();
 			this.updateVideoSharpen = createVideoSharpener(
 				this.videoSprite,
 				() => this.app?.renderer.resolution ?? 1,
+				() => {
+					const look = screenLook(this.config.colorGrading?.screen);
+					return look ? [look] : [];
+				},
 			);
 			this.videoTextureSource = texture.source as unknown as VideoTextureSource;
 			this.videoContainer.addChild(this.videoSprite);

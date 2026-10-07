@@ -127,6 +127,12 @@ import {
 import { updateOverlayIndicator } from "./videoPlayback/overlayUtils";
 import { supportsPreviewPlaybackRate } from "./videoPlayback/playbackRate";
 import { createVideoSharpener } from "@/lib/videoSharpenFilter";
+import {
+	type ColorGradingSettings,
+	createColorLookFilter,
+	DEFAULT_COLOR_GRADING,
+} from "@/lib/colorGrading";
+import { GradedWebcamCanvas, isCameraGradingActive } from "./videoPlayback/GradedWebcamCanvas";
 import { PreviewVideoSource } from "./videoPlayback/previewVideoSource";
 import { usePreviewVideoReady } from "./videoPlayback/usePreviewVideoReady";
 import { getSceneEffectMetrics } from "./videoPlayback/sceneEffects";
@@ -301,6 +307,7 @@ interface VideoPlaybackProps {
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
 	cursorExtras?: CursorExtrasSettings;
+	colorGrading?: ColorGradingSettings;
 	keystrokes?: KeystrokeSample[];
 	volume?: number;
 	suspendRendering?: boolean;
@@ -393,6 +400,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			cursorClickBounceDuration = DEFAULT_CURSOR_CLICK_BOUNCE_DURATION,
 			cursorSway = DEFAULT_CURSOR_SWAY,
 			cursorExtras = DEFAULT_CURSOR_EXTRAS,
+			colorGrading = DEFAULT_COLOR_GRADING,
 			keystrokes = EMPTY_KEYSTROKES,
 			volume = 1,
 			suspendRendering = false,
@@ -518,6 +526,8 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		const cursorTelemetryRef = useRef<CursorTelemetryPoint[]>([]);
 		const showCursorRef = useRef(showCursor);
 		const cursorExtrasRef = useRef(cursorExtras);
+		const colorGradingRef = useRef(colorGrading);
+		const cameraGradingActive = isCameraGradingActive(colorGrading);
 		const keystrokesRef = useRef(keystrokes);
 		const hiddenCursorRangesRef = useRef(getHiddenCursorRanges(clipRegions));
 		const shortcutCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -1468,6 +1478,11 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		}, [cursorExtras, keystrokes, clipRegions, requestPausedFrameRefresh]);
 
 		useEffect(() => {
+			colorGradingRef.current = colorGrading;
+			requestPausedFrameRefresh();
+		}, [colorGrading, requestPausedFrameRefresh]);
+
+		useEffect(() => {
 			cursorStyleRef.current = cursorStyle;
 			requestPausedFrameRefresh();
 		}, [cursorStyle, requestPausedFrameRefresh]);
@@ -1965,9 +1980,14 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			const videoSprite = new Sprite(videoTexture);
 			// Sharpen while the preview shows the recording at a non-1:1 scale; runs
 			// before the ticker's render pass (HIGH priority), never during it.
+			const screenLook = createColorLookFilter();
 			const updateVideoSharpen = createVideoSharpener(
 				videoSprite,
 				() => app.renderer.resolution || 1,
+				() => {
+					const look = screenLook(colorGradingRef.current.screen);
+					return look ? [look] : [];
+				},
 			);
 			app.ticker.add(updateVideoSharpen, undefined, UPDATE_PRIORITY.HIGH);
 			videoSpriteRef.current = videoSprite;
@@ -2620,8 +2640,14 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 										>
 											<video
 												ref={webcamVideoRef}
+												data-look-source="camera"
 												src={webcamVideoPath}
 												className="pointer-events-none absolute inset-0 block h-full w-full object-fill"
+												style={
+													cameraGradingActive
+														? { visibility: "hidden" }
+														: undefined
+												}
 												muted
 												playsInline
 												preload="auto"
@@ -2631,6 +2657,13 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 												onCanPlay={handleWebcamMediaReady}
 												onSeeked={handleWebcamMediaReady}
 											/>
+											{cameraGradingActive ? (
+												<GradedWebcamCanvas
+													videoRef={webcamVideoRef}
+													grading={colorGrading}
+													className="pointer-events-none absolute inset-0 block h-full w-full"
+												/>
+											) : null}
 										</div>
 									</div>
 								</div>
@@ -2960,6 +2993,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 					browser continues producing presented frames for Pixi and preview sync. */}
 				<video
 					ref={attachVideo}
+					data-look-source="screen"
 					src={videoPath}
 					className="pointer-events-none absolute left-0 top-0 h-px w-px opacity-0"
 					style={{ visibility: isGap ? "hidden" : "visible" }}

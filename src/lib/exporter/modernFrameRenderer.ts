@@ -3,10 +3,28 @@ import {
 	drawShortcutOverlay,
 	getActiveShortcut,
 } from "@/components/video-editor/cursorExtras";
-import { Application, BlurFilter, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
+import {
+	Application,
+	BlurFilter,
+	Container,
+	type Filter,
+	Graphics,
+	Rectangle,
+	Sprite,
+	Texture,
+} from "pixi.js";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
 import { ZoomBlurFilter } from "pixi-filters/zoom-blur";
-import { createVideoSharpener } from "@/lib/videoSharpenFilter";
+import {
+	createVideoSharpenFilter,
+	createVideoSharpener,
+	syncSpriteFilters,
+} from "@/lib/videoSharpenFilter";
+import {
+	type ColorGradingSettings,
+	createColorLookFilter,
+	MAX_CAMERA_SHARPEN_AMOUNT,
+} from "@/lib/colorGrading";
 import { buildActiveCaptionLayout } from "@/components/video-editor/captionLayout";
 import {
 	CAPTION_FONT_WEIGHT,
@@ -158,6 +176,7 @@ interface FrameRenderConfig {
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
 	cursorExtras?: CursorExtrasRenderOptions;
+	colorGrading?: ColorGradingSettings;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	autoFrame?: boolean;
@@ -385,6 +404,8 @@ export class FrameRenderer {
 	private webcamContainer: Container | null = null;
 	private videoSprite: Sprite | null = null;
 	private updateVideoSharpen: (() => void) | null = null;
+	private readonly webcamLook = createColorLookFilter();
+	private webcamSharpenFilter: Filter | null = null;
 	private videoTextureSource: MutableVideoTextureSource | null = null;
 	private backgroundSprite: Sprite | null = null;
 	private backgroundTextureSource: MutableVideoTextureSource | null = null;
@@ -2325,6 +2346,23 @@ export class FrameRenderer {
 		this.lastSyncedWebcamTime = null;
 	}
 
+	/** Screen sharpen/look and camera look/sharpen; must run before a render, never inside one. */
+	private syncSpriteFilters(): void {
+		this.updateVideoSharpen?.();
+		const sprite = this.webcamSprite;
+		if (!sprite || sprite.destroyed) return;
+		const grading = this.config.colorGrading;
+		const next: Filter[] = [];
+		const look = this.webcamLook(grading?.camera);
+		if (look) next.push(look);
+		const sharpAmount = (grading?.cameraSharpness ?? 0) * MAX_CAMERA_SHARPEN_AMOUNT;
+		if (sharpAmount > 0) {
+			this.webcamSharpenFilter ??= createVideoSharpenFilter(sharpAmount);
+			next.push(this.webcamSharpenFilter);
+		}
+		syncSpriteFilters(sprite, next);
+	}
+
 	private ensureWebcamSprite(
 		source: CanvasImageSource | VideoFrame,
 		sourceWidth: number,
@@ -2893,7 +2931,7 @@ export class FrameRenderer {
 			if (this.captionContainer) this.captionContainer.visible = false;
 			// Gap frames must bypass canvas annotation compositing as well as Pixi layers.
 			this.outputCanvasOverride = null;
-			this.updateVideoSharpen?.();
+			this.syncSpriteFilters();
 			this.app.render();
 			return;
 		}
@@ -2910,9 +2948,14 @@ export class FrameRenderer {
 		if (!this.videoSprite) {
 			const texture = this.createTextureFromSource(resolvedVideoSource);
 			this.videoSprite = new Sprite(texture);
+			const screenLook = createColorLookFilter();
 			this.updateVideoSharpen = createVideoSharpener(
 				this.videoSprite,
 				() => this.app?.renderer.resolution ?? 1,
+				() => {
+					const look = screenLook(this.config.colorGrading?.screen);
+					return look ? [look] : [];
+				},
 			);
 			this.videoTextureSource = texture.source as unknown as MutableVideoTextureSource;
 			this.videoContainer.addChildAt(this.videoSprite, 0);
@@ -3026,9 +3069,8 @@ export class FrameRenderer {
 				this.captionContainer.visible = false;
 			}
 
-			this.updateVideoSharpen?.();
-			this.updateVideoSharpen?.();
-		this.app!.render();
+			this.syncSpriteFilters();
+			this.app!.render();
 
 			if (this.annotationContainer) {
 				this.annotationContainer.visible = annotationContainerVisible;
@@ -3042,7 +3084,7 @@ export class FrameRenderer {
 		}
 
 		this.outputCanvasOverride = null;
-		this.updateVideoSharpen?.();
+		this.syncSpriteFilters();
 		this.app!.render();
 	}
 

@@ -1,5 +1,6 @@
 import { clipAltersAudio } from "@/components/video-editor/types";
 import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
+import { type ColorGradingSettings, hasActiveColorGrading } from "@/lib/colorGrading";
 import type {
 	AnnotationRegion,
 	AudioRegion,
@@ -145,6 +146,7 @@ interface VideoExporterConfig extends ExportConfig {
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
 	cursorExtras?: CursorExtrasRenderOptions;
+	colorGrading?: ColorGradingSettings;
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	autoFrame?: boolean;
@@ -660,6 +662,7 @@ export class ModernVideoExporter {
 					cursorClickBounceDuration: this.config.cursorClickBounceDuration,
 					cursorSway: this.config.cursorSway,
 					cursorExtras: this.config.cursorExtras,
+					colorGrading: this.config.colorGrading,
 					zoomSmoothness: this.config.zoomSmoothness,
 					zoomClassicMode: this.config.zoomClassicMode,
 					autoFrame: this.config.autoFrame,
@@ -1739,6 +1742,9 @@ export class ModernVideoExporter {
 					(cursorExtras.settings.hideIdleCursor || cursorExtras.hiddenRanges.length > 0)))
 		) {
 			reasons.push("unsupported-cursor-extras");
+		}
+		if (hasActiveColorGrading(this.config.colorGrading)) {
+			reasons.push("unsupported-color-grading");
 		}
 
 		const hasZoomRegions = (this.config.zoomRegions ?? []).length > 0;

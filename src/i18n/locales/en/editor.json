@@ -431,7 +431,8 @@
 	},
 	"header": {
 		"home": "Home",
-		"clips": "Clips"
+		"clips": "Clips",
+		"export": "Export"
 	},
 	"shell": {
 		"openProjects": "Open Projects"

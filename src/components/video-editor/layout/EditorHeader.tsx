@@ -20,6 +20,8 @@ import { EditorPresetMenu } from "./EditorPresetMenu";
 
 // Keep the preset implementation available for future use.
 const SHOW_PRESETS_BUTTON = false;
+// Feedback needs a cloud account; hidden in the personal offline build.
+const SHOW_FEEDBACK_BUTTON = false;
 
 type Props = {
 	clipsOpen: boolean;
@@ -222,7 +224,7 @@ export function EditorHeader(props: Props) {
 					</Button>
 				</div>
 				{SHOW_PRESETS_BUTTON && <EditorPresetMenu t={t} presets={presets} />}
-				<FeedbackDialog />
+				{SHOW_FEEDBACK_BUTTON && <FeedbackDialog />}
 				<EditorExportMenu
 					t={t}
 					exportSettings={exportSettings}

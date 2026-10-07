@@ -4,6 +4,9 @@ import { loadAppSetting, saveAppSetting } from "@/lib/appSettings";
 import { RecordlySignInDialog } from "./RecordlySignInDialog";
 
 const SEEN_KEY = "recordly.onboarding.v1.seen";
+// Personal offline build: never pop the cloud sign-in onboarding on first launch.
+// An explicit request (requestNonce) still opens it.
+const AUTO_SHOW_ON_FIRST_LAUNCH = false;
 
 export function OnboardingController({
 	requestNonce,
@@ -29,7 +32,7 @@ export function OnboardingController({
 	}, []);
 
 	useEffect(() => {
-		if (!ready || checked.current) return;
+		if (!AUTO_SHOW_ON_FIRST_LAUNCH || !ready || checked.current) return;
 		checked.current = true;
 		if (!loadAppSetting<boolean>(SEEN_KEY)) setOpen(true);
 	}, [ready]);

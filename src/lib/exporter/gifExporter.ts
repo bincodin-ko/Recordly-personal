@@ -1,3 +1,4 @@
+import type { ColorGradingSettings } from "@/lib/colorGrading";
 import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
 import GIF from "gif.js";
 import type {
@@ -90,6 +91,7 @@ interface GifExporterConfig {
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
 	cursorExtras?: CursorExtrasRenderOptions;
+	colorGrading?: ColorGradingSettings;
 	previewWidth?: number;
 	previewHeight?: number;
 	maxDecodeQueue?: number;
@@ -197,6 +199,7 @@ export function buildGifFrameRendererConfig(
 		cursorClickBounceDuration: config.cursorClickBounceDuration,
 		cursorSway: config.cursorSway,
 		cursorExtras: config.cursorExtras,
+		colorGrading: config.colorGrading,
 	};
 }
 

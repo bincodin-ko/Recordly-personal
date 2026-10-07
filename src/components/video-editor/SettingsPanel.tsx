@@ -51,6 +51,8 @@ import {
 import { loadEditorPreferences, saveEditorPreferences } from "./editorPreferences";
 import { getDefaultBorderRadiusPercent } from "./projectPersistence";
 import { SliderControl } from "./SliderControl";
+import { ColorLookControl } from "./ColorLookControl";
+import { type ColorGradingSettings, DEFAULT_COLOR_GRADING } from "@/lib/colorGrading";
 import { WallpaperGrid } from "./WallpaperGrid";
 import { useShortcuts } from "@/contexts/ShortcutsContext";
 import { SettingsRow } from "./SettingsRow";
@@ -532,6 +534,8 @@ interface SettingsPanelProps {
 	cursorSway?: number;
 	cursorExtras?: CursorExtrasSettings;
 	onCursorExtrasChange?: (patch: Partial<CursorExtrasSettings>) => void;
+	colorGrading?: ColorGradingSettings;
+	onColorGradingChange?: (next: ColorGradingSettings) => void;
 	hasRecordedShortcuts?: boolean;
 	onCursorSwayChange?: (amount: number) => void;
 	borderRadius?: number;
@@ -994,6 +998,8 @@ export function SettingsPanel({
 	cursorSway = DEFAULT_CURSOR_SWAY,
 	cursorExtras = DEFAULT_CURSOR_EXTRAS,
 	onCursorExtrasChange,
+	colorGrading = DEFAULT_COLOR_GRADING,
+	onColorGradingChange,
 	hasRecordedShortcuts = false,
 	onCursorSwayChange,
 	borderRadius = getDefaultBorderRadiusPercent(),
@@ -1542,9 +1548,15 @@ export function SettingsPanel({
 		onAspectRatioChange?.(initialEditorPreferences.aspectRatio);
 		onPaddingChange?.({ ...initialEditorPreferences.padding });
 		removeBackgroundStateRef.current = null;
+		onColorGradingChange?.({ ...colorGrading, screen: DEFAULT_COLOR_GRADING.screen });
 	};
 
 	const resetWebcamSection = () => {
+		onColorGradingChange?.({
+			...colorGrading,
+			camera: DEFAULT_COLOR_GRADING.camera,
+			cameraSharpness: DEFAULT_COLOR_GRADING.cameraSharpness,
+		});
 		if (!onWebcamChange) return;
 		onWebcamChange({ ...defaultWebcam });
 	};
@@ -1699,7 +1711,7 @@ export function SettingsPanel({
 						<ChoiceItem
 							key={option.value}
 							value={option.value}
-							className="flex-1 min-w-0 px-2"
+							className="flex-1 min-w-0 whitespace-nowrap px-1"
 						>
 							{option.label}
 						</ChoiceItem>
@@ -1979,6 +1991,11 @@ export function SettingsPanel({
 						onCheckedChange={handleRemoveBackgroundToggle}
 					/>
 				</div>
+				<ColorLookControl
+					source="screen"
+					value={colorGrading.screen}
+					onChange={(screen) => onColorGradingChange?.({ ...colorGrading, screen })}
+				/>
 			</div>
 		</section>
 	);
@@ -3510,6 +3527,22 @@ export function SettingsPanel({
 									formatValue={(v) => `${Math.round(v * 100)}%`}
 								/>
 							)}
+							<ColorLookControl
+								source="camera"
+								value={colorGrading.camera}
+								onChange={(camera) => onColorGradingChange?.({ ...colorGrading, camera })}
+							/>
+							<SliderControl
+								label={tSettings("looks.sharpness", "Sharpness")}
+								value={colorGrading.cameraSharpness}
+								min={0}
+								max={1}
+								step={0.01}
+								onChange={(cameraSharpness) =>
+									onColorGradingChange?.({ ...colorGrading, cameraSharpness })
+								}
+								formatValue={(v) => `${Math.round(v * 100)}%`}
+							/>
 							<div className="py-2">
 								<div className="flex flex-col gap-4">
 									<div className="min-w-0">

@@ -10,7 +10,7 @@ const NATIVE_SCALE_TOLERANCE = 0.01;
 // there made a 0.57x editor preview worse vs a Lanczos reference (err 4.54 -> 5.84).
 const MIN_SHARPEN_SCALE = 0.8;
 
-const glVertex = `in vec2 aPosition;
+export const glVertex = `in vec2 aPosition;
 out vec2 vTextureCoord;
 uniform vec4 uInputSize;
 uniform vec4 uOutputFrame;
@@ -45,7 +45,7 @@ void main(void)
 
 // WGSL kept in the same shape as pixi-filters' default vertex (Pixi parses its
 // attribute signature; a combined module failed with "attribute slot 0 not present").
-const wgslVertex = `struct GlobalFilterUniforms {
+export const wgslVertex = `struct GlobalFilterUniforms {
   uInputSize:vec4<f32>,
   uInputPixel:vec4<f32>,
   uInputClamp:vec4<f32>,
@@ -119,14 +119,14 @@ fn mainFragment(
   return vec4<f32>(clamp(rgb, vec3<f32>(0.0), vec3<f32>(c.a)), c.a);
 }`;
 
-export function createVideoSharpenFilter(): Filter {
+export function createVideoSharpenFilter(amount = SHARPEN_AMOUNT): Filter {
 	return new Filter({
 		glProgram: GlProgram.from({ vertex: glVertex, fragment: glFragment, name: "video-sharpen" }),
 		gpuProgram: GpuProgram.from({
 			vertex: { source: wgslVertex, entryPoint: "mainVertex" },
 			fragment: { source: wgslFragment, entryPoint: "mainFragment" },
 		}),
-		resources: { sharpenUniforms: { uAmount: { value: SHARPEN_AMOUNT, type: "f32" } } },
+		resources: { sharpenUniforms: { uAmount: { value: amount, type: "f32" } } },
 		resolution: "inherit",
 	});
 }
@@ -137,7 +137,11 @@ export function createVideoSharpenFilter(): Filter {
  * Call the returned update() right before each render (never during one:
  * swapping filters mid-render blanked the whole frame).
  */
-export function createVideoSharpener(sprite: Sprite, getResolution: () => number): () => void {
+export function createVideoSharpener(
+	sprite: Sprite,
+	getResolution: () => number,
+	getLeadingFilters: () => Filter[] = () => [],
+): () => void {
 	const filter = createVideoSharpenFilter();
 	const matrix = new Matrix();
 	return () => {
@@ -145,8 +149,15 @@ export function createVideoSharpener(sprite: Sprite, getResolution: () => number
 		const m = sprite.getGlobalTransform(matrix, false);
 		const scale = Math.hypot(m.a, m.b) * getResolution();
 		const native = Math.abs(scale - 1) < NATIVE_SCALE_TOLERANCE || scale < MIN_SHARPEN_SCALE;
-		const active = sprite.filters?.includes(filter) ?? false;
-		if (native && active) sprite.filters = null;
-		else if (!native && !active) sprite.filters = [filter];
+		const next = getLeadingFilters();
+		if (!native) next.push(filter);
+		syncSpriteFilters(sprite, next);
 	};
+}
+
+/** Assign filters only when the list changed (reassigning every frame re-allocates passes). */
+export function syncSpriteFilters(sprite: Sprite, next: Filter[]): void {
+	const current = (sprite.filters ?? []) as readonly Filter[];
+	if (current.length === next.length && current.every((f, i) => f === next[i])) return;
+	sprite.filters = next.length > 0 ? next : null;
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { type ColorGradingSettings, DEFAULT_COLOR_GRADING } from "@/lib/colorGrading";
 import { type CursorExtrasSettings, DEFAULT_CURSOR_EXTRAS } from "../cursorExtras";
 import type { EditorPreferences } from "../editorPreferences";
 import type {
@@ -120,8 +121,11 @@ export function useAppearanceState(preferences: EditorPreferences) {
 		preferences.webcam ?? DEFAULT_WEBCAM_OVERLAY,
 	);
 	const [resolvedWebcamVideoUrl, setResolvedWebcamVideoUrl] = useState<string | null>(null);
+	const [colorGrading, setColorGrading] = useState<ColorGradingSettings>(DEFAULT_COLOR_GRADING);
 
 	return {
+		colorGrading,
+		setColorGrading,
 		wallpaper,
 		setWallpaper,
 		shadowIntensity,

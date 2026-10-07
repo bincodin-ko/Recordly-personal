@@ -218,7 +218,9 @@
 		"appearance": "Appearance",
 		"settings": "Settings",
 		"title": "Editor tools",
-		"ariaLabel": "Settings sections"
+		"ariaLabel": "Settings sections",
+		"clip": "Clipe",
+		"audio": "Áudio"
 	},
 	"captions": {
 		"selectOnTimeline": "Selecione uma legenda na linha do tempo para editá-la.",
@@ -396,5 +398,25 @@
 		"pauseThreshold": "Pausas maiores que",
 		"tightenPauses": "Encurtar {{count}} pausas",
 		"cutFailed": "Nada para cortar."
+	},
+	"looks": {
+		"title": "Visual",
+		"none": "Nenhum",
+		"natural": "Natural",
+		"warm": "Quente",
+		"cool": "Frio",
+		"vivid": "Vívido",
+		"soft": "Suave",
+		"cinematic": "Cinemático",
+		"film": "Filme",
+		"vintage": "Vintage",
+		"bright": "Claro",
+		"moody": "Sombrio",
+		"bw": "P&B",
+		"noir": "Noir",
+		"importLut": "Importar LUT (.cube)",
+		"importFailed": "Não foi possível ler este arquivo LUT",
+		"intensity": "Intensidade",
+		"sharpness": "Nitidez"
 	}
 }
