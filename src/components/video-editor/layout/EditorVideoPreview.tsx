@@ -116,6 +116,7 @@ export function EditorVideoPreview({
 			zoomSmoothness={appearance.zoomSmoothness}
 			zoomClassicMode={appearance.zoomClassicMode}
 			autoFrame={appearance.autoFrame}
+			autoFrameFollowSpeed={appearance.autoFrameFollowSpeed}
 			zoomMotionBlur={appearance.zoomMotionBlur}
 			zoomMotionBlurTuning={appearance.zoomMotionBlurTuning}
 			cursorMotionBlur={appearance.cursorMotionBlur}

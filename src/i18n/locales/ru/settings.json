@@ -14,7 +14,11 @@
 		"amount": "Amount",
 		"globalSettings": "Animation",
 		"modeLabel": "Zoom mode",
-		"levelLabel": "Zoom level"
+		"levelLabel": "Zoom level",
+		"autoFrameFollowSpeed": "Скорость следования",
+		"followSpeedSlow": "Медленно",
+		"followSpeedNormal": "Обычно",
+		"followSpeedFast": "Быстро"
 	},
 	"trim": {
 		"deleteRegion": "Удалить"

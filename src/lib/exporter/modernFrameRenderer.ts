@@ -11,6 +11,7 @@ import { buildActiveCaptionLayout } from "@/components/video-editor/captionLayou
 import {
 	CAPTION_FONT_WEIGHT,
 	CAPTION_LINE_HEIGHT,
+	getCaptionBottomOffsetPercent,
 	getCaptionPadding,
 	getCaptionScaledFontSize,
 	getCaptionScaledRadius,
@@ -160,6 +161,7 @@ interface FrameRenderConfig {
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	autoFrame?: boolean;
+	autoFrameFollowSpeed?: number;
 	nativeReadbackMode?: "pixels" | "canvas";
 }
 
@@ -1645,7 +1647,15 @@ export class FrameRenderer {
 		);
 		const centerX = this.config.width / 2;
 		const centerY =
-			this.config.height - (this.config.height * settings.bottomOffset) / 100 - boxHeight / 2;
+			this.config.height -
+			(this.config.height *
+				getCaptionBottomOffsetPercent(
+					settings.bottomOffset,
+					this.config.width,
+					this.config.height,
+				)) /
+				100 -
+			boxHeight / 2;
 
 		return {
 			key: `${layout.blockKey}:${layout.visiblePageIndex}:${layout.activeWordIndex}`,
@@ -3154,7 +3164,11 @@ export class FrameRenderer {
 			cursorTelemetry: this.config.cursorTelemetry,
 			cursorFollowCamera: this.cursorFollowCamera,
 			autoFrameViewport: this.config.autoFrame
-				? { stageSize: this.layoutCache.stageSize, mask: this.layoutCache.maskRect }
+				? {
+						stageSize: this.layoutCache.stageSize,
+						mask: this.layoutCache.maskRect,
+						followSpeed: this.config.autoFrameFollowSpeed,
+					}
 				: null,
 		});
 

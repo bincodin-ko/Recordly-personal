@@ -29,7 +29,11 @@ import {
 	DEFAULT_WALLPAPER_RELATIVE_PATH,
 	isVideoWallpaperSource,
 } from "@/lib/wallpapers";
-import { type AspectRatio, formatAspectRatioForCSS } from "@/utils/aspectRatioUtils";
+import {
+	type AspectRatio,
+	formatAspectRatioForCSS,
+	getAspectRatioValue,
+} from "@/utils/aspectRatioUtils";
 import { AnnotationOverlay } from "./AnnotationOverlay";
 import { type CaptionEditTarget, normalizeCaptionEditText } from "./captionEditing";
 import { buildActiveCaptionLayout } from "./captionLayout";
@@ -45,6 +49,7 @@ import {
 import {
 	CAPTION_FONT_WEIGHT,
 	CAPTION_LINE_HEIGHT,
+	getCaptionBottomOffsetPercent,
 	getCaptionPadding,
 	getCaptionScaledFontSize,
 	getCaptionScaledRadius,
@@ -282,6 +287,7 @@ interface VideoPlaybackProps {
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	autoFrame?: boolean;
+	autoFrameFollowSpeed?: number;
 	zoomMotionBlur?: number;
 	zoomMotionBlurTuning?: ZoomMotionBlurTuning;
 	cursorMotionBlur?: number;
@@ -373,6 +379,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			zoomSmoothness = 0.5,
 			zoomClassicMode = false,
 			autoFrame = false,
+			autoFrameFollowSpeed = 0.5,
 			zoomMotionBlur = DEFAULT_ZOOM_MOTION_BLUR,
 			zoomMotionBlurTuning = DEFAULT_ZOOM_MOTION_BLUR_TUNING,
 			cursorMotionBlur = DEFAULT_CURSOR_MOTION_BLUR,
@@ -546,6 +553,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		const zoomSmoothnessRef = useRef(zoomSmoothness);
 		const zoomClassicModeRef = useRef(zoomClassicMode);
 		const autoFrameRef = useRef(autoFrame);
+		const autoFrameFollowSpeedRef = useRef(autoFrameFollowSpeed);
 		const cursorFollowCameraRef = useRef<CursorFollowCameraState>(
 			createCursorFollowCameraState(),
 		);
@@ -1537,8 +1545,9 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 
 		useEffect(() => {
 			autoFrameRef.current = autoFrame;
+			autoFrameFollowSpeedRef.current = autoFrameFollowSpeed;
 			requestPausedFrameRefresh();
-		}, [autoFrame, requestPausedFrameRefresh]);
+		}, [autoFrame, autoFrameFollowSpeed, requestPausedFrameRefresh]);
 
 		useEffect(() => {
 			cursorMotionBlurRef.current = cursorMotionBlur;
@@ -1619,6 +1628,18 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				observer.disconnect();
 			};
 		}, [pixiReady, videoReady, layoutVideoContent]);
+
+		// Unlike a plain resize, an aspect change re-fits the camera (zoom focus,
+		// "Always keep zoomed in" crop), so recompose the paused frame too.
+		// biome-ignore lint/correctness/useExhaustiveDependencies: run only when the aspect ratio changes
+		useEffect(() => {
+			if (!pixiReady || !videoReady || !aspectRatio) return;
+			const frame = requestAnimationFrame(() => {
+				layoutVideoContent();
+				requestPausedFrameRefresh();
+			});
+			return () => cancelAnimationFrame(frame);
+		}, [aspectRatio, pixiReady, videoReady]);
 
 		useEffect(() => {
 			if (!pixiReady || !videoReady) return;
@@ -2168,7 +2189,11 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 					cursorTelemetry: cursorTelemetryRef.current,
 					cursorFollowCamera: cursorFollowCameraRef.current,
 					autoFrameViewport: autoFrameRef.current
-						? { stageSize: stageSizeRef.current, mask: baseMaskRef.current }
+						? {
+								stageSize: stageSizeRef.current,
+								mask: baseMaskRef.current,
+								followSpeed: autoFrameFollowSpeedRef.current,
+							}
 						: null,
 				});
 
@@ -2602,7 +2627,11 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 							<div
 								className="absolute inset-x-0 flex justify-center"
 								style={{
-									bottom: `${autoCaptionSettings.bottomOffset}%`,
+									bottom: `${getCaptionBottomOffsetPercent(
+										autoCaptionSettings.bottomOffset,
+										getAspectRatioValue(aspectRatio, nativeAspectRatio),
+										1,
+									)}%`,
 									pointerEvents: onEditAutoCaption ? "auto" : "none",
 								}}
 							>

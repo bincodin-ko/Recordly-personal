@@ -79,6 +79,7 @@ interface GifExporterConfig {
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	autoFrame?: boolean;
+	autoFrameFollowSpeed?: number;
 	cursorMotionBlur?: number;
 	cursorClickEffect?: CursorClickEffectStyle;
 	cursorClickEffectColor?: string;
@@ -185,6 +186,7 @@ export function buildGifFrameRendererConfig(
 		zoomSmoothness: config.zoomSmoothness,
 		zoomClassicMode: config.zoomClassicMode,
 		autoFrame: config.autoFrame,
+		autoFrameFollowSpeed: config.autoFrameFollowSpeed,
 		cursorMotionBlur: config.cursorMotionBlur,
 		cursorClickEffect: config.cursorClickEffect,
 		cursorClickEffectColor: config.cursorClickEffectColor,

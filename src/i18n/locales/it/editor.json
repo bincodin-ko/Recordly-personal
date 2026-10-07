@@ -433,7 +433,9 @@
 	},
 	"preview": {
 		"loadingPreview": "Loading preview",
-		"volume": "Preview volume"
+		"volume": "Preview volume",
+		"reelMode": "Modalità Reel",
+		"reelModeHint": "Anteprima in 9:16 con gli elementi di Instagram/TikTok"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",

@@ -14,7 +14,11 @@
 		"amount": "배율",
 		"globalSettings": "애니메이션",
 		"modeLabel": "줌 모드",
-		"levelLabel": "줌 배율"
+		"levelLabel": "줌 배율",
+		"autoFrameFollowSpeed": "따라가는 속도",
+		"followSpeedSlow": "느리게",
+		"followSpeedNormal": "보통",
+		"followSpeedFast": "빠르게"
 	},
 	"trim": {
 		"deleteRegion": "자르기 구간 삭제"

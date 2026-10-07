@@ -2,7 +2,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Slider } from "@/components/ui/slider";
 import {
 	CaretDown,
+	ChatCircle,
 	Check,
+	DotsThree,
+	Heart,
+	MusicNotes,
+	ShareNetwork,
+	Smartphone,
+	UserCircle,
 	Crop,
 	MagicWand,
 	MagnifyingGlassPlus,
@@ -16,7 +23,14 @@ import {
 	SpeakerLow,
 	SpeakerX,
 } from "@/components/ui/icons";
-import { type Dispatch, type RefObject, type SetStateAction, useEffect, useState } from "react";
+import {
+	type Dispatch,
+	type RefObject,
+	type SetStateAction,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -74,6 +88,42 @@ type Props = {
 	setError: (message: string | null) => void;
 };
 
+/** Screen Studio "Reel mode": Instagram/TikTok UI drawn over the preview only (never exported). */
+function ReelModeOverlay() {
+	const side = [
+		<Heart key="like" weight="fill" className="size-6" />,
+		<ChatCircle key="comment" weight="fill" className="size-6" />,
+		<ShareNetwork key="share" weight="fill" className="size-6" />,
+		<DotsThree key="more" weight="bold" className="size-6" />,
+	];
+	return (
+		<div
+			className="pointer-events-none absolute inset-0 z-30 overflow-hidden rounded-[inherit] text-white"
+			data-testid="reel-mode-overlay"
+		>
+			<div className="absolute inset-x-0 top-0 flex items-center justify-between bg-gradient-to-b from-black/40 to-transparent px-[5%] pb-6 pt-[4%] text-[13px] font-semibold">
+				<span>Reels</span>
+			</div>
+			<div className="absolute bottom-[18%] right-[3%] flex flex-col items-center gap-4 drop-shadow">
+				{side}
+			</div>
+			<div className="absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-black/55 to-transparent" />
+			<div className="absolute bottom-[4%] left-[4%] right-[20%] flex flex-col gap-1.5 text-[12px] drop-shadow">
+				<div className="flex items-center gap-2 font-semibold">
+					<UserCircle weight="fill" className="size-6" />
+					<span>your_account</span>
+					<span className="rounded border border-white/70 px-1.5 text-[0.85em]">Follow</span>
+				</div>
+				<div className="h-2 w-3/4 rounded-full bg-white/70" />
+				<div className="flex items-center gap-1.5 opacity-90">
+					<MusicNotes className="size-3.5" />
+					<div className="h-1.5 w-1/2 rounded-full bg-white/60" />
+				</div>
+			</div>
+		</div>
+	);
+}
+
 function formatTime(seconds: number) {
 	if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
 	const mins = Math.floor(seconds / 60);
@@ -117,6 +167,22 @@ export function EditorPreviewPanel(props: Props) {
 		setError,
 	} = props;
 
+	// Reel mode switches the output to 9:16 (so export matches) and overlays reel UI.
+	const [reelMode, setReelMode] = useState(false);
+	const aspectBeforeReelRef = useRef<AspectRatio | null>(null);
+	const showReelOverlay = reelMode && aspectRatio === "9:16";
+	const toggleReelMode = () => {
+		if (showReelOverlay) {
+			setReelMode(false);
+			if (aspectBeforeReelRef.current) setAspectRatio(aspectBeforeReelRef.current);
+			aspectBeforeReelRef.current = null;
+			return;
+		}
+		aspectBeforeReelRef.current = aspectRatio === "9:16" ? null : aspectRatio;
+		setAspectRatio("9:16");
+		setReelMode(true);
+	};
+
 	return (
 		<div className="flex min-h-0 min-w-0 flex-1 flex-col">
 			<div className="flex min-h-0 flex-1 flex-col">
@@ -150,6 +216,25 @@ export function EditorPreviewPanel(props: Props) {
 								))}
 							</DropdownMenuContent>
 						</DropdownMenu>
+						<Button
+							variant="ghost"
+							size="sm"
+							onClick={toggleReelMode}
+							aria-pressed={showReelOverlay}
+							title={t(
+								"editor.preview.reelModeHint",
+								"Preview in 9:16 with Instagram/TikTok screen elements",
+							)}
+							className="h-7 gap-1.5 px-2 text-xs"
+						>
+							<Smartphone className="h-3.5 w-3.5" />
+							<span className="font-medium">
+								{t("editor.preview.reelMode", "Reel mode")}
+							</span>
+							{showReelOverlay ? (
+								<span className="h-1.5 w-1.5 rounded-full bg-[#2563EB]" />
+							) : null}
+						</Button>
 						<div className="h-4 w-px bg-foreground/20" />
 						<Button
 							variant="ghost"
@@ -220,6 +305,7 @@ export function EditorPreviewPanel(props: Props) {
 											annotationCommands.handleAnnotationSizeChange,
 									}}
 								/>
+								{showReelOverlay ? <ReelModeOverlay /> : null}
 							</div>
 						</div>
 					</div>

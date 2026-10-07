@@ -1,6 +1,13 @@
 import { AccountAvatar } from "@/components/ui/account-avatar";
 import type { User } from "@supabase/supabase-js";
-import { Camera, ClosedCaptioning, Cursor, Gear, FrameCorners } from "@/components/ui/icons";
+import {
+	Camera,
+	ClosedCaptioning,
+	Cursor,
+	Gear,
+	FrameCorners,
+	MagnifyingGlassPlus,
+} from "@/components/ui/icons";
 import {
 	ToggleButtonGroup,
 	ToggleButton,
@@ -49,6 +56,11 @@ export function EditorSidebar({
 				id: "scene" as const,
 				label: t("settings.sections.scene", "Scene"),
 				icon: FrameCorners,
+			},
+			{
+				id: "zoom" as const,
+				label: t("settings.sections.zoom", "Zoom"),
+				icon: MagnifyingGlassPlus,
 			},
 			{ id: "cursor" as const, label: t("settings.sections.cursor", "Cursor"), icon: Cursor },
 			{ id: "webcam" as const, label: t("settings.sections.webcam", "Webcam"), icon: Camera },

@@ -433,7 +433,9 @@
 	},
 	"preview": {
 		"loadingPreview": "Loading preview",
-		"volume": "Preview volume"
+		"volume": "Preview volume",
+		"reelMode": "Reel-modus",
+		"reelModeHint": "Voorvertoning in 9:16 met Instagram/TikTok-schermelementen"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",

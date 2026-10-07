@@ -77,6 +77,7 @@ export function buildExportRenderOptions({
 		zoomSmoothness: appearance.zoomSmoothness,
 		zoomClassicMode: appearance.zoomClassicMode,
 		autoFrame: appearance.autoFrame,
+		autoFrameFollowSpeed: appearance.autoFrameFollowSpeed,
 		cursorMotionBlur: appearance.cursorMotionBlur,
 		cursorClickEffect: appearance.cursorClickEffect,
 		cursorClickEffectColor: appearance.cursorClickEffectColor,

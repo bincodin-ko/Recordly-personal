@@ -504,6 +504,8 @@ interface SettingsPanelProps {
 	onZoomClassicModeChange?: (enabled: boolean) => void;
 	autoFrame?: boolean;
 	onAutoFrameChange?: (enabled: boolean) => void;
+	autoFrameFollowSpeed?: number;
+	onAutoFrameFollowSpeedChange?: (speed: number) => void;
 	cursorClickEffect?: CursorClickEffectStyle;
 	onCursorClickEffectChange?: (effect: CursorClickEffectStyle) => void;
 	cursorClickEffectColor?: string;
@@ -958,6 +960,8 @@ export function SettingsPanel({
 	onZoomClassicModeChange,
 	autoFrame = false,
 	onAutoFrameChange,
+	autoFrameFollowSpeed = 0.5,
+	onAutoFrameFollowSpeedChange,
 	cursorClickEffect = DEFAULT_CURSOR_CLICK_EFFECT,
 	onCursorClickEffectChange,
 	cursorClickEffectColor = DEFAULT_CURSOR_CLICK_EFFECT_COLOR,
@@ -2363,44 +2367,6 @@ export function SettingsPanel({
 					)}
 				</SettingsCategory>
 				<SettingsCategory category="motion">
-					<section className="flex flex-col gap-6">
-						<SettingsRow
-							title={tSettings(
-								"effects.autoApplyFreshRecordingZooms",
-								"Auto-apply fresh recording zooms",
-							)}
-							description={tSettings(
-								"effects.autoApplyFreshRecordingZoomsDescription",
-								"Suggest cursor-follow zooms automatically when you open a new recording.",
-							)}
-						>
-							<Switch
-								aria-label={tSettings(
-									"effects.autoApplyFreshRecordingZooms",
-									"Auto-apply fresh recording zooms",
-								)}
-								checked={autoApplyFreshRecordingAutoZooms}
-								onCheckedChange={onAutoApplyFreshRecordingAutoZoomsChange}
-							/>
-						</SettingsRow>
-						<SettingsRow
-							title={tSettings("effects.connectZooms", "Connect neighboring zooms")}
-							description={tSettings(
-								"effects.connectZoomsDescription",
-								"Smooth consecutive zoom regions into a continuous camera move.",
-							)}
-						>
-							<Switch
-								aria-label={tSettings(
-									"effects.connectZooms",
-									"Connect neighboring zooms",
-								)}
-								checked={connectZooms}
-								onCheckedChange={onConnectZoomsChange}
-							/>
-						</SettingsRow>
-					</section>
-
 					<section className="flex flex-col gap-4">
 						<MotionPresetCards
 							title={tSettings("effects.motionPresetsTitle", "Motion Presets")}
@@ -2662,6 +2628,43 @@ export function SettingsPanel({
 						</div>
 					</>
 				)}
+			<div className="flex flex-col gap-4">
+				<SettingsRow
+					title={tSettings(
+						"effects.autoApplyFreshRecordingZooms",
+						"Auto-apply fresh recording zooms",
+					)}
+					description={tSettings(
+						"effects.autoApplyFreshRecordingZoomsDescription",
+						"Suggest cursor-follow zooms automatically when you open a new recording.",
+					)}
+				>
+					<Switch
+						aria-label={tSettings(
+							"effects.autoApplyFreshRecordingZooms",
+							"Auto-apply fresh recording zooms",
+						)}
+						checked={autoApplyFreshRecordingAutoZooms}
+						onCheckedChange={onAutoApplyFreshRecordingAutoZoomsChange}
+					/>
+				</SettingsRow>
+				<SettingsRow
+					title={tSettings("effects.connectZooms", "Connect neighboring zooms")}
+					description={tSettings(
+						"effects.connectZoomsDescription",
+						"Smooth consecutive zoom regions into a continuous camera move.",
+					)}
+				>
+					<Switch
+						aria-label={tSettings(
+							"effects.connectZooms",
+							"Connect neighboring zooms",
+						)}
+						checked={connectZooms}
+						onCheckedChange={onConnectZoomsChange}
+					/>
+				</SettingsRow>
+			</div>
 				<div>
 					<div className="flex items-center justify-between py-1">
 						<span className="text-xs text-muted-foreground">
@@ -2679,6 +2682,25 @@ export function SettingsPanel({
 							"Fill the selected aspect ratio and follow the cursor",
 						)}
 					</p>
+					{autoFrame && (
+						<div className="mt-3">
+							<SliderControl
+								label={tSettings("zoom.autoFrameFollowSpeed", "Follow speed")}
+								value={autoFrameFollowSpeed}
+								min={0}
+								max={1}
+								step={0.05}
+								onChange={(v) => onAutoFrameFollowSpeedChange?.(v)}
+								formatValue={(v) =>
+									v < 0.34
+										? tSettings("zoom.followSpeedSlow", "Slow")
+										: v > 0.66
+											? tSettings("zoom.followSpeedFast", "Fast")
+											: tSettings("zoom.followSpeedNormal", "Normal")
+								}
+							/>
+						</div>
+					)}
 				</div>
 				{advanced && (
 					<>

@@ -2,6 +2,7 @@ import { buildActiveCaptionLayout } from "@/components/video-editor/captionLayou
 import {
 	CAPTION_FONT_WEIGHT,
 	CAPTION_LINE_HEIGHT,
+	getCaptionBottomOffsetPercent,
 	getCaptionPadding,
 	getCaptionScaledFontSize,
 	getCaptionScaledRadius,
@@ -52,7 +53,10 @@ export function renderCaptions(
 	const textBlockHeight = activeCaptionLayout.visibleLines.length * lineHeight;
 	const boxHeight = textBlockHeight + paddingY * 2;
 	const centerX = width / 2;
-	const centerY = height - (height * settings.bottomOffset) / 100 - boxHeight / 2;
+	const centerY =
+		height -
+		(height * getCaptionBottomOffsetPercent(settings.bottomOffset, width, height)) / 100 -
+		boxHeight / 2;
 	const maxMeasuredWidth = activeCaptionLayout.visibleLines.reduce(
 		(largest, line) => Math.max(largest, line.width),
 		0,

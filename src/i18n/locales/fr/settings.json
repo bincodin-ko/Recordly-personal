@@ -14,7 +14,11 @@
 		"amount": "Amount",
 		"globalSettings": "Animation",
 		"modeLabel": "Zoom mode",
-		"levelLabel": "Zoom level"
+		"levelLabel": "Zoom level",
+		"autoFrameFollowSpeed": "Vitesse de suivi",
+		"followSpeedSlow": "Lente",
+		"followSpeedNormal": "Normale",
+		"followSpeedFast": "Rapide"
 	},
 	"trim": {
 		"deleteRegion": "Supprimer la zone de découpe"

@@ -127,6 +127,7 @@ interface FrameRenderConfig {
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	autoFrame?: boolean;
+	autoFrameFollowSpeed?: number;
 	cursorMotionBlur?: number;
 	cursorClickEffect?: CursorClickEffectStyle;
 	cursorClickEffectColor?: string;
@@ -1638,7 +1639,11 @@ export class FrameRenderer {
 			cursorTelemetry: this.config.cursorTelemetry,
 			cursorFollowCamera: this.cursorFollowCamera,
 			autoFrameViewport: this.config.autoFrame
-				? { stageSize: this.layoutCache.stageSize, mask: this.layoutCache.maskRect }
+				? {
+						stageSize: this.layoutCache.stageSize,
+						mask: this.layoutCache.maskRect,
+						followSpeed: this.config.autoFrameFollowSpeed,
+					}
 				: null,
 		});
 

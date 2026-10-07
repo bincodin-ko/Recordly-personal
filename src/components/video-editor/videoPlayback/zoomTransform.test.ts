@@ -182,3 +182,28 @@ describe("applyZoomTransform motion blur routing", () => {
 		expect(zoomBlurFilter.innerRadius).toBe(0);
 	});
 });
+
+describe("zoom focus across aspect ratios", () => {
+	it("keeps the zoom focus at the frame center after switching 16:9 -> 9:16", () => {
+		const focus = { x: 0.9, y: 0.2 };
+		for (const stageSize of [
+			{ width: 1920, height: 1080 },
+			{ width: 1080, height: 1920 },
+		]) {
+			// contained 16:9 video, as layoutVideoContent produces
+			const maskWidth = Math.min(stageSize.width, (stageSize.height * 16) / 9);
+			const baseMask = {
+				x: (stageSize.width - maskWidth) / 2,
+				y: (stageSize.height - (maskWidth * 9) / 16) / 2,
+				width: maskWidth,
+				height: (maskWidth * 9) / 16,
+			};
+			const zoomScale = 2;
+			const t = computeZoomTransform({ stageSize, baseMask, zoomScale, focusX: focus.x, focusY: focus.y });
+			const screenX = (baseMask.x + focus.x * baseMask.width) * t.scale + t.x;
+			const screenY = (baseMask.y + focus.y * baseMask.height) * t.scale + t.y;
+			expect(screenX).toBeCloseTo(stageSize.width / 2);
+			expect(screenY).toBeCloseTo(stageSize.height / 2);
+		}
+	});
+});

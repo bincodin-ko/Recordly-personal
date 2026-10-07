@@ -147,6 +147,7 @@ interface VideoExporterConfig extends ExportConfig {
 	zoomSmoothness?: number;
 	zoomClassicMode?: boolean;
 	autoFrame?: boolean;
+	autoFrameFollowSpeed?: number;
 	audioRegions?: AudioRegion[];
 	clipRegions?: ClipRegion[];
 	sourceAudioFallbackPaths?: string[];
@@ -661,6 +662,7 @@ export class ModernVideoExporter {
 					zoomSmoothness: this.config.zoomSmoothness,
 					zoomClassicMode: this.config.zoomClassicMode,
 					autoFrame: this.config.autoFrame,
+					autoFrameFollowSpeed: this.config.autoFrameFollowSpeed,
 				});
 				await this.renderer.initialize();
 				this.rendererInitTimeMs = this.getNowMs() - stageStartedAt;

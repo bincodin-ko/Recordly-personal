@@ -23,6 +23,20 @@ export function getCaptionScaledFontSize(
 	);
 }
 
+/** Bottom share of a vertical frame covered by Reels/TikTok/Shorts UI. */
+export const PORTRAIT_CAPTION_SAFE_BOTTOM_PERCENT = 20;
+
+/** Re-fit captions above the reel UI when the output is vertical (9:16, 10:16). */
+export function getCaptionBottomOffsetPercent(
+	bottomOffset: number,
+	width: number,
+	height: number,
+) {
+	return height >= width * 1.5
+		? Math.max(bottomOffset, PORTRAIT_CAPTION_SAFE_BOTTOM_PERCENT)
+		: bottomOffset;
+}
+
 export function getCaptionPadding(fontSize: number) {
 	return {
 		x: fontSize * 1.1,

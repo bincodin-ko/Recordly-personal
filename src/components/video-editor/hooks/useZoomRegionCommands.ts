@@ -49,8 +49,6 @@ export function useZoomRegionCommands({
 				setSelectedClipId(null);
 				setSelectedAudioId(null);
 				setSelectedCaptionId(null);
-			} else {
-				setActiveEffectSection((section) => (section === "zoom" ? "scene" : section));
 			}
 		},
 		[

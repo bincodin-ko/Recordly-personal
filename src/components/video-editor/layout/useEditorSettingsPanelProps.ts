@@ -159,6 +159,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		onZoomClassicModeChange: appearance.setZoomClassicMode,
 		autoFrame: appearance.autoFrame,
 		onAutoFrameChange: appearance.setAutoFrame,
+		autoFrameFollowSpeed: appearance.autoFrameFollowSpeed,
+		onAutoFrameFollowSpeedChange: appearance.setAutoFrameFollowSpeed,
 		cursorClickEffect: appearance.cursorClickEffect,
 		cursorClickEffectColor: appearance.cursorClickEffectColor,
 		onCursorClickEffectChange: appearance.setCursorClickEffect,

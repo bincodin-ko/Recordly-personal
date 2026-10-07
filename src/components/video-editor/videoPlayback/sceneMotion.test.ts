@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import type { ZoomRegion } from "../types";
 import { createCursorFollowCameraState } from "./cursorFollowCamera";
 import {
+	getAutoFrameCursorReach,
 	getAutoFrameFillScale,
+	getAutoFrameSmoothingWindowMs,
 	keepCursorInView,
 	resolvePreviewMotionMode,
 	resolveSceneZoomTarget,
@@ -177,5 +179,23 @@ describe("keepCursorInView", () => {
 		expect(out.cx).toBeCloseTo(0.9 - reach);
 		const near = keepCursorInView({ cx: 0.5, cy: 0.5 }, { cx: 0.52, cy: 0.5 }, scale, viewport);
 		expect(near.cx).toBe(0.5);
+	});
+});
+
+describe("auto frame follow speed", () => {
+	it("maps slow..fast to a longer..shorter window and a looser..tighter reach", () => {
+		expect(getAutoFrameSmoothingWindowMs(0.5)).toBe(800);
+		expect(getAutoFrameSmoothingWindowMs(0)).toBe(1600);
+		expect(getAutoFrameSmoothingWindowMs(1)).toBe(400);
+		expect(getAutoFrameCursorReach(0.5)).toBeCloseTo(0.7);
+		expect(getAutoFrameCursorReach(1)).toBeLessThan(getAutoFrameCursorReach(0));
+	});
+
+	it("keeps a fast cursor closer to center at fast speed", () => {
+		const viewport = { stageSize: { width: 1080, height: 1920 }, mask: { width: 1920, height: 1080 } };
+		const scale = getAutoFrameFillScale(viewport);
+		const slow = keepCursorInView({ cx: 0.2, cy: 0.5 }, { cx: 0.9, cy: 0.5 }, scale, { ...viewport, followSpeed: 0 });
+		const fast = keepCursorInView({ cx: 0.2, cy: 0.5 }, { cx: 0.9, cy: 0.5 }, scale, { ...viewport, followSpeed: 1 });
+		expect(fast.cx).toBeGreaterThan(slow.cx);
 	});
 });

@@ -433,7 +433,9 @@
 	},
 	"preview": {
 		"loadingPreview": "Loading preview",
-		"volume": "Preview volume"
+		"volume": "Preview volume",
+		"reelMode": "Reels 模式",
+		"reelModeHint": "以 9:16 预览并叠加 Instagram/TikTok 界面元素"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",

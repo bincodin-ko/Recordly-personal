@@ -433,7 +433,9 @@
 	},
 	"preview": {
 		"loadingPreview": "미리보기 불러오는 중",
-		"volume": "미리보기 볼륨"
+		"volume": "미리보기 볼륨",
+		"reelMode": "릴스 모드",
+		"reelModeHint": "인스타그램·틱톡 화면 요소를 덮어 9:16으로 미리 봐요"
 	},
 	"extensions": {
 		"unavailableTitle": "확장 기능은 더 이상 제공되지 않아요",

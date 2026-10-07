@@ -117,6 +117,8 @@ export interface ProjectEditorState {
 	zoomClassicMode: boolean;
 	/** Screen Studio "Always keep zoomed in": fill the aspect ratio and follow the cursor. */
 	autoFrame: boolean;
+	/** "Always keep zoomed in" cursor follow speed: 0 slow .. 1 fast (0.5 default). */
+	autoFrameFollowSpeed: number;
 	cursorMotionBlur: number;
 	cursorClickBounce: number;
 	cursorClickBounceDuration: number;
@@ -887,6 +889,10 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 		zoomClassicMode:
 			typeof editor.zoomClassicMode === "boolean" ? editor.zoomClassicMode : false,
 		autoFrame: editor.autoFrame === true,
+		autoFrameFollowSpeed:
+			typeof editor.autoFrameFollowSpeed === "number" && Number.isFinite(editor.autoFrameFollowSpeed)
+				? Math.min(1, Math.max(0, editor.autoFrameFollowSpeed))
+				: 0.5,
 		cursorMotionBlur: DEFAULT_CURSOR_MOTION_BLUR,
 		cursorClickBounce: normalizedMotionPreset.cursorClickBounce,
 		cursorClickBounceDuration: normalizedMotionPreset.cursorClickBounceDuration,

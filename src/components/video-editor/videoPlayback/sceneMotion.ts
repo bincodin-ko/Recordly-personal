@@ -19,11 +19,26 @@ export type SceneZoomTarget = {
 
 type Size = { width: number; height: number };
 
-/** Stage and base video mask size, used by "Always keep zoomed in" auto framing. */
-export type AutoFrameViewport = { stageSize: Size; mask: Size };
+/**
+ * Stage and base video mask size, used by "Always keep zoomed in" auto framing.
+ * followSpeed: 0 = slow, 0.5 = default, 1 = fast cursor following.
+ */
+export type AutoFrameViewport = { stageSize: Size; mask: Size; followSpeed?: number };
 
-const AUTO_FRAME_SMOOTHING_WINDOW_MS = 800;
+export const DEFAULT_AUTO_FRAME_FOLLOW_SPEED = 0.5;
 const AUTO_FRAME_SMOOTHING_STEP_MS = 100;
+
+/** Slow..fast maps to a 1600..400ms smoothing window (800ms at default). */
+export function getAutoFrameSmoothingWindowMs(followSpeed = DEFAULT_AUTO_FRAME_FOLLOW_SPEED) {
+	const speed = Math.min(1, Math.max(0, followSpeed));
+	return Math.round(800 * 2 ** ((0.5 - speed) * 2));
+}
+
+/** Share of the visible area the cursor may reach before the frame is pulled along (0.9..0.5). */
+export function getAutoFrameCursorReach(followSpeed = DEFAULT_AUTO_FRAME_FOLLOW_SPEED) {
+	const speed = Math.min(1, Math.max(0, followSpeed));
+	return 0.7 + (0.5 - speed) * 0.4;
+}
 
 /**
  * Scale that makes the video mask cover the whole stage. Returns 1 when the aspect
@@ -44,20 +59,20 @@ export function getAutoFrameFillScale({ stageSize, mask }: AutoFrameViewport): n
 export function getSmoothedCursorFocus(
 	samples: CursorTelemetryPoint[] | undefined,
 	timeMs: number,
+	windowMs = getAutoFrameSmoothingWindowMs(),
 ): ZoomFocus | null {
 	if (!samples || samples.length === 0) return null;
 	let sumX = 0;
 	let sumY = 0;
 	let sumW = 0;
 	for (
-		let offset = -AUTO_FRAME_SMOOTHING_WINDOW_MS;
-		offset <= AUTO_FRAME_SMOOTHING_WINDOW_MS;
+		let offset = -windowMs;
+		offset <= windowMs;
 		offset += AUTO_FRAME_SMOOTHING_STEP_MS
 	) {
 		const point = interpolateCursorPosition(samples, timeMs + offset);
 		if (!point) continue;
-		const weight =
-			AUTO_FRAME_SMOOTHING_WINDOW_MS + AUTO_FRAME_SMOOTHING_STEP_MS - Math.abs(offset);
+		const weight = windowMs + AUTO_FRAME_SMOOTHING_STEP_MS - Math.abs(offset);
 		sumX += point.cx * weight;
 		sumY += point.cy * weight;
 		sumW += weight;
@@ -67,16 +82,17 @@ export function getSmoothedCursorFocus(
 
 /**
  * The smoothed focus lags a fast cursor; pull the frame along so the real cursor
- * always stays inside the inner 70% of the visible area.
+ * always stays inside the inner part (70% at default speed) of the visible area.
  */
 export function keepCursorInView(
 	focus: ZoomFocus,
 	cursor: { cx: number; cy: number },
 	scale: number,
-	{ stageSize, mask }: AutoFrameViewport,
+	{ stageSize, mask, followSpeed }: AutoFrameViewport,
 ): ZoomFocus {
+	const reachRatio = getAutoFrameCursorReach(followSpeed);
 	const follow = (value: number, target: number, stage: number, size: number) => {
-		const reach = (stage / (2 * scale * size)) * 0.7;
+		const reach = (stage / (2 * scale * size)) * reachRatio;
 		return Math.min(target + reach, Math.max(target - reach, value));
 	};
 	return {
@@ -185,7 +201,11 @@ export function resolveSceneZoomTarget({
 			? (blendedScale ?? ZOOM_DEPTH_SCALES[activeRegion.depth])
 			: 1;
 		const scale = fillScale * (1 + (regionScale - 1) * strength);
-		const smoothed = getSmoothedCursorFocus(cursorTelemetry, cursorTimeMs);
+		const smoothed = getSmoothedCursorFocus(
+			cursorTelemetry,
+			cursorTimeMs,
+			getAutoFrameSmoothingWindowMs(autoFrameViewport.followSpeed),
+		);
 		const rawCursor = cursorTelemetry?.length
 			? interpolateCursorPosition(cursorTelemetry, cursorTimeMs)
 			: null;
