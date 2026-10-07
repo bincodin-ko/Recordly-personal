@@ -139,6 +139,8 @@ export interface ProjectEditorState {
 	aspectRatio: AspectRatio;
 	sourceAudioTrackSettingsByClip?: Record<string, SourceAudioTrackSettings>;
 	defaultSourceAudioTrackSettings?: SourceAudioTrackSettings;
+	/** Shortcut samples (by timeMs) switched off on the shortcuts track. */
+	disabledShortcutTimes?: number[];
 }
 
 export interface EditorProjectData {
@@ -604,6 +606,13 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 							: 20,
 						blurColor:
 							typeof region.blurColor === "string" ? region.blurColor : undefined,
+						blurStyle: region.blurStyle === "pixelate" ? "pixelate" : undefined,
+						shape:
+							region.shape === "rectangle" ||
+							region.shape === "rounded" ||
+							region.shape === "ellipse"
+								? region.shape
+								: undefined,
 						trackIndex: isFiniteNumber(region.trackIndex)
 							? Math.max(0, Math.floor(region.trackIndex))
 							: 0,
@@ -1051,6 +1060,9 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 			typeof editor.defaultSourceAudioTrackSettings === "object"
 				? editor.defaultSourceAudioTrackSettings
 				: {},
+		disabledShortcutTimes: Array.isArray(editor.disabledShortcutTimes)
+			? editor.disabledShortcutTimes.filter(isFiniteNumber)
+			: [],
 		aspectRatio:
 			typeof editor.aspectRatio === "string" &&
 			(validAspectRatios.has(editor.aspectRatio as AspectRatio) ||

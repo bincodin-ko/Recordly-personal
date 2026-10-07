@@ -141,7 +141,19 @@
 		"noArrowData": "No arrow data",
 		"typeLabel": "Annotation type",
 		"customFonts": "Custom Fonts",
-		"altUploaded": "Uploaded annotation"
+		"altUploaded": "Uploaded annotation",
+		"shape": "Vorm",
+		"shapes": {
+			"rectangle": "Rechthoek",
+			"rounded": "Afgerond",
+			"ellipse": "Ellips"
+		},
+		"blurStyle": "Stijl",
+		"blurStyles": {
+			"blur": "Vervagen",
+			"pixelate": "Pixeleren"
+		},
+		"pixelSize": "Pixelgrootte: {{strength}}"
 	},
 	"fontStyles": {
 		"classic": "Klassiek",

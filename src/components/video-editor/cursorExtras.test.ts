@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
 	buildClickSoundRegions,
+	buildShortcutBlocks,
 	DEFAULT_CURSOR_EXTRAS,
+	filterEnabledKeystrokes,
 	getActiveShortcut,
 	getCursorVisibility,
 	getHiddenCursorRanges,
@@ -64,5 +66,31 @@ describe("cursorExtras", () => {
 		const regions = buildClickSoundRegions(samples, clips, settings);
 		expect(regions.map((r) => r.startMs)).toEqual([500]);
 		expect(buildClickSoundRegions(samples, clips, DEFAULT_CURSOR_EXTRAS)).toEqual([]);
+	});
+
+	it("uses the picked click sound and drops shortcuts switched off on the track", () => {
+		const click: CursorTelemetryPoint = { timeMs: 100, cx: 0.5, cy: 0.5, interactionType: "click" };
+		const [region] = buildClickSoundRegions([click], [], {
+			...DEFAULT_CURSOR_EXTRAS,
+			clickSound: true,
+			clickSoundType: "soft",
+		});
+		expect(region.audioPath.startsWith("data:audio/ogg;base64,")).toBe(true);
+		expect(normalizeCursorExtras({ clickSoundType: "nope" }).clickSoundType).toBe("default");
+
+		const key = (timeMs: number, k: string) => ({
+			timeMs, key: k, ctrl: true, alt: false, shift: false, meta: false,
+		});
+		const keys = [key(0, "C"), key(300, "V"), key(5000, "C")];
+		expect(filterEnabledKeystrokes(keys, [300]).map((s) => s.key)).toEqual(["C", "C"]);
+
+		const settings = { ...DEFAULT_CURSOR_EXTRAS, showShortcuts: true };
+		const blocks = buildShortcutBlocks(keys, [300], [], settings);
+		expect(blocks.map((b) => [b.label, b.start, b.end, b.disabled])).toEqual([
+			["Ctrl + C", 0, 300, false],
+			["Ctrl + V", 300, 1300, true],
+			["Ctrl + C", 5000, 6000, false],
+		]);
+		expect(buildShortcutBlocks(keys, [], [], DEFAULT_CURSOR_EXTRAS)).toEqual([]);
 	});
 });

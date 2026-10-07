@@ -141,7 +141,19 @@
 		"noArrowData": "화살표 데이터 없음",
 		"typeLabel": "주석 종류",
 		"customFonts": "내 글꼴",
-		"altUploaded": "업로드한 주석"
+		"altUploaded": "업로드한 주석",
+		"shape": "모양",
+		"shapes": {
+			"rectangle": "사각형",
+			"rounded": "둥근 사각형",
+			"ellipse": "타원"
+		},
+		"blurStyle": "방식",
+		"blurStyles": {
+			"blur": "흐림",
+			"pixelate": "모자이크"
+		},
+		"pixelSize": "모자이크 크기: {{strength}}"
 	},
 	"fontStyles": {
 		"classic": "클래식",

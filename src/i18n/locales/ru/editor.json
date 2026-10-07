@@ -141,7 +141,19 @@
 		"noArrowData": "No arrow data",
 		"typeLabel": "Annotation type",
 		"customFonts": "Custom Fonts",
-		"altUploaded": "Uploaded annotation"
+		"altUploaded": "Uploaded annotation",
+		"shape": "Форма",
+		"shapes": {
+			"rectangle": "Прямоугольник",
+			"rounded": "Скруглённый",
+			"ellipse": "Эллипс"
+		},
+		"blurStyle": "Стиль",
+		"blurStyles": {
+			"blur": "Размытие",
+			"pixelate": "Пикселизация"
+		},
+		"pixelSize": "Размер пикселя: {{strength}}"
 	},
 	"fontStyles": {
 		"classic": "Классический",

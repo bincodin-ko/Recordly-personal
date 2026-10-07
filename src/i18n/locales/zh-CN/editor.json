@@ -141,7 +141,19 @@
 		"noArrowData": "No arrow data",
 		"typeLabel": "Annotation type",
 		"customFonts": "Custom Fonts",
-		"altUploaded": "Uploaded annotation"
+		"altUploaded": "Uploaded annotation",
+		"shape": "形状",
+		"shapes": {
+			"rectangle": "矩形",
+			"rounded": "圆角矩形",
+			"ellipse": "椭圆"
+		},
+		"blurStyle": "样式",
+		"blurStyles": {
+			"blur": "模糊",
+			"pixelate": "马赛克"
+		},
+		"pixelSize": "像素大小：{{strength}}"
 	},
 	"fontStyles": {
 		"classic": "经典",

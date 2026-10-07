@@ -1,9 +1,31 @@
 import {
 	type AnnotationRegion,
+	type AnnotationShape,
 	type ArrowDirection,
+	BASE_PREVIEW_WIDTH,
 	BLUR_ANNOTATION_STRENGTH,
+	getAnnotationCornerRadius,
+	getPixelateGrid,
 	HIGHLIGHT_ANNOTATION_DIM,
 } from "@/components/video-editor/types";
+
+/** Adds the annotation's box outline (rect / rounded rect / ellipse) to the current path. */
+function addShapePath(
+	ctx: CanvasRenderingContext2D,
+	shape: AnnotationShape | undefined,
+	x: number,
+	y: number,
+	width: number,
+	height: number,
+	radius: number,
+) {
+	if (shape === "ellipse") {
+		ctx.moveTo(x + width, y + height / 2);
+		ctx.ellipse(x + width / 2, y + height / 2, width / 2, height / 2, 0, 0, Math.PI * 2);
+		return;
+	}
+	ctx.roundRect(x, y, width, height, Math.max(0, Math.min(radius, width / 2, height / 2)));
+}
 
 export interface AnnotationRenderAssets {
 	imageCache: Map<string, HTMLImageElement>;
@@ -288,7 +310,15 @@ function renderText(
 
 			ctx.fillStyle = style.backgroundColor;
 			ctx.beginPath();
-			ctx.roundRect(bgX, bgY, bgWidth, bgHeight, borderRadius);
+			addShapePath(
+				ctx,
+				annotation.shape,
+				bgX,
+				bgY,
+				bgWidth,
+				bgHeight,
+				annotation.shape === "rectangle" ? 0 : borderRadius,
+			);
 			ctx.fill();
 		}
 
@@ -391,6 +421,11 @@ export async function renderAnnotations(
 		);
 		const { x, y, width, height } = rect;
 		const effectiveScaleFactor = scaleFactor * (sceneTransform?.scale ?? 1);
+		// Same basis as the preview overlay (recording width / 1920, times zoom), so radii
+		// and pixelate cells land on the same pixels in preview and export.
+		const shapeScale =
+			(annotationRect.width / BASE_PREVIEW_WIDTH) * (sceneTransform?.scale ?? 1);
+		const cornerRadius = getAnnotationCornerRadius(annotation) * shapeScale;
 
 		switch (annotation.type) {
 			case "text":
@@ -425,9 +460,33 @@ export async function renderAnnotations(
 				ctx.save();
 
 				ctx.beginPath();
-				const borderRadius = (annotation.style.borderRadius ?? 0) * effectiveScaleFactor;
-				ctx.roundRect(x, y, width, height, borderRadius);
+				addShapePath(ctx, annotation.shape, x, y, width, height, cornerRadius);
 				ctx.clip();
+
+				if (annotation.blurStyle === "pixelate") {
+					const buffer = getBlurBufferCanvas();
+					const bCtx = buffer?.getContext("2d");
+					if (buffer && bCtx && width > 0 && height > 0) {
+						const { cols, rows } = getPixelateGrid(
+							width,
+							height,
+							(annotation.blurIntensity ?? BLUR_ANNOTATION_STRENGTH) * shapeScale,
+						);
+						buffer.width = cols;
+						buffer.height = rows;
+						bCtx.imageSmoothingEnabled = true;
+						bCtx.imageSmoothingQuality = "low";
+						bCtx.drawImage(ctx.canvas, x, y, width, height, 0, 0, cols, rows);
+						ctx.imageSmoothingEnabled = false;
+						ctx.drawImage(buffer, 0, 0, cols, rows, x, y, width, height);
+						if (annotation.blurColor && annotation.blurColor !== "transparent") {
+							ctx.fillStyle = annotation.blurColor;
+							ctx.fillRect(x, y, width, height);
+						}
+					}
+					ctx.restore();
+					break;
+				}
 
 				const sx = Math.max(0, x - padding);
 				const sy = Math.max(0, y - padding);
@@ -464,13 +523,7 @@ export async function renderAnnotations(
 				ctx.save();
 				ctx.beginPath();
 				ctx.rect(0, 0, canvasWidth, canvasHeight);
-				ctx.roundRect(
-					x,
-					y,
-					width,
-					height,
-					(annotation.style.borderRadius ?? 0) * effectiveScaleFactor,
-				);
+				addShapePath(ctx, annotation.shape, x, y, width, height, cornerRadius);
 				ctx.fillStyle = `rgba(0, 0, 0, ${dim})`;
 				ctx.fill("evenodd");
 				ctx.restore();

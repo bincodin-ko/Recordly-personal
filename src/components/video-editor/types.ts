@@ -428,6 +428,9 @@ export function trimsToClips(trims: TrimRegion[], totalDurationMs: number): Clip
 }
 
 export type AnnotationType = "text" | "image" | "figure" | "blur" | "highlight";
+/** Box outline for blur, highlight and text backgrounds; unset keeps the legacy rounded box. */
+export type AnnotationShape = "rectangle" | "rounded" | "ellipse";
+export type BlurAnnotationStyle = "blur" | "pixelate";
 export const BLUR_ANNOTATION_STRENGTH = 20;
 /** Highlight annotations reuse blurIntensity as the dim opacity (percent) outside the rect. */
 export const HIGHLIGHT_ANNOTATION_DIM = 60;
@@ -496,6 +499,25 @@ export interface AnnotationRegion {
 	figureData?: FigureData;
 	blurIntensity?: number;
 	blurColor?: string;
+	/** Blur annotations only: Gaussian blur (default) or pixelate/mosaic; both use blurIntensity. */
+	blurStyle?: BlurAnnotationStyle;
+	shape?: AnnotationShape;
+}
+
+/** Corner radius (1920-wide basis) for an annotation box; "rounded" never collapses to square. */
+export function getAnnotationCornerRadius(annotation: AnnotationRegion): number {
+	if (annotation.shape === "rectangle") return 0;
+	const radius = annotation.style.borderRadius ?? 0;
+	return annotation.shape === "rounded" ? radius || DEFAULT_ANNOTATION_STYLE.borderRadius : radius;
+}
+
+/** Pixelate cells per axis; preview and export share it so the mosaic grid matches. */
+export function getPixelateGrid(width: number, height: number, cellSize: number) {
+	const cell = Math.max(1, cellSize);
+	return {
+		cols: Math.max(1, Math.round(width / cell)),
+		rows: Math.max(1, Math.round(height / cell)),
+	};
 }
 
 export const DEFAULT_ANNOTATION_POSITION: AnnotationPosition = {

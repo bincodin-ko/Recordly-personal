@@ -182,6 +182,7 @@ export function useProjectLifecycle(input: Input) {
 		timeline.setAudioRegions(editor.audioRegions);
 		timeline.setSourceAudioTrackSettingsByClip(editor.sourceAudioTrackSettingsByClip ?? {});
 		timeline.setDefaultSourceAudioTrackSettings(editor.defaultSourceAudioTrackSettings ?? {});
+		timeline.setDisabledShortcutTimes(editor.disabledShortcutTimes ?? []);
 		timeline.setAutoCaptions(editor.autoCaptions);
 		timeline.setAutoCaptionSettings(editor.autoCaptionSettings);
 		current.setAspectRatio(editor.aspectRatio);

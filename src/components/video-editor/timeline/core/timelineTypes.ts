@@ -20,6 +20,16 @@ export interface TimelineRegion {
 	endMs: number;
 }
 
+/** One recorded keyboard shortcut on the shortcuts track (timeline ms). */
+export interface TimelineShortcutBlock {
+	/** Source time of the keystroke sample; the persisted on/off key. */
+	timeMs: number;
+	start: number;
+	end: number;
+	label: string;
+	disabled: boolean;
+}
+
 export interface TimelineAudioRegion extends TimelineRegion {
 	trackIndex?: number;
 }

@@ -190,7 +190,16 @@
 		"hideIdleCursor": "Cursor ausblenden, wenn er sich nicht bewegt",
 		"idleCursorDelay": "Ausblenden nach",
 		"clickSound": "Klickgeräusch",
-		"clickSoundVolume": "Lautstärke des Klickgeräuschs"
+		"clickSoundVolume": "Lautstärke des Klickgeräuschs",
+		"clickSoundType": "Klang",
+		"clickSoundTypes": {
+			"default": "Standard",
+			"soft": "Weich",
+			"crisp": "Knackig",
+			"tick": "Tick",
+			"tap": "Tippen",
+			"toggle": "Umschalten"
+		}
 	},
 	"sections": {
 		"scene": "Szene",

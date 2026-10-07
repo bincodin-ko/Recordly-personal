@@ -190,7 +190,16 @@
 		"hideIdleCursor": "光标静止时隐藏",
 		"idleCursorDelay": "隐藏前等待",
 		"clickSound": "点击音效",
-		"clickSoundVolume": "点击音效音量"
+		"clickSoundVolume": "点击音效音量",
+		"clickSoundType": "声音",
+		"clickSoundTypes": {
+			"default": "默认",
+			"soft": "柔和",
+			"crisp": "清脆",
+			"tick": "滴答",
+			"tap": "轻点",
+			"toggle": "切换"
+		}
 	},
 	"sections": {
 		"scene": "场景",
