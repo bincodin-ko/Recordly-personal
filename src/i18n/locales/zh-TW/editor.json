@@ -431,7 +431,8 @@
 	},
 	"header": {
 		"home": "Home",
-		"clips": "Clips"
+		"clips": "Clips",
+		"export": "匯出"
 	},
 	"shell": {
 		"openProjects": "Open Projects"

@@ -226,7 +226,9 @@
 		"appearance": "Appearance",
 		"settings": "Settings",
 		"title": "Editor tools",
-		"ariaLabel": "Settings sections"
+		"ariaLabel": "Settings sections",
+		"clip": "Клип",
+		"audio": "Аудио"
 	},
 	"captions": {
 		"selectOnTimeline": "Выберите субтитры на таймлайне, чтобы отредактировать их.",
@@ -404,5 +406,25 @@
 		"pauseThreshold": "Паузы длиннее",
 		"tightenPauses": "Сократить паузы: {{count}}",
 		"cutFailed": "Нечего вырезать."
+	},
+	"looks": {
+		"title": "Стиль",
+		"none": "Нет",
+		"natural": "Естественный",
+		"warm": "Тёплый",
+		"cool": "Холодный",
+		"vivid": "Яркий",
+		"soft": "Мягкий",
+		"cinematic": "Кино",
+		"film": "Плёнка",
+		"vintage": "Винтаж",
+		"bright": "Светлый",
+		"moody": "Мрачный",
+		"bw": "Ч/Б",
+		"noir": "Нуар",
+		"importLut": "Импорт LUT (.cube)",
+		"importFailed": "Не удалось прочитать файл LUT",
+		"intensity": "Интенсивность",
+		"sharpness": "Резкость"
 	}
 }

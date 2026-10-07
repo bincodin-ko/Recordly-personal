@@ -226,7 +226,9 @@
 		"appearance": "모양",
 		"settings": "설정",
 		"title": "편집 도구",
-		"ariaLabel": "설정 섹션"
+		"ariaLabel": "설정 섹션",
+		"clip": "클립",
+		"audio": "오디오"
 	},
 	"captions": {
 		"selectOnTimeline": "타임라인에서 자막을 선택해 편집하세요.",
@@ -404,5 +406,25 @@
 		"pauseThreshold": "이보다 긴 무음",
 		"tightenPauses": "무음 {{count}}곳 줄이기",
 		"cutFailed": "자를 부분이 없어요."
+	},
+	"looks": {
+		"title": "룩",
+		"none": "없음",
+		"natural": "자연스럽게",
+		"warm": "따뜻하게",
+		"cool": "차갑게",
+		"vivid": "생생하게",
+		"soft": "부드럽게",
+		"cinematic": "시네마틱",
+		"film": "필름",
+		"vintage": "빈티지",
+		"bright": "밝게",
+		"moody": "무드",
+		"bw": "흑백",
+		"noir": "누아르",
+		"importLut": "LUT 불러오기 (.cube)",
+		"importFailed": "이 LUT 파일을 읽지 못했어요",
+		"intensity": "강도",
+		"sharpness": "선명도"
 	}
 }

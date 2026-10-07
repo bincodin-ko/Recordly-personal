@@ -431,7 +431,8 @@
 	},
 	"header": {
 		"home": "홈",
-		"clips": "클립"
+		"clips": "클립",
+		"export": "내보내기"
 	},
 	"shell": {
 		"openProjects": "프로젝트 열기"

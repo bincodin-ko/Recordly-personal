@@ -9,6 +9,7 @@ import {
 	useRef,
 } from "react";
 import { toast } from "@/components/ui/toast";
+import { DEFAULT_COLOR_GRADING } from "@/lib/colorGrading";
 import type { AspectRatio } from "@/utils/aspectRatioUtils";
 import type { UnsavedChangesDecision } from "../layout/EditorDialogs";
 import {
@@ -167,6 +168,7 @@ export function useProjectLifecycle(input: Input) {
 		appearance.setCursorClickBounceDuration(editor.cursorClickBounceDuration);
 		appearance.setCursorSway(editor.cursorSway);
 		appearance.setCursorExtras(editor.cursorExtras);
+		appearance.setColorGrading(editor.colorGrading ?? DEFAULT_COLOR_GRADING);
 		appearance.setBorderRadius(editor.borderRadius);
 		appearance.setPadding(editor.padding);
 		appearance.setCropRegion(editor.cropRegion);

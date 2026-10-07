@@ -226,7 +226,9 @@
 		"appearance": "Appearance",
 		"settings": "Settings",
 		"title": "Editor tools",
-		"ariaLabel": "Settings sections"
+		"ariaLabel": "Settings sections",
+		"clip": "片段",
+		"audio": "音訊"
 	},
 	"captions": {
 		"selectOnTimeline": "在時間軸上選擇字幕進行編輯。",
@@ -404,5 +406,25 @@
 		"pauseThreshold": "停頓超過",
 		"tightenPauses": "縮短 {{count}} 處停頓",
 		"cutFailed": "沒有可剪的內容。"
+	},
+	"looks": {
+		"title": "風格",
+		"none": "無",
+		"natural": "自然",
+		"warm": "暖色",
+		"cool": "冷色",
+		"vivid": "鮮豔",
+		"soft": "柔和",
+		"cinematic": "電影感",
+		"film": "底片",
+		"vintage": "復古",
+		"bright": "明亮",
+		"moody": "氛圍",
+		"bw": "黑白",
+		"noir": "黑色電影",
+		"importLut": "匯入 LUT (.cube)",
+		"importFailed": "無法讀取此 LUT 檔案",
+		"intensity": "強度",
+		"sharpness": "銳利度"
 	}
 }

@@ -1,3 +1,4 @@
+import type { ColorGradingSettings } from "@/lib/colorGrading";
 import { clipAltersAudio } from "@/components/video-editor/types";
 import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
 import { requiresClipTimelineRendering } from "./clipTimeline";
@@ -91,6 +92,7 @@ interface VideoExporterConfig extends ExportConfig {
 	cursorClickBounceDuration?: number;
 	cursorSway?: number;
 	cursorExtras?: CursorExtrasRenderOptions;
+	colorGrading?: ColorGradingSettings;
 	zoomSmoothness?: number;
 	audioRegions?: AudioRegion[];
 	clipRegions?: ClipRegion[];
@@ -266,6 +268,7 @@ export class VideoExporter {
 				cursorClickBounceDuration: this.config.cursorClickBounceDuration,
 				cursorSway: this.config.cursorSway,
 				cursorExtras: this.config.cursorExtras,
+				colorGrading: this.config.colorGrading,
 				zoomSmoothness: this.config.zoomSmoothness,
 			});
 			await this.renderer.initialize();

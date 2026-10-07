@@ -1,3 +1,4 @@
+import { type ColorGradingSettings, normalizeColorGrading } from "@/lib/colorGrading";
 import { type CursorExtrasSettings, normalizeCursorExtras } from "./cursorExtras";
 import { getLocalMediaServerPath } from "@/lib/localMediaUrl";
 import type { SourceAudioTrackSettings } from "@/components/video-editor/audio/audioTypes";
@@ -124,6 +125,7 @@ export interface ProjectEditorState {
 	cursorClickBounceDuration: number;
 	cursorSway: number;
 	cursorExtras: CursorExtrasSettings;
+	colorGrading?: ColorGradingSettings;
 	borderRadius: number;
 	padding: Padding;
 	cropRegion: CropRegion;
@@ -912,6 +914,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 			? clamp((editor as Partial<ProjectEditorState>).cursorSway as number, 0, 2)
 			: DEFAULT_CURSOR_SWAY,
 		cursorExtras: normalizeCursorExtras((editor as Partial<ProjectEditorState>).cursorExtras),
+		colorGrading: normalizeColorGrading((editor as Partial<ProjectEditorState>).colorGrading),
 		borderRadius: isFiniteNumber(editor.borderRadius)
 			? clamp(editor.borderRadius, 0, 50)
 			: getDefaultBorderRadiusPercent(),

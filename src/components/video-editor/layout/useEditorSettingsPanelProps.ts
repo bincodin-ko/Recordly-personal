@@ -183,6 +183,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		cursorSway: appearance.cursorSway,
 		onCursorSwayChange: appearance.setCursorSway,
 		cursorExtras: appearance.cursorExtras,
+		colorGrading: appearance.colorGrading,
+		onColorGradingChange: appearance.setColorGrading,
 		onCursorExtrasChange: (patch) =>
 			appearance.setCursorExtras((current) => ({ ...current, ...patch })),
 		hasRecordedShortcuts: timeline.keystrokes.length > 0,

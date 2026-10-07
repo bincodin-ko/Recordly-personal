@@ -34,6 +34,9 @@ type Props = {
 	settingsPanelProps: ComponentProps<typeof SettingsPanel>;
 };
 
+// Cloud account sign-in is hidden in the personal offline build.
+const SHOW_ACCOUNT_BUTTON = false;
+
 export function EditorSidebar({
 	t,
 	accountUser,
@@ -116,18 +119,20 @@ export function EditorSidebar({
 						</Tooltip>
 					))}
 				</ToggleButtonGroup>
-				<Tooltip>
-					<Button
-						variant="ghost"
-						isIconOnly
-						className="mt-auto"
-						aria-label="Recordly account"
-						onPress={onAccountClick}
-					>
-						<AccountAvatar user={accountUser} className="!size-7" />
-					</Button>
-					<Tooltip.Content placement="right">Account</Tooltip.Content>
-				</Tooltip>
+				{SHOW_ACCOUNT_BUTTON && (
+					<Tooltip>
+						<Button
+							variant="ghost"
+							isIconOnly
+							className="mt-auto"
+							aria-label="Recordly account"
+							onPress={onAccountClick}
+						>
+							<AccountAvatar user={accountUser} className="!size-7" />
+						</Button>
+						<Tooltip.Content placement="right">Account</Tooltip.Content>
+					</Tooltip>
+				)}
 			</nav>
 			<aside
 				aria-label={panelContent ? "Clips" : undefined}
@@ -158,10 +163,15 @@ export function EditorSidebar({
 												[activeSection]: value,
 											}))
 										}
-										aria-label={t("editor.sidebar.advancedSettings", "Advanced settings")}
+										aria-label={t(
+											"editor.sidebar.advancedSettings",
+											"Advanced settings",
+										)}
 									>
 										<Switch.Content>
-											<Label className="text-xs">{t("editor.sidebar.advanced", "Advanced")}</Label>
+											<Label className="text-xs">
+												{t("editor.sidebar.advanced", "Advanced")}
+											</Label>
 											<Switch.Control>
 												<Switch.Thumb />
 											</Switch.Control>
