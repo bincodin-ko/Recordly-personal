@@ -118,8 +118,8 @@ export function ColorLookControl({
 	};
 
 	return (
-		<div className="flex flex-col gap-3 py-2">
-			<Label className="text-xs text-muted-foreground">{t("looks.title", "Look")}</Label>
+		<div className="mt-2 flex flex-col gap-3 border-t border-foreground/10 pt-4">
+			<Label className="text-[13px]">{t("looks.title", "Look")}</Label>
 			<div
 				className="grid grid-cols-4 gap-2"
 				role="radiogroup"

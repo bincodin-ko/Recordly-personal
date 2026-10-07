@@ -2120,6 +2120,29 @@ export function SettingsPanel({
 				</div>
 				<div className="flex items-center justify-between gap-3">
 					<div className="text-sm font-medium text-foreground">
+						{tSettings("captions.displayMode", "Display")}
+					</div>
+					<Select
+						value={autoCaptionSettings.displayMode}
+						onValueChange={(value) =>
+							updateAutoCaptionSettings({ displayMode: value as "line" | "word" })
+						}
+					>
+						<SelectTrigger className="h-9 w-[180px] text-sm">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="line">
+								{tSettings("captions.displayLine", "Line")}
+							</SelectItem>
+							<SelectItem value="word">
+								{tSettings("captions.displayWord", "Word by word")}
+							</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div className="flex items-center justify-between gap-3">
+					<div className="text-sm font-medium text-foreground">
 						{tSettings("captions.animation", "Animation")}
 					</div>
 					<Select

@@ -745,6 +745,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 		maxRows: isFiniteNumber(rawAutoCaptionSettings.maxRows)
 			? clamp(Math.round(rawAutoCaptionSettings.maxRows), 1, 4)
 			: DEFAULT_AUTO_CAPTION_SETTINGS.maxRows,
+		displayMode: rawAutoCaptionSettings.displayMode === "word" ? "word" : "line",
 		animationStyle: normalizeAutoCaptionAnimation(
 			rawAutoCaptionSettings.animationStyle,
 			DEFAULT_AUTO_CAPTION_SETTINGS.animationStyle,

@@ -1,5 +1,5 @@
 import type { CaptionWordState } from "./captionLayout";
-import { DEFAULT_AUTO_CAPTION_SETTINGS } from "./types";
+import { type AutoCaptionDisplayMode, DEFAULT_AUTO_CAPTION_SETTINGS } from "./types";
 
 export const CAPTION_FONT_WEIGHT = 400;
 export const CAPTION_LINE_HEIGHT = 1.32;
@@ -61,11 +61,15 @@ export function getCaptionTextMaxWidth(
 	);
 }
 
-export function getCaptionWordVisualState(_hasWordTimings: boolean, _state: CaptionWordState) {
-	// Per-word "spoken" highlighting is disabled: word-level timings from the
-	// transcriber are unreliable, so captions render as a single uniform block.
-	return {
-		isInactive: false,
-		opacity: 1,
-	};
+export function getCaptionWordVisualState(
+	hasWordTimings: boolean,
+	state: CaptionWordState,
+	displayMode: AutoCaptionDisplayMode = "line",
+) {
+	// "line": uniform block. "word": karaoke-style, words not yet spoken are dimmed.
+	// Falls back to uniform when the cue has no real word timings.
+	if (displayMode !== "word" || !hasWordTimings) {
+		return { isInactive: false, opacity: 1 };
+	}
+	return { isInactive: state === "upcoming", opacity: 1 };
 }

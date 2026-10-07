@@ -83,7 +83,7 @@ function Choices<T extends string | number>({
 									? option.label
 									: String(option.value))
 							}
-							className="h-auto min-h-10 flex-1 justify-center flex-col gap-0.5 py-2"
+							className="h-auto min-h-10 flex-1 flex-col justify-center gap-0.5 whitespace-nowrap px-2 py-2"
 						>
 							{option.label}
 							{option.description && (

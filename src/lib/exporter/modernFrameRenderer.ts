@@ -1783,6 +1783,7 @@ export class FrameRenderer {
 				const visualState = getCaptionWordVisualState(
 					state.layout.hasWordTimings,
 					word.state,
+					settings.displayMode,
 				);
 
 				ctx.save();

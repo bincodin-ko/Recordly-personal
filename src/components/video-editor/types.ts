@@ -642,6 +642,8 @@ export interface CaptionCueWord {
 	leadingSpace?: boolean;
 }
 
+export type AutoCaptionDisplayMode = "line" | "word";
+
 export type AutoCaptionAnimation = "none" | "fade" | "rise" | "pop";
 
 export interface AutoCaptionSettings {
@@ -655,6 +657,8 @@ export interface AutoCaptionSettings {
 	maxWidth: number;
 	maxRows: number;
 	animationStyle: AutoCaptionAnimation;
+	/** "line": whole line at once. "word": spoken word highlighted, upcoming words dimmed. */
+	displayMode: AutoCaptionDisplayMode;
 	boxRadius: number;
 	textColor: string;
 	inactiveTextColor: string;
@@ -671,6 +675,7 @@ export const DEFAULT_AUTO_CAPTION_SETTINGS: AutoCaptionSettings = {
 	maxWidth: 62,
 	maxRows: 1,
 	animationStyle: "fade",
+	displayMode: "line",
 	boxRadius: 17.5,
 	textColor: "#FFFFFF",
 	inactiveTextColor: "#A3A3A3",

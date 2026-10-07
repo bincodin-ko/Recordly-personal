@@ -2899,6 +2899,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 															getCaptionWordVisualState(
 																activeCaptionLayout.hasWordTimings,
 																word.state,
+																autoCaptionSettings.displayMode,
 															);
 
 														return (

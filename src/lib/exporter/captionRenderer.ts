@@ -93,6 +93,7 @@ export function renderCaptions(
 			const visualState = getCaptionWordVisualState(
 				activeCaptionLayout.hasWordTimings,
 				word.state,
+				settings.displayMode,
 			);
 
 			ctx.save();
