@@ -748,6 +748,18 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	loadCameraAiRuntime: () => {
 		return ipcRenderer.invoke("load-camera-ai-runtime");
 	},
+	getVoiceoverOptions: () => {
+		return ipcRenderer.invoke("get-voiceover-options");
+	},
+	generateVoiceover: (request: { text: string; voice?: string; engine?: "qwen" | "supertonic" }) => {
+		return ipcRenderer.invoke("generate-voiceover", request);
+	},
+	onVoiceoverProgress: (callback: (state: { stage: string; detail?: string }) => void) => {
+		const listener = (_event: Electron.IpcRendererEvent, state: { stage: string; detail?: string }) =>
+			callback(state);
+		ipcRenderer.on("voiceover-progress", listener);
+		return () => ipcRenderer.removeListener("voiceover-progress", listener);
+	},
 	getWhisperSmallModelStatus: () => {
 		return ipcRenderer.invoke("get-whisper-small-model-status");
 	},

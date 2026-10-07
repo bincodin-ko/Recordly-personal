@@ -723,6 +723,26 @@ interface Window {
 			files?: Record<"bundle" | "loader" | "wasm" | "segmenter" | "face", Uint8Array>;
 			error?: string;
 		}>;
+		getVoiceoverOptions: () => Promise<{
+			defaultEngine: "qwen" | "supertonic";
+			gpu: boolean;
+			voices: Record<"qwen" | "supertonic", string[]>;
+		}>;
+		generateVoiceover: (request: {
+			text: string;
+			voice?: string;
+			engine?: "qwen" | "supertonic";
+		}) => Promise<{
+			success: boolean;
+			path?: string;
+			engine?: "qwen" | "supertonic";
+			durationSec?: number;
+			computeSec?: number;
+			error?: string;
+		}>;
+		onVoiceoverProgress: (
+			callback: (state: { stage: string; detail?: string }) => void,
+		) => () => void;
 		getWhisperSmallModelStatus: () => Promise<{
 			success: boolean;
 			exists: boolean;

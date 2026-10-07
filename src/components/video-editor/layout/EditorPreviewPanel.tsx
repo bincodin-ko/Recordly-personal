@@ -53,6 +53,7 @@ import type { useTimelineState } from "../state/useTimelineState";
 import type { TimelineEditorHandle } from "../timeline/TimelineEditor";
 import type { VideoPlaybackRef } from "../VideoPlayback";
 import { copyPreviewFrame } from "../copyFrame";
+import { VoiceoverDialog } from "../VoiceoverDialog";
 import { EditorVideoPreview } from "./EditorVideoPreview";
 
 type Props = {
@@ -171,6 +172,11 @@ export function EditorPreviewPanel(props: Props) {
 
 	// Reel mode switches the output to 9:16 (so export matches) and overlays reel UI.
 	const [reelMode, setReelMode] = useState(false);
+	const [voiceoverOpen, setVoiceoverOpen] = useState(false);
+	const nextAudioTrack = () =>
+		timeline.audioRegions.length > 0
+			? Math.max(...timeline.audioRegions.map((region) => region.trackIndex ?? 0)) + 1
+			: 0;
 	const aspectBeforeReelRef = useRef<AspectRatio | null>(null);
 	const showReelOverlay = reelMode && aspectRatio === "9:16";
 	const toggleReelMode = () => {
@@ -354,23 +360,26 @@ export function EditorPreviewPanel(props: Props) {
 								{t("timeline.annotation.label")}
 							</DropdownMenuItem>
 							<DropdownMenuItem
-								onClick={() => {
-									const nextTrack =
-										timeline.audioRegions.length > 0
-											? Math.max(
-													...timeline.audioRegions.map(
-														(region) => region.trackIndex ?? 0,
-													),
-												) + 1
-											: 0;
-									timelineRef.current?.addAudio(nextTrack);
-								}}
+								onClick={() => timelineRef.current?.addAudio(nextAudioTrack())}
 								className="cursor-pointer text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
 							>
 								{t("timeline.audio.label")}
 							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => setVoiceoverOpen(true)}
+								className="cursor-pointer text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
+							>
+								{t("editor.voiceover.menu", "AI voiceover")}
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
+					<VoiceoverDialog
+						open={voiceoverOpen}
+						onOpenChange={setVoiceoverOpen}
+						onGenerated={(audioPath) =>
+							timelineRef.current?.addAudio(nextAudioTrack(), audioPath)
+						}
+					/>
 					<Button
 						onClick={() => timelineRef.current?.addZoom()}
 						variant="ghost"

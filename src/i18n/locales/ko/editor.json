@@ -554,5 +554,27 @@
 		"aspectRatio": "화면 비율: {{ratio}}",
 		"openProjects": "프로젝트 열기",
 		"goTo": "{{section}} 열기"
+	},
+	"voiceover": {
+		"menu": "AI 보이스오버",
+		"title": "AI 보이스오버",
+		"description": "대본을 입력하면 재생 위치에 오디오 클립으로 들어가요. 이 컴퓨터 안에서만 만들어요.",
+		"script": "대본",
+		"placeholder": "한국어나 영어로 입력하세요…",
+		"engine": "엔진",
+		"engineQwen": "Qwen3-TTS · GPU",
+		"engineSupertonic": "Supertonic 3 · CPU",
+		"voice": "목소리",
+		"noGpu": "NVIDIA 그래픽카드가 없어요. Qwen3-TTS는 그래픽카드가 필요해요.",
+		"stage": {
+			"installing": "음성 엔진 준비 중(처음 한 번만)…",
+			"loading": "음성 모델 불러오는 중…",
+			"generating": "목소리 만드는 중…"
+		},
+		"cancel": "취소",
+		"generate": "만들기",
+		"generating": "만드는 중…",
+		"failed": "보이스오버를 만들지 못했어요.",
+		"added": "재생 위치에 보이스오버를 넣었어요({{seconds}}초)."
 	}
 }

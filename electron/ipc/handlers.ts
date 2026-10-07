@@ -3,6 +3,7 @@ import { registerAnnouncementHandlers } from "./register/announcements";
 import { registerAssetHandlers } from "./register/assets";
 import { registerCaptionHandlers } from "./register/captions";
 import { registerCameraAiHandlers } from "./cameraAi";
+import { registerVoiceoverHandlers } from "./tts/voiceover";
 import { registerEditorExtrasHandlers } from "./register/editorExtras";
 import { registerCloudShareHandlers } from "./register/cloudShare";
 import { registerExportHandlers } from "./register/export";
@@ -74,6 +75,7 @@ export function registerIpcHandlers(
 	registerCaptionHandlers();
 	registerEditorExtrasHandlers();
 	registerCameraAiHandlers();
+	registerVoiceoverHandlers();
 	registerCloudShareHandlers();
 	registerProjectHandlers();
 	registerSettingsHandlers();
