@@ -261,13 +261,14 @@ export function ClipTimelineOverlays({
 						onChange={onTypingSpeedChange}
 						formatValue={(value) => `${value}×`}
 					/>
-					<Button type="button" size="sm" onClick={() => onApplyTyping([suggestion])}>
+					<Button type="button" size="sm" className="w-full" onClick={() => onApplyTyping([suggestion])}>
 						{t("clipEdit.applySuggestion", "Apply suggestion")}
 					</Button>
 					<Button
 						type="button"
 						size="sm"
 						variant="ghost"
+						className="w-full"
 						onClick={() => onApplyTyping(suggestions)}
 					>
 						{t("clipEdit.applyAll", "Apply all suggestions ({{count}})", {
