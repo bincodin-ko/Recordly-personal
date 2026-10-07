@@ -210,6 +210,8 @@ export class CameraEffectsProcessor {
 		webcam: WebcamOverlaySettings,
 		targetAspect: number,
 		timeSeconds: number,
+		/** Precomputed BiRefNet matte frame (white = person, same framing as `source`), export only. */
+		matte?: CanvasImageSource | null,
 	): void {
 		const ai = vision;
 		if (webcam.faceTracking && ai) {
@@ -229,7 +231,7 @@ export class CameraEffectsProcessor {
 		const outCtx = out.getContext("2d");
 		if (!outCtx) return;
 
-		if (!webcam.backgroundRemoval || !ai) {
+		if (!webcam.backgroundRemoval || (!ai && !matte)) {
 			outCtx.clearRect(0, 0, w, h);
 			outCtx.drawImage(source, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, w, h);
 			return;
@@ -237,7 +239,8 @@ export class CameraEffectsProcessor {
 
 		resize(this.frame.canvas, w, h);
 		this.frame.ctx.drawImage(source, rect.sx, rect.sy, rect.sw, rect.sh, 0, 0, w, h);
-		this.drawMask(ai, this.frame.canvas);
+		if (matte) this.drawMatte(matte, rect, sourceWidth, w, h);
+		else if (ai) this.drawMask(ai, this.frame.canvas);
 
 		resize(this.person.canvas, w, h);
 		const p = this.person.ctx;
@@ -302,6 +305,25 @@ export class CameraEffectsProcessor {
 		const dt = this.lastTime === null ? null : timeSeconds - this.lastTime;
 		this.lastTime = timeSeconds;
 		if (best) this.face = smoothFaceCenter(this.face, best, dt);
+	}
+
+	/** Crops the matte frame like the camera and turns its luminance into the alpha mask. */
+	private drawMatte(
+		matte: CanvasImageSource,
+		rect: { sx: number; sy: number; sw: number; sh: number },
+		sourceWidth: number,
+		w: number,
+		h: number,
+	) {
+		const m = matte as { displayWidth?: number; videoWidth?: number; width?: number };
+		const matteWidth = m.displayWidth ?? m.videoWidth ?? m.width ?? sourceWidth;
+		const k = matteWidth / sourceWidth;
+		resize(this.mask.canvas, w, h);
+		this.mask.ctx.drawImage(matte, rect.sx * k, rect.sy * k, rect.sw * k, rect.sh * k, 0, 0, w, h);
+		const pixels = this.mask.ctx.getImageData(0, 0, w, h);
+		const data = pixels.data;
+		for (let i = 0; i < data.length; i += 4) data[i + 3] = data[i];
+		this.mask.ctx.putImageData(pixels, 0, 0);
 	}
 
 	private drawMask(ai: CameraVision, image: HTMLCanvasElement) {

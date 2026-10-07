@@ -3495,6 +3495,31 @@ export function SettingsPanel({
 							{webcam?.backgroundRemoval ? (
 								<div className="flex flex-col gap-2">
 									<ChoiceGroup
+										aria-label={tSettings("effects.webcamQuality", "Cutout quality")}
+										value={webcam.backgroundRemovalQuality ?? "fast"}
+										onValueChange={(value) =>
+											updateWebcam({
+												backgroundRemovalQuality: value as "fast" | "high",
+											})
+										}
+										className="grid grid-cols-2 gap-2"
+									>
+										<ChoiceItem value="fast" textValue="fast">
+											{tSettings("effects.webcamQualityFast", "Fast")}
+										</ChoiceItem>
+										<ChoiceItem value="high" textValue="high">
+											{tSettings("effects.webcamQualityHigh", "High quality (slow)")}
+										</ChoiceItem>
+									</ChoiceGroup>
+									{webcam.backgroundRemovalQuality === "high" ? (
+										<p className="text-xs text-muted-foreground/70">
+											{tSettings(
+												"effects.webcamQualityHint",
+												"High quality is used when exporting only and takes several seconds per second of camera video; the preview stays fast. First use downloads about 0.2 GB.",
+											)}
+										</p>
+									) : null}
+									<ChoiceGroup
 										aria-label={tSettings(
 											"effects.webcamBackgroundStyle",
 											"Background",

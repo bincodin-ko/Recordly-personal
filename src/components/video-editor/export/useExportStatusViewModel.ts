@@ -22,8 +22,23 @@ export function useExportStatusViewModel({ t, session, settings }: Input) {
 			})
 		: null;
 	const progress = session.exportProgress;
+	const exportMatteProgress =
+		status.isExportPreparing && typeof progress?.cameraMatteProgress === "number"
+			? progress.cameraMatteProgress
+			: null;
 	const exportPercentLabel = progress
-		? status.isExportPreparing
+		? exportMatteProgress !== null
+			? progress.cameraMatteStage === "installing" || progress.cameraMatteStage === "downloading"
+				? t(
+						"editor.exportStatus.cameraMatteSetup",
+						"Setting up high-quality camera cutout (one-time download)...",
+					)
+				: t(
+						"editor.exportStatus.cameraMatte",
+						"Camera cutout (high quality) {{percent}}%",
+						{ percent: Math.round(exportMatteProgress * 100) },
+					)
+			: status.isExportPreparing
 			? t("editor.exportStatus.preparing", "Preparing export...")
 			: status.isExportSaving
 				? t("editor.exportStatus.saving", "Opening save dialog...")
@@ -54,5 +69,5 @@ export function useExportStatusViewModel({ t, session, settings }: Input) {
 							})
 		: t("editor.exportStatus.preparing", "Preparing export...");
 
-	return { ...status, exportRenderSpeedLabel, exportPercentLabel };
+	return { ...status, exportRenderSpeedLabel, exportPercentLabel, exportMatteProgress };
 }

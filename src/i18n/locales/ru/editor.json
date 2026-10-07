@@ -252,6 +252,8 @@
 		"exporting": "Экспорт",
 		"renderingFile": "Обработка файла.",
 		"preparing": "Подготовка к экспорту...",
+		"cameraMatte": "Camera cutout (high quality) {{percent}}%",
+		"cameraMatteSetup": "Setting up high-quality camera cutout (one-time download)...",
 		"completePercent": "Готово: {{percent}}%",
 		"issue": "Ошибка экспорта",
 		"complete": "Экспорт завершён",

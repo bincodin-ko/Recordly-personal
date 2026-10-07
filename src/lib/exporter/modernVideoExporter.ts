@@ -606,6 +606,7 @@ export class ModernVideoExporter {
 					}
 				}
 
+				const webcamMatteUrl = await this.prepareCameraMatte();
 				stageStartedAt = this.getNowMs();
 				this.renderer = new ModernFrameRenderer({
 					timelineEffects: this.config.clipRegions !== undefined,
@@ -633,6 +634,7 @@ export class ModernVideoExporter {
 					cropRegion: this.config.cropRegion,
 					webcam: this.config.webcam,
 					webcamUrl: this.config.webcamUrl,
+					webcamMatteUrl,
 					videoWidth: videoInfo.width,
 					videoHeight: videoInfo.height,
 					annotationRegions: this.config.annotationRegions,
@@ -1269,6 +1271,56 @@ export class ModernVideoExporter {
 
 	private getNativeVideoSourcePath(): string | null {
 		return this.config.videoUrl ? getLocalFilePath(this.config.videoUrl) : null;
+	}
+
+	/**
+	 * "High quality" camera background removal: BiRefNet mattes for every camera frame, computed
+	 * once (cached by camera file hash) by the main process. Null falls back to MediaPipe.
+	 */
+	private async prepareCameraMatte(): Promise<string | null> {
+		const webcam = this.config.webcam;
+		const api = typeof window !== "undefined" ? window.electronAPI : undefined;
+		if (
+			!webcam?.enabled ||
+			!webcam.backgroundRemoval ||
+			webcam.backgroundRemovalQuality !== "high" ||
+			!api?.prepareBirefnetMatte
+		) {
+			return null;
+		}
+		const webcamPath = this.getNativeWebcamSourcePath();
+		if (!webcamPath) return null;
+		const emit = (cameraMatteProgress: number, cameraMatteStage?: string) =>
+			this.config.onProgress?.({
+				currentFrame: 0,
+				totalFrames: 0,
+				percentage: 0,
+				estimatedTimeRemaining: 0,
+				phase: "preparing",
+				cameraMatteProgress,
+				cameraMatteStage,
+			});
+		const unsubscribe = api.onBirefnetProgress?.((state) =>
+			emit(
+				state.stage === "matting" && state.total ? (state.done ?? 0) / state.total : 0,
+				state.stage,
+			),
+		);
+		try {
+			emit(0, "starting");
+			const result = await api.prepareBirefnetMatte(webcamPath);
+			if (!result.success || !result.path) {
+				console.warn("[VideoExporter] BiRefNet matte failed, using MediaPipe:", result.error);
+				return null;
+			}
+			const media = await api.getLocalMediaUrl(result.path);
+			return media.success ? media.url : null;
+		} catch (error) {
+			console.warn("[VideoExporter] BiRefNet matte failed, using MediaPipe:", error);
+			return null;
+		} finally {
+			unsubscribe?.();
+		}
 	}
 
 	private getNativeWebcamSourcePath(): string | null {
@@ -3711,6 +3763,7 @@ export class ModernVideoExporter {
 
 	cancel(): void {
 		this.cancelled = true;
+		void window.electronAPI?.cancelBirefnetMatte?.();
 		if (this.streamingDecoder) {
 			this.streamingDecoder.cancel();
 		}

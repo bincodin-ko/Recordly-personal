@@ -252,6 +252,8 @@
 		"exporting": "Exportation",
 		"renderingFile": "Rendu de votre fichier.",
 		"preparing": "Préparation de l’export...",
+		"cameraMatte": "Camera cutout (high quality) {{percent}}%",
+		"cameraMatteSetup": "Setting up high-quality camera cutout (one-time download)...",
 		"completePercent": "{{percent}} % terminé",
 		"issue": "Problème d’exportation",
 		"complete": "Exportation terminée",

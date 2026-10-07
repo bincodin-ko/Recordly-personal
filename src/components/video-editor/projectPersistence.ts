@@ -1066,6 +1066,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 				? clamp(webcam.margin, 0, 96)
 				: DEFAULT_WEBCAM_MARGIN,
 			backgroundRemoval: webcam.backgroundRemoval === true,
+			backgroundRemovalQuality: webcam.backgroundRemovalQuality === "high" ? "high" : "fast",
 			backgroundStyle:
 				webcam.backgroundStyle === "blur" || webcam.backgroundStyle === "color"
 					? webcam.backgroundStyle

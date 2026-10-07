@@ -159,6 +159,8 @@ export interface WebcamOverlaySettings {
 	margin: number;
 	/** Remove the camera background (person kept) — Screen Studio's camera cutout. */
 	backgroundRemoval?: boolean;
+	/** "high" = BiRefNet mattes at export (slow); the preview always uses the fast model. */
+	backgroundRemovalQuality?: "fast" | "high";
 	backgroundStyle?: WebcamBackgroundStyle;
 	backgroundColor?: string;
 	/** Keep the face centred in the camera crop. */
@@ -236,6 +238,7 @@ export const DEFAULT_WEBCAM_OVERLAY: WebcamOverlaySettings = {
 	shadow: DEFAULT_WEBCAM_SHADOW,
 	margin: DEFAULT_WEBCAM_MARGIN,
 	backgroundRemoval: false,
+	backgroundRemovalQuality: "fast",
 	backgroundStyle: "transparent",
 	backgroundColor: "#FFFFFF",
 	faceTracking: false,

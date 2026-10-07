@@ -252,6 +252,8 @@
 		"exporting": "내보내는 중",
 		"renderingFile": "파일을 렌더링하고 있어요.",
 		"preparing": "내보내기를 준비하는 중...",
+		"cameraMatte": "카메라 누끼 만드는 중 (고품질) {{percent}}%",
+		"cameraMatteSetup": "고품질 카메라 누끼를 준비하는 중이에요 (처음 한 번만 내려받아요)...",
 		"completePercent": "{{percent}}% 완료",
 		"issue": "내보내기 문제",
 		"complete": "내보내기 완료",

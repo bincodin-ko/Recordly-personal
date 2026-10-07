@@ -751,6 +751,22 @@ contextBridge.exposeInMainWorld("electronAPI", {
 	loadCameraAiRuntime: () => {
 		return ipcRenderer.invoke("load-camera-ai-runtime");
 	},
+	prepareBirefnetMatte: (webcamPath: string) => {
+		return ipcRenderer.invoke("prepare-birefnet-matte", webcamPath);
+	},
+	cancelBirefnetMatte: () => {
+		return ipcRenderer.invoke("cancel-birefnet-matte");
+	},
+	onBirefnetProgress: (
+		callback: (state: { stage: string; done?: number; total?: number }) => void,
+	) => {
+		const listener = (
+			_event: Electron.IpcRendererEvent,
+			state: { stage: string; done?: number; total?: number },
+		) => callback(state);
+		ipcRenderer.on("birefnet-progress", listener);
+		return () => ipcRenderer.removeListener("birefnet-progress", listener);
+	},
 	getVoiceoverOptions: () => {
 		return ipcRenderer.invoke("get-voiceover-options");
 	},

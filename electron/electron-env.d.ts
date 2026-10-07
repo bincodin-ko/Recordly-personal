@@ -727,6 +727,17 @@ interface Window {
 			files?: Record<"bundle" | "loader" | "wasm" | "segmenter" | "face", Uint8Array>;
 			error?: string;
 		}>;
+		prepareBirefnetMatte: (webcamPath: string) => Promise<{
+			success: boolean;
+			path?: string;
+			cached?: boolean;
+			computeSec?: number;
+			error?: string;
+		}>;
+		cancelBirefnetMatte: () => Promise<void>;
+		onBirefnetProgress: (
+			callback: (state: { stage: string; done?: number; total?: number }) => void,
+		) => () => void;
 		getVoiceoverOptions: () => Promise<{
 			defaultEngine: "qwen" | "supertonic";
 			gpu: boolean;

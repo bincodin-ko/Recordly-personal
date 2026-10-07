@@ -130,6 +130,7 @@ export function EditorExportMenu(props: Props) {
 		exportFinalizingProgress,
 		exportRenderSpeedLabel,
 		exportPercentLabel,
+		exportMatteProgress,
 		runtimeLabel: exportRuntimeLabel,
 		nativeSkipLabel: exportNativeSkipLabel,
 	} = exportStatus;
@@ -317,12 +318,14 @@ export function EditorExportMenu(props: Props) {
 												"Exporting",
 											)}
 											isIndeterminate={
-												isExportPreparing ||
+												(isExportPreparing && exportMatteProgress === null) ||
 												isExportSaving ||
 												isExportFinalSaveIndeterminate
 											}
 											value={Math.min(
-												isRenderingAudio
+												exportMatteProgress !== null
+													? exportMatteProgress * 100
+													: isRenderingAudio
 													? (exportProgress?.audioProgress ?? 0) * 100
 													: (exportFinalizingProgress ??
 															exportProgress?.percentage ??

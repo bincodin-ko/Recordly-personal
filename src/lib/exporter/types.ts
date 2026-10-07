@@ -35,6 +35,8 @@ export interface ExportProgress {
 	phase?: "preparing" | "extracting" | "finalizing" | "saving"; // Phase of export
 	renderProgress?: number; // 0-100, progress of GIF rendering phase
 	audioProgress?: number; // 0-1, progress of real-time audio rendering (speed/audio regions)
+	cameraMatteProgress?: number; // 0-1, high-quality camera background removal (preparing phase)
+	cameraMatteStage?: string; // installing | downloading | matting | starting
 }
 
 export interface ExportFinalizationStageMetrics {

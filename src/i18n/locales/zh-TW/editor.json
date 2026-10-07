@@ -252,6 +252,8 @@
 		"exporting": "正在匯出",
 		"renderingFile": "正在渲染你的檔案。",
 		"preparing": "正在準備匯出...",
+		"cameraMatte": "Camera cutout (high quality) {{percent}}%",
+		"cameraMatteSetup": "Setting up high-quality camera cutout (one-time download)...",
 		"completePercent": "已完成 {{percent}}%",
 		"issue": "匯出問題",
 		"complete": "匯出完成",

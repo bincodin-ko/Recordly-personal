@@ -154,6 +154,8 @@ interface FrameRenderConfig {
 	cropRegion: CropRegion;
 	webcam?: WebcamOverlaySettings;
 	webcamUrl?: string | null;
+	/** Precomputed BiRefNet matte video for the camera (export "high quality" background removal). */
+	webcamMatteUrl?: string | null;
 	videoWidth: number;
 	videoHeight: number;
 	annotationRegions?: AnnotationRegion[];
@@ -442,6 +444,8 @@ export class FrameRenderer {
 	private webcamTextureSource: MutableVideoTextureSource | null = null;
 	private webcamForwardFrameSource: ForwardFrameSource | null = null;
 	private webcamDecodedFrame: VideoFrame | null = null;
+	private webcamMatteSource: ForwardFrameSource | null = null;
+	private webcamMatteFrame: VideoFrame | null = null;
 	private webcamVideoElement: HTMLVideoElement | null = null;
 	private webcamSeekPromise: Promise<void> | null = null;
 	private webcamFrameCacheCanvas: HTMLCanvasElement | null = null;
@@ -2334,6 +2338,9 @@ export class FrameRenderer {
 		this.webcamForwardFrameSource?.cancel();
 		void this.webcamForwardFrameSource?.destroy();
 		this.webcamForwardFrameSource = null;
+		this.webcamMatteSource?.cancel();
+		void this.webcamMatteSource?.destroy();
+		this.webcamMatteSource = null;
 		this.closeWebcamDecodedFrame();
 		this.clearWebcamMediaElement();
 		this.webcamFrameCacheCanvas = null;
@@ -2348,6 +2355,16 @@ export class FrameRenderer {
 		try {
 			const frameSource = new ForwardFrameSource();
 			await frameSource.initialize(webcamUrl);
+			if (this.config.webcamMatteUrl && this.config.webcam.backgroundRemoval) {
+				const matteSource = new ForwardFrameSource();
+				try {
+					await matteSource.initialize(this.config.webcamMatteUrl);
+					this.webcamMatteSource = matteSource;
+				} catch (error) {
+					console.warn("[FrameRenderer] BiRefNet matte unavailable, using MediaPipe:", error);
+					void matteSource.destroy();
+				}
+			}
 			this.webcamForwardFrameSource = frameSource;
 			this.webcamVideoElement = null;
 			this.webcamSeekPromise = null;
@@ -2477,6 +2494,7 @@ export class FrameRenderer {
 				webcam,
 				widthPercent / heightPercent,
 				this.currentVideoTime,
+				source === this.webcamDecodedFrame ? this.webcamMatteFrame : null,
 			);
 			return true;
 		}
@@ -2669,6 +2687,15 @@ export class FrameRenderer {
 				this.webcamDecodedFrame = decodedFrame;
 				if (decodedFrame) {
 					this.lastSyncedWebcamTime = clampedTime;
+				}
+				if (this.webcamMatteSource) {
+					try {
+						this.webcamMatteFrame = await this.webcamMatteSource.getFrameAtTime(clampedTime);
+					} catch (error) {
+						console.warn("[FrameRenderer] BiRefNet matte failed, using MediaPipe:", error);
+						void this.webcamMatteSource.destroy();
+						this.webcamMatteSource = null;
+					}
 				}
 				return;
 			} catch (error) {
@@ -3352,12 +3379,18 @@ export class FrameRenderer {
 	}
 
 	private closeWebcamDecodedFrame(): void {
+		this.closeWebcamMatteFrame();
 		if (!this.webcamDecodedFrame) {
 			return;
 		}
 
 		this.webcamDecodedFrame.close();
 		this.webcamDecodedFrame = null;
+	}
+
+	private closeWebcamMatteFrame(): void {
+		this.webcamMatteFrame?.close();
+		this.webcamMatteFrame = null;
 	}
 
 	getCanvas(): HTMLCanvasElement {
@@ -3478,6 +3511,9 @@ export class FrameRenderer {
 		this.webcamForwardFrameSource?.cancel();
 		void this.webcamForwardFrameSource?.destroy();
 		this.webcamForwardFrameSource = null;
+		this.webcamMatteSource?.cancel();
+		void this.webcamMatteSource?.destroy();
+		this.webcamMatteSource = null;
 		this.closeWebcamDecodedFrame();
 		if (this.webcamVideoElement) {
 			this.webcamVideoElement.pause();
