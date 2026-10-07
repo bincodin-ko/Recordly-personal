@@ -218,7 +218,9 @@
 			"tick": "Tick",
 			"tap": "Tap",
 			"toggle": "Toggle"
-		}
+		},
+		"webcamAvoidCursor": "Move away from cursor",
+		"webcamHideWhenSilent": "Hide during silence"
 	},
 	"sections": {
 		"scene": "Scene",

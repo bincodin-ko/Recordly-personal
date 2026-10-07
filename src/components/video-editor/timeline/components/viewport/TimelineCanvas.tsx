@@ -35,6 +35,8 @@ import {
 } from "../../core/rows";
 import type { TimelineRenderItem, TimelineShortcutBlock } from "../../core/timelineTypes";
 import ShortcutTrackRow from "../../ShortcutTrackRow";
+import CameraLayoutTrackRow from "../../CameraLayoutTrackRow";
+import type { CameraLayoutRegion } from "../../../cameraLayout";
 import { DEFAULT_CAPTION_DURATION_MS } from "../../hooks/actions/useTimelineCaptionActions";
 import { useTimelineAudioPeaks } from "../../hooks/useTimelineAudioPeaks";
 import Item from "../../Item";
@@ -92,6 +94,7 @@ interface TimelineCanvasProps {
 	isLoading?: boolean;
 	shortcutBlocks?: TimelineShortcutBlock[];
 	onShortcutDisabledChange?: (times: number[], disabled: boolean) => void;
+	cameraLayout?: { regions: CameraLayoutRegion[]; onChange: (regions: CameraLayoutRegion[]) => void } | null;
 }
 
 interface LaneHoverParams {
@@ -423,6 +426,7 @@ function useTimelineHover({
 }
 
 interface TimelineCanvasRowsProps {
+	cameraLayout?: { regions: CameraLayoutRegion[]; onChange: (regions: CameraLayoutRegion[]) => void } | null;
 	shortcutBlocks?: TimelineShortcutBlock[];
 	onShortcutDisabledChange?: (times: number[], disabled: boolean) => void;
 	videoPath?: string | null;
@@ -541,6 +545,8 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 	onCaptionRowClick,
 	shortcutBlocks = [],
 	onShortcutDisabledChange,
+	cameraLayout,
+	videoDurationMs,
 }: TimelineCanvasRowsProps) {
 	const {
 		pixelsToValue,
@@ -944,6 +950,15 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 					))}
 			</Row>
 
+			{cameraLayout && (
+				<CameraLayoutTrackRow
+					regions={cameraLayout.regions}
+					durationMs={videoDurationMs}
+					direction={direction}
+					onChange={cameraLayout.onChange}
+				/>
+			)}
+
 			{annotationRows.map(({ rowId, items: rowItems }, index) => (
 				<Row
 					key={rowId}
@@ -1034,6 +1049,7 @@ export default function TimelineCanvas({
 	isLoading = false,
 	shortcutBlocks = [],
 	onShortcutDisabledChange,
+	cameraLayout,
 }: TimelineCanvasProps) {
 	const { setTimelineRef, style, sidebarWidth, direction, range, valueToPixels, pixelsToValue } =
 		useTimelineContext();
@@ -1329,6 +1345,7 @@ export default function TimelineCanvas({
 					onCaptionRowClick={handleCaptionRowClick}
 					shortcutBlocks={shortcutBlocks}
 					onShortcutDisabledChange={onShortcutDisabledChange}
+					cameraLayout={cameraLayout}
 				/>
 			</div>
 		</div>

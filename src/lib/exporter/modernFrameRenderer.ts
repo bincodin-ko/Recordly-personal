@@ -52,7 +52,6 @@ import type {
 	ZoomTransitionEasing,
 } from "@/components/video-editor/types";
 import {
-	DEFAULT_WEBCAM_ROUNDNESS,
 	getDefaultCaptionFontFamily,
 } from "@/components/video-editor/types";
 import { DEFAULT_FOCUS } from "@/components/video-editor/videoPlayback/constants";
@@ -86,6 +85,12 @@ import {
 } from "@/components/video-editor/cameraEffects";
 import { getWebcamMediaTargetTimeSeconds, isWebcamVisibleAtSourceTime } from "@/components/video-editor/videoPlayback/webcamSync";
 import {
+	type CameraFrame,
+	type CameraFrameCache,
+	computeWebcamCameraFrame,
+	isIdentityCameraFrame,
+} from "@/components/video-editor/cameraLayout";
+import {
 	applyZoomTransform,
 	computeZoomTransform,
 	createMotionBlurState,
@@ -93,12 +98,8 @@ import {
 } from "@/components/video-editor/videoPlayback/zoomTransform";
 import {
 	getCropMatchedWebcamHeightPercent,
-	getWebcamCornerRadiusPx,
 	getWebcamCropSourceRect,
-	getWebcamOverlayDimensionsPx,
-	getWebcamOverlayPosition,
 	isWebcamCropRegionDefault,
-	scaleWebcamOverlayPixels,
 } from "@/components/video-editor/webcamOverlay";
 import { getAssetPath, getExportableVideoUrl, getRenderableAssetUrl } from "@/lib/assetPath";
 import { drawSquircleOnCanvas, drawSquircleOnGraphics } from "@/lib/geometry/squircle";
@@ -400,6 +401,10 @@ export class FrameRenderer {
 	private rendererBackend: ExportRenderBackend = "webgl";
 	private backgroundContainer: Container | null = null;
 	private cameraContainer: Container | null = null;
+	/** Camera layout transform of the whole screen composition (split screen). */
+	private layoutContainer: Container | null = null;
+	private layoutClipGraphics: Graphics | null = null;
+	private cameraFrameCache: CameraFrameCache = {};
 	private videoEffectsContainer: Container | null = null;
 	private videoContainer: Container | null = null;
 	private cursorContainer: Container | null = null;
@@ -555,8 +560,12 @@ export class FrameRenderer {
 		this.webcamRootContainer = new Container();
 		this.webcamContainer = new Container();
 
+		this.layoutContainer = new Container();
+		this.layoutClipGraphics = new Graphics();
 		this.app.stage.addChild(this.backgroundContainer);
-		this.app.stage.addChild(this.cameraContainer);
+		this.app.stage.addChild(this.layoutContainer);
+		this.app.stage.addChild(this.layoutClipGraphics);
+		this.layoutContainer.addChild(this.cameraContainer);
 		this.app.stage.addChild(this.overlayContainer);
 
 		this.videoShadowLayers = this.createShadowLayers(
@@ -2820,9 +2829,34 @@ export class FrameRenderer {
 		}
 	}
 
-	private updateWebcamOverlay(referenceTimeSeconds = this.currentVideoTime): void {
+	private applyScreenLayout(frame: CameraFrame | null): void {
+		const container = this.layoutContainer;
+		const clip = this.layoutClipGraphics;
+		if (!container || !clip) return;
+		if (!frame || isIdentityCameraFrame(frame, this.config)) {
+			container.scale.set(1);
+			container.position.set(0, 0);
+			container.mask = null;
+			clip.visible = false;
+			return;
+		}
+		container.scale.set(frame.screen.scale);
+		container.position.set(frame.screen.x, frame.screen.y);
+		clip.clear();
+		clip.rect(frame.screenClip.x, frame.screenClip.y, frame.screenClip.width, frame.screenClip.height);
+		clip.fill({ color: 0xffffff });
+		clip.visible = true;
+		container.mask = clip;
+	}
+
+	private updateWebcamOverlay(
+		referenceTimeSeconds = this.currentVideoTime,
+		timelineMs = referenceTimeSeconds * 1000,
+		cursorMs = referenceTimeSeconds * 1000,
+	): void {
 		const webcam = this.config.webcam;
 		if (!webcam?.enabled || !isWebcamVisibleAtSourceTime(webcam, referenceTimeSeconds) || !this.webcamRootContainer || !this.webcamMaskGraphics) {
+			this.applyScreenLayout(null);
 			if (this.webcamRootContainer) {
 				this.webcamRootContainer.visible = false;
 			}
@@ -2878,7 +2912,6 @@ export class FrameRenderer {
 			return;
 		}
 
-		const margin = scaleWebcamOverlayPixels(webcam.margin ?? 24, this.config.width);
 		const widthPercent = webcam.width ?? webcam.size ?? 50;
 		const aspectSourceWidth =
 			liveSourceDimensions.width > 0
@@ -2895,36 +2928,37 @@ export class FrameRenderer {
 			aspectSourceHeight,
 			webcam.cropRegion,
 		);
-		const dimensions = getWebcamOverlayDimensionsPx({
-			containerWidth: this.config.width,
-			containerHeight: this.config.height,
+		const layoutCache = this.layoutCache;
+		const frame = computeWebcamCameraFrame({
+			webcam,
+			canvas: { width: this.config.width, height: this.config.height },
+			mask: layoutCache?.maskRect ?? {
+				x: 0,
+				y: 0,
+				width: this.config.width,
+				height: this.config.height,
+			},
+			crop: this.config.cropRegion,
 			widthPercent,
 			heightPercent,
-			margin,
 			zoomScale: this.animationState.appliedScale || 1,
-			reactToZoom: webcam.reactToZoom ?? true,
+			timelineMs,
+			cursorMs,
+			sourceMs: referenceTimeSeconds * 1000,
+			cursorTelemetry: this.config.cursorTelemetry,
+			cues: this.config.autoCaptions,
+			cache: this.cameraFrameCache,
 		});
-		const position = getWebcamOverlayPosition({
-			containerWidth: this.config.width,
-			containerHeight: this.config.height,
-			width: dimensions.width,
-			height: dimensions.height,
-			margin,
-			positionPreset: webcam.positionPreset ?? webcam.corner,
-			positionX: webcam.positionX ?? 1,
-			positionY: webcam.positionY ?? 1,
-			legacyCorner: webcam.corner,
-		});
-		const radius = getWebcamCornerRadiusPx(
-			webcam.roundness ?? DEFAULT_WEBCAM_ROUNDNESS,
-			dimensions.width,
-			dimensions.height,
-		);
+		this.applyScreenLayout(frame);
+		const dimensions = { width: frame.camera.width, height: frame.camera.height };
+		const position = { x: frame.camera.x, y: frame.camera.y };
+		const radius = frame.radius;
 		const shadowStrength = hasTransparentCameraBackground(webcam)
 			? 0
 			: getWebcamShadowStrength(webcam.shadow ?? 0);
 
-		this.webcamRootContainer.visible = true;
+		this.webcamRootContainer.alpha = frame.opacity;
+		this.webcamRootContainer.visible = frame.opacity > 0.001;
 
 		const nextLayout: WebcamLayoutCache = {
 			sourceWidth: renderableWebcamSource.width,
@@ -2958,6 +2992,7 @@ export class FrameRenderer {
 		this.cameraContainer.visible = videoFrame !== null;
 		if (!videoFrame) {
 			this.updateAnimationState(backgroundTimelineTimestamp / 1000, cursorTimestamp / 1000);
+			this.applyScreenLayout(null);
 			if (this.backgroundForwardFrameSource || this.backgroundVideoElement) {
 				await this.syncBackgroundFrame(backgroundTimelineTimestamp / 1_000_000);
 			}
@@ -3062,7 +3097,7 @@ export class FrameRenderer {
 
 		this.updateAnnotationLayer(timeMs);
 		this.updateCaptionLayer(timestamp / 1000);
-		this.updateWebcamOverlay();
+		this.updateWebcamOverlay(this.currentVideoTime, timeMs, cursorTimeMs);
 		await this.renderOutput(timeMs);
 		this.composeShortcutOverlay(cursorTimeMs);
 	}

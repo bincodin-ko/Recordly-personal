@@ -118,5 +118,13 @@
 		"cancel": "取消",
 		"confirm": "確定",
 		"undoTrim": "復原裁剪"
+	},
+	"cameraLayout": {
+		"fullscreen": "攝影機全螢幕",
+		"split": "分割畫面",
+		"hidden": "隱藏攝影機",
+		"default": "預設",
+		"hint": "點擊新增攝影機版面",
+		"delete": "刪除版面"
 	}
 }

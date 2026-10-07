@@ -212,7 +212,9 @@
 			"tick": "Тик",
 			"tap": "Тап",
 			"toggle": "Переключатель"
-		}
+		},
+		"webcamAvoidCursor": "Уходить от курсора",
+		"webcamHideWhenSilent": "Скрывать в тишине"
 	},
 	"sections": {
 		"scene": "Сцена",

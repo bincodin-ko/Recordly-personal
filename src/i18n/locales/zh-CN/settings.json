@@ -212,7 +212,9 @@
 			"tick": "滴答",
 			"tap": "轻点",
 			"toggle": "切换"
-		}
+		},
+		"webcamAvoidCursor": "避开光标",
+		"webcamHideWhenSilent": "静音时隐藏"
 	},
 	"sections": {
 		"scene": "场景",

@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+import type { WebcamOverlaySettings } from "../types";
 import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { buildShortcutBlocks, type CursorExtrasSettings } from "../cursorExtras";
 import type { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
@@ -38,6 +40,8 @@ type Props = {
 	handleSelectAnnotation: (id: string | null) => void;
 	cursorExtras: CursorExtrasSettings;
 	sourceDurationMs: number;
+	webcam: WebcamOverlaySettings;
+	setWebcam: Dispatch<SetStateAction<WebcamOverlaySettings>>;
 };
 
 export function EditorTimelinePanel(props: Props) {
@@ -239,6 +243,15 @@ export function EditorTimelinePanel(props: Props) {
 				onSourceAudioAvailabilityChange={timeline.setHasClipSourceAudio}
 				onSourceAudioTracksMetaChange={audio.onSourceAudioTracksMetaChange}
 				shortcutBlocks={shortcutBlocks}
+				cameraLayout={
+					props.webcam.enabled && props.webcam.sourcePath
+						? {
+								regions: props.webcam.layoutRegions ?? [],
+								onChange: (layoutRegions) =>
+									props.setWebcam((current) => ({ ...current, layoutRegions })),
+							}
+						: null
+				}
 				onShortcutDisabledChange={(times, disabled) =>
 					setDisabledShortcutTimes((current) => {
 						const next = new Set(current);

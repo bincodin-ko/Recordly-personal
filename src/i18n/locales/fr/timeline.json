@@ -118,5 +118,13 @@
 		"cancel": "Annuler",
 		"confirm": "OK",
 		"undoTrim": "Annuler la coupe"
+	},
+	"cameraLayout": {
+		"fullscreen": "Caméra en plein écran",
+		"split": "Écran partagé",
+		"hidden": "Caméra masquée",
+		"default": "Par défaut",
+		"hint": "Cliquez pour ajouter une disposition de caméra",
+		"delete": "Supprimer la disposition"
 	}
 }

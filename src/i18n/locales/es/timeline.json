@@ -118,5 +118,13 @@
 		"cancel": "Cancelar",
 		"confirm": "Aceptar",
 		"undoTrim": "Deshacer recorte"
+	},
+	"cameraLayout": {
+		"fullscreen": "Cámara a pantalla completa",
+		"split": "Pantalla dividida",
+		"hidden": "Cámara oculta",
+		"default": "Predeterminado",
+		"hint": "Haz clic para añadir un diseño de cámara",
+		"delete": "Eliminar diseño"
 	}
 }

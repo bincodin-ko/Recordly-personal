@@ -1,3 +1,4 @@
+import type { CameraLayoutRegion } from "./cameraLayout";
 export type ZoomDepth = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface ZoomFocus {
@@ -162,6 +163,12 @@ export interface WebcamOverlaySettings {
 	backgroundColor?: string;
 	/** Keep the face centred in the camera crop. */
 	faceTracking?: boolean;
+	/** Layout track ranges (camera fullscreen / split screen / hidden), timeline ms. */
+	layoutRegions?: CameraLayoutRegion[];
+	/** Move the bubble to the mirrored corner when the cursor comes near it. */
+	avoidCursor?: boolean;
+	/** Fade the camera out while nobody is speaking (uses caption word timings). */
+	hideWhenSilent?: boolean;
 }
 
 export type WebcamBackgroundStyle = "transparent" | "blur" | "color";
@@ -232,6 +239,9 @@ export const DEFAULT_WEBCAM_OVERLAY: WebcamOverlaySettings = {
 	backgroundStyle: "transparent",
 	backgroundColor: "#FFFFFF",
 	faceTracking: false,
+	layoutRegions: [],
+	avoidCursor: true,
+	hideWhenSilent: false,
 };
 
 export interface TrimRegion {

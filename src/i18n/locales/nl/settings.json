@@ -212,7 +212,9 @@
 			"tick": "Tik",
 			"tap": "Tap",
 			"toggle": "Schakelaar"
-		}
+		},
+		"webcamAvoidCursor": "Wijk uit voor de cursor",
+		"webcamHideWhenSilent": "Verbergen bij stilte"
 	},
 	"sections": {
 		"scene": "Scène",

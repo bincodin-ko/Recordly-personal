@@ -118,5 +118,13 @@
 		"cancel": "取消",
 		"confirm": "确定",
 		"undoTrim": "撤销裁剪"
+	},
+	"cameraLayout": {
+		"fullscreen": "摄像头全屏",
+		"split": "分屏",
+		"hidden": "隐藏摄像头",
+		"default": "默认",
+		"hint": "点击添加摄像头布局",
+		"delete": "删除布局"
 	}
 }

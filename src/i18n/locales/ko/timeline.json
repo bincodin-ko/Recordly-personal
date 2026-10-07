@@ -118,5 +118,13 @@
 		"cancel": "취소",
 		"confirm": "확인",
 		"undoTrim": "자르기 취소"
+	},
+	"cameraLayout": {
+		"fullscreen": "카메라 전체 화면",
+		"split": "화면 분할",
+		"hidden": "카메라 숨김",
+		"default": "기본",
+		"hint": "눌러서 카메라 레이아웃 추가",
+		"delete": "레이아웃 지우기"
 	}
 }

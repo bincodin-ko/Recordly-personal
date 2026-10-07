@@ -1072,6 +1072,29 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 					? webcam.backgroundColor
 					: DEFAULT_WEBCAM_OVERLAY.backgroundColor,
 			faceTracking: webcam.faceTracking === true,
+			layoutRegions: Array.isArray(webcam.layoutRegions)
+				? webcam.layoutRegions
+						.filter(
+							(region) =>
+								typeof region?.id === "string" &&
+								isFiniteNumber(region.startMs) &&
+								isFiniteNumber(region.endMs) &&
+								region.endMs > region.startMs &&
+								(region.layout === "default" ||
+									region.layout === "fullscreen" ||
+									region.layout === "split" ||
+									region.layout === "hidden"),
+						)
+						.map(({ id, startMs, endMs, layout }) => ({ id, startMs, endMs, layout }))
+				: [],
+			avoidCursor:
+				typeof webcam.avoidCursor === "boolean"
+					? webcam.avoidCursor
+					: DEFAULT_WEBCAM_OVERLAY.avoidCursor,
+			hideWhenSilent:
+				typeof webcam.hideWhenSilent === "boolean"
+					? webcam.hideWhenSilent
+					: DEFAULT_WEBCAM_OVERLAY.hideWhenSilent,
 		},
 		sourceAudioTrackSettingsByClip:
 			editor.sourceAudioTrackSettingsByClip &&
