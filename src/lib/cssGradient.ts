@@ -18,9 +18,10 @@ export type ParsedCssGradient =
 
 type PositionPart = { frac: number; px: number };
 
-// TPDF dither of +-1 LSB; same noise on R, G and B so it lands in luma, which
-// survives 4:2:0 chroma subsampling.
-const DITHER_AMPLITUDE = 1;
+// TPDF dither, same noise on R, G and B so it lands in luma (survives 4:2:0).
+// +-3 LSB: the RGB->YUV step and the realtime H.264 encoder flatten weaker
+// noise (+-1 kept almost nothing in NVENC tests); +-3 kept the ramp smooth.
+const DITHER_AMPLITUDE = 3;
 
 function splitTopLevel(params: string): string[] {
 	const parts: string[] = [];
