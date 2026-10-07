@@ -8,7 +8,14 @@ import { app, BrowserWindow, clipboard, dialog, ipcMain } from "electron";
 import { USER_DATA_PATH } from "./appPaths";
 import { readAppSetting } from "./appSettingsStore";
 import { createDesktopIconsController, type DesktopIconsMode } from "./desktopIconsController";
+import { getFfmpegBinaryPath } from "./ipc/ffmpeg/binary";
 import { selectedSource } from "./ipc/state";
+import {
+	buildQuickExportFfmpegArgs,
+	needsQuickExportTranscode,
+	normalizeQuickExportSettings,
+	QUICK_EXPORT_SETTINGS_KEY,
+} from "./quickExportSettings";
 import { parseWindowId } from "./ipc/utils";
 import {
 	createHudOverlayWindow,
@@ -167,6 +174,33 @@ function closeQuickExportWidget() {
 	quickExportWidget = null;
 }
 
+// The file [Save]/[Copy] hand out, per the quick export settings (gear on the widget).
+// Re-encoded files are cached per recording+settings so Save then Copy encodes once.
+const quickExportFiles = new Map<string, Promise<string>>();
+function getQuickExportFile(videoPath: string): Promise<string> {
+	const settings = normalizeQuickExportSettings(readAppSetting(QUICK_EXPORT_SETTINGS_KEY));
+	if (!needsQuickExportTranscode(settings)) return Promise.resolve(videoPath);
+	const outputDir = path.join(app.getPath("temp"), "recordly-quick-export");
+	const output = path.join(
+		outputDir,
+		`${path.parse(videoPath).name}-${settings.quality}.${settings.format}`,
+	);
+	const cached = quickExportFiles.get(output);
+	if (cached) return cached;
+	const job = (async () => {
+		await fs.promises.mkdir(outputDir, { recursive: true });
+		await execFileAsync(
+			getFfmpegBinaryPath(),
+			buildQuickExportFfmpegArgs(settings, videoPath, output),
+			{ timeout: 10 * 60 * 1000, maxBuffer: 64 * 1024 * 1024 },
+		);
+		return output;
+	})();
+	quickExportFiles.set(output, job);
+	job.catch(() => quickExportFiles.delete(output));
+	return job;
+}
+
 // Closed with [x] (not [Edit]): show the recording bar again so the app never looks gone.
 function restoreHudAfterWidget() {
 	// The recorder closes the HUD once a recording is finalized (the editor normally
@@ -287,23 +321,33 @@ export function registerCaptureExtrasHandlers() {
 	});
 	ipcMain.handle("quick-export-save", async (event) => {
 		if (!quickExportVideoPath) return { success: false };
+		const videoPath = quickExportVideoPath;
 		const owner = BrowserWindow.fromWebContents(event.sender) ?? undefined;
-		const extension = path.extname(quickExportVideoPath) || ".mp4";
+		const { format } = normalizeQuickExportSettings(readAppSetting(QUICK_EXPORT_SETTINGS_KEY));
+		const extension = format === "gif" ? "gif" : path.extname(videoPath).slice(1) || "mp4";
 		const options = {
-			defaultPath: path.join(app.getPath("downloads"), path.basename(quickExportVideoPath)),
-			filters: [{ name: "Video", extensions: [extension.slice(1)] }],
+			defaultPath: path.join(
+				app.getPath("downloads"),
+				`${path.parse(videoPath).name}.${extension}`,
+			),
+			filters: [{ name: format === "gif" ? "GIF" : "Video", extensions: [extension] }],
 		};
 		const result = owner
 			? await dialog.showSaveDialog(owner, options)
 			: await dialog.showSaveDialog(options);
 		if (result.canceled || !result.filePath) return { success: false, canceled: true };
-		await fs.promises.copyFile(quickExportVideoPath, result.filePath);
-		return { success: true, path: result.filePath };
+		try {
+			await fs.promises.copyFile(await getQuickExportFile(videoPath), result.filePath);
+			return { success: true, path: result.filePath };
+		} catch (error) {
+			console.warn("Quick export save failed:", error);
+			return { success: false, error: String(error) };
+		}
 	});
 	ipcMain.handle("quick-export-copy", async () => {
 		if (!quickExportVideoPath) return { success: false };
 		try {
-			await copyFileToClipboard(quickExportVideoPath);
+			await copyFileToClipboard(await getQuickExportFile(quickExportVideoPath));
 			return { success: true };
 		} catch (error) {
 			console.warn("Failed to copy recording to clipboard:", error);

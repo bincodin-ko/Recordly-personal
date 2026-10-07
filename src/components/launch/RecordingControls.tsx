@@ -46,21 +46,30 @@ export function RecordingControls({
 			>
 				<House weight="fill" className="size-4" />
 			</Button>
-			<div
-				className="flex items-center gap-3 px-2"
-				role="status"
-				aria-label={paused ? t("recording.paused") : t("recording.rec")}
-			>
-				<span
-					className={`size-2 rounded-full ${paused ? "bg-warning" : `bg-danger ${styles.recDotBlink}`}`}
-				/>
-				<span className="min-w-14 text-sm font-medium tabular-nums text-foreground">
-					{formatTime(elapsed)}
-				</span>
-				{paused && (
-					<span className="text-xs text-muted-foreground">{t("recording.paused")}</span>
-				)}
-			</div>
+			<Tooltip delay={300}>
+				<Tooltip.Trigger>
+					<div
+						tabIndex={0}
+						className="flex items-center gap-3 px-2"
+						role="status"
+						aria-label={paused ? t("recording.paused") : t("recording.rec")}
+					>
+						<span
+							className={`size-2 rounded-full ${paused ? "bg-warning" : `bg-danger ${styles.recDotBlink}`}`}
+						/>
+						<span className="min-w-14 text-sm font-medium tabular-nums text-foreground">
+							{formatTime(elapsed)}
+						</span>
+						{paused && (
+							<span className="text-xs text-muted-foreground">{t("recording.paused")}</span>
+						)}
+					</div>
+				</Tooltip.Trigger>
+				{/* Shortcut: RECORDING_FLAG_SHORTCUT in electron/ipc/register/recording.ts. */}
+				<Tooltip.Content>
+					{t("recording.flagHint", "Press Ctrl+Alt+F to add a flag at this moment")}
+				</Tooltip.Content>
+			</Tooltip>
 			<Tooltip>
 				<Button
 					isIconOnly

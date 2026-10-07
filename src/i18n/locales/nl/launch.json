@@ -77,7 +77,8 @@
 		"audioApp": {
 			"title": "Record sound from",
 			"all": "All system sound"
-		}
+		},
+		"flagHint": "Druk op Ctrl+Alt+F om hier een vlag te plaatsen"
 	},
 	"sourceSelector": {
 		"loadingSources": "Bronnen laden...",
@@ -189,6 +190,12 @@
 		"saved": "Opgeslagen",
 		"copied": "Gekopieerd naar klembord",
 		"copyFailed": "Kopiëren mislukt",
-		"doubleClickToEdit": "Dubbelklik om in de editor te openen"
+		"doubleClickToEdit": "Dubbelklik om in de editor te openen",
+		"settings": "Instellingen snel exporteren",
+		"format": "Formaat",
+		"quality": "Kwaliteit",
+		"original": "Origineel",
+		"exporting": "Exporteren…",
+		"saveFailed": "Opslaan mislukt"
 	}
 }

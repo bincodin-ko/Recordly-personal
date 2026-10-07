@@ -77,7 +77,8 @@
 		"audioApp": {
 			"title": "Record sound from",
 			"all": "All system sound"
-		}
+		},
+		"flagHint": "Strg+Alt+F setzt an dieser Stelle eine Markierung"
 	},
 	"sourceSelector": {
 		"loadingSources": "Quellen werden geladen...",
@@ -189,6 +190,12 @@
 		"saved": "Gespeichert",
 		"copied": "In die Zwischenablage kopiert",
 		"copyFailed": "Kopieren fehlgeschlagen",
-		"doubleClickToEdit": "Doppelklicken, um im Editor zu öffnen"
+		"doubleClickToEdit": "Doppelklicken, um im Editor zu öffnen",
+		"settings": "Schnellexport-Einstellungen",
+		"format": "Format",
+		"quality": "Qualität",
+		"original": "Original",
+		"exporting": "Wird exportiert…",
+		"saveFailed": "Speichern fehlgeschlagen"
 	}
 }
