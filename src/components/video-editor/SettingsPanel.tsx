@@ -1,6 +1,9 @@
 import {
+	CLICK_SOUND_IDS,
+	type ClickSoundId,
 	type CursorExtrasSettings,
 	DEFAULT_CURSOR_EXTRAS,
+	playPreviewClickSound,
 	type ShortcutOverlayPosition,
 } from "./cursorExtras";
 import { SettingsSections, SettingsCategory } from "./SettingsSections";
@@ -548,6 +551,7 @@ interface SettingsPanelProps {
 	onAnnotationFigureDataChange?: (id: string, figureData: FigureData) => void;
 	onAnnotationBlurIntensityChange?: (id: string, intensity: number) => void;
 	onAnnotationBlurColorChange?: (id: string, color: string) => void;
+	onAnnotationPatch?: (id: string, patch: Partial<AnnotationRegion>) => void;
 	onAnnotationDelete?: (id: string) => void;
 	autoCaptions?: CaptionCue[];
 	autoCaptionSettings?: AutoCaptionSettings;
@@ -1004,6 +1008,7 @@ export function SettingsPanel({
 	onAnnotationFigureDataChange,
 	onAnnotationBlurIntensityChange,
 	onAnnotationBlurColorChange,
+	onAnnotationPatch,
 	onAnnotationDelete,
 	autoCaptions = [],
 	autoCaptionSettings = DEFAULT_AUTO_CAPTION_SETTINGS,
@@ -1824,6 +1829,11 @@ export function SettingsPanel({
 				onBlurColorChange={
 					onAnnotationBlurColorChange
 						? (color) => onAnnotationBlurColorChange(selectedAnnotation.id, color)
+						: undefined
+				}
+				onRegionChange={
+					onAnnotationPatch
+						? (patch) => onAnnotationPatch(selectedAnnotation.id, patch)
 						: undefined
 				}
 				onDelete={() => onAnnotationDelete(selectedAnnotation.id)}
@@ -3067,6 +3077,34 @@ export function SettingsPanel({
 									onCheckedChange={(clickSound) => onCursorExtrasChange?.({ clickSound })}
 								/>
 							</label>
+							{cursorExtras.clickSound && (
+								<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+									<span>{tSettings("effects.clickSoundType", "Sound")}</span>
+									<Select
+										value={cursorExtras.clickSoundType}
+										onValueChange={(value) => {
+											const clickSoundType = value as ClickSoundId;
+											onCursorExtrasChange?.({ clickSoundType });
+											// Audition the picked sound, like Screen Studio's preview on select.
+											playPreviewClickSound(
+												Math.max(0.3, cursorExtras.clickSoundVolume),
+												clickSoundType,
+											);
+										}}
+									>
+										<SelectTrigger className="h-8 w-[140px] text-xs">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											{CLICK_SOUND_IDS.map((id) => (
+												<SelectItem key={id} value={id}>
+													{tSettings(`effects.clickSoundTypes.${id}`, id)}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</label>
+							)}
 							{cursorExtras.clickSound && (
 								<SliderControl
 									label={tSettings("effects.clickSoundVolume")}

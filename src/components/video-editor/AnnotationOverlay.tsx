@@ -1,5 +1,5 @@
 import { translate } from "@/contexts/I18nContext";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Rnd } from "react-rnd";
 import { cn } from "@/lib/utils";
 import { getArrowComponent } from "./ArrowSvgs";
@@ -7,8 +7,11 @@ import {
 	type AnnotationRegion,
 	BASE_PREVIEW_WIDTH,
 	BLUR_ANNOTATION_STRENGTH,
+	getAnnotationCornerRadius,
+	getPixelateGrid,
 	HIGHLIGHT_ANNOTATION_DIM,
 } from "./types";
+import { subscribePreviewScene } from "./videoPlayback/previewSceneTap";
 
 type Rect = {
 	x: number;
@@ -36,6 +39,51 @@ interface AnnotationOverlayProps {
 	onClick: (id: string) => void;
 	zIndex: number;
 	isSelectedBoost: boolean; // Boost z-index when selected for easy editing
+}
+
+/**
+ * Preview mosaic: after every Pixi render, copies the scene pixels under this box into a
+ * cols x rows canvas that CSS upscales without smoothing - the same grid the exporter draws.
+ */
+function PixelateFill({ cols, rows }: { cols: number; rows: number }) {
+	const canvasRef = useRef<HTMLCanvasElement>(null);
+	useEffect(
+		() =>
+			subscribePreviewScene((scene) => {
+				const canvas = canvasRef.current;
+				const ctx = canvas?.getContext("2d");
+				if (!canvas || !ctx) return;
+				const box = canvas.getBoundingClientRect();
+				const sceneBox = scene.getBoundingClientRect();
+				if (box.width <= 0 || box.height <= 0 || sceneBox.width <= 0) return;
+				const sx = scene.width / sceneBox.width;
+				const sy = scene.height / sceneBox.height;
+				ctx.imageSmoothingEnabled = true;
+				ctx.imageSmoothingQuality = "low";
+				ctx.clearRect(0, 0, cols, rows);
+				ctx.drawImage(
+					scene,
+					(box.left - sceneBox.left) * sx,
+					(box.top - sceneBox.top) * sy,
+					box.width * sx,
+					box.height * sy,
+					0,
+					0,
+					cols,
+					rows,
+				);
+			}),
+		[cols, rows],
+	);
+	return (
+		<canvas
+			ref={canvasRef}
+			width={cols}
+			height={rows}
+			className="absolute inset-0 h-full w-full"
+			style={{ imageRendering: "pixelated" }}
+		/>
+	);
 }
 
 function positivePercent(value: number) {
@@ -75,6 +123,10 @@ export function AnnotationOverlay({
 	const height = sceneHeight * sceneTransform.scale;
 	const sizeScale = safeRecordingRect.width / BASE_PREVIEW_WIDTH;
 	const blurScaleFactor = sizeScale * sceneTransform.scale;
+	const shapeRadius =
+		annotation.shape === "ellipse"
+			? "50%"
+			: `${getAnnotationCornerRadius(annotation) * blurScaleFactor}px`;
 
 	const isDraggingRef = useRef(false);
 
@@ -145,7 +197,12 @@ export function AnnotationOverlay({
 								boxDecorationBreak: "clone",
 								WebkitBoxDecorationBreak: "clone",
 								padding: "0.1em 0.2em",
-								borderRadius: `${4 * sizeScale}px`,
+								borderRadius:
+									annotation.shape === "ellipse"
+										? "50%"
+										: annotation.shape === "rectangle"
+											? 0
+											: `${4 * sizeScale}px`,
 								lineHeight: "1.4",
 							}}
 						>
@@ -194,6 +251,24 @@ export function AnnotationOverlay({
 				const blurPx = currentBlurStrength * blurScaleFactor;
 				const blurStyle = `blur(${blurPx}px)`;
 
+				if (annotation.blurStyle === "pixelate") {
+					const { cols, rows } = getPixelateGrid(width, height, blurPx);
+					return (
+						<div
+							className="relative h-full w-full overflow-hidden"
+							style={{ borderRadius: shapeRadius }}
+						>
+							<PixelateFill cols={cols} rows={rows} />
+							{annotation.blurColor && annotation.blurColor !== "transparent" && (
+								<div
+									className="absolute inset-0"
+									style={{ backgroundColor: annotation.blurColor }}
+								/>
+							)}
+						</div>
+					);
+				}
+
 				return (
 					<div
 						className="h-full w-full bg-slate-400/10"
@@ -201,7 +276,7 @@ export function AnnotationOverlay({
 							backdropFilter: blurStyle,
 							WebkitBackdropFilter: blurStyle,
 							backgroundColor: annotation.blurColor || "transparent",
-							borderRadius: `${(annotation.style.borderRadius ?? 0) * blurScaleFactor}px`,
+							borderRadius: shapeRadius,
 						}}
 					/>
 				);
@@ -215,7 +290,7 @@ export function AnnotationOverlay({
 						className="h-full w-full"
 						style={{
 							boxShadow: `0 0 0 100vmax rgba(0, 0, 0, ${dim})`,
-							borderRadius: `${(annotation.style.borderRadius ?? 0) * blurScaleFactor}px`,
+							borderRadius: shapeRadius,
 						}}
 					/>
 				);

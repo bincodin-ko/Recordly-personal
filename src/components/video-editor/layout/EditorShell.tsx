@@ -420,6 +420,7 @@ export function EditorShell(props: Props) {
 					disableSuggestedZooms={!appearance.autoApplyFreshRecordingAutoZooms}
 					currentTime={ui.currentTime}
 					handleSelectAnnotation={handleSelectAnnotation}
+					cursorExtras={appearance.cursorExtras}
 				/>
 			</div>
 			{library.importing && (

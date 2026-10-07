@@ -194,7 +194,16 @@
 		"hideIdleCursor": "Скрывать курсор, если он не движется",
 		"idleCursorDelay": "Скрыть через",
 		"clickSound": "Звук щелчка",
-		"clickSoundVolume": "Громкость щелчка"
+		"clickSoundVolume": "Громкость щелчка",
+		"clickSoundType": "Звук",
+		"clickSoundTypes": {
+			"default": "По умолчанию",
+			"soft": "Мягкий",
+			"crisp": "Чёткий",
+			"tick": "Тик",
+			"tap": "Тап",
+			"toggle": "Переключатель"
+		}
 	},
 	"sections": {
 		"scene": "Сцена",

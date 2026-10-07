@@ -90,5 +90,9 @@
 	"markers": {
 		"keyframe": "키프레임 @ {{ms}}ms (끌어서 이동, Delete/Backspace로 삭제)"
 	},
-	"playhead": "재생 헤드 {{time}}"
+	"playhead": "재생 헤드 {{time}}",
+	"shortcuts": {
+		"disableAll": "\"{{label}}\" 단축키 모두 끄기",
+		"enableAll": "\"{{label}}\" 단축키 모두 켜기"
+	}
 }

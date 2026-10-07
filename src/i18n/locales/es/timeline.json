@@ -90,5 +90,9 @@
 	"markers": {
 		"keyframe": "Keyframe @ {{ms}}ms (drag to move, Delete/Backspace to remove)"
 	},
-	"playhead": "Playhead {{time}}"
+	"playhead": "Playhead {{time}}",
+	"shortcuts": {
+		"disableAll": "Desactivar todos los atajos \"{{label}}\"",
+		"enableAll": "Activar todos los atajos \"{{label}}\""
+	}
 }

@@ -1,5 +1,5 @@
-import type { KeystrokeSample } from "../cursorExtras";
-import { useState } from "react";
+import { filterEnabledKeystrokes, type KeystrokeSample } from "../cursorExtras";
+import { useMemo, useState } from "react";
 import type { SourceAudioTrackSettings } from "../audio/audioTypes";
 import type {
 	AnnotationRegion,
@@ -19,6 +19,12 @@ export function useTimelineState() {
 	const [cursorTelemetry, setCursorTelemetry] = useState<CursorTelemetryPoint[]>([]);
 	const [cursorTelemetrySourcePath, setCursorTelemetrySourcePath] = useState<string | null>(null);
 	const [keystrokes, setKeystrokes] = useState<KeystrokeSample[]>([]);
+	const [disabledShortcutTimes, setDisabledShortcutTimes] = useState<number[]>([]);
+	/** What the overlay renders: recorded shortcuts minus the ones switched off on the track. */
+	const enabledKeystrokes = useMemo(
+		() => filterEnabledKeystrokes(keystrokes, disabledShortcutTimes),
+		[keystrokes, disabledShortcutTimes],
+	);
 	const [selectedZoomId, setSelectedZoomId] = useState<string | null>(null);
 	const [trimRegions, setTrimRegions] = useState<TrimRegion[]>([]);
 	const [clipRegions, setClipRegions] = useState<ClipRegion[]>([]);
@@ -50,6 +56,9 @@ export function useTimelineState() {
 		setCursorTelemetrySourcePath,
 		keystrokes,
 		setKeystrokes,
+		disabledShortcutTimes,
+		setDisabledShortcutTimes,
+		enabledKeystrokes,
 		selectedZoomId,
 		setSelectedZoomId,
 		trimRegions,

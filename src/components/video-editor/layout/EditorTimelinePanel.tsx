@@ -1,4 +1,5 @@
-import type { RefObject } from "react";
+import { type RefObject, useMemo } from "react";
+import { buildShortcutBlocks, type CursorExtrasSettings } from "../cursorExtras";
 import type { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
 import { retimeCaptionFragment } from "../captionTimeline";
 import type { useAnnotationRegionCommands } from "../hooks/useAnnotationRegionCommands";
@@ -32,6 +33,7 @@ type Props = {
 	disableSuggestedZooms: boolean;
 	currentTime: number;
 	handleSelectAnnotation: (id: string | null) => void;
+	cursorExtras: CursorExtrasSettings;
 };
 
 export function EditorTimelinePanel(props: Props) {
@@ -55,7 +57,19 @@ export function EditorTimelinePanel(props: Props) {
 		disableSuggestedZooms,
 		currentTime,
 		handleSelectAnnotation,
+		cursorExtras,
 	} = props;
+	const shortcutBlocks = useMemo(
+		() =>
+			buildShortcutBlocks(
+				timeline.keystrokes,
+				timeline.disabledShortcutTimes,
+				timeline.clipRegions,
+				cursorExtras,
+			),
+		[timeline.keystrokes, timeline.disabledShortcutTimes, timeline.clipRegions, cursorExtras],
+	);
+	const { setDisabledShortcutTimes } = timeline;
 
 	return (
 		<div
@@ -149,6 +163,17 @@ export function EditorTimelinePanel(props: Props) {
 				getSourceAudioTrackSettingsForClip={audio.getSourceAudioTrackSettingsForClip}
 				onSourceAudioAvailabilityChange={timeline.setHasClipSourceAudio}
 				onSourceAudioTracksMetaChange={audio.onSourceAudioTracksMetaChange}
+				shortcutBlocks={shortcutBlocks}
+				onShortcutDisabledChange={(times, disabled) =>
+					setDisabledShortcutTimes((current) => {
+						const next = new Set(current);
+						for (const time of times) {
+							if (disabled) next.add(time);
+							else next.delete(time);
+						}
+						return [...next].sort((a, b) => a - b);
+					})
+				}
 			/>
 		</div>
 	);

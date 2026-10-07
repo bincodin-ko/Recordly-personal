@@ -38,6 +38,7 @@ import { AddCustomFontDialog } from "./AddCustomFontDialog";
 import { getArrowComponent } from "./ArrowSvgs";
 import {
 	type AnnotationRegion,
+	type AnnotationShape,
 	type AnnotationType,
 	type ArrowDirection,
 	type FigureData,
@@ -52,6 +53,7 @@ interface AnnotationSettingsPanelProps {
 	onFigureDataChange?: (figureData: FigureData) => void;
 	onBlurIntensityChange?: (intensity: number) => void;
 	onBlurColorChange?: (color: string) => void;
+	onRegionChange?: (patch: Partial<AnnotationRegion>) => void;
 	onDelete: () => void;
 }
 
@@ -76,6 +78,7 @@ export function AnnotationSettingsPanel({
 	onFigureDataChange,
 	onBlurIntensityChange,
 	onBlurColorChange,
+	onRegionChange,
 	onDelete,
 }: AnnotationSettingsPanelProps) {
 	const t = useScopedT("editor");
@@ -644,13 +647,34 @@ export function AnnotationSettingsPanel({
 
 						{annotation.type === "blur" && (
 							<div className="space-y-4">
+								<ChoiceGroup
+									aria-label={t("annotations.blurStyle", "Style")}
+									value={annotation.blurStyle ?? "blur"}
+									onValueChange={(value) =>
+										onRegionChange?.({
+											blurStyle: value === "pixelate" ? "pixelate" : undefined,
+										})
+									}
+									className="grid grid-cols-2 gap-2"
+								>
+									<ChoiceItem value="blur" className="min-w-0 px-1 text-xs">
+										{t("annotations.blurStyles.blur", "Blur")}
+									</ChoiceItem>
+									<ChoiceItem value="pixelate" className="min-w-0 px-1 text-xs">
+										{t("annotations.blurStyles.pixelate", "Pixelate")}
+									</ChoiceItem>
+								</ChoiceGroup>
 								<div className="flex flex-col items-center">
 									<div className="w-full space-y-5">
 										<div className="flex items-center justify-between">
 											<span className="text-sm font-medium text-foreground">
-												{t("annotations.blurStrength", undefined, {
-													strength: annotation.blurIntensity ?? 20,
-												})}
+												{t(
+													annotation.blurStyle === "pixelate"
+														? "annotations.pixelSize"
+														: "annotations.blurStrength",
+													undefined,
+													{ strength: annotation.blurIntensity ?? 20 },
+												)}
 											</span>
 										</div>
 										<Slider
@@ -701,6 +725,43 @@ export function AnnotationSettingsPanel({
 										</div>
 									</div>
 								</div>
+							</div>
+						)}
+
+						{(annotation.type === "text" ||
+							annotation.type === "blur" ||
+							annotation.type === "highlight") && (
+							<div className="mt-4 space-y-2">
+								<span className="text-sm font-medium text-foreground">
+									{t("annotations.shape", "Shape")}
+								</span>
+								<ChoiceGroup
+									aria-label={t("annotations.shape", "Shape")}
+									value={annotation.shape ?? "rounded"}
+									onValueChange={(value) =>
+										onRegionChange?.({ shape: value as AnnotationShape })
+									}
+									className="grid grid-cols-3 gap-2"
+								>
+									{(["rectangle", "rounded", "ellipse"] as const).map((shape) => (
+										<ChoiceItem
+											key={shape}
+											value={shape}
+											aria-label={t(`annotations.shapes.${shape}`, shape)}
+											className="min-w-0 gap-1 px-1 text-xs"
+										>
+											<span
+												aria-hidden="true"
+												className="h-3 w-4 border-[1.5px] border-current"
+												style={{
+													borderRadius:
+														shape === "ellipse" ? "50%" : shape === "rounded" ? 3 : 0,
+												}}
+											/>
+											{t(`annotations.shapes.${shape}`, shape)}
+										</ChoiceItem>
+									))}
+								</ChoiceGroup>
 							</div>
 						)}
 					</div>

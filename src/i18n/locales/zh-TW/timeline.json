@@ -90,5 +90,9 @@
 	"markers": {
 		"keyframe": "Keyframe @ {{ms}}ms (drag to move, Delete/Backspace to remove)"
 	},
-	"playhead": "Playhead {{time}}"
+	"playhead": "Playhead {{time}}",
+	"shortcuts": {
+		"disableAll": "停用所有「{{label}}」快捷鍵",
+		"enableAll": "啟用所有「{{label}}」快捷鍵"
+	}
 }

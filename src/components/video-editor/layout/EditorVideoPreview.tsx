@@ -129,7 +129,7 @@ export function EditorVideoPreview({
 			cursorClickBounceDuration={appearance.cursorClickBounceDuration}
 			cursorSway={appearance.cursorSway}
 			cursorExtras={appearance.cursorExtras}
-			keystrokes={timeline.keystrokes}
+			keystrokes={timeline.enabledKeystrokes}
 			volume={
 				audio.shouldMutePreviewVideo || audio.isCurrentClipMuted
 					? 0

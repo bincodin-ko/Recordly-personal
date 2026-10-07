@@ -89,7 +89,7 @@ export function buildExportRenderOptions({
 		cursorSway: appearance.cursorSway,
 		cursorExtras: {
 			settings: appearance.cursorExtras,
-			keystrokes: timeline.keystrokes,
+			keystrokes: timeline.enabledKeystrokes,
 			hiddenRanges: getHiddenCursorRanges(timeline.clipRegions),
 		},
 		previewWidth,

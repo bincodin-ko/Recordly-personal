@@ -194,7 +194,16 @@
 		"hideIdleCursor": "Masquer le curseur s'il ne bouge pas",
 		"idleCursorDelay": "Masquer après",
 		"clickSound": "Son de clic",
-		"clickSoundVolume": "Volume du son de clic"
+		"clickSoundVolume": "Volume du son de clic",
+		"clickSoundType": "Son",
+		"clickSoundTypes": {
+			"default": "Par défaut",
+			"soft": "Doux",
+			"crisp": "Net",
+			"tick": "Tic",
+			"tap": "Tap",
+			"toggle": "Bascule"
+		}
 	},
 	"sections": {
 		"scene": "Scène",

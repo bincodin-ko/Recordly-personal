@@ -194,7 +194,16 @@
 		"hideIdleCursor": "커서가 멈춰 있으면 숨기기",
 		"idleCursorDelay": "숨기기까지 대기",
 		"clickSound": "클릭 소리",
-		"clickSoundVolume": "클릭 소리 크기"
+		"clickSoundVolume": "클릭 소리 크기",
+		"clickSoundType": "소리",
+		"clickSoundTypes": {
+			"default": "기본",
+			"soft": "부드럽게",
+			"crisp": "또렷하게",
+			"tick": "틱",
+			"tap": "톡",
+			"toggle": "딸깍"
+		}
 	},
 	"sections": {
 		"scene": "장면",

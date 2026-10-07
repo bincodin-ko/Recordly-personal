@@ -141,7 +141,19 @@
 		"noArrowData": "No arrow data",
 		"typeLabel": "Annotation type",
 		"customFonts": "Custom Fonts",
-		"altUploaded": "Uploaded annotation"
+		"altUploaded": "Uploaded annotation",
+		"shape": "Shape",
+		"shapes": {
+			"rectangle": "Rectangle",
+			"rounded": "Rounded",
+			"ellipse": "Ellipse"
+		},
+		"blurStyle": "Style",
+		"blurStyles": {
+			"blur": "Blur",
+			"pixelate": "Pixelate"
+		},
+		"pixelSize": "Pixel Size: {{strength}}"
 	},
 	"fontStyles": {
 		"classic": "Classic",

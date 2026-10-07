@@ -47,3 +47,7 @@ Source: https://github.com/480-Design/Solar-Icon-Set. Icons are rendered using t
 Copyright 2014 The DM Sans Project Authors (https://github.com/googlefonts/dm-fonts).
 
 DM Sans is licensed under the SIL Open Font License, Version 1.1. The unmodified regular and italic variable fonts are sourced from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/dmsans). The full license is included in [src/assets/fonts/dm-sans/OFL.txt](src/assets/fonts/dm-sans/OFL.txt).
+
+## Kenney Interface Sounds
+
+Click sounds "Soft", "Crisp", "Tick", "Tap" and "Toggle" are `click_001`, `click_003`, `tick_002`, `select_001` and `toggle_001` from [Interface Sounds 1.0](https://kenney.nl/assets/interface-sounds) by Kenney (www.kenney.nl), released under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). They are embedded unmodified in `src/components/video-editor/clickSoundAssets.ts`. The "Default" click is synthesized in code.

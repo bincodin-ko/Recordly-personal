@@ -170,6 +170,7 @@ export function useAnnotationRegionCommands({
 	);
 
 	return {
+		handleAnnotationPatch: updateRegion,
 		handleAnnotationAdded,
 		handleAnnotationSpanChange,
 		handleAnnotationDelete,

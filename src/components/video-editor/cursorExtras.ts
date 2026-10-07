@@ -8,8 +8,13 @@ import {
 	getClipSourceStartMs,
 	mapSourceTimeToTimelineTime,
 } from "./types";
+import { KENNEY_CLICK_SOUNDS } from "./clickSoundAssets";
+import type { TimelineShortcutBlock } from "./timeline/core/timelineTypes";
 
 export type ShortcutOverlayPosition = "bottom-center" | "bottom-left" | "bottom-right";
+
+export const CLICK_SOUND_IDS = ["default", "soft", "crisp", "tick", "tap", "toggle"] as const;
+export type ClickSoundId = (typeof CLICK_SOUND_IDS)[number];
 
 export interface CursorExtrasSettings {
 	/** Screen Studio "Show shortcuts". */
@@ -21,6 +26,8 @@ export interface CursorExtrasSettings {
 	shortcutsSize: number;
 	clickSound: boolean;
 	clickSoundVolume: number;
+	/** Screen Studio "Click sound" effect picker. */
+	clickSoundType: ClickSoundId;
 	/** Screen Studio "Hide cursor if it's not moving". */
 	hideIdleCursor: boolean;
 	idleCursorDelaySec: number;
@@ -33,6 +40,7 @@ export const DEFAULT_CURSOR_EXTRAS: CursorExtrasSettings = {
 	shortcutsSize: 1,
 	clickSound: false,
 	clickSoundVolume: 0.5,
+	clickSoundType: "default",
 	hideIdleCursor: false,
 	idleCursorDelaySec: 2,
 };
@@ -79,6 +87,9 @@ export function normalizeCursorExtras(raw: unknown): CursorExtrasSettings {
 		shortcutsSize: clamp(finiteOr(value.shortcutsSize, d.shortcutsSize), 0.5, 2),
 		clickSound: bool(value.clickSound, d.clickSound),
 		clickSoundVolume: clamp(finiteOr(value.clickSoundVolume, d.clickSoundVolume), 0, 1),
+		clickSoundType: CLICK_SOUND_IDS.includes(value.clickSoundType as ClickSoundId)
+			? (value.clickSoundType as ClickSoundId)
+			: d.clickSoundType,
 		hideIdleCursor: bool(value.hideIdleCursor, d.hideIdleCursor),
 		idleCursorDelaySec: clamp(
 			finiteOr(value.idleCursorDelaySec, d.idleCursorDelaySec),
@@ -219,6 +230,61 @@ export function getShortcutKeycaps(sample: KeystrokeSample): string[] {
 	if (sample.meta) caps.push("Win");
 	caps.push(sample.key);
 	return caps;
+}
+
+export function getShortcutLabel(sample: KeystrokeSample) {
+	return getShortcutKeycaps(sample).join(" + ");
+}
+
+/** Shortcuts the user switched off on the shortcuts track (keyed by sample time). */
+export function filterEnabledKeystrokes(
+	keystrokes: KeystrokeSample[],
+	disabledTimes: number[] | undefined,
+): KeystrokeSample[] {
+	if (!disabledTimes?.length) return keystrokes;
+	const disabled = new Set(disabledTimes);
+	return keystrokes.filter((sample) => !disabled.has(sample.timeMs));
+}
+
+/** Shortcut blocks in timeline time; hidden when "Show shortcuts" is off, like Screen Studio. */
+export function buildShortcutBlocks(
+	keystrokes: KeystrokeSample[],
+	disabledTimes: number[],
+	clips: ClipRegion[],
+	settings: CursorExtrasSettings,
+): TimelineShortcutBlock[] {
+	if (!settings.showShortcuts) return [];
+	const disabled = new Set(disabledTimes);
+	const visible = keystrokes.filter(
+		(sample) => settings.showSingleKeyShortcuts || !isSingleKeyShortcut(sample),
+	);
+	const toTimeline = (ms: number) =>
+		clips.length > 0 ? mapSourceTimeToTimelineTime(ms, clips) : ms;
+	const blocks: TimelineShortcutBlock[] = [];
+	visible.forEach((sample, index) => {
+		const inClip =
+			clips.length === 0 ||
+			clips.some(
+				(clip) =>
+					sample.timeMs >= getClipSourceStartMs(clip) &&
+					sample.timeMs < getClipSourceEndMs(clip),
+			);
+		if (!inClip) return;
+		const next = visible[index + 1];
+		const endSource = Math.min(
+			sample.timeMs + SHORTCUT_HOLD_MS,
+			next ? Math.max(next.timeMs, sample.timeMs + 1) : Infinity,
+		);
+		const start = toTimeline(sample.timeMs);
+		blocks.push({
+			timeMs: sample.timeMs,
+			start,
+			end: Math.max(start + 1, toTimeline(endSource)),
+			label: getShortcutLabel(sample),
+			disabled: disabled.has(sample.timeMs),
+		});
+	});
+	return blocks;
 }
 
 export type ActiveShortcut = {
@@ -395,8 +461,9 @@ export function synthesizeClickSamples(
 
 let clickSoundDataUrl: string | null = null;
 
-/** The click as a 16-bit mono WAV data URL, usable as an export audio region. */
-export function getClickSoundDataUrl(): string {
+/** Data URL for the chosen click (synthesized "default" or a bundled CC0 sample). */
+export function getClickSoundDataUrl(id: ClickSoundId = "default"): string {
+	if (id !== "default") return KENNEY_CLICK_SOUNDS[id].dataUrl;
 	if (clickSoundDataUrl) return clickSoundDataUrl;
 	const pcm = synthesizeClickSamples();
 	const bytes = new Uint8Array(44 + pcm.length * 2);
@@ -431,7 +498,11 @@ export function buildClickSoundRegions(
 	settings: CursorExtrasSettings,
 ): AudioRegion[] {
 	if (!settings.clickSound || settings.clickSoundVolume <= 0) return [];
-	const audioPath = getClickSoundDataUrl();
+	const audioPath = getClickSoundDataUrl(settings.clickSoundType);
+	const durationMs =
+		settings.clickSoundType === "default"
+			? CLICK_SOUND_DURATION_MS
+			: KENNEY_CLICK_SOUNDS[settings.clickSoundType].durationMs;
 	const regions: AudioRegion[] = [];
 	for (const sourceMs of getClickTimes(samples)) {
 		// With clips, audio regions live on the timeline; skip clicks that were cut out.
@@ -446,7 +517,7 @@ export function buildClickSoundRegions(
 		regions.push({
 			id: `click-sound-${regions.length}`,
 			startMs,
-			endMs: startMs + CLICK_SOUND_DURATION_MS,
+			endMs: startMs + durationMs,
 			audioPath,
 			volume: settings.clickSoundVolume,
 		});
@@ -455,27 +526,48 @@ export function buildClickSoundRegions(
 }
 
 let previewAudioContext: AudioContext | null = null;
-let previewClickBuffer: AudioBuffer | null = null;
+const previewClickBuffers = new Map<ClickSoundId, Promise<AudioBuffer | null>>();
 
-/** Plays the click in the editor preview. */
-export function playPreviewClickSound(volume: number) {
+function getPreviewClickBuffer(ctx: AudioContext, id: ClickSoundId) {
+	let pending = previewClickBuffers.get(id);
+	if (!pending) {
+		pending =
+			id === "default"
+				? Promise.resolve().then(() => {
+						const pcm = synthesizeClickSamples(ctx.sampleRate);
+						const buffer = ctx.createBuffer(1, pcm.length, ctx.sampleRate);
+						buffer.copyToChannel(pcm, 0);
+						return buffer;
+					})
+				: fetch(getClickSoundDataUrl(id))
+						.then((response) => response.arrayBuffer())
+						.then((bytes) => ctx.decodeAudioData(bytes))
+						.catch((error) => {
+							console.warn("Click sound decode failed:", error);
+							return null;
+						});
+		previewClickBuffers.set(id, pending);
+	}
+	return pending;
+}
+
+/** Plays the click in the editor preview (also used to audition a sound when picked). */
+export function playPreviewClickSound(volume: number, id: ClickSoundId = "default") {
 	if (typeof AudioContext === "undefined" || volume <= 0) return;
 	try {
 		previewAudioContext ??= new AudioContext();
 		const ctx = previewAudioContext;
-		if (!previewClickBuffer) {
-			const pcm = synthesizeClickSamples(ctx.sampleRate);
-			previewClickBuffer = ctx.createBuffer(1, pcm.length, ctx.sampleRate);
-			previewClickBuffer.copyToChannel(pcm, 0);
-		}
 		void ctx.resume();
-		const gain = ctx.createGain();
-		gain.gain.value = volume;
-		gain.connect(ctx.destination);
-		const source = ctx.createBufferSource();
-		source.buffer = previewClickBuffer;
-		source.connect(gain);
-		source.start();
+		void getPreviewClickBuffer(ctx, id).then((buffer) => {
+			if (!buffer) return;
+			const gain = ctx.createGain();
+			gain.gain.value = volume;
+			gain.connect(ctx.destination);
+			const source = ctx.createBufferSource();
+			source.buffer = buffer;
+			source.connect(gain);
+			source.start();
+		});
 	} catch (error) {
 		console.warn("Click sound preview failed:", error);
 	}

@@ -31,7 +31,8 @@ import {
 	isAnnotationTrackRowId,
 	isAudioTrackRowId,
 } from "../../core/rows";
-import type { TimelineRenderItem } from "../../core/timelineTypes";
+import type { TimelineRenderItem, TimelineShortcutBlock } from "../../core/timelineTypes";
+import ShortcutTrackRow from "../../ShortcutTrackRow";
 import { DEFAULT_CAPTION_DURATION_MS } from "../../hooks/actions/useTimelineCaptionActions";
 import { useTimelineAudioPeaks } from "../../hooks/useTimelineAudioPeaks";
 import Item from "../../Item";
@@ -85,6 +86,8 @@ interface TimelineCanvasProps {
 	liveHiddenItemIds?: string[];
 	isDragging?: boolean;
 	isLoading?: boolean;
+	shortcutBlocks?: TimelineShortcutBlock[];
+	onShortcutDisabledChange?: (times: number[], disabled: boolean) => void;
 }
 
 interface LaneHoverParams {
@@ -400,6 +403,8 @@ function useTimelineHover({
 }
 
 interface TimelineCanvasRowsProps {
+	shortcutBlocks?: TimelineShortcutBlock[];
+	onShortcutDisabledChange?: (times: number[], disabled: boolean) => void;
 	videoPath?: string | null;
 	items: TimelineRenderItem[];
 	videoDurationMs: number;
@@ -514,6 +519,8 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 	onCaptionRowMouseLeave,
 	onCaptionRowMouseDown,
 	onCaptionRowClick,
+	shortcutBlocks = [],
+	onShortcutDisabledChange,
 }: TimelineCanvasRowsProps) {
 	const {
 		pixelsToValue,
@@ -890,6 +897,14 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 					))}
 				</Row>
 			))}
+
+			{shortcutBlocks.length > 0 && (
+				<ShortcutTrackRow
+					blocks={shortcutBlocks}
+					direction={direction}
+					onDisabledChange={onShortcutDisabledChange}
+				/>
+			)}
 		</>
 	);
 });
@@ -927,6 +942,8 @@ export default function TimelineCanvas({
 	liveHiddenItemIds,
 	isDragging = false,
 	isLoading = false,
+	shortcutBlocks = [],
+	onShortcutDisabledChange,
 }: TimelineCanvasProps) {
 	const { setTimelineRef, style, sidebarWidth, direction, range, valueToPixels, pixelsToValue } =
 		useTimelineContext();
@@ -1090,8 +1107,9 @@ export default function TimelineCanvas({
 			if (isAudioTrackRowId(item.rowId)) audioRowIds.add(item.rowId);
 		}
 		const sourceAudioRows = showSourceAudioTrack ? sourceAudioTracks.length : 0;
-		return 2 + sourceAudioRows + annotationRowIds.size + audioRowIds.size;
-	}, [items, showSourceAudioTrack, sourceAudioTracks.length]);
+		const shortcutRows = shortcutBlocks.length > 0 ? 1 : 0;
+		return 2 + sourceAudioRows + annotationRowIds.size + audioRowIds.size + shortcutRows;
+	}, [items, showSourceAudioTrack, sourceAudioTracks.length, shortcutBlocks.length]);
 	const timelineRowsMinHeightPx = getTimelineRowsMinHeightPx(timelineRowCount);
 	const timelineContentMinHeightPx = getTimelineContentMinHeightPx(timelineRowCount);
 	const sideProperty = direction === "rtl" ? "right" : "left";
@@ -1218,6 +1236,8 @@ export default function TimelineCanvas({
 					onCaptionRowMouseLeave={handleCaptionRowMouseLeave}
 					onCaptionRowMouseDown={handleCaptionRowMouseDown}
 					onCaptionRowClick={handleCaptionRowClick}
+					shortcutBlocks={shortcutBlocks}
+					onShortcutDisabledChange={onShortcutDisabledChange}
 				/>
 			</div>
 		</div>

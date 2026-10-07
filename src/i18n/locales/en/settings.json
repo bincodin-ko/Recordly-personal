@@ -200,7 +200,16 @@
 		"hideIdleCursor": "Hide cursor if it's not moving",
 		"idleCursorDelay": "Hide after",
 		"clickSound": "Click sound",
-		"clickSoundVolume": "Click sound volume"
+		"clickSoundVolume": "Click sound volume",
+		"clickSoundType": "Sound",
+		"clickSoundTypes": {
+			"default": "Default",
+			"soft": "Soft",
+			"crisp": "Crisp",
+			"tick": "Tick",
+			"tap": "Tap",
+			"toggle": "Toggle"
+		}
 	},
 	"sections": {
 		"scene": "Scene",

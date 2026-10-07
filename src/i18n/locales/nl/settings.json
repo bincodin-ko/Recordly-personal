@@ -194,7 +194,16 @@
 		"hideIdleCursor": "Cursor verbergen als hij niet beweegt",
 		"idleCursorDelay": "Verbergen na",
 		"clickSound": "Klikgeluid",
-		"clickSoundVolume": "Volume klikgeluid"
+		"clickSoundVolume": "Volume klikgeluid",
+		"clickSoundType": "Geluid",
+		"clickSoundTypes": {
+			"default": "Standaard",
+			"soft": "Zacht",
+			"crisp": "Helder",
+			"tick": "Tik",
+			"tap": "Tap",
+			"toggle": "Schakelaar"
+		}
 	},
 	"sections": {
 		"scene": "Scène",

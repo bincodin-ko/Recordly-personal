@@ -122,6 +122,7 @@ export function useProjectSnapshotModel({
 				aspectRatio,
 				sourceAudioTrackSettingsByClip: timeline.sourceAudioTrackSettingsByClip,
 				defaultSourceAudioTrackSettings: timeline.defaultSourceAudioTrackSettings,
+				disabledShortcutTimes: timeline.disabledShortcutTimes,
 			}),
 		[
 			appearance.wallpaper,
@@ -178,6 +179,7 @@ export function useProjectSnapshotModel({
 			aspectRatio,
 			timeline.sourceAudioTrackSettingsByClip,
 			timeline.defaultSourceAudioTrackSettings,
+			timeline.disabledShortcutTimes,
 			buildPersistedEditorState,
 		],
 	);

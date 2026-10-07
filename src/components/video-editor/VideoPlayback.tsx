@@ -35,6 +35,7 @@ import {
 	getAspectRatioValue,
 } from "@/utils/aspectRatioUtils";
 import { AnnotationOverlay } from "./AnnotationOverlay";
+import { emitPreviewScene } from "./videoPlayback/previewSceneTap";
 import { type CaptionEditTarget, normalizeCaptionEditText } from "./captionEditing";
 import { buildActiveCaptionLayout } from "./captionLayout";
 import {
@@ -1821,6 +1822,10 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 
 				appRef.current = app;
 				container.appendChild(app.canvas);
+				const sceneApp = app;
+				sceneApp.renderer.runners.postrender.add({
+					postrender: () => emitPreviewScene(sceneApp.canvas as HTMLCanvasElement),
+				});
 
 				// Camera container - this will be scaled/positioned for zoom
 				const cameraContainer = new Container();
@@ -2139,7 +2144,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 						sample.interactionType === "right-click" ||
 						sample.interactionType === "middle-click"
 					) {
-						playPreviewClickSound(extras.clickSoundVolume);
+						playPreviewClickSound(extras.clickSoundVolume, extras.clickSoundType);
 					}
 				}
 			};

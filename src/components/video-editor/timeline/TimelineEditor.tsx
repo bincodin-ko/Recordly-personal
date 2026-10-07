@@ -23,7 +23,7 @@ import KeyframeMarkers from "./components/markers/KeyframeMarkers";
 import TimelineCanvas from "./components/viewport/TimelineCanvas";
 import TimelineWrapper from "./components/wrapper/TimelineWrapper";
 import { calculateTimelineScale } from "./core/time";
-import type { ClipSequenceSpan } from "./core/timelineTypes";
+import type { ClipSequenceSpan, TimelineShortcutBlock } from "./core/timelineTypes";
 import { useTimelineAudioPeaks } from "./hooks/useTimelineAudioPeaks";
 import { useTimelineEditorRuntime } from "./hooks/useTimelineEditorRuntime";
 import { useTimelineRange } from "./hooks/useTimelineRange";
@@ -87,6 +87,8 @@ export interface TimelineEditorProps {
 	sourceAudioTrackSettings?: SourceAudioTrackSettings;
 	getSourceAudioTrackSettingsForClip?: (clipId: string | null) => SourceAudioTrackSettings;
 	onSourceAudioTracksMetaChange?: (tracks: SourceAudioTrackMeta) => void;
+	shortcutBlocks?: TimelineShortcutBlock[];
+	onShortcutDisabledChange?: (times: number[], disabled: boolean) => void;
 }
 
 function extractLocalPathFromMediaServerUrl(input: string | null | undefined): string | null {
@@ -165,6 +167,8 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 			videoSourcePath,
 			cursorTelemetrySourcePath,
 			showSourceAudioTrack = false,
+			shortcutBlocks,
+			onShortcutDisabledChange,
 			sourceAudioResourceVersion = 0,
 			onSourceAudioAvailabilityChange,
 			sourceAudioTrackSettings = {},
@@ -515,6 +519,8 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 							liveHiddenItemIds={Array.from(liveZoomPreview.hiddenZoomIds)}
 							isDragging={isDragging}
 							isLoading={isLoading}
+							shortcutBlocks={shortcutBlocks}
+							onShortcutDisabledChange={onShortcutDisabledChange}
 						/>
 					</TimelineWrapper>
 				</div>
