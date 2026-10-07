@@ -6,11 +6,12 @@ export async function readWhisperCaptionOutput(outputBase: string, jsonEnabled: 
 	if (jsonEnabled) {
 		let json = "";
 		try {
-			json = await fs.readFile(`${outputBase}.json`, "utf8");
+			// latin1 = raw bytes: Whisper tokens can hold partial UTF-8 characters.
+			json = await fs.readFile(`${outputBase}.json`, "latin1");
 		} catch (error) {
 			if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
 		}
-		const timed = json ? parseWhisperJsonCues(json) : [];
+		const timed = json ? parseWhisperJsonCues(json, true) : [];
 		if (timed.length) return timed;
 		console.warn("[auto-captions] No usable JSON timing output; falling back to SRT.");
 	}

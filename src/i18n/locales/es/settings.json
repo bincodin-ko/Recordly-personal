@@ -381,5 +381,19 @@
 			"bottom-center": "Centro",
 			"bottom-right": "Derecha"
 		}
+	},
+	"transcript": {
+		"title": "Transcripción",
+		"hint": "Haz clic en una palabra, Mayús+clic para ampliar, doble clic para la frase. Pulsa Supr para cortarla del vídeo.",
+		"empty": "Se han cortado todas las palabras.",
+		"deleteSelection": "Eliminar palabras seleccionadas",
+		"removeFillers": "Quitar muletillas",
+		"fillerFound": "{{count}} muletillas encontradas",
+		"removeCount": "Quitar {{count}}",
+		"cancel": "Cancelar",
+		"noFillers": "No se encontraron muletillas.",
+		"pauseThreshold": "Pausas de más de",
+		"tightenPauses": "Acortar {{count}} pausas",
+		"cutFailed": "Nada que cortar."
 	}
 }

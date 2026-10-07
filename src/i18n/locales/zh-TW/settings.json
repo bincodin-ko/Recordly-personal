@@ -381,5 +381,19 @@
 			"bottom-center": "置中",
 			"bottom-right": "右側"
 		}
+	},
+	"transcript": {
+		"title": "逐字稿",
+		"hint": "點擊單字，按住 Shift 點擊擴展，雙擊選取整句。按 Delete 從影片剪掉。",
+		"empty": "所有單字都已剪掉。",
+		"deleteSelection": "刪除所選單字",
+		"removeFillers": "刪除贅詞",
+		"fillerFound": "找到 {{count}} 個贅詞",
+		"removeCount": "刪除 {{count}} 個",
+		"cancel": "取消",
+		"noFillers": "沒有找到贅詞。",
+		"pauseThreshold": "停頓超過",
+		"tightenPauses": "縮短 {{count}} 處停頓",
+		"cutFailed": "沒有可剪的內容。"
 	}
 }

@@ -381,5 +381,19 @@
 			"bottom-center": "Midden",
 			"bottom-right": "Rechts"
 		}
+	},
+	"transcript": {
+		"title": "Transcript",
+		"hint": "Klik op een woord, Shift-klik om uit te breiden, dubbelklik voor de zin. Delete knipt het uit de video.",
+		"empty": "Alle woorden zijn geknipt.",
+		"deleteSelection": "Geselecteerde woorden verwijderen",
+		"removeFillers": "Stopwoorden verwijderen",
+		"fillerFound": "{{count}} stopwoorden gevonden",
+		"removeCount": "{{count}} verwijderen",
+		"cancel": "Annuleren",
+		"noFillers": "Geen stopwoorden gevonden.",
+		"pauseThreshold": "Pauzes langer dan",
+		"tightenPauses": "{{count}} pauzes inkorten",
+		"cutFailed": "Niets om te knippen."
 	}
 }

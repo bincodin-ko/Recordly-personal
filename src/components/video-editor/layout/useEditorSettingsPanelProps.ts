@@ -11,6 +11,7 @@ import { SettingsPanel } from "../SettingsPanel";
 import type { useAppearanceState } from "../state/useAppearanceState";
 import type { useTimelineState } from "../state/useTimelineState";
 import { type EditorEffectSection, mapTimelineTimeToSourceTime } from "../types";
+import { removeCaptionWordsInRanges } from "../transcriptEdit";
 
 type Input = {
 	activeEffectSection: EditorEffectSection;
@@ -200,6 +201,12 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		selectedAnnotationId: timeline.selectedAnnotationId,
 		annotationRegions: timeline.annotationRegions,
 		autoCaptions: timeline.autoCaptions,
+		clipRegions: timeline.clipRegions,
+		onCutSourceRanges: (ranges) => {
+			if (!clipCommands.handleCutSourceRanges(ranges)) return false;
+			timeline.setAutoCaptions((cues) => removeCaptionWordsInRanges(cues, ranges));
+			return true;
+		},
 		autoCaptionSettings: timeline.autoCaptionSettings,
 		whisperExecutablePath,
 		whisperModelPath,

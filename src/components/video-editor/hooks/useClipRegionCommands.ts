@@ -10,6 +10,7 @@ import {
 } from "../clipSequence";
 import { getClipSourceStartMs, type AnnotationRegion, type AudioRegion } from "../types";
 import { planClipSplit } from "../clipSplit";
+import { cutSourceRanges, type SourceRange } from "../transcriptEdit";
 import type { ClipRegion, EditorEffectSection, ZoomRegion } from "../types";
 import { supportsPreviewPlaybackRate } from "../videoPlayback/playbackRate";
 
@@ -203,7 +204,40 @@ export function useClipRegionCommands({
 		[clipRegions, selectedClipId, applySequence, setSelectedClipId],
 	);
 
+	/** Edit by transcript: cut source-time ranges (words, fillers, pauses) out of the sequence. */
+	const handleCutSourceRanges = useCallback(
+		(ranges: SourceRange[]) => {
+			const base =
+				clipRegions.length > 0
+					? clipRegions
+					: [{ id: "clip-base", startMs: 0, endMs: Math.round(sourceDurationMs), speed: 1 }];
+			const before = cutSourceRanges(base, ranges, () => `clip-${nextClipIdRef.current++}`);
+			if (!before) return false;
+			const next = packClipSequence(before);
+			setClipRegions(next);
+			setZoomRegions((current) => rippleRegions(current, before, next));
+			setAnnotationRegions((current) => rippleRegions(current, before, next));
+			setAudioRegions((current) => rippleRegionAnchors(current, before, next));
+			if (selectedClipId && !next.some((clip) => clip.id === selectedClipId)) {
+				setSelectedClipId(null);
+			}
+			return true;
+		},
+		[
+			clipRegions,
+			sourceDurationMs,
+			nextClipIdRef,
+			selectedClipId,
+			setClipRegions,
+			setZoomRegions,
+			setAnnotationRegions,
+			setAudioRegions,
+			setSelectedClipId,
+		],
+	);
+
 	return {
+		handleCutSourceRanges,
 		handleSelectClip,
 		handleClipSplit,
 		handleClipSpanChange,

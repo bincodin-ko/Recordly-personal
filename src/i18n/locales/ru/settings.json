@@ -381,5 +381,19 @@
 			"bottom-center": "По центру",
 			"bottom-right": "Справа"
 		}
+	},
+	"transcript": {
+		"title": "Расшифровка",
+		"hint": "Нажмите на слово, Shift+клик расширяет, двойной клик — предложение. Delete вырезает из видео.",
+		"empty": "Все слова вырезаны.",
+		"deleteSelection": "Удалить выбранные слова",
+		"removeFillers": "Удалить слова-паразиты",
+		"fillerFound": "Найдено слов-паразитов: {{count}}",
+		"removeCount": "Удалить {{count}}",
+		"cancel": "Отмена",
+		"noFillers": "Слов-паразитов не найдено.",
+		"pauseThreshold": "Паузы длиннее",
+		"tightenPauses": "Сократить паузы: {{count}}",
+		"cutFailed": "Нечего вырезать."
 	}
 }

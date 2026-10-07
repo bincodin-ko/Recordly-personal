@@ -381,5 +381,19 @@
 			"bottom-center": "居中",
 			"bottom-right": "右侧"
 		}
+	},
+	"transcript": {
+		"title": "文字稿",
+		"hint": "点击单词，按住 Shift 点击扩展，双击选中整句。按 Delete 从视频中剪掉。",
+		"empty": "所有单词都已剪掉。",
+		"deleteSelection": "删除所选单词",
+		"removeFillers": "删除口头禅",
+		"fillerFound": "找到 {{count}} 个口头禅",
+		"removeCount": "删除 {{count}} 个",
+		"cancel": "取消",
+		"noFillers": "没有找到口头禅。",
+		"pauseThreshold": "停顿超过",
+		"tightenPauses": "缩短 {{count}} 处停顿",
+		"cutFailed": "没有可剪的内容。"
 	}
 }
