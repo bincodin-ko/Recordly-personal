@@ -274,7 +274,12 @@
 		"pathLabel": "경로: {{path}}",
 		"nativeSkipped": "네이티브 내보내기 건너뜀: {{reason}}",
 		"nativeSkippedMore": " (외 {{count}}건)",
-		"encodingUnsupported": "이 시스템에서는 영상 인코딩을 지원하지 않아요. 코덱 {{codec}}, {{fps}} FPS, 최대 {{width}}x{{height}}로 시도했어요."
+		"encodingUnsupported": "이 시스템에서는 영상 인코딩을 지원하지 않아요. 코덱 {{codec}}, {{fps}} FPS, 최대 {{width}}x{{height}}로 시도했어요.",
+		"aiSharpen": {
+			"preparing": "AI 선명화 준비 중 (처음 한 번은 몇 분 걸려요)…",
+			"active": "확대된 장면을 AI로 선명하게 만드는 중",
+			"unavailable": "AI 선명화를 쓸 수 없어 일반 화질로 내보내요"
+		}
 	},
 	"toolbar": {
 		"addLayer": "레이어 추가",

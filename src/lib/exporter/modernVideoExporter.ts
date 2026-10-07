@@ -379,6 +379,9 @@ export class ModernVideoExporter {
 	private displayedRenderFps = 0;
 	private sourceVideoInfo: DecodedVideoInfo | null = null;
 	private mediaSourceRetryAttempted = false;
+	private aiSharpenStatus: "preparing" | "active" | "unavailable" | null = null;
+	private aiSharpenFrames = 0;
+	private aiSharpenMs = 0;
 	private runtimeDiagnostics: ExportRuntimeDiagnostics = {};
 
 	constructor(config: VideoExporterConfig) {
@@ -391,6 +394,7 @@ export class ModernVideoExporter {
 		let nativeFailure: string | null = null;
 		this.mediaSourceRetryAttempted = false;
 		this.runtimeDiagnostics = await this.collectRuntimeDiagnostics();
+		await this.prepareAiSharpen();
 
 		while (true) {
 			let retryExport = false;
@@ -415,6 +419,8 @@ export class ModernVideoExporter {
 					shouldPreferNativeStaticLayoutBeforeBreeze(runtimePlatform, backendPreference);
 				const shouldTryNativeStaticLayout =
 					!nativeFailure &&
+					// The native compositor bypasses the Pixi renderer that applies AI sharpening.
+					this.aiSharpenStatus !== "active" &&
 					(backendPreference === "breeze" ||
 						this.config.experimentalNvidiaCudaExport === true ||
 						prefersNativeStaticLayoutBeforeBreeze);
@@ -670,6 +676,11 @@ export class ModernVideoExporter {
 					zoomClassicMode: this.config.zoomClassicMode,
 					autoFrame: this.config.autoFrame,
 					autoFrameFollowSpeed: this.config.autoFrameFollowSpeed,
+					superResolve:
+						this.aiSharpenStatus === "active" &&
+						(this.config.aiSharpen === "zoom" || this.config.aiSharpen === "all")
+							? { mode: this.config.aiSharpen, upscale: (rgba, w, h) => this.upscaleFrame(rgba, w, h) }
+							: undefined,
 				});
 				await this.renderer.initialize();
 				this.rendererInitTimeMs = this.getNowMs() - stageStartedAt;
@@ -3280,6 +3291,35 @@ export class ModernVideoExporter {
 		}
 	}
 
+	/** Installs/starts the AI sharpening worker once; any failure exports without it. */
+	private async prepareAiSharpen(): Promise<void> {
+		const mode = this.config.aiSharpen;
+		if (mode !== "zoom" && mode !== "all") return;
+		if (mode === "zoom" && (this.config.zoomRegions ?? []).length === 0) return;
+		this.aiSharpenStatus = "preparing";
+		this.reportProgress(0, 0, "preparing");
+		const result = await window.electronAPI?.prepareUpscale?.().catch((error: unknown) => ({
+			success: false,
+			error: String(error),
+		}));
+		this.aiSharpenStatus = result?.success ? "active" : "unavailable";
+		if (!result?.success) {
+			console.warn("[VideoExporter] AI sharpening unavailable, exporting without it:", result?.error);
+		}
+	}
+
+	private async upscaleFrame(rgba: Uint8Array, width: number, height: number) {
+		const startedAt = this.getNowMs();
+		const result = await window.electronAPI.upscaleFrame(rgba, width, height);
+		this.aiSharpenMs += this.getNowMs() - startedAt;
+		if (!result.success) {
+			console.warn("[VideoExporter] AI sharpening frame failed:", result.error);
+			return null;
+		}
+		this.aiSharpenFrames++;
+		return result;
+	}
+
 	private reportProgress(
 		currentFrame: number,
 		totalFrames: number,
@@ -3385,6 +3425,7 @@ export class ModernVideoExporter {
 				phase,
 				renderProgress: safeRenderProgress,
 				audioProgress,
+				aiSharpen: this.aiSharpenStatus ?? undefined,
 			});
 		}
 	}
@@ -3397,6 +3438,8 @@ export class ModernVideoExporter {
 
 		return {
 			totalElapsedMs,
+			aiSharpenFrames: this.aiSharpenFrames || undefined,
+			aiSharpenMs: this.aiSharpenMs || undefined,
 			metadataLoadMs: this.metadataLoadTimeMs,
 			rendererInitMs: this.rendererInitTimeMs,
 			nativeSessionStartMs: this.nativeSessionStartTimeMs,

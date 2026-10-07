@@ -779,6 +779,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
 		ipcRenderer.on("voiceover-progress", listener);
 		return () => ipcRenderer.removeListener("voiceover-progress", listener);
 	},
+	prepareUpscale: () => {
+		return ipcRenderer.invoke("prepare-upscale");
+	},
+	upscaleFrame: (data: Uint8Array, width: number, height: number) => {
+		return ipcRenderer.invoke("upscale-frame", data, width, height);
+	},
 	getWhisperSmallModelStatus: () => {
 		return ipcRenderer.invoke("get-whisper-small-model-status");
 	},

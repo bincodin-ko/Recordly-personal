@@ -758,6 +758,14 @@ interface Window {
 		onVoiceoverProgress: (
 			callback: (state: { stage: string; detail?: string }) => void,
 		) => () => void;
+		prepareUpscale: () => Promise<{ success: boolean; error?: string }>;
+		upscaleFrame: (
+			data: Uint8Array,
+			width: number,
+			height: number,
+		) => Promise<
+			{ success: true; width: number; height: number; data: Uint8Array } | { success: false; error: string }
+		>;
 		getWhisperSmallModelStatus: () => Promise<{
 			success: boolean;
 			exists: boolean;

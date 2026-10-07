@@ -20,6 +20,7 @@ import { useEditorUiState } from "./state/useEditorUiState";
 import { useProjectState } from "./state/useProjectState";
 import { useTimelineState } from "./state/useTimelineState";
 import { useNvidiaCudaExportOptIn } from "./useNvidiaCudaExportOptIn";
+import { estimateAiSharpenSeconds } from "./aiSharpenEstimate";
 
 export default function VideoEditor() {
 	const { t } = useI18n();
@@ -397,6 +398,7 @@ export default function VideoEditor() {
 			settingsPanelProps={settingsPanelProps}
 			headerLeftControlsPaddingClass={headerLeftControlsPaddingClass}
 			hasCaptionsForSidecar={hasCaptionsForSidecar}
+			aiSharpenEstimateSec={estimateAiSharpenSeconds(duration, effectiveZoomRegions, mp4FrameRate)}
 			nvidiaCudaExportAvailable={nvidiaCudaExportAvailable}
 			experimentalNvidiaCudaExport={experimentalNvidiaCudaExport}
 			setExperimentalNvidiaCudaExport={setExperimentalNvidiaCudaExport}

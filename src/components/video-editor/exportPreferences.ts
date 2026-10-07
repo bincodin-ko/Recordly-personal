@@ -1,4 +1,5 @@
 import type {
+	AiSharpenMode,
 	ExportBackendPreference,
 	ExportEncodingMode,
 	ExportFormat,
@@ -22,6 +23,7 @@ export interface ExportPreferences {
 	gifSizePreset: GifSizePreset;
 	publishDestination: "link" | "local";
 	includeCaptionSidecar: boolean;
+	aiSharpen: AiSharpenMode;
 }
 
 export function normalizeExportEncodingMode(value: unknown): ExportEncodingMode {
@@ -81,5 +83,6 @@ export function normalizeExportPreferences(raw: Partial<ExportPreferences>): Exp
 				: "medium",
 		publishDestination: raw.publishDestination === "local" ? "local" : "link",
 		includeCaptionSidecar: raw.includeCaptionSidecar === true,
+		aiSharpen: raw.aiSharpen === "zoom" || raw.aiSharpen === "all" ? raw.aiSharpen : "off",
 	};
 }

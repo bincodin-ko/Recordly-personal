@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type {
+	AiSharpenMode,
 	ExportBackendPreference,
 	ExportEncodingMode,
 	ExportFormat,
@@ -41,6 +42,7 @@ export function useExportSettings(
 	const [gifFrameRate, setGifFrameRate] = useState<GifFrameRate>(preferences.gifFrameRate);
 	const [gifLoop, setGifLoop] = useState(preferences.gifLoop);
 	const [gifSizePreset, setGifSizePreset] = useState<GifSizePreset>(preferences.gifSizePreset);
+	const [aiSharpen, setAiSharpen] = useState<AiSharpenMode>(preferences.aiSharpen);
 	useEffect(() => {
 		saveEditorPreferences({
 			publishDestination,
@@ -54,8 +56,10 @@ export function useExportSettings(
 			gifFrameRate,
 			gifLoop,
 			gifSizePreset,
+			aiSharpen,
 		});
 	}, [
+		aiSharpen,
 		publishDestination,
 		includeCaptionSidecar,
 		exportQuality,
@@ -107,6 +111,8 @@ export function useExportSettings(
 		setGifLoop,
 		gifSizePreset,
 		setGifSizePreset,
+		aiSharpen,
+		setAiSharpen,
 		captionSidecarCues,
 	};
 }

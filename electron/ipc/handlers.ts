@@ -5,6 +5,7 @@ import { registerCaptionHandlers } from "./register/captions";
 import { registerBirefnetHandlers } from "./birefnet/birefnet";
 import { registerCameraAiHandlers } from "./cameraAi";
 import { registerVoiceoverHandlers } from "./tts/voiceover";
+import { registerUpscaleHandlers } from "./upscale/upscale";
 import { registerEditorExtrasHandlers } from "./register/editorExtras";
 import { registerMicEnhanceHandlers } from "./register/micEnhance";
 import { registerCloudShareHandlers } from "./register/cloudShare";
@@ -80,6 +81,7 @@ export function registerIpcHandlers(
 	registerCameraAiHandlers();
 	registerBirefnetHandlers();
 	registerVoiceoverHandlers();
+	registerUpscaleHandlers();
 	registerCloudShareHandlers();
 	registerProjectHandlers();
 	registerSettingsHandlers();

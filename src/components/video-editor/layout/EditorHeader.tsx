@@ -46,6 +46,7 @@ type Props = {
 	exportDimensions: ReturnType<typeof useExportDimensions>;
 	exportStatus: ReturnType<typeof useExportStatusViewModel>;
 	hasCaptionsForSidecar: boolean;
+	aiSharpenEstimateSec?: { zoom: number; all: number };
 	nvidiaCudaExportAvailable: boolean;
 	experimentalNvidiaCudaExport: boolean;
 	setExperimentalNvidiaCudaExport: (enabled: boolean) => void;
@@ -84,6 +85,7 @@ export function EditorHeader(props: Props) {
 		exportDimensions,
 		exportStatus,
 		hasCaptionsForSidecar,
+		aiSharpenEstimateSec,
 		nvidiaCudaExportAvailable,
 		experimentalNvidiaCudaExport,
 		setExperimentalNvidiaCudaExport,
@@ -232,6 +234,7 @@ export function EditorHeader(props: Props) {
 					exportDimensions={exportDimensions}
 					exportStatus={exportStatus}
 					hasCaptionsForSidecar={hasCaptionsForSidecar}
+					aiSharpenEstimateSec={aiSharpenEstimateSec}
 					nvidiaCudaExportAvailable={nvidiaCudaExportAvailable}
 					experimentalNvidiaCudaExport={experimentalNvidiaCudaExport}
 					setExperimentalNvidiaCudaExport={setExperimentalNvidiaCudaExport}

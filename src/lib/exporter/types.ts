@@ -14,7 +14,11 @@ export interface ExportConfig {
 	maxPendingFrames?: number;
 	maxInFlightNativeWrites?: number;
 	sourceAudioFallbackStartDelayMsByPath?: Record<string, number>;
+	aiSharpen?: AiSharpenMode;
 }
+
+// AI text sharpening (2x super-resolution of the source): off, only while zoomed, or every enlarged frame.
+export type AiSharpenMode = "off" | "zoom" | "all";
 
 export type ExportRenderBackend = "webgpu" | "webgl";
 export type ExportEncodeBackend = "ffmpeg" | "webcodecs";
@@ -37,6 +41,7 @@ export interface ExportProgress {
 	audioProgress?: number; // 0-1, progress of real-time audio rendering (speed/audio regions)
 	cameraMatteProgress?: number; // 0-1, high-quality camera background removal (preparing phase)
 	cameraMatteStage?: string; // installing | downloading | matting | starting
+	aiSharpen?: "preparing" | "active" | "unavailable";
 }
 
 export interface ExportFinalizationStageMetrics {
@@ -117,6 +122,8 @@ export interface ExportFfmpegAudioMuxBreakdown {
 
 export interface ExportMetrics {
 	totalElapsedMs: number;
+	aiSharpenFrames?: number;
+	aiSharpenMs?: number;
 	metadataLoadMs?: number;
 	rendererInitMs?: number;
 	nativeSessionStartMs?: number;
@@ -203,6 +210,7 @@ export interface ExportSettings {
 	mp4FrameRate?: ExportMp4FrameRate;
 	backendPreference?: ExportBackendPreference;
 	pipelineModel?: ExportPipelineModel;
+	aiSharpen?: AiSharpenMode;
 	// GIF settings
 	gifConfig?: GifExportConfig;
 }

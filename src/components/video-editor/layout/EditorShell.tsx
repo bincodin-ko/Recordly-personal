@@ -50,6 +50,7 @@ type Props = {
 	settingsPanelProps: ComponentProps<typeof SettingsPanel>;
 	headerLeftControlsPaddingClass: string;
 	hasCaptionsForSidecar: boolean;
+	aiSharpenEstimateSec?: { zoom: number; all: number };
 	nvidiaCudaExportAvailable: boolean;
 	experimentalNvidiaCudaExport: boolean;
 	setExperimentalNvidiaCudaExport: (enabled: boolean) => void;
@@ -93,6 +94,7 @@ export function EditorShell(props: Props) {
 		settingsPanelProps,
 		headerLeftControlsPaddingClass,
 		hasCaptionsForSidecar,
+		aiSharpenEstimateSec,
 		nvidiaCudaExportAvailable,
 		experimentalNvidiaCudaExport,
 		setExperimentalNvidiaCudaExport,
@@ -281,6 +283,7 @@ export function EditorShell(props: Props) {
 				exportDimensions={exportDimensions}
 				exportStatus={exportStatus}
 				hasCaptionsForSidecar={hasCaptionsForSidecar}
+				aiSharpenEstimateSec={aiSharpenEstimateSec}
 				nvidiaCudaExportAvailable={nvidiaCudaExportAvailable}
 				experimentalNvidiaCudaExport={experimentalNvidiaCudaExport}
 				setExperimentalNvidiaCudaExport={setExperimentalNvidiaCudaExport}

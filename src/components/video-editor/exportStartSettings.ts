@@ -1,4 +1,5 @@
 import {
+	type AiSharpenMode,
 	calculateOutputDimensions,
 	type ExportBackendPreference,
 	type ExportEncodingMode,
@@ -25,6 +26,7 @@ export function resolveExportStartSettings({
 	gifFrameRate,
 	gifLoop,
 	gifSizePreset,
+	aiSharpen = "off",
 }: {
 	sourceWidth: number;
 	sourceHeight: number;
@@ -38,6 +40,7 @@ export function resolveExportStartSettings({
 	gifFrameRate: GifFrameRate;
 	gifLoop: boolean;
 	gifSizePreset: GifSizePreset;
+	aiSharpen?: AiSharpenMode;
 }): ExportSettings {
 	const gifDimensions =
 		exportFormat === "gif"
@@ -52,6 +55,7 @@ export function resolveExportStartSettings({
 		backendPreference: exportFormat === "mp4" ? exportBackendPreference : undefined,
 		pipelineModel: exportFormat === "mp4" ? exportPipelineModel : undefined,
 		quality: exportFormat === "mp4" ? exportQuality : undefined,
+		aiSharpen: exportFormat === "mp4" ? aiSharpen : undefined,
 		gifConfig:
 			exportFormat === "gif" && gifDimensions
 				? {
@@ -73,6 +77,7 @@ export function resolveShareExportSettings(settings: ExportSettings): ExportSett
 		encodingMode: "fast",
 		mp4FrameRate: 30,
 		includeCaptionSidecar: false,
+		aiSharpen: "off",
 		gifConfig: undefined,
 	};
 }

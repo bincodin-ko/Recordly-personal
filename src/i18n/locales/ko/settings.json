@@ -361,7 +361,17 @@
 			"balanced": "균형",
 			"quality": "고화질"
 		},
-		"formatVideo": "영상"
+		"formatVideo": "영상",
+		"aiSharpen": {
+			"title": "줌 구간 글자 선명하게 (AI)",
+			"hint": "확대된 장면을 NVIDIA 그래픽카드의 AI 모델로 2배 선명하게 키워요. 처음 쓸 때 약 4GB를 내려받아요.",
+			"scope": "적용 범위",
+			"zoom": "줌 구간에만",
+			"all": "영상 전체",
+			"extraSeconds": "약 {{count}}초 추가",
+			"extraMinutes": "약 {{count}}분 추가",
+			"noZoom": "줌 구간 없음"
+		}
 	},
 	"audio": {
 		"title": "오디오",
