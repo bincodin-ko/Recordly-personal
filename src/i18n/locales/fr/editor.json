@@ -554,5 +554,27 @@
 		"aspectRatio": "Format : {{ratio}}",
 		"openProjects": "Ouvrir les projets",
 		"goTo": "Ouvrir {{section}}"
+	},
+	"voiceover": {
+		"menu": "AI voiceover",
+		"title": "AI voiceover",
+		"description": "Type a script and it becomes an audio clip at the playhead. Runs on this computer.",
+		"script": "Script",
+		"placeholder": "Korean or English text…",
+		"engine": "Engine",
+		"engineQwen": "Qwen3-TTS · GPU",
+		"engineSupertonic": "Supertonic 3 · CPU",
+		"voice": "Voice",
+		"noGpu": "No NVIDIA GPU found. Qwen3-TTS needs one.",
+		"stage": {
+			"installing": "Preparing the voice engine (first time only)…",
+			"loading": "Loading the voice model…",
+			"generating": "Generating voice…"
+		},
+		"cancel": "Cancel",
+		"generate": "Generate",
+		"generating": "Generating…",
+		"failed": "Could not generate the voiceover.",
+		"added": "Voiceover added at the playhead ({{seconds}}s)."
 	}
 }

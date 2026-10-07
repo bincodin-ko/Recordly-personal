@@ -88,12 +88,15 @@ export function useTimelineAudioActions({
 	const deps = useMemo(() => buildTimelineAudioActionsDeps(depsOverrides), [depsOverrides]);
 
 	const handleAddAudio = useCallback(
-		async (preferredTrackIndex?: number) => {
+		async (preferredTrackIndex?: number, presetAudioPath?: string) => {
 			if (!videoDuration || videoDuration === 0 || totalMs === 0 || !onAudioAdded) {
 				return;
 			}
 
-			const result = await deps.openFilePicker();
+			// A generated file (e.g. AI voiceover) skips the picker.
+			const result = presetAudioPath
+				? { success: true, path: presetAudioPath }
+				: await deps.openFilePicker();
 			if (!result?.success || !result.path) {
 				return;
 			}
