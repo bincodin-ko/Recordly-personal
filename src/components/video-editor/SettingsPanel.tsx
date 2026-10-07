@@ -453,6 +453,8 @@ interface SettingsPanelProps {
 	onZoomModeChange?: (mode: ZoomMode) => void;
 	selectedZoomInstant?: boolean;
 	onZoomInstantChange?: (instant: boolean) => void;
+	selectedZoomLoupe?: boolean;
+	onZoomLoupeChange?: (loupe: boolean) => void;
 	onZoomDelete?: (id: string) => void;
 	selectedClipId?: string | null;
 	selectedClipSpeed?: number | null;
@@ -932,6 +934,8 @@ export function SettingsPanel({
 	onZoomModeChange,
 	selectedZoomInstant = false,
 	onZoomInstantChange,
+	selectedZoomLoupe = false,
+	onZoomLoupeChange,
 	onZoomDelete,
 	selectedClipId,
 	selectedClipSpeed,
@@ -2710,6 +2714,16 @@ export function SettingsPanel({
 								aria-label={tSettings("zoom.instantAnimation", "Instant Animation")}
 								checked={selectedZoomInstant}
 								onCheckedChange={(v) => onZoomInstantChange?.(v)}
+							/>
+						</div>
+						<div className="flex items-center justify-between py-1">
+							<span className="text-xs text-muted-foreground">
+								{tSettings("zoom.glassLoupe", "Glass Loupe")}
+							</span>
+							<Switch
+								aria-label={tSettings("zoom.glassLoupe", "Glass Loupe")}
+								checked={selectedZoomLoupe}
+								onCheckedChange={(v) => onZoomLoupeChange?.(v)}
 							/>
 						</div>
 					</>

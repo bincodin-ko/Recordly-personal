@@ -13,6 +13,7 @@
 		"modeManual": "Manual",
 		"modeManualDescription": "Set a fixed focus point for this zoom",
 		"instantAnimation": "Instant Animation",
+		"glassLoupe": "Glass Loupe",
 		"autoFrame": "Always keep zoomed in",
 		"autoFrameDescription": "Fill the selected aspect ratio and follow the cursor",
 		"modeAutoDescription": "Camera recenters when the cursor nears the edge of the zoomed view",

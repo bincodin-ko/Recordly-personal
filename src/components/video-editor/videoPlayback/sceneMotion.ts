@@ -15,6 +15,18 @@ export type SceneZoomTarget = {
 	progress: number;
 	/** Cut to this target instead of springing toward it. */
 	instant?: boolean;
+	/** Active Glass Loupe region: magnify inside a lens; the camera itself stays put. */
+	loupe?: SceneLoupeTarget;
+};
+
+export type SceneLoupeTarget = {
+	/** Lens center (normalized to the video) used when not following the cursor. */
+	focus: ZoomFocus;
+	/** Full magnification at strength 1. */
+	scale: number;
+	/** 0..1 eased in/out like a regular zoom. */
+	strength: number;
+	followCursor: boolean;
 };
 
 type Size = { width: number; height: number };
@@ -162,8 +174,32 @@ export function shouldComposePreviewFrame({
 	return contentTimeChanged || shouldSnapPausedFrame;
 }
 
-/** Resolve the camera target for a media timestamp, independent of renderer. */
-export function resolveSceneZoomTarget({
+type SceneZoomTargetInput = Parameters<typeof resolveCameraZoomTarget>[0];
+
+/** Resolve the camera target (and Glass Loupe) for a media timestamp, independent of renderer. */
+export function resolveSceneZoomTarget(input: SceneZoomTargetInput): SceneZoomTarget {
+	if (!input.zoomRegions.some((region) => region.loupe)) return resolveCameraZoomTarget(input);
+	const target = resolveCameraZoomTarget({
+		...input,
+		zoomRegions: input.zoomRegions.filter((region) => !region.loupe),
+	});
+	const { region, strength } = findDominantRegion(
+		input.zoomRegions.filter((region) => region.loupe),
+		input.timeMs,
+		{ zoomInDurationMs: input.zoomInDurationMs, zoomOutDurationMs: input.zoomOutDurationMs },
+	);
+	if (region && strength > 0) {
+		target.loupe = {
+			focus: region.focus,
+			scale: ZOOM_DEPTH_SCALES[region.depth],
+			strength,
+			followCursor: region.mode !== "manual" && !input.zoomClassicMode,
+		};
+	}
+	return target;
+}
+
+function resolveCameraZoomTarget({
 	zoomRegions,
 	timeMs,
 	cursorTimeMs = timeMs,

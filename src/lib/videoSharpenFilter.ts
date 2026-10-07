@@ -1,4 +1,4 @@
-import { Filter, GlProgram, GpuProgram, Matrix, type Sprite } from "pixi.js";
+import { type Container, Filter, GlProgram, GpuProgram, Matrix, type Sprite } from "pixi.js";
 
 // Bilinear resampling of the screen recording at any non-1:1 scale (padding,
 // preview fit, zoom) cost ~25% edge contrast on small UI text. A light 4-tap
@@ -156,7 +156,7 @@ export function createVideoSharpener(
 }
 
 /** Assign filters only when the list changed (reassigning every frame re-allocates passes). */
-export function syncSpriteFilters(sprite: Sprite, next: Filter[]): void {
+export function syncSpriteFilters(sprite: Container, next: Filter[]): void {
 	const current = (sprite.filters ?? []) as readonly Filter[];
 	if (current.length === next.length && current.every((f, i) => f === next[i])) return;
 	sprite.filters = next.length > 0 ? next : null;

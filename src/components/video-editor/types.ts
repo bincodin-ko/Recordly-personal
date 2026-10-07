@@ -17,6 +17,8 @@ export interface ZoomRegion {
 	mode?: ZoomMode;
 	/** Cut straight in/out instead of easing (Screen Studio "Instant Animation"). */
 	instant?: boolean;
+	/** Screen Studio "Glass Loupe": magnify inside a round lens instead of zooming the frame. */
+	loupe?: boolean;
 }
 
 export interface CursorTelemetryPoint {

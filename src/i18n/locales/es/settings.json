@@ -7,6 +7,7 @@
 		"modeManual": "Manual",
 		"modeManualDescription": "Establece un punto de enfoque fijo para este zoom",
 		"instantAnimation": "Animación instantánea",
+		"glassLoupe": "Glass Loupe",
 		"autoFrame": "Mantener siempre el zoom",
 		"autoFrameDescription": "Llena la relación de aspecto elegida y sigue el cursor",
 		"modeAutoDescription": "La cámara sigue el cursor automáticamente",

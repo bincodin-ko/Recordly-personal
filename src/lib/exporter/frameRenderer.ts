@@ -46,7 +46,12 @@ import {
 	stepSpringValue,
 } from "@/components/video-editor/videoPlayback/motionSmoothing";
 import { getSceneEffectMetrics } from "@/components/video-editor/videoPlayback/sceneEffects";
-import { resolveSceneZoomTarget } from "@/components/video-editor/videoPlayback/sceneMotion";
+import {
+	resolveSceneZoomTarget,
+	type SceneZoomTarget,
+} from "@/components/video-editor/videoPlayback/sceneMotion";
+import { paintCssGradient } from "@/lib/cssGradient";
+import { createGlassLoupe } from "@/lib/glassLoupe";
 import {
 	CameraEffectsProcessor,
 	hasTransparentCameraBackground,
@@ -271,6 +276,8 @@ export class FrameRenderer {
 	private lastContentTimeMs: number | null = null;
 	/** Instant zooms cut the camera; a cut must not be smeared by zoom motion blur. */
 	private cameraCut = false;
+	private syncLoupe: ReturnType<typeof createGlassLoupe> | null = null;
+	private loupeTarget: SceneZoomTarget["loupe"];
 	private cursorOverlay: PixiCursorOverlay | null = null;
 	private webcamForwardFrameSource: ForwardFrameSource | null = null;
 	private webcamDecodedFrame: VideoFrame | null = null;
@@ -638,48 +645,7 @@ export class FrameRenderer {
 				wallpaper.startsWith("linear-gradient") ||
 				wallpaper.startsWith("radial-gradient")
 			) {
-				const gradientMatch = wallpaper.match(/(linear|radial)-gradient\((.+)\)/);
-				if (gradientMatch) {
-					const [, type, params] = gradientMatch;
-					const parts = params.split(",").map((s) => s.trim());
-
-					let gradient: CanvasGradient;
-
-					if (type === "linear") {
-						gradient = bgCtx.createLinearGradient(0, 0, 0, this.config.height);
-						parts.forEach((part, index) => {
-							if (part.startsWith("to ") || part.includes("deg")) return;
-
-							const colorMatch = part.match(
-								/^(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|[a-z]+)/,
-							);
-							if (colorMatch) {
-								const color = colorMatch[1];
-								const position = index / (parts.length - 1);
-								gradient.addColorStop(position, color);
-							}
-						});
-					} else {
-						const cx = this.config.width / 2;
-						const cy = this.config.height / 2;
-						const radius = Math.max(this.config.width, this.config.height) / 2;
-						gradient = bgCtx.createRadialGradient(cx, cy, 0, cx, cy, radius);
-
-						parts.forEach((part, index) => {
-							const colorMatch = part.match(
-								/^(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\)|[a-z]+)/,
-							);
-							if (colorMatch) {
-								const color = colorMatch[1];
-								const position = index / (parts.length - 1);
-								gradient.addColorStop(position, color);
-							}
-						});
-					}
-
-					bgCtx.fillStyle = gradient;
-					bgCtx.fillRect(0, 0, this.config.width, this.config.height);
-				} else {
+				if (!paintCssGradient(bgCtx, wallpaper, this.config.width, this.config.height)) {
 					console.warn("[FrameRenderer] Could not parse gradient, using black fallback");
 					bgCtx.fillStyle = "#000000";
 					bgCtx.fillRect(0, 0, this.config.width, this.config.height);
@@ -1514,6 +1480,13 @@ export class FrameRenderer {
 			motionBlurState: this.motionBlurState,
 			frameTimeMs: timeMs,
 		});
+		this.syncLoupe ??= createGlassLoupe(this.cameraContainer);
+		this.syncLoupe(
+			this.loupeTarget,
+			layoutCache.stageSize,
+			layoutCache.maskRect,
+			this.cursorOverlay,
+		);
 
 		// Render the PixiJS stage to its canvas (video only, transparent background)
 		this.updateVideoSharpen?.();
@@ -1665,6 +1638,7 @@ export class FrameRenderer {
 					}
 				: null,
 		});
+		this.loupeTarget = target.loupe;
 
 		const state = this.animationState;
 
