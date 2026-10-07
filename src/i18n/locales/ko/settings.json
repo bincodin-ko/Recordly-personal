@@ -382,5 +382,19 @@
 			"bottom-center": "가운데",
 			"bottom-right": "오른쪽"
 		}
+	},
+	"transcript": {
+		"title": "대본",
+		"hint": "단어를 누르고 Shift로 범위를 늘리세요. 두 번 누르면 문장 전체가 선택됩니다. Delete를 누르면 영상에서 잘립니다.",
+		"empty": "모든 단어가 잘렸습니다.",
+		"deleteSelection": "선택한 단어 지우기",
+		"removeFillers": "군말 지우기",
+		"fillerFound": "군말 {{count}}개를 찾았어요",
+		"removeCount": "{{count}}개 지우기",
+		"cancel": "취소",
+		"noFillers": "군말이 없어요.",
+		"pauseThreshold": "이보다 긴 무음",
+		"tightenPauses": "무음 {{count}}곳 줄이기",
+		"cutFailed": "자를 부분이 없어요."
 	}
 }

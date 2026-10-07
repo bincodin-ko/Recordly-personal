@@ -382,5 +382,19 @@
 			"bottom-center": "Center",
 			"bottom-right": "Right"
 		}
+	},
+	"transcript": {
+		"title": "Transcript",
+		"hint": "Click a word, Shift-click to extend, double-click for the sentence. Press Delete to cut it from the video.",
+		"empty": "All words have been cut.",
+		"deleteSelection": "Delete selected words",
+		"removeFillers": "Remove filler words",
+		"fillerFound": "{{count}} filler words found",
+		"removeCount": "Remove {{count}}",
+		"cancel": "Cancel",
+		"noFillers": "No filler words found.",
+		"pauseThreshold": "Pauses longer than",
+		"tightenPauses": "Tighten {{count}} pauses",
+		"cutFailed": "Nothing to cut."
 	}
 }

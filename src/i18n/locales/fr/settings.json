@@ -382,5 +382,19 @@
 			"bottom-center": "Centre",
 			"bottom-right": "Droite"
 		}
+	},
+	"transcript": {
+		"title": "Transcription",
+		"hint": "Cliquez sur un mot, Maj+clic pour étendre, double-clic pour la phrase. Suppr le coupe de la vidéo.",
+		"empty": "Tous les mots ont été coupés.",
+		"deleteSelection": "Supprimer les mots sélectionnés",
+		"removeFillers": "Supprimer les mots de remplissage",
+		"fillerFound": "{{count}} mots de remplissage trouvés",
+		"removeCount": "Supprimer {{count}}",
+		"cancel": "Annuler",
+		"noFillers": "Aucun mot de remplissage trouvé.",
+		"pauseThreshold": "Pauses de plus de",
+		"tightenPauses": "Raccourcir {{count}} pauses",
+		"cutFailed": "Rien à couper."
 	}
 }

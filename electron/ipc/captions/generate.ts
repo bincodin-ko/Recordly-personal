@@ -13,7 +13,7 @@ import {
 } from "../recording/diagnostics";
 import { normalizeVideoSourcePath } from "../utils";
 import { type CaptionAudioCandidate, getCaptionCompanionAudioCandidates } from "./audioCandidates";
-import { shouldRetryWhisperWithoutJson } from "./parser";
+import { shouldRetryWhisperWithoutJson, whisperDtwPreset } from "./parser";
 import { readWhisperCaptionOutput } from "./output";
 import { isMissingWindowsWhisperRuntimeDependency } from "./runtimeErrors";
 import { mergeCaptionSources } from "./mergeSources";
@@ -283,8 +283,18 @@ async function generateCaptionsForSource(options: {
 		];
 
 		let jsonEnabled = true;
+		// DTW token alignment gives word times accurate enough to cut by transcript.
+		// Flash attention disables DTW, hence -nfa.
+		const dtwPreset = whisperDtwPreset(whisperModelPath);
+		const dtwArgs = dtwPreset ? ["--dtw", dtwPreset, "-nfa"] : [];
 		try {
-			await executeWhisper(whisperExecutablePath, [...whisperBaseArgs, "-ojf"]);
+			try {
+				await executeWhisper(whisperExecutablePath, [...whisperBaseArgs, "-ojf", ...dtwArgs]);
+			} catch (error) {
+				if (dtwArgs.length === 0) throw error;
+				console.warn("[auto-captions] Whisper DTW run failed, retrying without DTW:", error);
+				await executeWhisper(whisperExecutablePath, [...whisperBaseArgs, "-ojf"]);
+			}
 		} catch (error) {
 			if (!shouldRetryWhisperWithoutJson(error)) {
 				throw error;

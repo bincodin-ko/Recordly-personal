@@ -382,5 +382,19 @@
 			"bottom-center": "Mitte",
 			"bottom-right": "Rechts"
 		}
+	},
+	"transcript": {
+		"title": "Transkript",
+		"hint": "Wort anklicken, mit Umschalt erweitern, Doppelklick wählt den Satz. Entf schneidet es aus dem Video.",
+		"empty": "Alle Wörter wurden geschnitten.",
+		"deleteSelection": "Ausgewählte Wörter löschen",
+		"removeFillers": "Füllwörter entfernen",
+		"fillerFound": "{{count}} Füllwörter gefunden",
+		"removeCount": "{{count}} entfernen",
+		"cancel": "Abbrechen",
+		"noFillers": "Keine Füllwörter gefunden.",
+		"pauseThreshold": "Pausen länger als",
+		"tightenPauses": "{{count}} Pausen kürzen",
+		"cutFailed": "Nichts zu schneiden."
 	}
 }

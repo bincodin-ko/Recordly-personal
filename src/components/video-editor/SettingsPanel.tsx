@@ -40,6 +40,8 @@ import type { AppLocale } from "../../i18n/config";
 import { SUPPORTED_LOCALES } from "../../i18n/config";
 import { AnnotationSettingsPanel } from "./AnnotationSettingsPanel";
 import CaptionListPanel from "./CaptionListPanel";
+import TranscriptPanel from "./TranscriptPanel";
+import type { SourceRange } from "./transcriptEdit";
 import type { CaptionRetimeSpan } from "./captionOps";
 import {
 	CURSOR_MOTION_PRESETS,
@@ -58,6 +60,7 @@ import type {
 	AutoCaptionAnimation,
 	AutoCaptionSettings,
 	CaptionCue,
+	ClipRegion,
 	CropRegion,
 	CursorClickEffectStyle,
 	CursorStyle,
@@ -557,6 +560,8 @@ interface SettingsPanelProps {
 	onAnnotationPatch?: (id: string, patch: Partial<AnnotationRegion>) => void;
 	onAnnotationDelete?: (id: string) => void;
 	autoCaptions?: CaptionCue[];
+	clipRegions?: ClipRegion[];
+	onCutSourceRanges?: (ranges: SourceRange[]) => boolean;
 	autoCaptionSettings?: AutoCaptionSettings;
 	whisperExecutablePath?: string | null;
 	whisperModelPath?: string | null;
@@ -1017,6 +1022,8 @@ export function SettingsPanel({
 	onAnnotationPatch,
 	onAnnotationDelete,
 	autoCaptions = [],
+	clipRegions = [],
+	onCutSourceRanges,
 	autoCaptionSettings = DEFAULT_AUTO_CAPTION_SETTINGS,
 	whisperModelPath,
 	whisperModelDownloadStatus = "idle",
@@ -2192,6 +2199,14 @@ export function SettingsPanel({
 					</div>
 				) : null}
 			</div>
+
+			{onCutSourceRanges && (
+				<TranscriptPanel
+					cues={autoCaptions}
+					clipRegions={clipRegions}
+					onCutSourceRanges={onCutSourceRanges}
+				/>
+			)}
 
 			<div className="flex flex-col gap-3">
 				{advanced && (

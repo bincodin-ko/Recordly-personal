@@ -382,5 +382,19 @@
 			"bottom-center": "Centro",
 			"bottom-right": "Direita"
 		}
+	},
+	"transcript": {
+		"title": "Transcrição",
+		"hint": "Clique numa palavra, Shift+clique para estender, clique duplo para a frase. Delete corta do vídeo.",
+		"empty": "Todas as palavras foram cortadas.",
+		"deleteSelection": "Excluir palavras selecionadas",
+		"removeFillers": "Remover vícios de linguagem",
+		"fillerFound": "{{count}} vícios de linguagem encontrados",
+		"removeCount": "Remover {{count}}",
+		"cancel": "Cancelar",
+		"noFillers": "Nenhum vício de linguagem encontrado.",
+		"pauseThreshold": "Pausas maiores que",
+		"tightenPauses": "Encurtar {{count}} pausas",
+		"cutFailed": "Nada para cortar."
 	}
 }

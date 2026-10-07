@@ -190,6 +190,8 @@ export type CaptionCuePayload = {
 
 export type WhisperJsonToken = {
 	text?: unknown;
+	/** DTW token timestamp in centiseconds (-1 when DTW is off). */
+	t_dtw?: unknown;
 	offsets?: {
 		from?: unknown;
 		to?: unknown;
