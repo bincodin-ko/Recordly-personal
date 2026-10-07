@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "Alle „{{label}}“-Kurzbefehle deaktivieren",
 		"enableAll": "Alle „{{label}}“-Kurzbefehle aktivieren"
+	},
+	"clipEdit": {
+		"menuLabel": "Clip-Menü",
+		"setSpeed": "Geschwindigkeit festlegen",
+		"setVolume": "Lautstärke festlegen",
+		"remove": "Entfernen",
+		"normal": "Normal",
+		"mute": "Stumm",
+		"typingTitle": "Tippen beschleunigen",
+		"typingBadge": "Tippen",
+		"typingInfo": "Tippen für {{seconds}} s ({{count}} Tasten)",
+		"typingSpeed": "Tempo",
+		"applySuggestion": "Vorschlag anwenden",
+		"applyAll": "Alle Vorschläge anwenden ({{count}})",
+		"typingApplied": "{{count}} Tippabschnitte beschleunigt",
+		"restoreTitle": "Kürzung rückgängig",
+		"restoreConflict": "Die Effekte davor und danach unterscheiden sich. Soll der wiederhergestellte Teil die vorherigen oder die nächsten Effekte übernehmen?",
+		"restoreBefore": "Wenn du die Kürzung rückgängig machst, werden die vorherigen Effekte auf diesen Teil übertragen. Fortfahren?",
+		"restoreAfter": "Wenn du die Kürzung rückgängig machst, werden die nächsten Effekte auf diesen Teil übertragen. Fortfahren?",
+		"followBefore": "Vorherige Effekte übernehmen",
+		"followAfter": "Nächste Effekte übernehmen",
+		"cancel": "Abbrechen",
+		"confirm": "OK",
+		"undoTrim": "Kürzung rückgängig"
 	}
 }

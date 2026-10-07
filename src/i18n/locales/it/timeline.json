@@ -94,5 +94,29 @@
 	"shortcuts": {
 		"disableAll": "Disattiva tutte le scorciatoie \"{{label}}\"",
 		"enableAll": "Attiva tutte le scorciatoie \"{{label}}\""
+	},
+	"clipEdit": {
+		"menuLabel": "Menu clip",
+		"setSpeed": "Imposta velocità",
+		"setVolume": "Imposta volume",
+		"remove": "Rimuovi",
+		"normal": "Normale",
+		"mute": "Muto",
+		"typingTitle": "Accelera la digitazione",
+		"typingBadge": "Digitazione",
+		"typingInfo": "Digitazione per {{seconds}} s ({{count}} tasti)",
+		"typingSpeed": "Velocità",
+		"applySuggestion": "Applica suggerimento",
+		"applyAll": "Applica tutti i suggerimenti ({{count}})",
+		"typingApplied": "{{count}} tratti di digitazione accelerati",
+		"restoreTitle": "Annulla taglio",
+		"restoreConflict": "Gli effetti prima e dopo sono diversi. Vuoi adattare la parte ripristinata agli effetti precedenti o a quelli successivi?",
+		"restoreBefore": "Annullando il taglio, gli effetti precedenti si estenderanno a questa parte. Continuare?",
+		"restoreAfter": "Annullando il taglio, gli effetti successivi si estenderanno a questa parte. Continuare?",
+		"followBefore": "Segui effetti precedenti",
+		"followAfter": "Segui effetti successivi",
+		"cancel": "Annulla",
+		"confirm": "OK",
+		"undoTrim": "Annulla taglio"
 	}
 }

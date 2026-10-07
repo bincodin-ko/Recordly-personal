@@ -245,6 +245,7 @@ interface Window {
 		getAndroidDevices: () => Promise<Array<{ serial: string; model: string }>>;
 		getRecordingFlags: () => Promise<number[]>;
 		getRecordingKeystrokes: (videoPath?: string) => Promise<unknown[]>;
+		getRecordingTypingTimes: (videoPath?: string) => Promise<number[]>;
 		togglePrompterWindow: () => Promise<boolean>;
 		getAudioSyncOffset: () => Promise<number>;
 		setAudioSyncOffset: (offsetMs: number) => Promise<number>;

@@ -15,6 +15,7 @@ import {
 	isAnnotationTrackRowId,
 	isAudioTrackRowId,
 } from "../core/rows";
+import { layoutAnnotationTracks } from "../core/annotationTracks";
 import { spansOverlap } from "../core/spans";
 import type { ClipSequenceSpan, TimelineRenderItem } from "../core/timelineTypes";
 import { buildAllRegionSpans, buildTimelineItems, resolveDropRowId } from "../model/timelineModel";
@@ -89,7 +90,7 @@ export function useTimelineDndBindings({
 			if (kind === "annotation") {
 				return rowId && isAnnotationTrackRowId(rowId)
 					? getAnnotationTrackIndex(rowId)
-					: (annotationRegions.find((region) => region.id === id)?.trackIndex ?? 0);
+					: (layoutAnnotationTracks(annotationRegions).get(id) ?? 0);
 			}
 			return rowId && isAudioTrackRowId(rowId)
 				? getAudioTrackIndex(rowId)

@@ -425,6 +425,7 @@ export function EditorShell(props: Props) {
 					isPlaying={ui.isPlaying}
 					handleSelectAnnotation={handleSelectAnnotation}
 					cursorExtras={appearance.cursorExtras}
+					sourceDurationMs={ui.duration * 1000}
 				/>
 			</div>
 			{library.importing && (

@@ -1,3 +1,4 @@
+import { clipAltersAudio } from "@/components/video-editor/types";
 import type { WebDemuxer } from "web-demuxer";
 import { requiresClipTimelineRendering } from "./clipTimeline";
 import type {
@@ -155,7 +156,7 @@ export class AudioProcessor extends AudioTranscodeProcessor {
 			sortedAudioRegions.length > 0 ||
 			needsSourceAudioMixing ||
 			hasNonDefaultSourceTrackSettings(sourceAudioTrackSettings) ||
-			(clipRegions ?? []).some((clip) => Boolean(clip.muted))
+			(clipRegions ?? []).some(clipAltersAudio)
 		) {
 			await this.renderAndMuxOfflineAudio(
 				videoUrl,

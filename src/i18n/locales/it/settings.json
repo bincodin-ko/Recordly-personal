@@ -38,7 +38,8 @@
 		"unmutedState": "Audio in riproduzione",
 		"separateClipFromAudio": "Separa clip dall'audio",
 		"delete": "Elimina clip",
-		"hideCursor": "Nascondi cursore"
+		"hideCursor": "Nascondi cursore",
+		"volume": "Volume"
 	},
 	"effects": {
 		"title": "Effetti video",

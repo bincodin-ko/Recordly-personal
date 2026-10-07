@@ -8,6 +8,7 @@ import type { useCaptionCommands } from "../hooks/useCaptionCommands";
 import type { useClipRegionCommands } from "../hooks/useClipRegionCommands";
 import type { useZoomRegionCommands } from "../hooks/useZoomRegionCommands";
 import { SettingsPanel } from "../SettingsPanel";
+import { getClipVolume } from "../types";
 import type { useAppearanceState } from "../state/useAppearanceState";
 import type { useTimelineState } from "../state/useTimelineState";
 import { type EditorEffectSection, mapTimelineTimeToSourceTime } from "../types";
@@ -97,6 +98,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		selectedClipId: timeline.selectedClipId,
 		selectedClipSpeed: selectedClip?.speed ?? (timeline.selectedClipId ? 1 : null),
 		selectedClipMuted: selectedClip?.muted ?? (timeline.selectedClipId ? false : null),
+		selectedClipVolume: selectedClip ? getClipVolume(selectedClip) : null,
+		onClipVolumeChange: clipCommands.handleClipVolumeChange,
 		onClipSpeedChange: clipCommands.handleClipSpeedChange,
 		onClipMutedChange: clipCommands.handleClipMutedChange,
 		selectedClipHideCursor: Boolean(selectedClip?.hideCursor),

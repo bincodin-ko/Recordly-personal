@@ -38,7 +38,8 @@
 		"unmutedState": "Audio wird wiedergegeben",
 		"separateClipFromAudio": "Clip vom Audio trennen",
 		"delete": "Clip löschen",
-		"hideCursor": "Cursor ausblenden"
+		"hideCursor": "Cursor ausblenden",
+		"volume": "Lautstärke"
 	},
 	"effects": {
 		"title": "Videoeffekte",

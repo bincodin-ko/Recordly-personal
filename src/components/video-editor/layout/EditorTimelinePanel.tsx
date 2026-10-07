@@ -10,6 +10,8 @@ import type { useEditorPlaybackControls } from "../hooks/useEditorPlaybackContro
 import type { useTimelineProjection } from "../hooks/useTimelineProjection";
 import type { useZoomRegionCommands } from "../hooks/useZoomRegionCommands";
 import type { useTimelineState } from "../state/useTimelineState";
+import { ClipActionsProvider } from "../timeline/core/ClipActionsContext";
+import { useClipTimelineActions } from "../timeline/clipOverlays/useClipTimelineActions";
 import TimelineEditor, { type TimelineEditorHandle } from "../timeline/TimelineEditor";
 
 type Props = {
@@ -35,6 +37,7 @@ type Props = {
 	isPlaying: boolean;
 	handleSelectAnnotation: (id: string | null) => void;
 	cursorExtras: CursorExtrasSettings;
+	sourceDurationMs: number;
 };
 
 export function EditorTimelinePanel(props: Props) {
@@ -60,6 +63,7 @@ export function EditorTimelinePanel(props: Props) {
 		isPlaying,
 		handleSelectAnnotation,
 		cursorExtras,
+		sourceDurationMs,
 	} = props;
 
 	// Hover scrub (Screen Studio): the preview shows the moment under the pointer while the
@@ -121,6 +125,13 @@ export function EditorTimelinePanel(props: Props) {
 		},
 		[],
 	);
+	const clipTimelineActions = useClipTimelineActions({
+		clipRegions: timeline.clipRegions,
+		zoomRegions: timeline.zoomRegions,
+		typingTimes: timeline.typingTimes,
+		sourceDurationMs,
+		clipCommands,
+	});
 	const shortcutBlocks = useMemo(
 		() =>
 			buildShortcutBlocks(
@@ -141,6 +152,7 @@ export function EditorTimelinePanel(props: Props) {
 			className="outline-none flex flex-shrink-0 flex-col bg-transparent px-4 pb-4 pt-2"
 			style={{ height: "22%", minHeight: 180, maxHeight: 280 }}
 		>
+			<ClipActionsProvider value={clipTimelineActions.actions}>
 			<TimelineEditor
 				ref={timelineRef}
 				videoDuration={projection.timelineDuration}
@@ -238,6 +250,8 @@ export function EditorTimelinePanel(props: Props) {
 					})
 				}
 			/>
+			</ClipActionsProvider>
+			{clipTimelineActions.overlays}
 		</div>
 	);
 }

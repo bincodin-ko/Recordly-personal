@@ -10,6 +10,8 @@ import {
 } from "../clipSequence";
 import { getClipSourceStartMs, type AnnotationRegion, type AudioRegion } from "../types";
 import { planClipSplit } from "../clipSplit";
+import { restoreTrimGap, type TrimGap } from "../trimRestore";
+import { applySpeedToSourceRanges, rippleBySource, type SourceSpeedRange } from "../typingSpeedUp";
 import type { ClipRegion, EditorEffectSection, ZoomRegion } from "../types";
 import { supportsPreviewPlaybackRate } from "../videoPlayback/playbackRate";
 
@@ -47,6 +49,7 @@ export function useClipRegionCommands({
 	sourceDurationMs,
 	clipRegions,
 	setClipRegions,
+	zoomRegions,
 	setZoomRegions,
 	selectedClipId,
 	setSelectedClipId,
@@ -134,9 +137,9 @@ export function useClipRegionCommands({
 		[clipRegions, applySequence, sourceDurationMs],
 	);
 
-	const handleClipSpeedChange = useCallback(
-		(speed: number) => {
-			if (!selectedClipId || !Number.isFinite(speed) || speed <= 0) return;
+	const setClipSpeedById = useCallback(
+		(id: string, speed: number) => {
+			if (!Number.isFinite(speed) || speed <= 0) return;
 			if (!supportsPreviewPlaybackRate(speed)) {
 				toast.error(
 					t(
@@ -149,7 +152,7 @@ export function useClipRegionCommands({
 
 			applySequence(
 				clipRegions.map((clip) =>
-					clip.id === selectedClipId
+					clip.id === id
 						? {
 								...clip,
 								sourceStartMs: getClipSourceStartMs(clip),
@@ -167,7 +170,102 @@ export function useClipRegionCommands({
 				),
 			);
 		},
-		[clipRegions, selectedClipId, applySequence, t],
+		[clipRegions, applySequence, t],
+	);
+	const handleClipSpeedChange = useCallback(
+		(speed: number) => {
+			if (selectedClipId) setClipSpeedById(selectedClipId, speed);
+		},
+		[selectedClipId, setClipSpeedById],
+	);
+
+	/** Screen Studio "Set volume": 0..1 for one clip (split the clip first for a sub-range). */
+	const setClipVolumeById = useCallback(
+		(id: string, volume: number) => {
+			const next = Math.max(0, Math.min(1, volume));
+			setClipRegions((current) =>
+				current.map((clip) => {
+					if (clip.id !== id) return clip;
+					const { volume: _old, ...rest } = clip;
+					return next >= 1 ? rest : { ...rest, volume: next };
+				}),
+			);
+		},
+		[setClipRegions],
+	);
+	const handleClipVolumeChange = useCallback(
+		(volume: number) => {
+			if (selectedClipId) setClipVolumeById(selectedClipId, volume);
+		},
+		[selectedClipId, setClipVolumeById],
+	);
+
+	/** Screen Studio "Apply suggestion(s)": speed up source-time ranges (typing bursts). */
+	const handleApplySpeedRanges = useCallback(
+		(ranges: SourceSpeedRange[]) => {
+			if (ranges.length === 0) return;
+			if (ranges.some((range) => !supportsPreviewPlaybackRate(range.speed))) {
+				toast.error(
+					t(
+						"editor.timeline.unsupportedSpeed",
+						"This speed is not supported for preview on this device.",
+					),
+				);
+				return;
+			}
+			const next = applySpeedToSourceRanges(
+				clipRegions,
+				ranges,
+				() => `clip-${nextClipIdRef.current++}`,
+			);
+			setClipRegions(next);
+			setZoomRegions((current) => rippleBySource(current, clipRegions, next));
+			setAnnotationRegions((current) => rippleBySource(current, clipRegions, next));
+			setAudioRegions((current) =>
+				current.map((region) => {
+					const [moved] = rippleBySource(
+						[{ startMs: region.startMs, endMs: region.startMs + 1 }],
+						clipRegions,
+						next,
+					);
+					const startMs = moved?.startMs ?? region.startMs;
+					return { ...region, startMs, endMs: startMs + region.endMs - region.startMs };
+				}),
+			);
+		},
+		[
+			clipRegions,
+			nextClipIdRef,
+			setClipRegions,
+			setZoomRegions,
+			setAnnotationRegions,
+			setAudioRegions,
+			t,
+		],
+	);
+
+	/** Undo a trim: bring the gap back, inheriting the chosen neighbour's effects. */
+	const handleRestoreTrim = useCallback(
+		(gap: TrimGap, side: "before" | "after" | null) => {
+			const result = restoreTrimGap({
+				gap,
+				clips: clipRegions,
+				zooms: zoomRegions,
+				side,
+				createId: () => `clip-${nextClipIdRef.current++}`,
+			});
+			setClipRegions(result.clips);
+			setZoomRegions(result.zooms);
+			setAnnotationRegions((current) => rippleBySource(current, clipRegions, result.clips));
+		},
+		[
+			clipRegions,
+			zoomRegions,
+			nextClipIdRef,
+			setClipRegions,
+			setZoomRegions,
+			setAnnotationRegions,
+		],
 	);
 
 	const handleClipMutedChange = useCallback(
@@ -278,6 +376,11 @@ export function useClipRegionCommands({
 		handleClipSplit,
 		handleClipSpanChange,
 		handleClipSpeedChange,
+		setClipSpeedById,
+		handleClipVolumeChange,
+		setClipVolumeById,
+		handleApplySpeedRanges,
+		handleRestoreTrim,
 		handleClipMutedChange,
 		handleClipHideCursorChange,
 		handleClipShowSourceAudioChange,

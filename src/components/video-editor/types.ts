@@ -248,6 +248,17 @@ export interface ClipRegion {
 	showSourceAudio?: boolean;
 	/** Hide the cursor while this clip plays (Screen Studio "hide cursor" on a fragment). */
 	hideCursor?: boolean;
+	/** Per-segment volume, 0..1 (Screen Studio "Set volume"). Unset = 1. */
+	volume?: number;
+}
+
+export function getClipVolume(clip: Pick<ClipRegion, "volume">): number {
+	return Number.isFinite(clip.volume) ? Math.max(0, Math.min(1, clip.volume as number)) : 1;
+}
+
+/** True when the clip needs the offline audio renderer (muted or non-default volume). */
+export function clipAltersAudio(clip: ClipRegion): boolean {
+	return Boolean(clip.muted) || getClipVolume(clip) !== 1;
 }
 
 export function getClipSourceStartMs(clip: ClipRegion): number {
