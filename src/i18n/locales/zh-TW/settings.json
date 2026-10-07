@@ -356,7 +356,17 @@
 			"balanced": "Balanced",
 			"quality": "Quality"
 		},
-		"formatVideo": "Video"
+		"formatVideo": "Video",
+		"aiSharpen": {
+			"title": "Sharpen zoomed text (AI)",
+			"hint": "Upscales enlarged frames 2x with an AI model on the NVIDIA GPU. First use downloads about 4 GB.",
+			"scope": "Apply to",
+			"zoom": "Zoom regions only",
+			"all": "Whole video",
+			"extraSeconds": "About {{count}} s more",
+			"extraMinutes": "About {{count}} min more",
+			"noZoom": "No zoom regions"
+		}
 	},
 	"audio": {
 		"title": "音訊",

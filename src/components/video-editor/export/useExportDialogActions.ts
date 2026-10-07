@@ -80,6 +80,7 @@ export function useExportDialogActions({
 				gifFrameRate: settings.gifFrameRate,
 				gifLoop: settings.gifLoop,
 				gifSizePreset: settings.gifSizePreset,
+				aiSharpen: settings.aiSharpen,
 			});
 		},
 		[videoPath, videoPlaybackRef, hasCaptionsForSidecar, settings],

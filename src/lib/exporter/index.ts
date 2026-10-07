@@ -24,6 +24,7 @@ export type {
 	ExportPipelineModel,
 	ExportProgress,
 	ExportQuality,
+	AiSharpenMode,
 	ExportRenderBackend,
 	ExportResult,
 	ExportSettings,

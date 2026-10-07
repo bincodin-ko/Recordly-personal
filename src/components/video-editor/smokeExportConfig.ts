@@ -1,4 +1,5 @@
 import {
+	type AiSharpenMode,
 	isValidMp4FrameRate,
 	type ExportBackendPreference,
 	type ExportEncodingMode,
@@ -27,6 +28,7 @@ export type SmokeExportConfig = {
 	projectPath?: string | null;
 	quality?: ExportQuality;
 	fps?: ExportMp4FrameRate;
+	aiSharpen?: AiSharpenMode;
 };
 
 export type DevOpenRecordingConfig = {
@@ -63,6 +65,10 @@ function parseSmokeExportFps(value: string | null): ExportMp4FrameRate | undefin
 	if (value === null) return undefined;
 	const parsed = Number.parseInt(value, 10);
 	return isValidMp4FrameRate(parsed) ? parsed : undefined;
+}
+
+function normalizeAiSharpenMode(value: string | null): AiSharpenMode | undefined {
+	return value === "off" || value === "zoom" || value === "all" ? value : undefined;
 }
 
 function parseSmokeRenderBackend(value: string | null): ExportRenderBackend | undefined {
@@ -125,6 +131,7 @@ export function getSmokeExportConfig(search: string): SmokeExportConfig {
 		projectPath: enabled ? params.get("smokeProject") : null,
 		quality: enabled ? parseSmokeExportQuality(params.get("smokeQuality")) : undefined,
 		fps: enabled ? parseSmokeExportFps(params.get("smokeFps")) : undefined,
+		aiSharpen: enabled ? normalizeAiSharpenMode(params.get("smokeAiSharpen")) : undefined,
 	};
 }
 

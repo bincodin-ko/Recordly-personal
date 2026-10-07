@@ -9,6 +9,8 @@ import {
 	Container,
 	type Filter,
 	Graphics,
+	Matrix,
+	Point,
 	Rectangle,
 	Sprite,
 	Texture,
@@ -189,6 +191,15 @@ interface FrameRenderConfig {
 	autoFrame?: boolean;
 	autoFrameFollowSpeed?: number;
 	nativeReadbackMode?: "pixels" | "canvas";
+	/** AI sharpening: 2x super-resolve the visible source area while it is drawn enlarged. */
+	superResolve?: {
+		mode: "zoom" | "all";
+		upscale: (
+			rgba: Uint8Array,
+			width: number,
+			height: number,
+		) => Promise<{ width: number; height: number; data: Uint8Array } | null>;
+	};
 }
 
 interface AnimationState {
@@ -418,6 +429,15 @@ export class FrameRenderer {
 	private readonly webcamLook = createColorLookFilter();
 	private webcamSharpenFilter: Filter | null = null;
 	private videoTextureSource: MutableVideoTextureSource | null = null;
+	private superResolution: {
+		canvas: HTMLCanvasElement;
+		context: CanvasRenderingContext2D;
+		texture: Texture;
+		readCanvas: HTMLCanvasElement;
+		readContext: CanvasRenderingContext2D;
+		baseTexture: Texture | null;
+		baseScale: number;
+	} | null = null;
 	private backgroundSprite: Sprite | null = null;
 	private backgroundTextureSource: MutableVideoTextureSource | null = null;
 	private videoMaskGraphics: Graphics | null = null;
@@ -2989,6 +3009,7 @@ export class FrameRenderer {
 			throw new Error("Renderer not initialized");
 		}
 
+		this.restoreSuperResolution();
 		this.currentVideoTime = timestamp / 1_000_000;
 		this.cameraContainer.visible = videoFrame !== null;
 		if (!videoFrame) {
@@ -3095,12 +3116,103 @@ export class FrameRenderer {
 			motionBlurState: this.motionBlurState,
 			frameTimeMs: timeMs,
 		});
+		await this.applySuperResolution(videoFrame);
 
 		this.updateAnnotationLayer(timeMs);
 		this.updateCaptionLayer(timestamp / 1000);
 		this.updateWebcamOverlay(this.currentVideoTime, timeMs, cursorTimeMs);
 		await this.renderOutput(timeMs);
 		this.composeShortcutOverlay(cursorTimeMs);
+	}
+
+	private restoreSuperResolution(): void {
+		const sr = this.superResolution;
+		if (!sr?.baseTexture || !this.videoSprite) return;
+		this.videoSprite.texture = sr.baseTexture;
+		this.videoSprite.scale.set(sr.baseScale);
+		sr.baseTexture = null;
+	}
+
+	/**
+	 * AI sharpening: while the recording is drawn enlarged (zoom, or a 4K export), swap the
+	 * sprite to a 2x canvas whose visible part was super-resolved by the model. Only the
+	 * visible source rectangle is sent (a 2x zoom sends a quarter of the frame). Any failure
+	 * keeps the normal bilinear texture for that frame.
+	 */
+	private async applySuperResolution(frame: VideoFrame): Promise<void> {
+		const options = this.config.superResolve;
+		const sprite = this.videoSprite;
+		if (!options || !sprite || !this.app) return;
+		const matrix = sprite.getGlobalTransform(new Matrix(), false);
+		const scale = Math.hypot(matrix.a, matrix.b) * this.app.renderer.resolution;
+		const zoomed = (this.animationState.appliedScale || 1) > 1.01;
+		if (scale < 1.05 || (options.mode === "zoom" && !zoomed)) return;
+
+		const { videoWidth, videoHeight } = this.config;
+		const { width: screenWidth, height: screenHeight } = this.app.screen;
+		const corners = [
+			[0, 0],
+			[screenWidth, 0],
+			[0, screenHeight],
+			[screenWidth, screenHeight],
+		].map(([x, y]) => matrix.applyInverse(new Point(x, y)));
+		const margin = 8; // filter taps and motion-blur reach slightly past the screen edge
+		const x0 = Math.max(0, Math.floor(Math.min(...corners.map((p) => p.x)) - margin));
+		const y0 = Math.max(0, Math.floor(Math.min(...corners.map((p) => p.y)) - margin));
+		const x1 = Math.min(videoWidth, Math.ceil(Math.max(...corners.map((p) => p.x)) + margin));
+		const y1 = Math.min(videoHeight, Math.ceil(Math.max(...corners.map((p) => p.y)) + margin));
+		const width = x1 - x0;
+		const height = y1 - y0;
+		if (width < 16 || height < 16) return;
+
+		if (!this.superResolution) {
+			const canvas = document.createElement("canvas");
+			canvas.width = videoWidth * 2;
+			canvas.height = videoHeight * 2;
+			const readCanvas = document.createElement("canvas");
+			const context = configureHighQuality2DContext(canvas.getContext("2d"));
+			const readContext = readCanvas.getContext("2d", { willReadFrequently: true });
+			if (!context || !readContext) return;
+			this.superResolution = {
+				canvas,
+				context,
+				texture: Texture.from(canvas),
+				readCanvas,
+				readContext,
+				baseTexture: null,
+				baseScale: 1,
+			};
+		}
+		const sr = this.superResolution;
+		if (sr.readCanvas.width !== width || sr.readCanvas.height !== height) {
+			sr.readCanvas.width = width;
+			sr.readCanvas.height = height;
+		}
+		sr.readContext.drawImage(frame, x0, y0, width, height, 0, 0, width, height);
+		const pixels = sr.readContext.getImageData(0, 0, width, height).data;
+		const result = await options
+			.upscale(new Uint8Array(pixels.buffer, pixels.byteOffset, pixels.byteLength), width, height)
+			.catch(() => null);
+		if (!result || result.width !== width * 2 || result.height !== height * 2) return;
+
+		if (width < videoWidth || height < videoHeight) {
+			// Off-crop areas only show during fast moves (motion blur); plain resample is fine there.
+			sr.context.drawImage(frame, 0, 0, sr.canvas.width, sr.canvas.height);
+		}
+		sr.context.putImageData(
+			new ImageData(
+				new Uint8ClampedArray(result.data.buffer as ArrayBuffer, result.data.byteOffset, result.data.byteLength),
+				result.width,
+				result.height,
+			),
+			x0 * 2,
+			y0 * 2,
+		);
+		sr.texture.source.update();
+		sr.baseTexture = sprite.texture;
+		sr.baseScale = sprite.scale.x;
+		sprite.texture = sr.texture;
+		sprite.scale.set(sr.baseScale / 2);
 	}
 
 	/** Keyboard shortcut pill, composited on top of the finished frame. */
@@ -3393,6 +3505,9 @@ export class FrameRenderer {
 	}
 
 	destroy(): void {
+		this.restoreSuperResolution();
+		this.superResolution?.texture.destroy(true);
+		this.superResolution = null;
 		const texturesToDestroy = new Set<Texture>();
 		for (const sprite of [
 			this.videoSprite,

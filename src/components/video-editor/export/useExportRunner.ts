@@ -294,6 +294,7 @@ export function useExportRunner(input: ExportRunnerInput) {
 							: audio.activeSourceAudioTrackSettings;
 
 					const exporterConfig = {
+						aiSharpen: smokeExportConfig.aiSharpen ?? settings.aiSharpen,
 						videoUrl: videoPath,
 						width: exportWidth,
 						height: exportHeight,

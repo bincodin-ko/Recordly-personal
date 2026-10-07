@@ -24,6 +24,7 @@ type Props = {
 	exportDimensions: ReturnType<typeof useExportDimensions>;
 	exportStatus: ReturnType<typeof useExportStatusViewModel>;
 	hasCaptionsForSidecar: boolean;
+	aiSharpenEstimateSec?: { zoom: number; all: number };
 	nvidiaCudaExportAvailable: boolean;
 	experimentalNvidiaCudaExport: boolean;
 	setExperimentalNvidiaCudaExport: (enabled: boolean) => void;
@@ -109,6 +110,8 @@ export function EditorExportMenu(props: Props) {
 		setGifSizePreset,
 		includeCaptionSidecar,
 		setIncludeCaptionSidecar,
+		aiSharpen,
+		setAiSharpen,
 	} = exportSettings;
 	const {
 		isExporting,
@@ -157,6 +160,9 @@ export function EditorExportMenu(props: Props) {
 			showCaptionSidecarOption={hasCaptionsForSidecar && exportFormat === "mp4"}
 			includeCaptionSidecar={includeCaptionSidecar}
 			onIncludeCaptionSidecarChange={setIncludeCaptionSidecar}
+			aiSharpen={aiSharpen}
+			onAiSharpenChange={setAiSharpen}
+			aiSharpenEstimateSec={props.aiSharpenEstimateSec}
 			mp4OutputDimensions={mp4OutputDimensions}
 			gifOutputDimensions={gifOutputDimensions}
 			onExport={handleStartExportFromDropdown}
@@ -359,6 +365,20 @@ export function EditorExportMenu(props: Props) {
 										{exportNativeSkipLabel ? (
 											<p className="mt-1 text-[11px] text-amber-500/80">
 												{exportNativeSkipLabel}
+											</p>
+										) : null}
+										{exportProgress?.aiSharpen ? (
+											<p
+												className={`mt-1 text-[11px] ${exportProgress.aiSharpen === "unavailable" ? "text-amber-500/80" : "text-muted-foreground/70"}`}
+											>
+												{t(
+													`editor.export.aiSharpen.${exportProgress.aiSharpen}`,
+													{
+														preparing: "Preparing AI sharpening (first time: a few minutes)…",
+														active: "AI sharpening enlarged frames",
+														unavailable: "AI sharpening unavailable, exporting without it",
+													}[exportProgress.aiSharpen],
+												)}
 											</p>
 										) : null}
 									</Card>

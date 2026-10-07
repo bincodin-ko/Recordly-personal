@@ -272,7 +272,12 @@
 		"pathLabel": "Path: {{path}}",
 		"nativeSkipped": "Native skipped: {{reason}}",
 		"nativeSkippedMore": " (+{{count}} more)",
-		"encodingUnsupported": "Video encoding not supported on this system. Tried codec {{codec}} at {{fps}} FPS up to {{width}}x{{height}}."
+		"encodingUnsupported": "Video encoding not supported on this system. Tried codec {{codec}} at {{fps}} FPS up to {{width}}x{{height}}.",
+		"aiSharpen": {
+			"preparing": "Preparing AI sharpening (first time: a few minutes)…",
+			"active": "AI sharpening enlarged frames",
+			"unavailable": "AI sharpening unavailable, exporting without it"
+		}
 	},
 	"toolbar": {
 		"addLayer": "Aggiungi livello",

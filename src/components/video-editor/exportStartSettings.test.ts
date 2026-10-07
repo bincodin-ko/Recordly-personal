@@ -26,8 +26,10 @@ describe("resolveExportStartSettings", () => {
 			backendPreference: "auto",
 			pipelineModel: "modern",
 			quality: "good",
+			aiSharpen: "off",
 			gifConfig: undefined,
 		});
+		expect(resolveExportStartSettings({ ...baseOptions, aiSharpen: "zoom" }).aiSharpen).toBe("zoom");
 	});
 
 	it("omits MP4-only fields and resolves GIF dimensions for GIF exports", () => {

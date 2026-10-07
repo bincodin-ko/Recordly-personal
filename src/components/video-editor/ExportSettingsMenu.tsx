@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useScopedT } from "@/contexts/I18nContext";
 import type {
+	AiSharpenMode,
 	ExportEncodingMode,
 	ExportFormat,
 	ExportMp4FrameRate,
@@ -31,6 +32,10 @@ interface ExportSettingsMenuProps {
 	showCaptionSidecarOption?: boolean;
 	includeCaptionSidecar?: boolean;
 	onIncludeCaptionSidecarChange?: (enabled: boolean) => void;
+	aiSharpen?: AiSharpenMode;
+	onAiSharpenChange?: (mode: AiSharpenMode) => void;
+	/** Estimated extra export seconds per scope (see aiSharpenEstimate.ts). */
+	aiSharpenEstimateSec?: { zoom: number; all: number };
 	mp4OutputDimensions?: Record<ExportQuality, { width: number; height: number }>;
 	gifFrameRate: GifFrameRate;
 	onGifFrameRateChange?: (rate: GifFrameRate) => void;
@@ -112,6 +117,9 @@ export function ExportSettingsMenu({
 	showCaptionSidecarOption = false,
 	includeCaptionSidecar = false,
 	onIncludeCaptionSidecarChange,
+	aiSharpen = "off",
+	onAiSharpenChange,
+	aiSharpenEstimateSec,
 	mp4OutputDimensions,
 	gifFrameRate,
 	onGifFrameRateChange,
@@ -128,6 +136,16 @@ export function ExportSettingsMenu({
 }: ExportSettingsMenuProps) {
 	const tSettings = useScopedT("settings");
 	const isLegacyModel = exportPipelineModel === "legacy";
+	const formatExtraTime = (seconds: number) =>
+		seconds <= 0
+			? tSettings("export.aiSharpen.noZoom", "No zoom regions")
+			: seconds < 60
+			? tSettings("export.aiSharpen.extraSeconds", "About {{count}} s more", {
+					count: Math.max(1, Math.round(seconds)),
+				})
+			: tSettings("export.aiSharpen.extraMinutes", "About {{count}} min more", {
+					count: Math.round(seconds / 60),
+				});
 
 	return (
 		<Card className={className}>
@@ -207,6 +225,43 @@ export function ExportSettingsMenu({
 								label: String(value),
 							}))}
 						/>
+						{!isLegacyModel && (
+							<div className="flex flex-col gap-2">
+								<div>
+									<Switch
+										checked={aiSharpen !== "off"}
+										onCheckedChange={(on) => onAiSharpenChange?.(on ? "zoom" : "off")}
+									>
+										<Label>
+											{tSettings("export.aiSharpen.title", "Sharpen zoomed text (AI)")}
+										</Label>
+									</Switch>
+									<Description>
+										{tSettings(
+											"export.aiSharpen.hint",
+											"Upscales enlarged frames 2x with an AI model on the NVIDIA GPU. First use downloads about 4 GB.",
+										)}
+									</Description>
+								</div>
+								{aiSharpen !== "off" && (
+									<Choices
+										label={tSettings("export.aiSharpen.scope", "Apply to")}
+										value={aiSharpen}
+										onChange={onAiSharpenChange}
+										options={(["zoom", "all"] as const).map((value) => ({
+											value,
+											label: tSettings(
+												`export.aiSharpen.${value}`,
+												value === "zoom" ? "Zoom regions only" : "Whole video",
+											),
+											description: aiSharpenEstimateSec
+												? formatExtraTime(aiSharpenEstimateSec[value])
+												: undefined,
+										}))}
+									/>
+								)}
+							</div>
+						)}
 						{!isLegacyModel && nvidiaCudaExportAvailable && (
 							<Switch
 								checked={experimentalNvidiaCudaExport}
