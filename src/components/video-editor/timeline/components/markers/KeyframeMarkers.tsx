@@ -16,6 +16,7 @@ interface KeyframeMarkersProps {
 	onKeyframeMove: (id: string, newTime: number) => void;
 	videoDurationMs: number;
 	timelineRef: React.RefObject<HTMLDivElement | null>;
+	onSeek?: (timeSeconds: number) => void;
 }
 
 const KeyframeMarkers: React.FC<KeyframeMarkersProps> = ({
@@ -25,6 +26,7 @@ const KeyframeMarkers: React.FC<KeyframeMarkersProps> = ({
 	onKeyframeMove,
 	videoDurationMs,
 	timelineRef,
+	onSeek,
 }) => {
 	const { sidebarWidth, range, valueToPixels, pixelsToValue } = useTimelineContext();
 	const { clips } = useTimelinePresentation();
@@ -82,7 +84,9 @@ const KeyframeMarkers: React.FC<KeyframeMarkersProps> = ({
 						key={kf.id}
 						className={`absolute top-8 cursor-grab active:cursor-grabbing ${isSelected ? "ring-2 ring-[#2563EB]" : ""}`}
 						style={{
-							left: `${sidebarWidth + offset - 8}px`,
+							// Centered on its time: the same x as the playhead line.
+							left: `${sidebarWidth + offset}px`,
+							transform: "translateX(-50%)",
 							zIndex: isDragging ? 50 : 40,
 							transition: isDragging ? "none" : "left 0.1s ease-out",
 						}}
@@ -92,6 +96,8 @@ const KeyframeMarkers: React.FC<KeyframeMarkersProps> = ({
 							if (e.button !== 0) {
 								return;
 							}
+							// Clicking a flag puts the playhead on it.
+							onSeek?.(kf.time / 1000);
 							setDraggingKeyframeId(kf.id);
 						}}
 						onContextMenu={(e) => {

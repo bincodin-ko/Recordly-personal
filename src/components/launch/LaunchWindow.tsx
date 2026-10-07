@@ -56,7 +56,7 @@ export function LaunchWindow() {
 
 function LaunchWindowContent() {
 	const t = useScopedT("launch");
-	const { openId, requestOpen } = useLaunchPopoverCoordinator();
+	const { openId } = useLaunchPopoverCoordinator();
 
 	const {
 		recording,
@@ -88,7 +88,6 @@ function LaunchWindowContent() {
 
 	const {
 		selectedSource,
-		hasSelectedSource,
 		isWindowSourceSelected,
 		handleSourceSelect,
 		syncSelectedSource,
@@ -416,14 +415,8 @@ function LaunchWindowContent() {
 				variant="destructive"
 				size="icon"
 				className={styles.electronNoDrag}
-				onClick={
-					hasSelectedSource || platform === "linux"
-						? toggleRecording
-						: () => {
-								beginInteractiveHudAction();
-								requestOpen("sources");
-							}
-				}
+				// No source yet → records the main display (see useScreenRecorder).
+				onClick={toggleRecording}
 				disabled={countdownActive}
 				title={t("recording.record")}
 			>

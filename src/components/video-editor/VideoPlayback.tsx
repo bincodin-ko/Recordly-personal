@@ -2475,6 +2475,14 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			<div
 				ref={previewFrameRef}
 				className="relative overflow-hidden"
+				// Clicking the preview outside an annotation deselects it (hides the blue frame).
+				onPointerDown={(event) => {
+					if (
+						selectedAnnotationId &&
+						!(event.target as Element).closest?.("[data-annotation-id]")
+					)
+						onSelectAnnotation?.(null);
+				}}
 				style={{
 					width: "100%",
 					aspectRatio: formatAspectRatioForCSS(aspectRatio, nativeAspectRatio),

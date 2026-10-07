@@ -481,6 +481,7 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 							onKeyframeMove={handleKeyframeMove}
 							videoDurationMs={totalMs}
 							timelineRef={timelineContainerRef}
+							onSeek={onSeek}
 						/>
 						<TimelineCanvas
 							videoPath={videoPath}

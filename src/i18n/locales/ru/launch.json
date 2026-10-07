@@ -77,7 +77,8 @@
 		"audioApp": {
 			"title": "Record sound from",
 			"all": "All system sound"
-		}
+		},
+		"flagHint": "Нажмите Ctrl+Alt+F, чтобы поставить флажок в этот момент"
 	},
 	"sourceSelector": {
 		"loadingSources": "Загрузка источников...",
@@ -189,6 +190,12 @@
 		"saved": "Сохранено",
 		"copied": "Скопировано в буфер обмена",
 		"copyFailed": "Не удалось скопировать",
-		"doubleClickToEdit": "Дважды щёлкните, чтобы открыть в редакторе"
+		"doubleClickToEdit": "Дважды щёлкните, чтобы открыть в редакторе",
+		"settings": "Настройки быстрого экспорта",
+		"format": "Формат",
+		"quality": "Качество",
+		"original": "Оригинал",
+		"exporting": "Экспорт…",
+		"saveFailed": "Не удалось сохранить"
 	}
 }

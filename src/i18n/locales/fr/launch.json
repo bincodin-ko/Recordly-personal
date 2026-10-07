@@ -77,7 +77,8 @@
 		"audioApp": {
 			"title": "Record sound from",
 			"all": "All system sound"
-		}
+		},
+		"flagHint": "Appuyez sur Ctrl+Alt+F pour ajouter un repère à cet instant"
 	},
 	"sourceSelector": {
 		"loadingSources": "Chargement des sources...",
@@ -189,6 +190,12 @@
 		"saved": "Enregistré",
 		"copied": "Copié dans le presse-papiers",
 		"copyFailed": "Copie impossible",
-		"doubleClickToEdit": "Double-cliquez pour ouvrir dans l’éditeur"
+		"doubleClickToEdit": "Double-cliquez pour ouvrir dans l’éditeur",
+		"settings": "Réglages d’export rapide",
+		"format": "Format",
+		"quality": "Qualité",
+		"original": "Original",
+		"exporting": "Export en cours…",
+		"saveFailed": "Échec de l’enregistrement"
 	}
 }

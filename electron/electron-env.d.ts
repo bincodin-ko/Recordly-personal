@@ -1056,7 +1056,7 @@ interface Window {
 		/** Resolves false when the widget is turned off; the caller opens the editor instead. */
 		showQuickExportWidget: (videoPath: string) => Promise<boolean>;
 		quickExportGetVideo: () => Promise<string | null>;
-		quickExportSave: () => Promise<{ success: boolean; canceled?: boolean; path?: string }>;
+		quickExportSave: () => Promise<{ success: boolean; canceled?: boolean; path?: string; error?: string }>;
 		quickExportCopy: () => Promise<{ success: boolean; error?: string }>;
 		quickExportClose: (options?: { toEditor?: boolean }) => Promise<void>;
 		startCountdown: (seconds: number) => Promise<{ success: boolean; cancelled?: boolean }>;

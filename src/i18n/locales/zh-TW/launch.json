@@ -77,7 +77,8 @@
 		"audioApp": {
 			"title": "Record sound from",
 			"all": "All system sound"
-		}
+		},
+		"flagHint": "按 Ctrl+Alt+F 在此刻加入標記"
 	},
 	"sourceSelector": {
 		"loadingSources": "正在載入來源...",
@@ -189,6 +190,12 @@
 		"saved": "已儲存",
 		"copied": "已複製到剪貼簿",
 		"copyFailed": "複製失敗",
-		"doubleClickToEdit": "按兩下在編輯器中開啟"
+		"doubleClickToEdit": "按兩下在編輯器中開啟",
+		"settings": "快速匯出設定",
+		"format": "格式",
+		"quality": "畫質",
+		"original": "原始",
+		"exporting": "正在匯出…",
+		"saveFailed": "無法儲存"
 	}
 }

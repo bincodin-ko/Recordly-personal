@@ -77,7 +77,8 @@
 		"audioApp": {
 			"title": "녹음할 소리",
 			"all": "모든 시스템 소리"
-		}
+		},
+		"flagHint": "Ctrl+Alt+F를 누르면 지금 위치에 깃발을 꽂아요"
 	},
 	"sourceSelector": {
 		"loadingSources": "소스를 불러오는 중...",
@@ -189,6 +190,12 @@
 		"saved": "저장했어요",
 		"copied": "클립보드에 복사했어요",
 		"copyFailed": "복사하지 못했어요",
-		"doubleClickToEdit": "두 번 클릭하면 편집기가 열려요"
+		"doubleClickToEdit": "두 번 클릭하면 편집기가 열려요",
+		"settings": "빠른 내보내기 설정",
+		"format": "형식",
+		"quality": "화질",
+		"original": "원본",
+		"exporting": "내보내는 중…",
+		"saveFailed": "저장하지 못했어요"
 	}
 }

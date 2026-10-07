@@ -77,7 +77,8 @@
 		"audioApp": {
 			"title": "Record sound from",
 			"all": "All system sound"
-		}
+		},
+		"flagHint": "Press Ctrl+Alt+F to add a flag at this moment"
 	},
 	"sourceSelector": {
 		"loadingSources": "Loading sources...",
@@ -189,6 +190,12 @@
 		"saved": "Saved",
 		"copied": "Copied to clipboard",
 		"copyFailed": "Couldn’t copy",
-		"doubleClickToEdit": "Double-click to open in the editor"
+		"doubleClickToEdit": "Double-click to open in the editor",
+		"settings": "Quick export settings",
+		"format": "Format",
+		"quality": "Quality",
+		"original": "Original",
+		"exporting": "Exporting…",
+		"saveFailed": "Couldn’t save"
 	}
 }

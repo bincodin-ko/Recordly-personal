@@ -122,6 +122,16 @@ const LINUX_PORTAL_SOURCE: ProcessedDesktopSource = {
 	sourceType: "screen",
 };
 
+// Nothing picked yet (every launch starts this way): record the main display, like
+// Screen Studio's Display mode, instead of making the first click open the picker.
+async function selectDefaultScreenSource(): Promise<ProcessedDesktopSource | null> {
+	const [screen] = await window.electronAPI.getSources({
+		types: ["screen"],
+		thumbnailSize: { width: 1, height: 1 },
+	});
+	return screen ? window.electronAPI.selectSource(screen) : null;
+}
+
 type DesktopCaptureMediaDevices = {
 	getUserMedia: (constraints: unknown) => Promise<MediaStream>;
 	getDisplayMedia: (constraints: unknown) => Promise<MediaStream>;
@@ -1136,7 +1146,8 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 		hideEditorOverlayCursorByDefault.current = false;
 		const existingSource = await window.electronAPI.getSelectedSource();
 		const selectedSource =
-			existingSource ?? (platform === "linux" ? LINUX_PORTAL_SOURCE : null);
+			existingSource ??
+			(platform === "linux" ? LINUX_PORTAL_SOURCE : await selectDefaultScreenSource());
 		if (!selectedSource) {
 			alert(translate("launch.messages.pleaseSelectASourceToRecord", "Please select a source to record"));
 			return null;
