@@ -103,7 +103,7 @@ export default function PlaybackCursor({
 	return (
 		<div data-testid="timeline-playhead" className="absolute inset-0 z-50 pointer-events-none">
 			<div
-				className="absolute top-0 bottom-0 w-px bg-red-500"
+				className="absolute top-0 bottom-0 w-px bg-primary"
 				style={{ [sideProperty]: sidebarWidth + offset }}
 			>
 				<button
@@ -121,7 +121,7 @@ export default function PlaybackCursor({
 						event.stopPropagation();
 						setIsDragging(true);
 					}}
-					className="absolute top-0 h-4 rounded-full bg-red-500 text-white cursor-ew-resize pointer-events-auto overflow-hidden transition-[width,transform] duration-150"
+					className="absolute top-0 h-4 rounded-full bg-primary text-primary-foreground cursor-ew-resize pointer-events-auto overflow-hidden transition-[width,transform] duration-150"
 					style={{
 						width: expanded ? 68 : 16,
 						left: "50%",

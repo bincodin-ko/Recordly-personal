@@ -45,6 +45,8 @@ export function persistThemePreference(pref: ThemePreference): void {
 }
 
 function resolveTheme(pref: ThemePreference): ResolvedTheme {
+	// Editor is dark-only (Screen Studio look).
+	if (globalThis.location?.search?.includes("windowType=editor")) return "dark";
 	if (pref === "system") {
 		return globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 	}
