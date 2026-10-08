@@ -398,15 +398,6 @@ export function EditorPreviewPanel(props: Props) {
 					>
 						<MagicWand className="h-4 w-4" />
 					</Button>
-					<Button
-						onClick={() => timelineRef.current?.splitClip()}
-						variant="ghost"
-						size="icon"
-						className="h-9 w-9"
-						title={t("editor.toolbar.splitClip")}
-					>
-						<Scissors className="h-4 w-4" />
-					</Button>
 				</div>
 
 				<div className="editor-playback-center z-10 flex items-center justify-center">
@@ -452,6 +443,26 @@ export function EditorPreviewPanel(props: Props) {
 				</div>
 
 				<div className="editor-playback-volume z-10 ml-auto flex items-center">
+					<Button
+						onClick={() => timelineRef.current?.splitClip()}
+						variant="ghost"
+						size="icon"
+						className="h-9 w-9"
+						title={t("editor.toolbar.splitClip")}
+					>
+						<Scissors className="h-4 w-4" />
+					</Button>
+					<Slider
+						aria-label={t("editor.playback.timelineZoom", "Timeline zoom")}
+						min={0}
+						max={1}
+						step={0.01}
+						defaultValue={[0]}
+						onValueChange={([value]) =>
+							window.dispatchEvent(new CustomEvent("timeline-zoom", { detail: value }))
+						}
+						className="mx-2 w-24"
+					/>
 					<AudioSyncControl
 						t={t}
 						onChanged={() => timeline.setSourceAudioFallbackRefreshKey((k) => k + 1)}

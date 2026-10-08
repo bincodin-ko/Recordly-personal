@@ -89,7 +89,8 @@
 		"volume": "預覽音量",
 		"seek": "Playback position",
 		"editCurrentCaption": "Edit current caption",
-		"videoLoadFailed": "Failed to load video ({{detail}})"
+		"videoLoadFailed": "Failed to load video ({{detail}})",
+		"timelineZoom": "Timeline zoom"
 	},
 	"annotations": {
 		"settings": "註釋設定",
@@ -439,7 +440,8 @@
 	"header": {
 		"home": "Home",
 		"clips": "Clips",
-		"export": "匯出"
+		"export": "匯出",
+		"togglePanel": "Toggle settings panel"
 	},
 	"shell": {
 		"openProjects": "Open Projects"

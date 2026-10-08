@@ -1,7 +1,6 @@
-import { FeedbackDialog } from "@/components/feedback/FeedbackDialog";
-import { Separator } from "@heroui/react";
 import {
 	House,
+	SidebarSimple,
 	FilmStrip,
 	ArrowClockwise as Redo2,
 	ArrowCounterClockwise as Undo2,
@@ -18,12 +17,10 @@ import type { useProjectState } from "../state/useProjectState";
 import { EditorExportMenu } from "./EditorExportMenu";
 import { EditorPresetMenu } from "./EditorPresetMenu";
 
-// Keep the preset implementation available for future use.
-const SHOW_PRESETS_BUTTON = false;
-// Feedback needs a cloud account; hidden in the personal offline build.
-const SHOW_FEEDBACK_BUTTON = false;
 
 type Props = {
+	panelOpen: boolean;
+	onTogglePanel: () => void;
 	clipsOpen: boolean;
 	onToggleClips: () => void;
 	t: ReturnType<typeof useI18n>["t"];
@@ -107,7 +104,7 @@ export function EditorHeader(props: Props) {
 
 	return (
 		<header
-			className="editor-header [--text-sm:0.8125rem] relative z-50 grid h-14 shrink-0 border-b border-separator grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4"
+			className="editor-header [--text-sm:0.8125rem] relative z-50 grid h-14 shrink-0 border-b border-separator grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4"
 			style={{ WebkitAppRegion: "drag" } as CSSProperties}
 		>
 			<div
@@ -120,24 +117,29 @@ export function EditorHeader(props: Props) {
 					variant="ghost"
 					size="sm"
 					onClick={handleOpenProjectBrowser}
-					className="h-9 shrink-0 gap-2 px-3"
+					className="h-9 w-9 shrink-0 p-0"
 					title={t("editor.header.home", "Home")}
 					aria-label={t("editor.header.home", "Home")}
 				>
 					<House weight="fill" className="h-4 w-4" />
-					<span>{t("editor.header.home", "Home")}</span>
 				</Button>
-				<span
-					aria-hidden="true"
-					className="mx-2 shrink-0 text-xl font-light text-muted-foreground/60"
+				<Button
+					variant="ghost"
+					size="sm"
+					className="h-9 shrink-0 gap-2 px-3"
+					aria-expanded={props.clipsOpen}
+					onClick={props.onToggleClips}
 				>
-					/
-				</span>
+					<FilmStrip weight={props.clipsOpen ? "fill" : "regular"} className="size-4" />
+					{t("editor.header.clips", "Clips")}
+				</Button>
+			</div>
 
-				<div
-					className="editor-header-title flex min-w-0 items-center"
-					style={{ WebkitAppRegion: "no-drag" } as CSSProperties}
-				>
+			<div
+				className="editor-header-title flex min-w-0 items-center justify-center"
+				style={{ WebkitAppRegion: "no-drag" } as CSSProperties}
+			>
+				<div className="flex min-w-0 items-center">
 					{isEditingProjectName ? (
 						<form
 							onSubmit={(event) => void handleProjectNameSubmit(event)}
@@ -180,20 +182,10 @@ export function EditorHeader(props: Props) {
 							<span className="truncate text-sm font-semibold tracking-tight text-foreground/90">
 								{projectDisplayName}
 							</span>
+							<span className="shrink-0 text-sm text-muted-foreground/60">.recordly</span>
 						</Button>
 					)}
 				</div>
-				<Separator orientation="vertical" className="mx-3 h-5 shrink-0 self-center" />
-				<Button
-					variant="secondary"
-					size="sm"
-					className="h-9 shrink-0 gap-2"
-					aria-expanded={props.clipsOpen}
-					onClick={props.onToggleClips}
-				>
-					<FilmStrip weight={props.clipsOpen ? "fill" : "regular"} className="size-4" />
-					{t("editor.header.clips", "Clips")}
-				</Button>
 			</div>
 
 			<div
@@ -201,7 +193,6 @@ export function EditorHeader(props: Props) {
 				style={{ WebkitAppRegion: "no-drag" } as CSSProperties}
 			>
 				<div className="flex items-center gap-1">
-					<Separator orientation="vertical" className="mx-3 h-5 shrink-0 self-center" />
 					<Button
 						type="button"
 						variant="ghost"
@@ -225,8 +216,18 @@ export function EditorHeader(props: Props) {
 						<Redo2 className="h-4 w-4" />
 					</Button>
 				</div>
-				{SHOW_PRESETS_BUTTON && <EditorPresetMenu t={t} presets={presets} />}
-				{SHOW_FEEDBACK_BUTTON && <FeedbackDialog />}
+				<EditorPresetMenu t={t} presets={presets} />
+				<Button
+					type="button"
+					variant="ghost"
+					onClick={props.onTogglePanel}
+					className="inline-flex h-9 w-9 min-w-9 items-center justify-center p-0"
+					aria-pressed={props.panelOpen}
+					title={t("editor.header.togglePanel", "Toggle settings panel")}
+					aria-label={t("editor.header.togglePanel", "Toggle settings panel")}
+				>
+					<SidebarSimple weight={props.panelOpen ? "fill" : "regular"} className="h-4 w-4 -scale-x-100" />
+				</Button>
 				<EditorExportMenu
 					t={t}
 					exportSettings={exportSettings}
