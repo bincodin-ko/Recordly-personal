@@ -67,7 +67,8 @@
 		"audio": "오디오",
 		"caption": "자막",
 		"zoomN": "줌 {{n}}",
-		"clipN": "클립 {{n}}"
+		"clipN": "클립 {{n}}",
+		"voiceover": "AI 보이스오버"
 	},
 	"item": {
 		"resizeLeft": "왼쪽 크기 조절",
@@ -76,7 +77,12 @@
 		"auto": "자동",
 		"trim": "자르기",
 		"clip": "클립",
-		"cursorHidden": "커서 숨김"
+		"cursorHidden": "커서 숨김",
+		"sec": "{{s}}초",
+		"minSec": "{{m}}분 {{s}}초",
+		"zoom": "줌",
+		"loupe": "글라스 루페(둥근 렌즈)",
+		"loupeShort": "렌즈"
 	},
 	"empty": {
 		"title": "불러온 영상이 없어요",

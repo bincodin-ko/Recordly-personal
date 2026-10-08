@@ -30,7 +30,7 @@ export const SliderControl = memo(function SliderControl({
 			onChange={(value) => onChange(Number(value))}
 			className="my-1 w-full gap-y-2"
 		>
-			<Label className="text-xs">{label}</Label>
+			<Label className="text-xs font-normal">{label}</Label>
 			<Slider.Output className="text-xs font-normal">
 				{() => formatValue(value)}
 			</Slider.Output>

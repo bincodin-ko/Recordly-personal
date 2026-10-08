@@ -10,7 +10,7 @@ import { SettingsSections, SettingsCategory } from "./SettingsSections";
 import { Card, RadioGroup, Radio, Label, Description } from "@heroui/react";
 import { ProgressBar } from "@heroui/react";
 import { ColorControl, ColorPalette } from "@/components/ui/color-picker";
-import { Palette, Trash as Trash2, UploadSimple as Upload } from "@/components/ui/icons";
+import { MagicWand, Palette, Trash as Trash2, UploadSimple as Upload } from "@/components/ui/icons";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { getCameraAiStatus, subscribeCameraAiStatus } from "./cameraEffects";
@@ -171,7 +171,7 @@ const CLICK_EFFECT_COLOR_OPTIONS = [
 	"#F97316",
 ] as const;
 
-type BackgroundTab = "image" | "video" | "color" | "gradient";
+type BackgroundTab = "wallpaper" | "gradient" | "color" | "image";
 function isHexWallpaper(value: string): boolean {
 	return /^#(?:[0-9a-f]{3}){1,2}$/i.test(value);
 }
@@ -189,7 +189,7 @@ function hexToRgba(hex: string, alpha: number) {
 	return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
-function getBackgroundTabForWallpaper(value: string): BackgroundTab {
+function getBackgroundTabForWallpaper(value: string, customImages: string[] = []): BackgroundTab {
 	if (GRADIENTS.includes(value)) {
 		return "gradient";
 	}
@@ -198,11 +198,13 @@ function getBackgroundTabForWallpaper(value: string): BackgroundTab {
 		return "color";
 	}
 
+	// Video wallpapers live at the bottom of the Image tab.
 	if (isVideoWallpaperSource(value)) {
-		return "video";
+		return "image";
 	}
 
-	return "image";
+	// Uploaded pictures live in the Image tab; everything else is a built-in wallpaper.
+	return value.startsWith("data:") || customImages.includes(value) ? "image" : "wallpaper";
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -1214,7 +1216,7 @@ export function SettingsPanel({
 	const removeBackgroundEnabled = aspectRatio === "native" && isZeroPadding(padding);
 
 	const [backgroundTab, setBackgroundTab] = useState<BackgroundTab>(() =>
-		getBackgroundTabForWallpaper(selected),
+		getBackgroundTabForWallpaper(selected, customImages),
 	);
 
 	const defaultWebcam = initialEditorPreferences.webcam;
@@ -1268,7 +1270,7 @@ export function SettingsPanel({
 	}, []);
 
 	useEffect(() => {
-		setBackgroundTab(getBackgroundTabForWallpaper(selected));
+		setBackgroundTab(getBackgroundTabForWallpaper(selected, customImages));
 
 		if (isHexWallpaper(selected)) {
 			setSelectedColor(selected);
@@ -1417,6 +1419,12 @@ export function SettingsPanel({
 			return false;
 		}
 		return false;
+	};
+
+	const pickRandomWallpaper = () => {
+		const choices = imageWallpaperTiles.filter((tile) => !getWallpaperTileState(tile.value, tile.previewUrl));
+		const pick = choices[Math.floor(Math.random() * choices.length)];
+		if (pick) onWallpaperChange(pick.value);
 	};
 
 	const wallpaperTileClass = (isSelected: boolean) =>
@@ -1696,15 +1704,6 @@ export function SettingsPanel({
 						{t("common.actions.reset", "Reset")}
 					</Button>
 				</div>
-				<SliderControl
-					label={tSettings("effects.backgroundBlur")}
-					value={backgroundBlur}
-					min={0}
-					max={8}
-					step={0.25}
-					onChange={(v) => onBackgroundBlurChange?.(v)}
-					formatValue={(v) => `${v.toFixed(1)}px`}
-				/>
 			</section>
 
 			<div className="w-full">
@@ -1717,14 +1716,14 @@ export function SettingsPanel({
 						}
 					}}
 					aria-label={tSettings("background.title", "Background type")}
-					className="grid w-full grid-cols-4 gap-2"
+					className="grid w-full grid-cols-4 gap-1"
 				>
 					{(
 						[
-							{ value: "image", label: tSettings("background.image") },
-							{ value: "video", label: tSettings("background.video", "Video") },
-							{ value: "color", label: tSettings("background.color") },
+							{ value: "wallpaper", label: tSettings("background.wallpaper", "Wallpaper") },
 							{ value: "gradient", label: tSettings("background.gradient") },
+							{ value: "color", label: tSettings("background.color") },
+							{ value: "image", label: tSettings("background.image") },
 						] as const
 					).map((option) => (
 						<ChoiceItem
@@ -1750,48 +1749,65 @@ export function SettingsPanel({
 						data-background-panel={backgroundTab}
 						className="editor-section-enter min-w-0"
 					>
-						{backgroundTab === "image" || backgroundTab === "video" ? (
-							<>
+						{backgroundTab === "wallpaper" ? (
+							<div className="flex flex-col gap-3">
+								<Button
+									variant="secondary"
+									type="button"
+									data-testid="random-wallpaper"
+									className="w-full justify-center gap-2 text-xs"
+									onClick={pickRandomWallpaper}
+								>
+									<MagicWand className="size-4" />
+									{tSettings("background.randomWallpaper", "Pick random wallpaper")}
+								</Button>
 								<WallpaperGrid
-									addLabel={
-										backgroundTab === "image"
-											? tSettings("background.addWallpaper", "Add wallpaper")
-											: tSettings(
-													"background.addVideoWallpaper",
-													"Add video wallpaper",
-												)
-									}
-									onAdd={
-										backgroundTab === "image"
-											? () => fileInputRef.current?.click()
-											: handleVideoUpload
-									}
+									addLabel=""
+									onSelect={onWallpaperChange}
+									onRemove={handleRemoveCustomImage}
+									isSelected={getWallpaperTileState}
+									items={imageWallpaperTiles}
+								/>
+							</div>
+						) : backgroundTab === "image" ? (
+							<div className="flex flex-col gap-4">
+								<WallpaperGrid
+									addLabel={tSettings("background.addWallpaper", "Add wallpaper")}
+									onAdd={() => fileInputRef.current?.click()}
+									onSelect={onWallpaperChange}
+									onRemove={handleRemoveCustomImage}
+									isSelected={getWallpaperTileState}
+									items={customImages
+										.filter((url) => !isVideoWallpaperSource(url))
+										.map((url, index) => ({
+											key: `custom-${index}`,
+											value: url,
+											previewUrl: url,
+											label: `${tSettings("background.customWallpaper", "Custom wallpaper")} ${index + 1}`,
+											removable: true,
+										}))}
+								/>
+								<SectionLabel>{tSettings("background.video", "Video")}</SectionLabel>
+								<WallpaperGrid
+									addLabel={tSettings("background.addVideoWallpaper", "Add video wallpaper")}
+									onAdd={handleVideoUpload}
 									onSelect={onWallpaperChange}
 									onRemove={handleRemoveCustomImage}
 									isSelected={getWallpaperTileState}
 									items={[
 										...customImages
-											.filter(
-												(url) =>
-													isVideoWallpaperSource(url) ===
-													(backgroundTab === "video"),
-											)
+											.filter((url) => isVideoWallpaperSource(url))
 											.map((url, index) => ({
-												key: `custom-${index}`,
+												key: `custom-video-${index}`,
 												value: url,
 												previewUrl: url,
-												label: isVideoWallpaperSource(url)
-													? (url.split(/[\\/]/).pop() ??
-														"Custom video wallpaper")
-													: `${tSettings("background.customWallpaper", "Custom wallpaper")} ${index + 1}`,
+												label: url.split(/[\/]/).pop() ?? "Custom video wallpaper",
 												removable: true,
 											})),
-										...(backgroundTab === "image"
-											? imageWallpaperTiles
-											: videoWallpaperTiles),
+										...videoWallpaperTiles,
 									]}
 								/>
-							</>
+							</div>
 						) : backgroundTab === "color" ? (
 							<div className="mt-0 space-y-4">
 								<div className="flex flex-col gap-3">
@@ -1836,6 +1852,17 @@ export function SettingsPanel({
 							</div>
 						)}
 					</div>
+				</div>
+				<div className="pt-4">
+					<SliderControl
+						label={tSettings("background.blur", "Background blur")}
+						value={backgroundBlur}
+						min={0}
+						max={8}
+						step={0.25}
+						onChange={(v) => onBackgroundBlurChange?.(v)}
+						formatValue={(v) => `${v.toFixed(1)}px`}
+					/>
 				</div>
 			</div>
 		</div>

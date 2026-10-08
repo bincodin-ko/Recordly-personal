@@ -321,7 +321,10 @@
 		"unsupportedFormatDesc": "Please select a video file (mp4, webm, mov, etc.)",
 		"videoAdded": "Video background added",
 		"videoImportFailed": "Failed to import video background",
-		"customColor": "Custom color"
+		"customColor": "Custom color",
+		"wallpaper": "Wallpaper",
+		"randomWallpaper": "Pick random wallpaper",
+		"blur": "Background blur"
 	},
 	"export": {
 		"title": "Exportar",

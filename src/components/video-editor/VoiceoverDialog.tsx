@@ -10,6 +10,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/components/ui/toast";
+import { rememberVoiceoverScript } from "./audio/voiceoverLabels";
 import { useScopedT } from "@/contexts/I18nContext";
 
 type Engine = "qwen" | "supertonic";
@@ -67,6 +68,7 @@ export function VoiceoverDialog({ open, onOpenChange, onGenerated }: VoiceoverDi
 				});
 				return;
 			}
+			rememberVoiceoverScript(result.path, text);
 			await onGenerated(result.path);
 			toast.success(
 				t("voiceover.added", "Voiceover added at the playhead ({{seconds}}s).", {
@@ -84,6 +86,13 @@ export function VoiceoverDialog({ open, onOpenChange, onGenerated }: VoiceoverDi
 		installing: t("voiceover.stage.installing", "Preparing the voice engine (first time only)…"),
 		loading: t("voiceover.stage.loading", "Loading the voice model…"),
 		generating: t("voiceover.stage.generating", "Generating voice…"),
+	};
+
+	// Stages are all the engine reports, so the bar fills per stage and creeps with elapsed time.
+	const stageProgress: Record<string, number> = {
+		installing: Math.min(30, 8 + elapsed),
+		loading: Math.min(55, 35 + elapsed / 2),
+		generating: Math.min(95, 60 + elapsed),
 	};
 
 	return (
@@ -172,7 +181,10 @@ export function VoiceoverDialog({ open, onOpenChange, onGenerated }: VoiceoverDi
 					{busy ? (
 						<div className="space-y-1.5" role="status">
 							<div className="h-1 w-full overflow-hidden rounded-full bg-foreground/10">
-								<div className="h-full w-1/3 animate-pulse rounded-full bg-[#2563EB]" />
+								<div
+									className="h-full rounded-full bg-[#2563EB] transition-[width] duration-700"
+									style={{ width: `${stageProgress[stage?.stage ?? "installing"] ?? 10}%` }}
+								/>
 							</div>
 							<p className="text-xs text-muted-foreground">
 								{stageLabel[stage?.stage ?? "installing"]} · {elapsed}s

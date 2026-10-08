@@ -23,22 +23,25 @@ export function WallpaperGrid({
 }: {
 	items: WallpaperTile[];
 	addLabel: string;
-	onAdd: () => void;
+	/** Omit to hide the add tile (built-in wallpapers only). */
+	onAdd?: () => void;
 	onSelect: (value: string) => void;
 	onRemove: (value: string) => void;
 	isSelected: (value: string, previewUrl?: string) => boolean;
 }) {
 	return (
 		<div className="grid grid-cols-5 gap-2">
-			<Button
-				variant="secondary"
-				isIconOnly
-				aria-label={addLabel}
-				onPress={onAdd}
-				className="aspect-[4/3] h-auto w-full min-w-0 rounded-md p-0 text-muted"
-			>
-				<Plus className="size-4" />
-			</Button>
+			{onAdd && (
+				<Button
+					variant="secondary"
+					isIconOnly
+					aria-label={addLabel}
+					onPress={onAdd}
+					className="aspect-[4/3] h-auto w-full min-w-0 rounded-md p-0 text-muted"
+				>
+					<Plus className="size-4" />
+				</Button>
+			)}
 			{items.map((item) => {
 				const selected = isSelected(item.value, item.previewUrl);
 				return (

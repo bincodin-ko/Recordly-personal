@@ -67,7 +67,8 @@
 		"audio": "Audio",
 		"caption": "Caption",
 		"zoomN": "Zoom {{n}}",
-		"clipN": "Clip {{n}}"
+		"clipN": "Clip {{n}}",
+		"voiceover": "AI voiceover"
 	},
 	"item": {
 		"resizeLeft": "Resize left",
@@ -76,7 +77,12 @@
 		"auto": "Auto",
 		"trim": "Trim",
 		"clip": "Clip",
-		"cursorHidden": "Cursor oculto"
+		"cursorHidden": "Cursor oculto",
+		"sec": "{{s}}s",
+		"minSec": "{{m}}m {{s}}s",
+		"zoom": "Zoom",
+		"loupe": "Glass Loupe (round lens)",
+		"loupeShort": "Loupe"
 	},
 	"empty": {
 		"title": "No Video Loaded",
