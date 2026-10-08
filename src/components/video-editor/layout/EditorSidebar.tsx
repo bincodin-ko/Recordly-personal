@@ -28,6 +28,7 @@ import type { EditorEffectSection } from "../types";
 type Props = {
 	accountUser?: User | null;
 	panelContent?: ReactNode;
+	panelOpen?: boolean;
 	onAccountClick?: () => void;
 	t: ReturnType<typeof useI18n>["t"];
 	activeSection: EditorEffectSection;
@@ -45,6 +46,7 @@ export function EditorSidebar({
 	setActiveSection,
 	settingsPanelProps,
 	panelContent,
+	panelOpen = true,
 	onAccountClick,
 }: Props) {
 	const [advancedSections, setAdvancedSections] = useState<Record<string, boolean>>({});
@@ -83,62 +85,10 @@ export function EditorSidebar({
 		[t],
 	);
 	return (
-		<div className="flex min-h-0 shrink-0 pb-3 pr-2">
-			<nav
-				aria-label={t("settings.sections.title", "Editor tools")}
-				className="flex w-16 shrink-0 flex-col items-center gap-3 py-2.5"
-			>
-				<ToggleButtonGroup
-					orientation="vertical"
-					isDetached
-					className="w-full items-center gap-2"
-					selectionMode="single"
-					disallowEmptySelection
-					selectedKeys={panelContent ? [] : [activeSection]}
-					onSelectionChange={(keys) => {
-						const key = Array.from(keys)[0];
-						if (key) setActiveSection(key as EditorEffectSection);
-					}}
-				>
-					{sections.map((section) => (
-						<Tooltip key={section.id}>
-							<ToggleButton
-								id={section.id}
-								variant="ghost"
-								isIconOnly
-								aria-label={section.label}
-							>
-								<section.icon
-									weight={
-										!panelContent && activeSection === section.id
-											? "fill"
-											: "regular"
-									}
-									className="size-5"
-								/>
-							</ToggleButton>
-							<Tooltip.Content placement="right">{section.label}</Tooltip.Content>
-						</Tooltip>
-					))}
-				</ToggleButtonGroup>
-				{SHOW_ACCOUNT_BUTTON && (
-					<Tooltip>
-						<Button
-							variant="ghost"
-							isIconOnly
-							className="mt-auto"
-							aria-label="Recordly account"
-							onPress={onAccountClick}
-						>
-							<AccountAvatar user={accountUser} className="!size-7" />
-						</Button>
-						<Tooltip.Content placement="right">Account</Tooltip.Content>
-					</Tooltip>
-				)}
-			</nav>
+		<div className="flex min-h-0 shrink-0 pb-3 pl-2">
 			<aside
 				aria-label={panelContent ? "Clips" : undefined}
-				className="editor-inspector [--text-sm:0.8125rem] [--text-base:0.8125rem] flex w-[320px] min-h-0 flex-col"
+				className={`editor-inspector [--text-sm:0.8125rem] [--text-base:0.8125rem] min-h-0 w-[320px] flex-col ${panelOpen ? "flex" : "hidden"}`}
 			>
 				<Card className="min-h-0 flex-1 gap-0 overflow-hidden p-0">
 					{panelContent ?? (
@@ -190,6 +140,58 @@ export function EditorSidebar({
 					)}
 				</Card>
 			</aside>
+			<nav
+				aria-label={t("settings.sections.title", "Editor tools")}
+				className="flex w-16 shrink-0 flex-col items-center gap-3 py-2.5"
+			>
+				<ToggleButtonGroup
+					orientation="vertical"
+					isDetached
+					className="w-full items-center gap-2"
+					selectionMode="single"
+					disallowEmptySelection
+					selectedKeys={panelContent ? [] : [activeSection]}
+					onSelectionChange={(keys) => {
+						const key = Array.from(keys)[0];
+						if (key) setActiveSection(key as EditorEffectSection);
+					}}
+				>
+					{sections.map((section) => (
+						<Tooltip key={section.id}>
+							<ToggleButton
+								id={section.id}
+								variant="ghost"
+								isIconOnly
+								aria-label={section.label}
+							>
+								<section.icon
+									weight={
+										!panelContent && activeSection === section.id
+											? "fill"
+											: "regular"
+									}
+									className="size-5"
+								/>
+							</ToggleButton>
+							<Tooltip.Content placement="left">{section.label}</Tooltip.Content>
+						</Tooltip>
+					))}
+				</ToggleButtonGroup>
+				{SHOW_ACCOUNT_BUTTON && (
+					<Tooltip>
+						<Button
+							variant="ghost"
+							isIconOnly
+							className="mt-auto"
+							aria-label="Recordly account"
+							onPress={onAccountClick}
+						>
+							<AccountAvatar user={accountUser} className="!size-7" />
+						</Button>
+						<Tooltip.Content placement="left">Account</Tooltip.Content>
+					</Tooltip>
+				)}
+			</nav>
 		</div>
 	);
 }

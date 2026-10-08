@@ -61,6 +61,7 @@ type Props = {
 export function EditorShell(props: Props) {
 	const [onboardingRequest, setOnboardingRequest] = useState(0);
 	const showOnboarding = useCallback(() => setOnboardingRequest((value) => value + 1), []);
+	const [panelOpen, setPanelOpen] = useState(true);
 	const [signInOpen, setSignInOpen] = useState(false);
 	const [signInReason, setSignInReason] = useState<SignInReason>("account");
 	const [shareRequestNonce, setShareRequestNonce] = useState(0);
@@ -261,6 +262,8 @@ export function EditorShell(props: Props) {
 	return (
 		<div className="flex h-screen flex-col overflow-hidden bg-editor-bg text-foreground selection:bg-accent/20">
 			<EditorHeader
+				panelOpen={panelOpen}
+				onTogglePanel={() => setPanelOpen((open) => !open)}
 				clipsOpen={library.open}
 				onToggleClips={() => library.setOpen((open) => !open)}
 				t={t}
@@ -348,28 +351,6 @@ export function EditorShell(props: Props) {
 				}}
 			>
 				<div className="relative z-10 flex min-h-0 flex-1 pt-3">
-					<EditorSidebar
-						accountUser={auth.user}
-						onAccountClick={() => requestSignIn("account")}
-						panelContent={
-							library.open ? <RecordingLibraryPanel library={library} /> : undefined
-						}
-						t={t}
-						activeSection={ui.activeEffectSection}
-						setActiveSection={(section) => {
-							library.setOpen(false);
-							timeline.setSelectedAnnotationId(null);
-							timeline.setSelectedZoomId(null);
-							timeline.setSelectedClipId(null);
-							timeline.setSelectedAudioId(null);
-							timeline.setSelectedCaptionId(null);
-							ui.setActiveEffectSection(section);
-						}}
-						settingsPanelProps={{
-							...settingsPanelProps,
-							onShowOnboarding: showOnboarding,
-						}}
-					/>
 					<EditorPreviewPanel
 						t={t}
 						videoPath={project.videoPath}
@@ -403,6 +384,29 @@ export function EditorShell(props: Props) {
 						setCurrentTime={ui.setCurrentTime}
 						setIsPlaying={ui.setIsPlaying}
 						setError={handlePreviewError}
+					/>
+					<EditorSidebar
+						accountUser={auth.user}
+						onAccountClick={() => requestSignIn("account")}
+						panelContent={
+							library.open ? <RecordingLibraryPanel library={library} /> : undefined
+						}
+						panelOpen={panelOpen}
+						t={t}
+						activeSection={ui.activeEffectSection}
+						setActiveSection={(section) => {
+							library.setOpen(false);
+							timeline.setSelectedAnnotationId(null);
+							timeline.setSelectedZoomId(null);
+							timeline.setSelectedClipId(null);
+							timeline.setSelectedAudioId(null);
+							timeline.setSelectedCaptionId(null);
+							ui.setActiveEffectSection(section);
+						}}
+						settingsPanelProps={{
+							...settingsPanelProps,
+							onShowOnboarding: showOnboarding,
+						}}
 					/>
 				</div>
 				<EditorTimelinePanel

@@ -89,7 +89,8 @@
 		"volume": "Vorschaulautstärke",
 		"seek": "Playback position",
 		"editCurrentCaption": "Edit current caption",
-		"videoLoadFailed": "Failed to load video ({{detail}})"
+		"videoLoadFailed": "Failed to load video ({{detail}})",
+		"timelineZoom": "Timeline zoom"
 	},
 	"annotations": {
 		"settings": "Einstellungen für Anmerkungen",
@@ -439,7 +440,8 @@
 	"header": {
 		"home": "Home",
 		"clips": "Clips",
-		"export": "Exportieren"
+		"export": "Exportieren",
+		"togglePanel": "Toggle settings panel"
 	},
 	"shell": {
 		"openProjects": "Open Projects"

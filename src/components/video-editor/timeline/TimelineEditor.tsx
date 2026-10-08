@@ -207,6 +207,23 @@ const TimelineEditor = forwardRef<TimelineEditorHandle, TimelineEditorProps>(
 			timelineContainerRef,
 		});
 
+		// Playback-row zoom slider (EditorPreviewPanel) sends a 0..1 fraction via this window event.
+		useEffect(() => {
+			const onZoom = (event: Event) => {
+				const f = Math.min(1, Math.max(0, Number((event as CustomEvent<number>).detail) || 0));
+				if (totalMs <= 0) return;
+				const minSpan = Math.min(totalMs, 1000);
+				const span = totalMs - f * (totalMs - minSpan);
+				setRange((prev) => {
+					const center = (prev.start + prev.end) / 2;
+					const start = Math.max(0, Math.min(center - span / 2, totalMs - span));
+					return { start, end: start + span };
+				});
+			};
+			window.addEventListener("timeline-zoom", onZoom);
+			return () => window.removeEventListener("timeline-zoom", onZoom);
+		}, [setRange, totalMs]);
+
 		const [liveSpanPreviewById, setLiveSpanPreviewById] = useState<Record<string, Span>>({});
 		const [isDragging, setIsDragging] = useState(false);
 		const liveZoomPreview = useMemo(() => {

@@ -89,7 +89,8 @@
 		"volume": "미리보기 볼륨",
 		"seek": "재생 위치",
 		"editCurrentCaption": "현재 자막 편집",
-		"videoLoadFailed": "영상을 불러오지 못했어요 ({{detail}})"
+		"videoLoadFailed": "영상을 불러오지 못했어요 ({{detail}})",
+		"timelineZoom": "타임라인 확대"
 	},
 	"annotations": {
 		"settings": "주석 설정",
@@ -439,7 +440,8 @@
 	"header": {
 		"home": "홈",
 		"clips": "클립",
-		"export": "내보내기"
+		"export": "내보내기",
+		"togglePanel": "설정 패널 표시/숨기기"
 	},
 	"shell": {
 		"openProjects": "프로젝트 열기"
