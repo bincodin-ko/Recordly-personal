@@ -372,3 +372,39 @@
 	border-color: #fde047;
 	box-shadow: inset 0 0 0 1.5px #fde047;
 }
+
+/* Screen Studio style: clip = one ochre band, zoom = purple block. */
+.glassClip {
+	position: relative;
+	border-radius: 8px;
+	background: #7a5a16;
+	border: 1px solid #8f6b1c;
+	transition: border-color 0.15s ease;
+}
+.glassClip:hover {
+	border-color: #b88a22;
+}
+.glassClip.selected {
+	border-color: #f0c040;
+	box-shadow: inset 0 0 0 1.5px #f0c040;
+	z-index: 10;
+}
+.glassZoom {
+	position: relative;
+	border-radius: 8px;
+	background: #4b33e0;
+	border: 1px solid transparent;
+	transition: background 0.15s ease;
+}
+.glassZoom:hover {
+	background: #5a44ea;
+}
+.glassZoom.selected {
+	border-color: #b8aaff;
+	box-shadow: inset 0 0 0 1.5px #b8aaff;
+	z-index: 10;
+}
+.glassClip:hover .zoomEndCap,
+.glassZoom:hover .zoomEndCap {
+	opacity: 1;
+}

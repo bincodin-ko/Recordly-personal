@@ -17,6 +17,7 @@ import {
 	isAnnotationTrackRowId,
 	isAudioTrackRowId,
 } from "../core/rows";
+import { getVoiceoverLabel } from "../../audio/voiceoverLabels";
 import { layoutAnnotationTracks } from "../core/annotationTracks";
 import type { TimelineRegionSpan, TimelineRenderItem } from "../core/timelineTypes";
 
@@ -32,6 +33,12 @@ export function getAnnotationLabel(region: AnnotationRegion): string {
 }
 
 export function getAudioLabel(region: AudioRegion): string {
+	const voiceover = getVoiceoverLabel(region.audioPath);
+	if (voiceover) {
+		const title = translate("timeline.labels.voiceover", "AI voiceover");
+		const script = voiceover.script;
+		return script ? `${title} · ${script.length > 24 ? `${script.slice(0, 24)}…` : script}` : title;
+	}
 	return (
 		region.audioPath
 			.split(/[\\/]/)
@@ -60,6 +67,7 @@ export function buildTimelineItems(params: {
 		label: translate("timeline.labels.zoomN", "Zoom {{n}}", { n: index + 1 }),
 		zoomDepth: region.depth,
 		zoomMode: region.mode ?? "auto",
+		loupe: Boolean(region.loupe),
 		variant: "zoom",
 	}));
 

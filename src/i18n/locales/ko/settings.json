@@ -306,7 +306,7 @@
 	"background": {
 		"title": "배경",
 		"image": "이미지",
-		"color": "색상",
+		"color": "색",
 		"gradient": "그라데이션",
 		"wallpaperPreview": "배경화면 미리보기",
 		"uploadCustom": "직접 업로드",
@@ -321,7 +321,10 @@
 		"unsupportedFormatDesc": "영상 파일(mp4, webm, mov 등)을 선택해 주세요.",
 		"videoAdded": "영상 배경화면을 추가했어요",
 		"videoImportFailed": "영상 배경화면을 가져오지 못했어요",
-		"customColor": "직접 지정한 색상"
+		"customColor": "직접 지정한 색상",
+		"wallpaper": "배경화면",
+		"randomWallpaper": "무작위 배경화면",
+		"blur": "배경 흐림"
 	},
 	"export": {
 		"title": "내보내기",

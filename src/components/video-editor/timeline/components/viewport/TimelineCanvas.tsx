@@ -507,7 +507,6 @@ function AudioItemWithWaveform({
 }
 
 const TimelineCanvasRows = memo(function TimelineCanvasRows({
-	videoPath,
 	items,
 	selectAllBlocksActive,
 	selectedZoomId,
@@ -752,8 +751,9 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 						sharedRightGrip={clipPresentation.some(
 							(other) => other.span.start === item.span.end,
 						)}
-						videoPath={videoPath}
 						sourceSpan={item.sourceSpan ?? item.span}
+						waveformPeaks={sourceAudioTracks[0]?.peaks ?? null}
+						waveformSegmentSpan={item.sourceSpan ?? item.span}
 						speedValue={item.speedValue}
 						cursorHidden={item.cursorHidden}
 						volumeValue={item.volumeValue}
@@ -943,6 +943,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 							onSelectId={onSelectZoom}
 							zoomDepth={item.zoomDepth}
 							zoomMode={item.zoomMode}
+						loupe={item.loupe}
 							variant="zoom"
 						>
 							{item.label}

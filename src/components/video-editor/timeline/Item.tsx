@@ -7,8 +7,10 @@ import {
 	SpeakerX,
 	SpeakerLow,
 	EyeSlash,
+	FilmStrip,
+	MagnifyingGlass as LoupeIcon,
+	TimerIcon,
 } from "@/components/ui/icons";
-import { ClipFilmstrip } from "./components/filmstrip/ClipFilmstrip";
 import type { Span, GetSpanFromDragEvent, GetSpanFromResizeEvent } from "dnd-timeline";
 import { useItem, useTimelineContext } from "dnd-timeline";
 import { useCallback, useMemo, useRef } from "react";
@@ -46,6 +48,8 @@ interface ItemProps {
 	onSelectId?: (id: string) => void;
 	zoomDepth?: number;
 	zoomMode?: "auto" | "manual";
+	/** Zoom uses Glass Loupe (round lens) instead of zooming the frame. */
+	loupe?: boolean;
 	speedValue?: number;
 	waveformPeaks?: AudioPeaksData | null;
 	waveformSegmentSpan?: Span;
@@ -76,8 +80,6 @@ export default function Item({
 	sharedLeftGrip = false,
 	sharedRightGrip = false,
 	embedded = false,
-	videoPath,
-	sourceSpan,
 	span,
 	displaySpan: suppliedDisplaySpan,
 	rowId,
@@ -88,6 +90,7 @@ export default function Item({
 	onSelectId,
 	zoomDepth = 1,
 	zoomMode = "auto",
+	loupe = false,
 	speedValue,
 	waveformPeaks = null,
 	waveformSegmentSpan,
@@ -244,13 +247,23 @@ export default function Item({
 	const isCaption = variant === "caption";
 	const showAudioWaveform = isAudio && Boolean(waveformPeaks);
 	const clipSpeedLabel = isClip ? formatClipSpeedLabel(speedValue ?? 1) : null;
+	const clipDurationMs = span.end - span.start;
+	const clipSeconds = Math.max(1, Math.round(clipDurationMs / 1000));
+	const clipDurationLabel =
+		clipSeconds >= 60
+			? translate("timeline.item.minSec", "{{m}}m {{s}}s", {
+					m: Math.floor(clipSeconds / 60),
+					s: clipSeconds % 60,
+				})
+			: translate("timeline.item.sec", "{{s}}s", { s: clipSeconds });
+	const clipSpeedText = `${speedValue ?? 1}×`;
 
 	const glassClass = isZoom
-		? glassStyles.glassBlue
+		? glassStyles.glassZoom
 		: isTrim
 			? glassStyles.glassRed
 			: isClip
-				? glassStyles.glassCyan
+				? glassStyles.glassClip
 				: isSpeed
 					? glassStyles.glassAmber
 					: isAudio
@@ -330,13 +343,6 @@ export default function Item({
 						event.stopPropagation();
 					}}
 				>
-					{isClip && videoPath && (
-						<ClipFilmstrip
-							path={videoPath}
-							span={span}
-							sourceSpan={sourceSpan ?? span}
-						/>
-					)}
 					<div
 						className={cn(
 							glassStyles.zoomEndCap,
@@ -363,14 +369,17 @@ export default function Item({
 						}}
 						title={translate("timeline.item.resizeRight", "Resize right")}
 					/>
-					{showAudioWaveform && waveformPeaks && (
+					{(showAudioWaveform || (isClip && waveformPeaks)) && waveformPeaks && (
 						<AudioWaveform
 							peaks={waveformPeaks}
 							segmentStartMs={waveformSegmentSpan?.start ?? span.start}
 							segmentEndMs={waveformSegmentSpan?.end ?? span.end}
 							gain={waveformGain}
 							normalize={waveformNormalize}
-							className="absolute inset-0 w-full h-full pointer-events-none opacity-45"
+							className={cn(
+								"absolute inset-0 w-full h-full pointer-events-none",
+								isClip ? "opacity-30" : "opacity-45",
+							)}
 						/>
 					)}
 					{/* Muted overlay for source audio track items */}
@@ -400,35 +409,53 @@ export default function Item({
 							{volumeValue > 0 && `${Math.round(volumeValue * 100)}%`}
 						</div>
 					)}
-					{/* Normal-speed clips show only the filmstrip and resize handles. */}
-					{(!isClip || clipSpeedLabel) && (
+					{isClip && (
+						<div
+							data-testid="clip-band-label"
+							className="absolute inset-x-0 top-1 z-10 flex flex-col items-center gap-px text-[11px] leading-[13px] text-white/90 select-none pointer-events-none overflow-hidden px-2"
+						>
+							<span className="flex items-center gap-1 font-medium opacity-80">
+								<FilmStrip aria-hidden="true" className="size-3 shrink-0" />
+								{translate("timeline.item.clip", "Clip")}
+							</span>
+							<span className="flex items-center gap-1 whitespace-nowrap">
+								{clipDurationLabel} · <TimerIcon aria-hidden="true" className="size-3 shrink-0" />
+								{clipSpeedText}
+							</span>
+						</div>
+					)}
+					{!isClip && (
 						<div
 							title={`${isZoom ? `${ZOOM_LABELS[zoomDepth]} ${zoomMode === "manual" ? translate("timeline.item.manual", "Manual") : translate("timeline.item.auto", "Auto")}` : typeof children === "string" ? children : translate("timeline.item.clip", "Clip")} · ${timeLabel}`}
 							className={cn(
 								"relative z-10 flex max-w-full items-center justify-center gap-1 px-1 text-[11px] font-medium text-black/70 dark:text-white/90 select-none overflow-hidden",
-								isClip &&
-									"rounded bg-black/65 px-2 py-1 text-white dark:text-white",
 								(isZoom || embedded) && "text-white dark:text-white",
 								embedded && "w-full justify-start px-2",
 							)}
 						>
-							{isClip ? (
-								clipSpeedLabel
-							) : isZoom ? (
-								<>
-									<ZoomIn
-										aria-hidden="true"
-										className="zoom-icon size-3 shrink-0"
-									/>
-									<span className="zoom-value whitespace-nowrap">
-										{ZOOM_LABELS[zoomDepth] || `${zoomDepth}×`}
-										<span className="zoom-mode font-normal">
-											{zoomMode === "manual"
+							{isZoom ? (
+								<span className="flex flex-col items-center gap-px leading-[12px]">
+									<span className="flex items-center gap-1 opacity-80">
+										<ZoomIn aria-hidden="true" className="size-3 shrink-0" />
+										{translate("timeline.item.zoom", "Zoom")}
+									</span>
+									<span className="zoom-value flex items-center gap-1 whitespace-nowrap">
+										<LoupeIcon aria-hidden="true" className="zoom-icon size-3 shrink-0" />
+										{ZOOM_LABELS[zoomDepth] || `${zoomDepth}×`} ·{" "}
+										{zoomMode === "manual"
 											? translate("timeline.item.manual", "Manual")
 											: translate("timeline.item.auto", "Auto")}
-										</span>
+										{loupe && (
+											<span
+												data-testid="zoom-loupe-badge"
+												title={translate("timeline.item.loupe", "Glass Loupe")}
+												className="ml-0.5 inline-flex items-center rounded-full bg-white/25 px-1 text-[9px] font-semibold"
+											>
+												{translate("timeline.item.loupeShort", "Loupe")}
+											</span>
+										)}
 									</span>
-								</>
+								</span>
 							) : embedded ? (
 								<span className="truncate">{children}</span>
 							) : (
