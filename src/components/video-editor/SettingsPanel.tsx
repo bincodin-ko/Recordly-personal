@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ChoiceGroup, ChoiceItem } from "@/components/ui/choice-group";
-import { useTheme } from "@/contexts/ThemeContext";
 import { getAssetPath, getRenderableVideoUrl, getWallpaperThumbnailUrl } from "@/lib/assetPath";
 import { cn } from "@/lib/utils";
 import type { BuiltInWallpaper } from "@/lib/wallpapers";
@@ -1074,7 +1073,6 @@ export function SettingsPanel({
 }: SettingsPanelProps) {
 	const tSettings = useScopedT("settings");
 	const { locale, setLocale, t } = useI18n();
-	const { preference: themePreference, setPreference: setThemePreference } = useTheme();
 	const isBackgroundPanel = panelMode === "background";
 	const initialEditorPreferences = useMemo(() => loadEditorPreferences(), []);
 	const clipSpeedRange = useMemo(getPreviewPlaybackRateRange, []);
@@ -2414,30 +2412,6 @@ export function SettingsPanel({
 							</Button>
 						</SettingsRow>
 					)}
-
-					<SettingsRow title={t("editor.theme.appearance", "Appearance")} stacked>
-						<ChoiceGroup
-							type="single"
-							aria-label={t("editor.theme.appearance", "Appearance")}
-							value={themePreference}
-							onValueChange={(value) => {
-								if (value === "light" || value === "dark" || value === "system")
-									setThemePreference(value);
-							}}
-							fullWidth
-							size="sm"
-						>
-							<ChoiceItem value="light" className="flex-1">
-								{t("editor.theme.light", "Light")}
-							</ChoiceItem>
-							<ChoiceItem value="dark" className="flex-1">
-								{t("editor.theme.dark", "Dark")}
-							</ChoiceItem>
-							<ChoiceItem value="system" className="flex-1">
-								{t("editor.theme.system", "System")}
-							</ChoiceItem>
-						</ChoiceGroup>
-					</SettingsRow>
 
 					<SettingsRow title={t("common.app.language", "Language")} stacked>
 						<Select
