@@ -166,12 +166,14 @@
 		"fontSize": "Text size",
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
-		"placeholder": "Paste or type your script here, then press Start."
+		"placeholder": "Paste or type your script here, then press Start.",
+		"autoFlow": "Scroll automatically when recording starts"
 	},
 	"recordingSettings": {
 		"title": "Ajustes de grabación",
 		"hideDesktopIcons": "Ocultar iconos del escritorio al grabar",
-		"openEditorAfterRecording": "Open the editor right after recording"
+		"openEditorAfterRecording": "Open the editor right after recording",
+		"openEditorOnWidgetClose": "Open the editor when closed without Save or Edit"
 	},
 	"windowSize": {
 		"title": "Cambiar tamaño de ventana",

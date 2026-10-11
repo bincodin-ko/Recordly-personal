@@ -166,12 +166,14 @@
 		"fontSize": "Text size",
 		"opacity": "Opacity",
 		"hiddenNote": "Not recorded",
-		"placeholder": "Paste or type your script here, then press Start."
+		"placeholder": "Paste or type your script here, then press Start.",
+		"autoFlow": "Scroll automatically when recording starts"
 	},
 	"recordingSettings": {
 		"title": "錄製設定",
 		"hideDesktopIcons": "錄製時隱藏桌面圖示",
-		"openEditorAfterRecording": "Open the editor right after recording"
+		"openEditorAfterRecording": "Open the editor right after recording",
+		"openEditorOnWidgetClose": "Open the editor when closed without Save or Edit"
 	},
 	"windowSize": {
 		"title": "調整視窗大小",

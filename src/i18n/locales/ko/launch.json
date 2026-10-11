@@ -166,12 +166,14 @@
 		"fontSize": "글자 크기",
 		"opacity": "투명도",
 		"hiddenNote": "녹화에 안 찍힘",
-		"placeholder": "대본을 붙여넣거나 입력한 뒤 시작을 누르세요."
+		"placeholder": "대본을 붙여넣거나 입력한 뒤 시작을 누르세요.",
+		"autoFlow": "녹화 시작하면 자동으로 흐르기"
 	},
 	"recordingSettings": {
 		"title": "녹화 설정",
 		"hideDesktopIcons": "녹화하는 동안 바탕화면 아이콘 숨기기",
-		"openEditorAfterRecording": "녹화 후 즉시 편집기로 이동"
+		"openEditorAfterRecording": "녹화 후 즉시 편집기로 이동",
+		"openEditorOnWidgetClose": "저장·편집 안 누르고 닫으면 편집기로 열기"
 	},
 	"windowSize": {
 		"title": "창 크기 맞추기",

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useScopedT } from "@/contexts/I18nContext";
 import { loadAppSetting, saveAppSetting } from "@/lib/appSettings";
 import { getRenderableVideoUrl } from "@/lib/assetPath";
+import { OPEN_EDITOR_ON_WIDGET_CLOSE_KEY, shouldOpenEditorOnWidgetClose } from "./quickExportClose";
 import "./launchTheme.css";
 
 // Read by electron/captureExtras.ts (see electron/quickExportSettings.ts).
@@ -34,7 +35,16 @@ export function QuickExportWidget() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [settings, setSettings] = useState(loadQuickExportSettings);
 
-	const close = useCallback(() => void window.electronAPI.quickExportClose(), []);
+	// [x] (also after Save) opens the editor like Edit, unless the setting is off.
+	const close = useCallback(() => {
+		if (shouldOpenEditorOnWidgetClose(loadAppSetting<boolean>(OPEN_EDITOR_ON_WIDGET_CLOSE_KEY))) {
+			void window.electronAPI.switchToEditor().then(() =>
+				window.electronAPI.quickExportClose({ toEditor: true }),
+			);
+		} else {
+			void window.electronAPI.quickExportClose();
+		}
+	}, []);
 
 	useEffect(() => {
 		void window.electronAPI.quickExportGetVideo().then(async (videoPath) => {

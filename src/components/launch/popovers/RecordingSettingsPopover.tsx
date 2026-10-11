@@ -4,6 +4,7 @@ import { useScopedT } from "@/contexts/I18nContext";
 import { loadAppSetting, saveAppSetting } from "@/lib/appSettings";
 import styles from "../LaunchWindow.module.css";
 import { useLaunchPopoverCoordinator } from "./LaunchPopoverCoordinator";
+import { OPEN_EDITOR_ON_WIDGET_CLOSE_KEY } from "../quickExportClose";
 import { DropdownItem, HudPopover } from "./PopoverScaffold";
 
 // Read by electron/captureExtras.ts.
@@ -39,6 +40,10 @@ export function RecordingSettingsPopover({
 		() => loadAppSetting<boolean>(QUICK_EXPORT_WIDGET_SETTING_KEY) !== false,
 	);
 
+	const [openEditorOnClose, setOpenEditorOnClose] = useState(
+		() => loadAppSetting<boolean>(OPEN_EDITOR_ON_WIDGET_CLOSE_KEY) !== false,
+	);
+
 	return (
 		<HudPopover
 			open={isOpen(SETTINGS_POPOVER_ID)}
@@ -60,6 +65,19 @@ export function RecordingSettingsPopover({
 				}}
 			>
 				{t("recordingSettings.openEditorAfterRecording", "Open the editor right after recording")}
+			</DropdownItem>
+			<DropdownItem
+				icon={<FilmStrip size={16} />}
+				selected={openEditorOnClose}
+				onClick={() => {
+					setOpenEditorOnClose(!openEditorOnClose);
+					saveAppSetting(OPEN_EDITOR_ON_WIDGET_CLOSE_KEY, !openEditorOnClose);
+				}}
+			>
+				{t(
+					"recordingSettings.openEditorOnWidgetClose",
+					"Open the editor when closed without Save or Edit",
+				)}
 			</DropdownItem>
 			{platform === "win32" ? (
 				<DropdownItem

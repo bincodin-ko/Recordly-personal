@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useScopedT } from "@/contexts/I18nContext";
+import { nextPrompterPlaying } from "./prompterAutoFlow";
 
 // Speaker notes / teleprompter. The window is excluded from screen capture
 // (setContentProtection), so it is visible only to the person recording.
 const STORAGE_KEY = "recordly.prompter";
 
-type PrompterState = { text: string; speed: number; fontSize: number; opacity: number };
-const DEFAULTS: PrompterState = { text: "", speed: 20, fontSize: 28, opacity: 0.9 };
+type PrompterState = { text: string; speed: number; fontSize: number; opacity: number; autoFlow: boolean };
+const DEFAULTS: PrompterState = { text: "", speed: 20, fontSize: 28, opacity: 0.9, autoFlow: true };
 
 function loadState(): PrompterState {
 	try {
@@ -30,6 +31,17 @@ export function PrompterWindow() {
 			// storage unavailable: settings just won't persist
 		}
 	}, [state]);
+
+	// Recording starts (after the countdown) / stops: main broadcasts recording-state-changed.
+	const autoFlowRef = useRef(state.autoFlow);
+	autoFlowRef.current = state.autoFlow;
+	useEffect(
+		() =>
+			window.electronAPI?.onRecordingStateChanged?.(({ recording }) =>
+				setPlaying((current) => nextPrompterPlaying(current, recording, autoFlowRef.current)),
+			),
+		[],
+	);
 
 	// Scroll at `speed` px/s while playing. scrollTop only takes whole pixels, so the
 	// position is accumulated as a float (slow speeds otherwise rounded to 0 per frame).
@@ -83,6 +95,10 @@ export function PrompterWindow() {
 				<label className="flex items-center gap-1">
 					{t("prompter.opacity", "Opacity")}
 					<input type="range" min={30} max={100} value={Math.round(state.opacity * 100)} onChange={(e) => set({ opacity: Number(e.target.value) / 100 })} />
+				</label>
+				<label className="flex items-center gap-1">
+					<input type="checkbox" checked={state.autoFlow} onChange={(e) => set({ autoFlow: e.target.checked })} />
+					{t("prompter.autoFlow", "Scroll automatically when recording starts")}
 				</label>
 				<span className="ml-auto text-white/50">{t("prompter.hiddenNote", "Not recorded")}</span>
 			</div>
