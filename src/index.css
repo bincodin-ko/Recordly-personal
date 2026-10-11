@@ -213,8 +213,15 @@
 
 .dashboard-settings .custom-scrollbar { padding-inline: 0; scrollbar-gutter: auto !important; }
 
-/* Screen Studio dark palette for the editor window (dark-only). */
-html[data-window-type="editor"],
+/* Editor: purple accent in both themes; Screen Studio dark palette only when dark. */
+html[data-window-type="editor"] {
+	--accent: #5b45f5;
+	--accent-foreground: #ffffff;
+	--accent-soft: rgba(91, 69, 245, 0.16);
+	--accent-hover: #4a35e0;
+	--focus: #5b45f5;
+	--link: #5b45f5;
+}
 html[data-window-type="editor"].dark {
 	--background: #0b0b0d;
 	--foreground: #e9e9ee;
@@ -230,11 +237,8 @@ html[data-window-type="editor"].dark {
 	--border: rgba(255, 255, 255, 0.06);
 	--separator: rgba(255, 255, 255, 0.06);
 	--segment: #2a2a31;
-	--accent: #5b45f5;
-	--accent-foreground: #ffffff;
 	--accent-soft: rgba(91, 69, 245, 0.2);
 	--accent-hover: #6f5cf7;
-	--focus: #5b45f5;
 	--link: #8b7bff;
 	--backdrop: rgba(0, 0, 0, 0.65);
 	--switch-control-bg: #3a3a42;

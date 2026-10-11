@@ -585,5 +585,10 @@
 		"generating": "Generating…",
 		"failed": "Could not generate the voiceover.",
 		"added": "Voiceover added at the playhead ({{seconds}}s)."
+	},
+	"settingsSide": {
+		"label": "Settings panel position",
+		"left": "Left",
+		"right": "Right"
 	}
 }

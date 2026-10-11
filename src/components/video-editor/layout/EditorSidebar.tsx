@@ -1,3 +1,4 @@
+import { useSettingsSide } from "@/lib/settingsSide";
 import { AccountAvatar } from "@/components/ui/account-avatar";
 import type { User } from "@supabase/supabase-js";
 import {
@@ -84,8 +85,10 @@ export function EditorSidebar({
 		],
 		[t],
 	);
+	const left = useSettingsSide() === "left";
+	const tipSide = left ? "right" : "left";
 	return (
-		<div className="flex min-h-0 shrink-0 pb-3 pl-2">
+		<div className={`flex min-h-0 shrink-0 pb-3 ${left ? "flex-row-reverse pr-2" : "pl-2"}`}>
 			<aside
 				aria-label={panelContent ? "Clips" : undefined}
 				className={`editor-inspector [--text-sm:0.8125rem] [--text-base:0.8125rem] min-h-0 w-[320px] flex-col ${panelOpen ? "flex" : "hidden"}`}
@@ -173,7 +176,7 @@ export function EditorSidebar({
 									className="size-5"
 								/>
 							</ToggleButton>
-							<Tooltip.Content placement="left">{section.label}</Tooltip.Content>
+							<Tooltip.Content placement={tipSide}>{section.label}</Tooltip.Content>
 						</Tooltip>
 					))}
 				</ToggleButtonGroup>
@@ -188,7 +191,7 @@ export function EditorSidebar({
 						>
 							<AccountAvatar user={accountUser} className="!size-7" />
 						</Button>
-						<Tooltip.Content placement="left">Account</Tooltip.Content>
+						<Tooltip.Content placement={tipSide}>Account</Tooltip.Content>
 					</Tooltip>
 				)}
 			</nav>

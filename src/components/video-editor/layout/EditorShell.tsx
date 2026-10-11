@@ -1,3 +1,4 @@
+import { useSettingsSide } from "@/lib/settingsSide";
 import { OnboardingController } from "@/components/auth/OnboardingController";
 import { AccountProfileContext } from "@/components/ui/account-avatar";
 import { DashboardSettingsContext } from "../dashboard/DashboardSettings";
@@ -102,6 +103,7 @@ export function EditorShell(props: Props) {
 		effectiveShowCursor,
 		previewAspectRatioValue,
 	} = props;
+	const settingsSide = useSettingsSide();
 	const library = useRecordingLibrary(project, timeline, ui, appearance);
 	// biome-ignore lint/correctness/useExhaustiveDependencies: Changing the active inspector closes the Videos view.
 	useEffect(() => {
@@ -350,7 +352,9 @@ export function EditorShell(props: Props) {
 						void library.addToTimeline(paths, index);
 				}}
 			>
-				<div className="relative z-10 flex min-h-0 flex-1 pt-3">
+				<div
+					className={`relative z-10 flex min-h-0 flex-1 pt-3 ${settingsSide === "left" ? "flex-row-reverse" : ""}`}
+				>
 					<EditorPreviewPanel
 						t={t}
 						videoPath={project.videoPath}
