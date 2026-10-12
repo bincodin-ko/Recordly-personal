@@ -111,8 +111,9 @@ test("background swaps use the section fade without sliding or overlapping panel
 }) => {
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
-	await expect(page.locator('[data-background-panel="image"]')).toBeVisible({ timeout: 20000 });
-	for (const name of ["Color", "Gradient", "Video", "Image"]) {
+	// Background tabs are now Wallpaper (default) / Gradient / Color / Image; Video lives under Image.
+	await expect(page.locator('[data-background-panel="wallpaper"]')).toBeVisible({ timeout: 20000 });
+	for (const name of ["Color", "Gradient", "Image", "Wallpaper"]) {
 		await page.getByRole("row", { name, exact: true }).click();
 		const panel = page.locator("[data-background-panel]");
 		await expect(panel).toHaveCount(1);

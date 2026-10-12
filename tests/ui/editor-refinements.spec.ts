@@ -120,13 +120,14 @@ test("populated project and preset popovers fit long names and dismiss outside",
 	await page.getByRole("button", { name: "Home", exact: true }).click();
 	// Home now opens the full Projects dashboard instead of a popover.
 	const projects = page.getByRole("dialog", { name: "Projects dashboard", exact: true });
-	await expect(projects.getByRole("button", { name: /A very long project name/ })).toHaveCount(5);
+	await expect(projects.getByRole("button", { name: /^A very long project name with many words \d$/ })).toHaveCount(5);
 	await expectButtonsFit(projects);
 	await page.screenshot({
 		path: "test-results/editor-projects-populated.png",
 		animations: "disabled",
 	});
-	await clickOutside(page);
+	// Home is now a full-window dashboard dialog (not a popover); it dismisses with Escape.
+	await page.keyboard.press("Escape");
 	await expect(projects).toHaveCount(0);
 	await page.getByRole("button", { name: "Open presets", exact: true }).click();
 	const presets = page.getByRole("dialog", { name: "Presets", exact: true });

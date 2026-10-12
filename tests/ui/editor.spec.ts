@@ -67,7 +67,8 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await page.getByRole("button", { name: "16:9", exact: true }).click();
 	await page.getByRole("menuitem", { name: "1:1", exact: true }).click();
 	await expect(page.getByRole("button", { name: "1:1", exact: true })).toBeVisible();
-	await expect(page.getByRole("button", { name: "Open presets", exact: true })).toHaveCount(0);
+	// Presets now live permanently in the Screen Studio-style top bar (2e876b0b).
+	await expect(page.getByRole("button", { name: "Open presets", exact: true })).toHaveCount(1);
 	await page.getByRole("button", { name: "Add Layer", exact: true }).click();
 	await page.getByRole("menuitem", { name: "Annotation", exact: true }).click();
 	await expect

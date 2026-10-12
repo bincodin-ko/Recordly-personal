@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+// Fixture pages skip the desktop bridge, so pin the English locale here (the app defaults to Korean).
+test.beforeEach(async ({ page }) => {
+	await page.addInitScript(() => localStorage.setItem("recordly.locale", "en"));
+});
+
 test("shared cards open ready links and delete incomplete uploads", async ({ page }) => {
 	await page.goto("/tests/ui/shared-recordings.html");
 	await page.getByRole("button", { name: "Product walkthrough", exact: true }).click();
