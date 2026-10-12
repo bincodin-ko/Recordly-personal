@@ -3,20 +3,16 @@ import fs from "node:fs";
 import { installDesktopBridge } from "./bridge";
 test("probe", async ({ page }) => {
 	await installDesktopBridge(page);
-	await page.addInitScript(() => {
-		window.electronAPI.getRecordingPreferences = async () => ({ success: true, webcamEnabled: true, microphoneEnabled: false, systemAudioEnabled: false });
-		window.electronAPI.onRecordingStateChanged = (callback) => {
-			const listener = () => callback({ recording: true, sourceName: "Built-in Display" });
-			window.addEventListener("test-recording-started", listener);
-			return () => window.removeEventListener("test-recording-started", listener);
-		};
-	});
-	await page.goto("/?windowType=hud-overlay");
-	await page.waitForTimeout(3000);
-	const list = () => page.evaluate(() => [...document.querySelectorAll("button")].map((b) => `${b.getAttribute("aria-label") || b.innerText.trim()} ${b.offsetWidth}x${b.offsetHeight}`));
-	const idle = await list();
-	await page.evaluate(() => window.dispatchEvent(new Event("test-recording-started")));
-	await page.waitForTimeout(1500);
-	const rec = await page.evaluate(() => [...document.querySelectorAll('[aria-label="Recording controls"] button')].map((b) => `${b.getAttribute("aria-label") || b.innerText.trim()} ${b.offsetWidth}x${b.offsetHeight}`));
-	fs.writeFileSync(".verify/probe.json", JSON.stringify({ idle, rec }, null, 1));
+	await page.goto("/?windowType=editor");
+	await page.getByRole("button", { name: "Rename project" }).click({ timeout: 30000 });
+	await page.getByRole("textbox", { name: "Project name" }).fill("A very long project title that should truncate and never cover the toolbar");
+	const out: string[] = [];
+	for (const width of [1440, 1280, 800]) {
+		await page.setViewportSize({ width, height: 800 });
+		await page.waitForTimeout(300);
+		const b = await Promise.all([".editor-header-start", ".editor-header-title", ".editor-header-end"].map((s) => page.locator(s).boundingBox()));
+		out.push(`${width}: ${b.map((x) => `${Math.round(x!.x)}-${Math.round(x!.x + x!.width)}`).join(" | ")}`);
+		await page.screenshot({ path: `.verify/probe-header-${width}.png`, clip: { x: 0, y: 0, width, height: 60 } });
+	}
+	fs.writeFileSync(".verify/probe.json", out.join("\n"));
 });

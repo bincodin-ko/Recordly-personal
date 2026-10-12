@@ -104,7 +104,7 @@ export function EditorHeader(props: Props) {
 
 	return (
 		<header
-			className="editor-header [--text-sm:0.8125rem] relative z-50 grid h-14 shrink-0 border-b border-separator grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4"
+			className="editor-header [--text-sm:0.8125rem] relative z-50 grid h-14 shrink-0 border-b border-separator grid-cols-[minmax(max-content,1fr)_minmax(0,auto)_minmax(max-content,1fr)] items-center gap-3 px-4"
 			style={{ WebkitAppRegion: "drag" } as CSSProperties}
 		>
 			<div
