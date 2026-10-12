@@ -1,0 +1,13 @@
+URL: https://www.screen.studio/guide/disable-smooth-mouse-movement
+
+Look & Feel
+Disable smooth mouse movement
+In certain sections of the video, you may want to disable effects for specific fragments to ensure accurate mouse movements while still maintaining control over the size and appearance of your cursors. This feature is particularly beneficial when recording drop-down menus.
+How to disable smooth mouse movement
+Begin by opening a project in Screen Studio.
+Go to the specific fragment on the timeline that you want to adjust.
+Click on the selected fragment.
+Locate the   cursor settings   option and click to open it.
+Find the   Disable smooth mouse movement   and toggle it on.
+After enabling this setting, preview the fragment to ensure that the mouse movements appear as intended.
+Previous  Cursor    Next   Hiding Cursor in Specific Sections

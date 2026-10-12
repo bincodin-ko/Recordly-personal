@@ -1,0 +1,26 @@
+URL: https://www.screen.studio/guide/diagnostic-info
+
+Troubleshooting
+Diagnostic info
+This guide explains how to share diagnostic information with our support team to help troubleshoot issues you may encounter.
+Understanding Diagnostic Info
+Diagnostic data includes technical information about your setup:
+• Screen Studio version
+• macOS version
+• Mac specifications
+• Connected camera details
+• Microphone information
+💡Note: This only includes device names and models - no content or personal data is accessed.
+Sending Diagnostic Info
+Open Screen Studio
+In the menu bar, navigate to   Screen Studio   →   Settings
+3. Switch to the   Advanced   tab
+4. Scroll to the bottom of the window
+5. Click the   Share diagnostics info   button
+If you're logged in, your account will be automatically associated with the report. Otherwise, you'll need to provide your email address for identification.
+Important Follow-up Steps
+Before sending diagnostic info, ensure you:
+Email our support team at  team@screen.studio
+Include a detailed description of the issue you're experiencing
+Without a description of the problem, diagnostic data alone may not be sufficient for our team to assist you effectively.
+Previous  Sharing your project    Next   Activating Account Access Issue

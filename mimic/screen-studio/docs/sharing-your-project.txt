@@ -1,0 +1,22 @@
+URL: https://www.screen.studio/guide/sharing-your-project
+
+Saving & Sharing project
+Sharing your project
+Each project can be saved and shared with other Screen Studio users.
+Whether you want to share your project file with someone else for additional editing or send it to another of your own devices, this guide will explain the best method to do so.
+Compress your project before sharing it
+Screen Studio project files have their own extension,  .screenstudio  (e.g.,  projectname**.screenstudio** ).
+Some applications or cloud services that don't recognize this extension might treat it as a folder containing separate files. This could cause an issue when you try to upload it, as it will upload each file separately.
+To avoid this, it's always better to compress (zip) the project before sending it to someone.
+To do this, simply right-click on your project and select the "Compress" option.
+Sharing the project
+Once you have compressed your project, you can share it the same way as any other file on your computer.
+You can attach it to an email, use AirDrop, or a file-sharing app.
+If the project file is large, you can share it via cloud storage services like iCloud, Google Drive, or similar.
+Sharing your project with the Screen Studio team
+If you experience any issue with your project and want to send it to the Screen Studio team to investigate the issue, you can use this link:  https://screenstudio.wetransfer.com/ .
+However,  please remember to contact us first at team@screen.studio  so we can have the context of your bug, and it also allows us to connect the file with your request.
+Simply click "Add files" and select your project.
+After that, you will be asked to input your email address. If you don't already have a WeTransfer account, you will receive a confirmation code in your email, which you will have to use to confirm the transfer.
+That's it!
+Previous  Quick share widget     Next   Diagnostic info

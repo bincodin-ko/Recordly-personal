@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/scrubber
+
+Editing project
+Scrubber
+Scrubber is an editing tool that allows you to manually navigate through a video, enabling you to listen to your voice and pinpoint exact editing points.
+How to use a scrubber
+Begin by opening your project in Screen Studio
+Find the   scrubber   positioned above the timeline
+Click on the scrubber to activate it
+Move the playhead to the right to play the media forward. Drag it to the left to play it backward. This allows for precise navigation through your content.
+The speed of the audio or video playback will correspond to how quickly you drag the mouse. The faster you drag, the quicker the playback.Once you've found the exact spot you need, you can perform your edits, such as deleting unwanted sections or making other adjustments.
+Previous  Set Volume    Next   Speed Up Typing Segments

@@ -1,0 +1,16 @@
+URL: https://www.screen.studio/guide/shortcuts
+
+Look & Feel
+Shortcuts
+With Screen Studio, you can showcase the shortcuts pressed during your recording.
+Each shortcut is detected automatically, but you can decide whether you want to show all of them or just some of them.
+How to turn on shortcuts
+If you want to display pressed shortcuts, open the Keyboard Shortcuts menu and toggle the  Show shortcuts  button.
+💡 If you didn't press any key during the recording, this menu will be disabled.   Shortcuts settings
+Shortcut labels size  - Use a slider to change the shortcut label size on your recording.
+Show single key shortcuts  -By turning on this option, we will display single-key shortcuts. Sometimes you might want to show single key strokes. We are trying to ignore keystrokes near to each other, and thanks to that, we are not showing them while you are writing.
+Shortcuts timeline
+You can show a timeline for your shortcuts, making it easy to edit and disable the ones you want to ignore.
+To disable a shortcut, click on it.
+To disable all specific shortcuts, right-click on one and choose  disable all "x" shortcuts  .
+Previous  Background music    Next   Animations

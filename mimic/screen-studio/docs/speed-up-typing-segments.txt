@@ -1,0 +1,15 @@
+URL: https://www.screen.studio/guide/speed-up-typing-segments
+
+Editing project
+Speed Up Typing Segments
+Screen Studio automatically detects typing sections and offers you the option to speed up those fragments. This feature helps avoid boring typing segments in your recordings, making them more engaging.
+Adjusting Typing Speed
+Select Speed Level
+Click on a typing segment in the timeline
+Use the speed slider to set your desired pace.
+Apply Changes
+After setting the speed, choose your scope:
+•  Apply all suggestions  : Click "Apply to all typing parts" to use this speed across the entire recording
+•  Apply suggestion  : Apply changes only to the selected typing segment
+Using "Apply all suggestions" ensures consistent typing speed throughout your recording, creating a more professional look.
+Previous  Scrubber    Next   Adding a mask and highlight

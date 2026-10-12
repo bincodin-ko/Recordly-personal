@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/creating-preset
+
+Presets
+Creating preset
+In Screen Studio, you can save frequently used settings as   presets   to speed up your editing process.
+What is a preset?
+A preset is a pre-configured setting that you can apply to your recordings to match the saved settings in the preset.
+Let's say that you are creating a series of recordings for a new guide on your website (wink-wink), and you want to always have the same background, aspect ratio, and camera position in your recordings.
+Instead of adjusting these settings each time after a new recording is done, you can simply choose your saved preset, and it will apply all the changes to your new recording.
+How to create a new preset
+Open the Screen Studio project whose settings you would like to save for a preset or create new settings in a new recording. Once editing is complete, you can click on the ** Presets **button, choose a name, and select   Create new preset  . Your preset will be saved, and you can apply it to a new recording.
+Previous  Manual Zoom    Next   Applying preset

@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/dynamic-camera-layouts-
+
+Look & Feel
+Dynamic camera layouts
+Thanks to the Dynamic Camera Layout feature in Screen Studio, you can edit and customize your webcam view in fullscreen display. This functionality comes with a new Layouts timeline, allowing you to easily modify where the camera view appears in your project.
+How to create a new camera layout?
+There are two ways to set up a dynamic camera layout: through the Layouts timeline or by toggling the “Camera” settings in the sidebar panel.
+Once you select any of the following options, the new timeline for camera layouts will appear, allowing you to add new layouts in the same way you add new zooms.
+How to edit a camera layout?
+The initial setting for a new camera layout is fullscreen, but you can easily switch to “Default” to show both the camera and the screen whenever you need, or hide the camera view altogether for parts of the recording.
+By switching to the “default”, you’ll enter to the webcam mode and will be able to adjust your camera’s position at any point in your recording.
+Previous  Reactions     Next   Captions

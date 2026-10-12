@@ -7,9 +7,6 @@ test("editor brightness and settings-panel side are configurable and persist", a
 	await installDesktopBridge(page);
 	await page.addInitScript(() => {
 		localStorage.setItem("recordly.locale", "ko");
-		// Stale bridge: add any missing subscribe-style stubs.
-		const api = (window as any).electronAPI;
-		api.onVoiceoverProgress ??= () => () => undefined;
 	});
 	await page.goto("/?windowType=editor");
 	const nav = page.locator("div:has(> aside.editor-inspector) > nav");

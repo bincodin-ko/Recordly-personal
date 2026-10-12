@@ -1,0 +1,15 @@
+출처: https://screen.studio/ (Claude in Chrome get_page_text, 2026-10-07 읽음). 기능 문구 요약.
+
+Zoom: Classic zoom, Loupe zoom; 6.5x upscale (own real-time upscaler); Smart framing (webcam never covers cursor); Automatic zoom (from clicks); Manual zoom (add and point).
+Layouts: Fullscreen camera, Split screen, Camera overlay, Screen only, Camera cutout; transitions animate. Camera cutout; Hide during silence; Face tracking.
+Motion: Motion blur (optics-based); Smooth cursor; Click effects (circle or ripple); Edit cursor style (size/style after recording); Loop cursor position; Hides when idle.
+Aspect ratio: Wide 16:9, Square 1:1, Vertical 9:16 (editor menu also Auto, Classic 4:3, Tall 3:4); Reel mode (Off / Instagram / TikTok overlay); zooms re-aim, layouts rearrange, captions stay readable.
+Recording: whole display, one window, area; webcam, microphone, Mac sound; Resize recorded window to exact size; Hide desktop icons; Speaker notes; crash-safe save every 2s; Countdown; One shortcut start/stop; Pause and resume.
+Editing: Edit by transcript; Filler words & pauses; Microphone modes Standard / Noise reduction / Podcast (beta); Captions (local, styles); Import any video; Command menu Cmd+K; Cut and speed up; Crop; Speed up typing.
+Style: Background (macOS wallpaper, gradient, image, Unsplash photo); Shadow (angle, distance, softness) & inset; Presets (save look, share with team).
+Devices: iPhone / iPad via USB with device mockup frame.
+Sharing: Shareable links (1080p60, comments, view counts, private); Clipboard copy (paste into Slack/Linear/doc); Export MP4 720p/1080p/4K up to 60fps, GIF up to 1080p; Shared projects; Export transcript .srt matching edits.
+Masks: Sensitive data (blur blends into UI); Highlight (rest of frame dims).
+Privacy: offline-first, local transcription, local voice enhancement, local face tracking/cutout, local debanding/super resolution/encoding; cloud only when chosen (links, shared projects, cloud transcription, AI voiceover).
+More: AI voiceover (type script, change later); Background music (loops to fit); Show shortcuts (keys on screen); Sharp system cursors (hi-res as they grow); Click sounds; Camera looks (color grading + strength); Sharpen (webcam); GIF export; Share the project; Private links; Comments; View counts.
+Editor UI (guide videos, scratchpad s7ref): top bar folder/trash, centered "name.screenstudio", undo/redo, Presets ▾, panel toggle, Export (purple); above preview aspect "Auto ▾" + Crop; right vertical icon rail (Background, Cursor, Camera, Captions, Audio, Shortcuts ⌘, Motion); timeline: clip band "Clip 27s ⏱1x" ochre with waveform, zoom blocks purple "Zoom 2x Auto/Manual"; playback row centered times + ⏮ ▶ ⏭, right scissors + zoom slider. Camera panel: Hide camera, Position 3x3 dots, Mirror camera, Roundness %, Size ("when not zoomed in"). Background panel: Wallpaper/Gradient/Color/Image tabs, collections (macOS, Spring, Sunset, Radiant), Pick random wallpaper, Background blur. Recording bar: Device, No camera, mic, Record system audio, gear.

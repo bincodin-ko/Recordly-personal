@@ -1,0 +1,9 @@
+URL: https://www.screen.studio/guide/extracting-raw-recording-files
+
+Exporting
+Extracting raw recording files
+Sometimes, you may only need the original camera, microphone, or screen recording track for further editing. In this guide, we will show you how to easily extract those raw files from your original Screen Studio project file.
+How to extract raw recording files
+To extract raw recording files from your project, first open Screen Studio and load the project from which you want to extract files. Next, navigate to the top menu bar in the editor, click on "Export," and select "Extract raw recording files…" from the dropdown menu.
+A dialog box will prompt you to choose a destination folder; navigate to your preferred location and confirm your selection. The extraction process will begin, and you'll need to wait for it to complete, which may take some time depending on the project size. Once finished, you can access the extracted raw recording files in the folder you selected.
+Previous  Saving your project    Next   Quick share widget

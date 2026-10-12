@@ -1,0 +1,9 @@
+URL: https://www.screen.studio/guide/activating-screen-studio
+
+Getting started
+Activating Screen Studio
+To activate Screen Studio, start by navigating to the top menu bar and clicking on  Screen Studio.  From the dropdown list, select   Activate Screen Studio.
+Email Address : In the provided field, enter the  email address you used for purchasing your subscription.  After typing in your email, a code will be sent to that address. Check your inbox for the activation code and follow the instructions to complete the activation process.
+License Key : located at the bottom of the activation window. In the designated field, enter your license key to activate Screen Studio.  This activation is only applicable for legacy one-time purchase licenses.
+Following these steps will ensure that you successfully activate Screen Studio and can start using its features for your projects.
+Previous  Setting up & Permissions    Next   New Recording

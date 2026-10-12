@@ -1,0 +1,6 @@
+URL: https://www.screen.studio/guide/recording-entire-display
+
+Recording
+Recording entire display
+To record an entire screen, select the  Display  option from the recording modal. Move your mouse to the display you wish to capture and click to confirm.
+Previous  New Recording    Next   Recording single window

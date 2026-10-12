@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/hiding-the-cursor-in-specific-sections
+
+Look & Feel
+Hiding Cursor in Specific Sections
+Sometimes, you may wish to hide the mouse cursor during certain parts of your video. This way, you can effectively manage the cursor's visibility in your video.
+How to hide the cursor
+Begin by opening the project you wish to edit.
+Navigate to the specific cut fragment on the timeline that you want to adjust.
+With the fragment selected, right-click on it to open the menu.
+From the menu, select   Hide mouse cursor .
+Once the change has been made, a hide arrow will appear on the selected fragment, indicating that the cursor will be hidden during that section.
+Previous  Disable smooth mouse movement    Next   Mouse click sound

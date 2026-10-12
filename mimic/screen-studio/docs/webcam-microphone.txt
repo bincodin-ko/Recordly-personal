@@ -1,0 +1,15 @@
+URL: https://www.screen.studio/guide/webcam-microphone
+
+Recording
+Webcam & Microphone
+With Screen Studio, you have the capability to record your webcam and microphone audio, a feature especially useful for incorporating additional narration or explanations into your recordings.
+Webcam
+To record a webcam, click on the  camera  icon and choose the device you want to use.
+Once you select your camera, the preview will pop up.
+While the camera preview will be continuously visible on your screen during the recording, it will not be included in the final output in the same form. So, it's okay if it's covering a portion of your screen, as the part covered by the camera will still be recorded.
+Post-recording, during the editing phase, you have the flexibility to modify its size, layout, or position in the recording. You can also mirror your camera in the editor.
+If you would like to hide your preview, you can do so by clicking on the  camera  button once again and selecting  Hide camera preview .
+Microphone
+To record a microphone audio, click on the  microphone  icon and choose the device you want to use.
+The white bar under the microphone icon shows if your microphone is working and collecting sound.
+Previous  Recording area    Next   Managing recording in progress

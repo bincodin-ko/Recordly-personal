@@ -1,0 +1,24 @@
+출처: https://www.screen.studio/changelog (Claude in Chrome로 읽음, 2026-10-13). 4.0.0~4.0.4 원문 요약(영문 그대로).
+
+4.0.4 (2026-10-07) Fix: background above recordings in 4K exports.
+4.0.3 (2026-10-06) Local fallback for transcript if cloud fails; improved webcam quality.
+4.0.2 (2026-10-05) Export decode fix; raw media extraction fix; Padding value represented in %.
+4.0.0 (2026-10-01):
+- Glass Loupe: magnify a detail under a glass lens, viewers see surroundings. Use where classic zoom moves too much.
+- Camera cutout (beta): background removed on Mac, you placed in front of the screen.
+- Edit by transcript: delete a sentence to cut it. Remove filler words (um, uh) offers. Tighten pause: finds long pauses and offers to shorten.
+- Split screen: side by side, or one above the other in vertical video; switch layouts during video, animated.
+- Face tracking (keeps face centered); Hide during silence (hides camera while not talking).
+- Color grading: camera color preset + strength, or own LUT; 12 looks previewed on your camera; create own presets.
+- Sharper zooms: own AI model trained on macOS screenshots, runs locally.
+- Faster exports (3x) and smaller projects (2x smaller recordings).
+- Ripple click effect redesigned: each click sends a colorful ripple.
+- Previews in the Finder / Quick Look for projects.
+- Recent projects next to the recording picker (folder button in recording picker).
+- Keyboard shortcuts redesigned: each key its own key with the Mac symbol and name.
+- Also new / Captions: font style, color, position; line-by-line or word-by-word; animate appear / fade in / slide in. Cloud transcription (uploads mic audio).
+- Editing and zoom: Toolbar next to the preview to add zooms, camera layouts, masks. Camera crop (keep only part of camera picture). Projects open where you left off at the saved playhead.
+- Style and masks: Unsplash background search. Sensitive data masks take their color from what they cover. Less banding in gradients/wallpapers.
+- Recording and projects: Share project (beta) as link. Every save keeps a backup of previous version. "Remove project" moves to Trash. Asks before quitting during recording or export. New recordings with no speech open with "Mute microphone" on.
+- Fixes: SRT export follows cuts and speed changes; recording picker canceled selection; sped-up clip edge drag; project damaged when save interrupted; new project replaced same-name project.
+- Changes from 3: "Microphone audio mode" (Standard / Noise reduction / Podcast) replaces "Improve microphone audio". "Camera aspect ratio" replaces Shape (Original → 1:1). Removed: "Snap to edges", "Always keep zoomed in", "Advanced motion blur settings".

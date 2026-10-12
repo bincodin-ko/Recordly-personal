@@ -1,0 +1,10 @@
+URL: https://www.screen.studio/guide/sharing-preset
+
+Presets
+Sharing preset
+There is an option for sharing presets.
+Imagine that you have created a preset with your custom background that you want to share with your marketing team so they can apply it to new recordings made in Screen Studio.
+How to share a preset
+Click the   Presets   button in the editor, then open settings for the presets you want to share. Select   Open in finder   to display your preset file in Finder.
+You can then copy it and send it to another user via email or messaging app.
+Previous  Applying preset    Next   Exporting the video

@@ -1,0 +1,17 @@
+URL: https://www.screen.studio/guide/quick-share-widget-
+
+Exporting
+Quick share widget
+You can efficiently manage your projects by sharing, saving, copying, and editing them.
+Shareable Links
+You can effortlessly share your project by clicking   Share .  Once your shareable link is ready, it will open in your default browser, allowing you to access and share your project via its URL.
+To customize your export settings for future projects, click on the  Edit quick export settings  icon, accessible from the recording modal, and set your preferences.
+Save to File
+If you need to save your recording immediately, select  Save . This will allow you to choose the file's location and save it accordingly.
+Copy to Clipboard
+You can quickly copy your entire project by clicking  Copy . This action will add the project to your clipboard, allowing you to paste it into any document.
+Edit
+To double-check your project by clicking   Edit   or double-clicking the widget to open the editor and review your work before sharing.
+Disabling the Widget
+If you prefer not to use the Quick Share Widget, you can easily disable it in the settings. To do this, click on the   Settings   icon located at the far right of the recording picker and toggle off the option  Show quick export widget after recording.
+Previous  Extracting raw recording files    Next   Sharing your project

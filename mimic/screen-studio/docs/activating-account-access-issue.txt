@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/activating-account-access-issue
+
+Troubleshooting
+Activating Account Access Issue
+Overview
+If you are experiencing log in issues with Screen Studio, it may be related to your internet connection or your internet service provider potentially blocking access to our servers, or due to antivirus software. To resolve this, consider using a different internet connection, such as a mobile hotspot, or changing your location using a VPN to activate the license on your device.
+To adjust your settings for a better connection, follow these steps:
+Go to the top menu bar and click on   Screen Studio.   From the dropdown list, select   Show settings.
+Once the settings window is open, navigate to the   Advanced   tab. Next, turn on   Skip network certificate validation.
+3. Next, go to the   Experimental   tab and turn on the   Enhanced shareable links upload settings.
+By following these steps, you should be able to troubleshoot and resolve any log in issues.
+Previous  Diagnostic info    Next   Resolving Presets Access Issue

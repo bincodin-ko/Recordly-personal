@@ -1,0 +1,11 @@
+URL: https://www.screen.studio/guide/disable-automatic-zooms-
+
+Zooms
+Disable Automatic Zooms
+Sometimes, when you make a recording, you may not want automatic zooms applied to each video and prefer to apply manual zoom for each recording instead. Follow these steps to disable the automatic zooms:
+Begin by launching the Screen Studio application.
+Go to the top menu bar and click on   Screen Studio.
+From the dropdown menu, choose   Show Settings.
+In the pop-up settings window, locate the   Recording   tab.
+Find the option labeled   Create zooms automatically   and untoggle it to disable this feature.
+Previous  Adding & Editing zooms    Next   Auto Zoom

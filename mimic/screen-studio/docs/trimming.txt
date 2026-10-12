@@ -1,0 +1,20 @@
+URL: https://www.screen.studio/guide/trimming
+
+Editing project
+Trimming
+In this guide, you will learn how to navigate through the timeline and trim your clip.
+Navigating through a timeline
+Yellow bar at the bottom of the editor represents your clip timeline. It always shows the length of your clip and speed setting.
+To zoom in or out on the timeline , adjust the slider next to the scissor icon.
+To navigate the timeline , move your cursor over it and swipe on your trackpad or scroll using the scroll bar on your mouse.
+Cut
+If you want to cut your clip to delete some parts or adjust its length, use the scissors (not the real ones, of course!).
+You can activate them by clicking on the   scissors   icon or by pressing   ⌥   to turn them on.
+Choose the parts you want to cut by clicking on the timeline at the specific location.
+To delete an unwanted part of the clip, right-click on it and choose   Remove  .
+💡 You can also use the shortcut  C  to cut at the current cursor position on the clip timeline.
+Adjusting the trim
+Each clip can be manually adjusted without additional cutting.
+To trim the beginning or end of the recording or adjust the length of the clip, click and hold the edge of the clip, then move it left or right to adjust the length.
+Each trim is shown on the timeline as a yellow bubble with a scissors icon. Click on it to undo the trim.
+Previous  Cropping the recording    Next   Speeding up the video

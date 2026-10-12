@@ -1,0 +1,11 @@
+URL: https://www.screen.studio/guide/auto-zoom
+
+Zooms
+Auto Zoom
+In Screen Studio, you can set each zoom to be either Auto or Manual. But what does it mean?
+Auto Zoom Explanation
+The Auto zoom option focuses on the areas where clicks occurred during your recording.
+It automatically detects the click positions and zooms in on those areas.
+Please note that if you add auto-zoom where no mouse click occurs, it will not zoom to any area. In this situation, you'll need to choose manual zoom and select the area you want to zoom in on manually.
+You can find more information about manual zoom on the next page.
+Previous  Disable Automatic Zooms     Next   Manual Zoom

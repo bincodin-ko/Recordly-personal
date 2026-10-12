@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/iphone-mirroring
+
+Recording
+iPhone Mirroring
+To record your iPhone screen using the  iPhone Mirroring application,  start by accessing the application from the Dock or by opening it from the Applications folder on your Mac.  This feature is included with macOS Sequoia 15 or later.
+Once the application is open, your Mac will prompt you to unlock your iPhone; use your iPhone to enter your passcode. When the iPhone Mirroring app displays your iPhone screen, it indicates that your iPhone is successfully connected.
+To record the iPhone mirroring in Screen Studio, ensure that you select the recording  “window”  . Locate the window corresponding to the iPhone Mirroring application to capture the recording effectively. This setup allows you to interact with your iPhone directly from the iPhone Mirroring window while recording your screen seamlessly.
+💡 You can also record audio from your microphone or video from your webcam.
+Editing the recording
+After finishing your recording, you can edit the project just like any other project in Screen Studio. In the editor, you can make various adjustments and enhancements as needed. An additional feature in the editor allows you to customize the appearance of your project by selecting your preferred iPhone frame.
+To change your preferred iPhone frame, go to the  "Device frame"  tab in the editor. From there, you can choose the frame that best matches your preferences.
+Previous  Hiding Dock Icon    Next   Recording iPhone & iPad

@@ -1,0 +1,13 @@
+URL: https://www.screen.studio/guide/cropping-the-recording
+
+Editing project
+Cropping the recording
+Sometimes you may need to crop your final recording.
+For instance, if you recorded a browser window and want to hide its menu bar with the URL, you can easily do so after the recording.
+How to use crop
+In the editor, you can select a  Crop  button above your recording preview or simply press the  C  key on your keyboard.
+The Crop Tool window will appear.
+To manage the crop size, you can either drag the edges of the crop manually or input your desired size values.
+You can also select the desired aspect ratio for the crop.
+💡 Please note that this will not change the aspect ratio for the entire recording. If you would like to adjust the aspect ratio for the entire recording, refer to this  guide .
+Previous  Aspect ratio    Next   Trimming

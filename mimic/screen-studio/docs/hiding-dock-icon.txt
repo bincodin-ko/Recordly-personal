@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/hiding-dock-icon
+
+Recording
+Hiding Dock Icon
+You can effectively hide the dock icon, keeping your workspace organized while still having access to Screen Studio through the top menu bar.
+How to hide the dock icon
+Launch the Screen Studio application.
+Go to the top menu bar and click on   Screen Studio
+From the dropdown menu, choose   Show Settings
+In the pop-up settings window, locate the  General  tab.
+When located, toggle on the   Hide Dock Icon   setting. This will ensure that the Dock icon is hidden when there are no open projects and no recordings in progress.
+Previous  Recording system audio    Next   iPhone Mirroring

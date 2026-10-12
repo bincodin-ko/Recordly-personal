@@ -1,0 +1,9 @@
+URL: https://www.screen.studio/guide/recording-system-audio
+
+Recording
+Recording system audio
+Screen Studio enables you to record your system audio.
+This feature lets you include background music, capture meeting audio, and record sound effects in your app.
+To begin, click on the  system audio  button and select whether you want to record system audio from all apps or just from a selected one.
+It's possible to select a group of apps from which audio you want to record, and the rest of them will be ignored.
+Previous  Managing Project Settings for New Recordings    Next   Hiding Dock Icon

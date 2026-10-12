@@ -1,0 +1,10 @@
+URL: https://www.screen.studio/guide/background-music
+
+Look & Feel
+Background music
+To enhance your video with background music, start by navigating to the "Audio" section on the right side of the editor. Here, you'll find a selection from a built-in library and have the option to add your own tracks.
+Built-in music library
+You can select any of these tracks to use throughout your entire timeline, and since they are royalty-free, you can use them for any purpose without concerns about copyright issues.
+Add your own music
+If you prefer to use your own music, simply click on  "Add background audio"  to upload your audio files in MP4 or MP3 format. This allows you to personalize your video with music that fits your style and enhances the overall viewing experience.
+Previous  Captions    Next   Shortcuts

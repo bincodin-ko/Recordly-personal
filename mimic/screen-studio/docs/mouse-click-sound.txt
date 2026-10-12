@@ -1,0 +1,13 @@
+URL: https://www.screen.studio/guide/mouse-click-sound
+
+Look & Feel
+Mouse click sound
+To enhance your project with a polished feel, you may want to add a mouse click sound effect. Follow these steps to incorporate this effect into your video:
+Open the project you want to add mouse clicks too.
+In the editor, locate the   "Cursor"   tab. This can be found in the right corner of the editor.
+Scroll down to find the   "Click sound"   section. Here, you will see options for mouse click sound effects.
+Choose the mouse click sound effect that best fits your project. You can listen to the available options to find the one that suits your needs.
+Once you have selected your desired click sound, adjust the volume level to ensure it blends well with your overall project.
+After making your selections, preview the project to ensure the click sound effect enhances the viewing experience without overpowering other audio elements.
+By following these steps, you can successfully add a mouse click sound effect to your project, contributing to a more engaging and polished final video.
+Previous  Hiding Cursor in Specific Sections    Next   Camera Settings

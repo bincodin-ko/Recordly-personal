@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/installing-screen-studio
+
+Getting started
+Installing Screen Studio
+Screen Studio is a desktop app exclusive to macOS devices.
+You can download it from here:  screen.studio/download .
+💡 If your browser can detect your processor, you will see only one button for download. Otherwise, you will see an option to download it either for Mac with Intel processor or Apple silicon (M1, M2, etc.). Please choose the version matching your device.
+Once you click on the download button, the downloading process will start.
+After opening the downloaded file, you will be asked if you want to install Screen Studio on your device.
+You can either double-click on the Screen Studio icon or drag it to the Applications folder.
+After that, Screen Studio will be installed and located in the Applications folder on your Mac.
+Next   Instant Zoom

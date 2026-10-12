@@ -1,0 +1,7 @@
+URL: https://www.screen.studio/guide/recording-single-window
+
+Recording
+Recording single window
+To record a single window, choose the option  Window  from the modal and then click on the window you want to record to make it active. You can also right-click the  Window  button and select your window from the list.
+💡 If you want to record an app in full-screen mode, select  Display  instead of  Window .
+Previous  Recording entire display    Next   Recording area

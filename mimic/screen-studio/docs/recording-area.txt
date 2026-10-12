@@ -1,0 +1,7 @@
+URL: https://www.screen.studio/guide/recording-area
+
+Recording
+Recording area
+Select the  Area  option on the recording picker to capture a specific area.
+Drag the desired area or input your preferred dimensions.
+Previous  Recording single window    Next   Webcam & Microphone

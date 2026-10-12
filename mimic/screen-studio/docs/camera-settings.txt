@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/camera-settings
+
+Look & Feel
+Camera Settings
+You can customize your camera settings to enhance your recording experience. To apply those settings, follow these steps:
+Launch the Screen Studio application on your device.
+Switch on the camera in the application. Once the camera is turned on, a green camera icon will appear in the top menu bar.
+Click on the green camera icon to access various webcam options. The options will include:
+Background : allows you to add background wallpapers.
+Portrait : focus on you in a portrait mode.
+Studio Light : enhances lighting to create a professional studio effect.
+Previous  Mouse click sound    Next   Camera

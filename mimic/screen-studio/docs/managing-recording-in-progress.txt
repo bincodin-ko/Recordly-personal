@@ -1,0 +1,8 @@
+URL: https://www.screen.studio/guide/managing-recording-in-progress
+
+Recording
+Managing recording in progress
+During recording, you will see a small recording control widget which counts the time and allows you to control the recording.
+You can use it to  finish ,  pause ,  restart , and  delete  the recording.
+To hide it, right-click it and select  Hide current recording control  Please note that it won't appear in the final recording if you are using macOS 12.3 or above.
+Previous  Webcam & Microphone    Next   Recording flag

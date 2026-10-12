@@ -1,0 +1,16 @@
+URL: https://www.screen.studio/guide/adding-a-mask-and-highlight
+
+Editing project
+Adding a mask and highlight
+When creating a recording, you may need to blur sensitive data or add highlights to emphasize important elements. Follow these steps to utilize masks and highlights effectively:
+Start by opening your recording in the editor.
+You can initiate the mask feature through the mask timeline or by pressing the shortcut key 4 to activate the mask timeline.
+To apply a mask or highlight, click on the mask timeline at your desired location within the video.
+Once the mask or highlight is applied, you can adjust its size or the opacity of the highlight.
+💡 Masks and highlights can be applied throughout the video timeline; however, they cannot be added simultaneously within a single frame.
+What are masks used for?
+Masks are used to conceal specific parts of your video, effectively hiding sensitive information from viewers.
+💡 Ensure that the mask covers the entire section of the timeline where sensitive data appears. The mask will not follow the screen when scrolling.
+What are highlights used for?
+Highlights draw attention to specific areas of your screen, helping viewers focus on important elements during your recording.
+Previous  Speed Up Typing Segments    Next   Command Menu

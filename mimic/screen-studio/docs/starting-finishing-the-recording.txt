@@ -1,0 +1,14 @@
+URL: https://www.screen.studio/guide/starting-finishing-the-recording
+
+Recording
+Starting & Finishing the recording
+To start recording, use the  Record  button.
+Four ways to stop recording
+You can click the  Stop Recording  icon on the recording control widget.
+You can click the  Stop Recording  icon on the menu bar icon.
+If you have a MacBook with a screen notch, this icon may not be visible.
+You can right-click the Screen Studio dock icon and click  Finish Recording
+You can also use the global Start / Stop shortcut you set during the onboarding.
+You can change your global Start / Stop shortcut in the app settings.
+After you have finished recording, the editor window will appear, allowing you to edit your recording.
+Previous  Recording iPhone & iPad    Next   Screen Studio shortcuts

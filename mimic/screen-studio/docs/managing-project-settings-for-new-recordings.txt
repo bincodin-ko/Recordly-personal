@@ -1,0 +1,11 @@
+URL: https://www.screen.studio/guide/managing-project-settings-for-new-recordings
+
+Recording
+Managing Project Settings for New Recordings
+If you want to ensure that the same settings from your last project are not applied to your new recording, follow these steps:
+Go to the top menu bar and click on   Screen Studio
+From the dropdown menu, choose   Show Settings
+Once the settings window opens, click on the   Editing   tab
+Look for the option labeled   Use last project settings as default for new recordings.  Please ensure you turn this off if you do not wish to apply the previous project's settings to your new recordings.
+By following these steps, you can customize your recording settings to suit each new project, ensuring greater flexibility and control over your edits.
+Previous  Recording flag    Next   Recording system audio

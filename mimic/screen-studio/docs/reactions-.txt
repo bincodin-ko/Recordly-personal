@@ -1,0 +1,11 @@
+URL: https://www.screen.studio/guide/reactions-
+
+Look & Feel
+Reactions
+The reactions feature is a native Apple functionality within the macOS system. This behavior will not only appear in Screen Studio but also in other applications that utilize the camera, such as Google Meet, Zoom, and more.
+To prevent reactions from appearing in your recorded videos, you can turn them off by following these steps:
+Activate the camera in Screen Studio or start a quick Google Meet session.
+Click on the green camera icon in the top menu bar.
+Select  Reactions  to turn them off.
+After making this adjustment, be sure to test it to ensure the reactions are no longer displayed.
+Previous  Camera    Next   Dynamic camera layouts

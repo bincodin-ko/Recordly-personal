@@ -1,0 +1,18 @@
+URL: https://www.screen.studio/guide/background
+
+Look & Feel
+Background
+You can enhance readability and aesthetics by displaying your screencast on the background of your choice.
+To choose your desired background and manage its settings, open  Background and Screen  in the editor settings visible on the right side of your recorded video.
+Choosing your background
+There are four options to add a background to your recording:
+Wallpaper   - lets you choose from a selection of wallpapers, including macOS native options and a variety of beautiful wallpapers tailored for Screen Studio users.
+Gradient    -  enables you to generate a wallpaper with a gradient based on your chosen color.
+Color   - allows you to create a plain single-color background. You can simply paste a hex color code or select it yourself using a color palette.  Image  - allows you to upload your own image to use it as a background.
+💡 If you prefer not to use any background in your recording, you can set the  Padding  option to the minimum value.  Background Settings
+By scrolling down, you will notice other options to modify the background. These include:
+Padding   - allows you to choose the size of the extra space that is added around your recording. When it's set to 0, then no background is visible in your video.
+Rounded corners   - use this setting to choose the degree of rounding for the corners of your recorded video.
+Inset   - creates an additional space, or "frame", within your main video.
+Shadow   - enables a drop shadow effect around your video frame against the background.
+Previous  Command Menu    Next   Cursor

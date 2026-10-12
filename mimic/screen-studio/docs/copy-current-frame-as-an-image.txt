@@ -1,0 +1,8 @@
+URL: https://www.screen.studio/guide/copy-current-frame-as-an-image
+
+Look & Feel
+Copy current frame as an image
+This process allows you to easily capture and utilize frames from your project in other contexts.
+To copy the current frame as an image, first open Screen Studio and navigate to your project. Position the playhead at the specific frame you wish to copy. You can then copy the frame by either clicking on the trackpad to bring up the context menu and selecting  “Copy current frame as image”  or by using the keyboard shortcut  ⌘ + C.
+Once the frame is copied, you can paste the image into another application, such as a document or image editor, by pressing  ⌘ + V  .
+Previous  Animations    Next   Adding & Editing zooms

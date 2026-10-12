@@ -1,0 +1,23 @@
+URL: https://www.screen.studio/guide/aspect-ratio
+
+Editing project
+Aspect ratio
+When uploading videos on certain platforms, you may need to adjust the aspect ratio of your recordings.
+For instance, for platforms that favor vertical videos, such as TikTok or Instagram, you should adjust the ratio accordingly.
+You can customize the aspect ratio for your exported videos after recording them.
+Changing the aspect ratio
+When the editor is open, you will see an option to change the aspect ratio just above the preview of your video.
+You have a few options to select:
+Auto  - original aspect ratio of your recording should match the display, window, or area being recorded.
+Wide  - 16:9
+Vertical  - 9:16
+Square  - 1:1
+Classic  - 4:3
+Tall  - 3:4
+Always keep zoomed in
+When selecting your aspect ratio, there is an additional option to  Always keep zoomed in  .
+When it's selected, your visible area is cropped to the selected aspect ratio, with your cursor dictating the position of the visible area. As you move your cursor, the visible area will adjust accordingly.
+Here are two examples for spreadsheet recording with a  vertical  aspect ratio:
+Always keep zoomed in    turned off
+Always keep zoomed in    turned on
+Previous  Creating project from existing video    Next   Cropping the recording

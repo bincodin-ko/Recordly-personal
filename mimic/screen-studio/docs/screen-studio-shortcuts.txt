@@ -1,0 +1,14 @@
+URL: https://www.screen.studio/guide/screen-studio-shortcuts
+
+Recording
+Screen Studio shortcuts
+Screen Studio enables you to create custom shortcuts for triggering some actions within an app.
+For instance, you can easily start recording a window at any time using a single shortcut and much more!
+Shortcuts settings
+To set up your own shortcuts, go to Screen Studio in the top menu bar. Then, choose Settings and select the Shortcuts tab.
+Assigning a new shortcut
+Each action has its own predefined shortcut, but you can change it to your preferred one.
+To do that, click on the one you would like to change and assign a new shortcut.
+View all shortcuts
+You can access a comprehensive list of all available keyboard shortcuts within the application. To view this shortcut guide, when you are in the editor, simply press  ⌘ + /   .This will open a window displaying all the keyboard shortcuts, making it easier for you to navigate and use the app efficiently. Familiarising yourself with these shortcuts can significantly enhance your workflow and productivity while using the application.
+Previous  Starting & Finishing the recording    Next   Speaker Notes

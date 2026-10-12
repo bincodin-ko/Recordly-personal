@@ -1,0 +1,88 @@
+URL: https://www.screen.studio/roadmap
+
+Roadmap
+Features we are working on and planning to work on in the future.
+Suggest a feature
+On Beta
+Features available to try in     Screen Studio Beta
+On Beta  AI voice cleanup
+On-device voice enhancement and AI noise removal.
+In Progress
+Features we’re actively working on.
+In progress  Teams subscriptions architecture
+Owner can invite team members who will need to sign in and will automatically be able to activate their Studio installs
+In progress  AI Voiceover
+Creating AI voice-overs for your videos
+Planned
+Features we’re planning for the coming months.
+Planned  Voice audio enchancement
+Automatically enhance audio quality to resemble a more studio-like sound.
+Planned  Multi-clip recordings
+Ability to merge multiple recordings into one project.
+Paused  Annotations
+Introduce a feature that enables users to incorporate visual or textual descriptions of clicks within their recordings.
+Planned  Full text slides
+Develop a feature that enables users to add full-text slides to their recordings, offering a new way to share information and improve the overall clarity of their videos.
+Planned  Enter / Exit animations
+Add a feature that enables users to incorporate custom enter and exit animations within their recordings.
+Planned  Create videos from screenshots
+Completed
+Features that have become available for use in Screen Studio.
+Done  Up to 3x faster exports
+We reworked Screen Studio's render engine. Exports are faster and editing is snappier.
+Done  New camera features
+Background removal, smooth face tracking, cropping, LUTs, and a new split-screen layout with smooth transitions.
+Done  New zoom effects
+A new Glass Loupe effect, sharper zoomed-in text, and lots of tiny improvements (too many to list out here ;-)
+Done  Better captions & shortcuts
+Improved style and animation. Real keycap overlays for shortcuts.
+Done  Unsplash backgrounds
+Search for background images on Unsplash within Screen Studio.
+Done  Improved click effects
+We reworked the  Ripple  click effect.
+Done  GIF export
+Incorporate a feature that allows users to export their screen recordings as GIF files.
+Done  Voice-over support
+Integrate a feature that enables users to add voice-over narrations to their screen recordings.
+Done  New Pick Recording UI
+Introducing a new pick recording UI featuring additional functionalities.
+Done  Selfie camera support
+Enable users to overlay their selfie camera video during screen recordings.
+Done  Cutting & Basic video edit tools
+MVP: being able to skip part of the video in the middle. On top  of that (maybe) being able to speed up parts of the video (technically similar). It will unblock a lot of features such as Text slides in the middle, speeding up automatically while typing.
+Done  Screen Studio 2.0 Release
+Introduce a new version of Screen Studio, including an improved recorder module for increased performance and efficiency.
+Done  Recording iOS device
+Implement a feature that allows users to capture their iOS device's screen through a wired connection.
+Done  Shortcuts displaying
+Introduce a feature enabling users to showcase their utilized shortcuts and have them appear on the recording.
+Done  Raycast Screen Studio extension
+Incorporate Screen Studio integration with applications such as Raycast.
+Done  System audio recording
+Introduce a feature that allows users to capture system audio alongside their screen recordings.
+Done  Presets
+Implement a functionality that enables users to create, save, and load custom settings for their screen recordings.
+Done  AI-Generated Captions
+Integrate a feature that utilizes AI models to automatically generate multilingual captions for screen recordings.
+Done  Speaker notes
+Option to create speaker notes that are not visible in the recording.
+Done  Editing captions
+Introduce the ability for users to modify and customize the automatically generated captions easily.
+Done  Authentication-based licensing instead of license keys
+Implementing authentication-based licensing to replace traditional license keys, improving the user experience and enhancing security.
+Done  Sharable Links
+Develop a feature allowing users to easily share their recordings with others via a unique, shareable link for quick access and collaboration.
+Done  Selfie camera layouts
+Introduce various layout options for the selfie camera, giving users more flexibility in customizing the appearance and positioning of their camera window within their recordings.
+Done  Masking sensitive data
+Implement a feature that enables users to easily conceal sensitive information within their recordings, ensuring the privacy and security of any confidential data displayed during the video.
+Done  Speed up video when typing
+Develop a feature that automatically accelerates the video playback during typing sequences.
+Done  Background music & library of songs to use
+Introduce a built-in library of songs for users to add background music to their recordings easily.
+Done  Visual effects on clicks
+Such as ripple or expanding circle
+Done  New cursor types
+Ability to change the cursor types for a fresh new look at your recordings.
+Done  Ability to pause the recording
+Done  Create project from pre-recorded video

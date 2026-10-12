@@ -1,0 +1,14 @@
+URL: https://www.screen.studio/guide/command-menu
+
+Editing project
+Command Menu
+The Command Menu is a tool that provides quick keyboard access to all Screen Studio features.
+How to Access?
+Press  ⌘+K  to open the Command Menu
+Common Use Cases
+Switching between tools
+Accessing editing features
+Changing settings
+Executing actions quickly during recording
+The Command Menu speeds up your workflow by eliminating the need to navigate menus with your mouse.
+Previous  Adding a mask and highlight    Next   Background

@@ -1,0 +1,16 @@
+URL: https://www.screen.studio/guide/speaker-notes-
+
+Recording
+Speaker Notes
+When preparing for a longer recording session, you might find it helpful to create notes for yourself. Screen Studio allows you to prepare such notes, which act as a discreet, personal teleprompter. The text you enter in speaker notes will be visible only to you and will not be included in your recording or the exported file.
+How to Open Speaker Notes?
+Begin by launching Screen Studio. You can access speaker notes from the recording modal.
+Click on the settings icon located on the right side of the recording modal.
+From the settings menu, select  Show Speaker Notes.
+Adjusting Your Notes
+To begin, simply click on  Start Prompter  or use the keyboard shortcut  ⁠⌘⌥.  This will activate the prompter, allowing you to view your notes as you're recording.
+Control the scrolling speed of your notes to match your speaking pace.
+Modify the opacity of the notepad to ensure that it is visible without being distracting.
+Increase or decrease the font size for better readability based on your preferences.
+To make these adjustments, click on   Settings   located in the upper right corner of the pop-out window containing your speaker notes.
+Previous  Screen Studio shortcuts    Next   Creating project from existing video

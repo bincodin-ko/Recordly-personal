@@ -1,0 +1,14 @@
+URL: https://www.screen.studio/guide/update-your-email-address
+
+Troubleshooting
+Update your email address
+There are two methods to change the email address linked to your license:
+Method 1: If you have access to your old email account
+Go to  app.lemonsqueezy.com/my-orders  and log in using the email currently associated with your license.
+Once logged in, locate the icon in the top right corner that displays the first letter of your name. Click on this icon.
+From the dropdown menu, choose  "Account."  Your account information will be displayed.
+Find the option to change your email address and update it to your new preferred email.
+Method 2: If you don’t have access to your previous email account
+Contact support by emailing team@screen.studio with proof of your license purchase. This may include a receipt, invoice, or transaction screenshot. Additionally, please provide as many details as possible about your license, such as the license key, your previous email, and the date of purchase.
+Once we verify that you are the owner of the license, we will reach out to Lemon Squeezy, our merchant of record, on your behalf to change the email address.
+Previous  Managing License

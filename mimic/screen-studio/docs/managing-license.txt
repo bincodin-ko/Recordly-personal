@@ -1,0 +1,11 @@
+URL: https://www.screen.studio/guide/managing-license
+
+Troubleshooting
+Managing License
+You can easily manage your license through the dashboard. Follow these steps to view your account details and handle your licenses:
+Visit the dashboard:  screen.studio/dashboard.
+Log in using the email address you used for the purchase.
+To reset a license, navigate to the  Device  tab within the dashboard.
+Click on  Disconnect device . This action will allow you to activate the same license key on a new device.
+You do not need access to your old device to reset your license key; you can perform this action from any device with internet access.
+Previous  Capturing notifications    Next   Update your email address

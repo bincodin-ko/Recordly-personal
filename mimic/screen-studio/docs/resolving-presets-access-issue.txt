@@ -1,0 +1,28 @@
+URL: https://www.screen.studio/guide/resolving-presets-access-issue
+
+Troubleshooting
+Resolving Presets Access Issue
+Overview
+If you're experiencing problems with opening or accessing presets in Screen Studio, it's likely due to missing permissions to the Documents folder. This guide will help you resolve these permission issues on macOS.
+💡Without proper folder access, Screen Studio cannot read or write preset files, which prevents the app from functioning correctly.
+Step-by-Step Resolution
+1. Open System Settings
+Click on the Apple menu (Apple logo) in the top-left corner
+Select System Settings
+2. Navigate to Privacy & Security Settings
+In the sidebar, scroll down to Privacy & Security
+Click on Files and Folders
+💡If you don't see Files and Folders immediately, you can use the search bar at the top of System Settings to find it.
+3. Locate Screen Studio Permissions
+Scroll through the list of applications until you find Screen Studio
+If you don't see Screen Studio listed, try launching the app first and attempting to access presets again
+4. Configure Permissions
+Find the Documents Folder entry under Screen Studio
+Enable the toggle switch next to Documents Folder
+5. Verify Access
+Return to Screen Studio
+Try accessing presets again
+You should now be able to open and save presets normally
+Troubleshooting
+If preset access issues persist please contact our support team at team@screen.studio
+Previous  Activating Account Access Issue    Next   Capturing notifications

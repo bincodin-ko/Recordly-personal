@@ -1,0 +1,13 @@
+URL: https://www.screen.studio/guide/creating-project-from-existing-video
+
+Recording
+Creating project from existing video
+Learn how to import and enhance existing video content in your Screen Studio projects.
+Creating a Project
+From the top menu bar, select   File   →  Create project from video...
+In the file browser, locate and select your video file
+Click  Open  to import the video into your project
+💡Please note that your source video must be in mp4 format.
+What Can You Do After Importing?
+When importing existing videos into Screen Studio, you'll have access to most visual enhancement features, including zooms and other visual effects. However, features that are typically captured during the recording process - such as mouse cursor animations and selfie camera - won't be available for imported content.
+Previous  Speaker Notes     Next   Aspect ratio

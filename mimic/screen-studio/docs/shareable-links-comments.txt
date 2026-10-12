@@ -1,0 +1,15 @@
+URL: https://www.screen.studio/guide/shareable-links-comments
+
+Exporting
+Shareable links: comments
+Effectively view and leave comments on shared links, enhancing communication and feedback on your projects.
+How to view comments
+Start by opening the  sharable link  for which you want to view comments.
+Once the link is opened, navigate to the bottom menu and select   Show Comments   or use the left side menu.
+After clicking on that option, all the comments will be displayed.
+How to leave a comment
+In the comments section, locate the field labeled   Write a comment .  Enter your comment in this field.
+Ensure that you set your  username  in the appropriate field.
+If you need to change your username, look for the  pencil icon  to edit your username. Click on it, enter your desired username,
+Once your username is set add your comment. To add a comment use a shortcut  ⌘ + ⏎ . This action will associate your comment with the current timestamp in the video.
+Previous  Shareable links    Next   Saving your project

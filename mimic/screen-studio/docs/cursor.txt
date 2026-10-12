@@ -1,0 +1,19 @@
+URL: https://www.screen.studio/guide/cursor
+
+Look & Feel
+Cursor
+In Screen Studio, you have a variety of options to customize how the cursor appears and behaves in your recording.
+Cursor Settings
+Hide cursor   - Completely removes the cursor from your recording, ideal for presentations or tutorials where the cursor may be distracting.
+Cursor size   - Adjusts the size of the cursor to make it more visible or subtle depending on your needs.
+Cursor type   - Choose between macOS or Touch cursor styles to match your operating system or personal preference. The Touch cursor is mostly used for recordings on iPads and iPhones.
+Always use default system cursor   - Ensures consistency by always using your system’s default cursor, avoiding changes during different actions like text selection.
+Hide cursor if it's not moving   - Automatically hides the cursor when it's idle, keeping your viewers' focus on the main content.
+Loop cursor position   - Near the end of the video, cursor will move back to its initial position. You can use this option to create a perfect loop.
+Advanced Cursor Settings
+Screen Studio provides advanced settings to further refine cursor behavior. Click on  Advanced  in the same menu to toggle the list of additional options.
+Rotate cursor while moving   - Adds a dynamic effect by slightly rotating the cursor, mimicking the natural movement of chasing the mouse.
+Stop cursor movement at the end of the video   - Controls the cursor to stop moving before the video ends, avoiding unwanted captures like stopping the recording.
+Remove cursor shakes   - Useful for eliminating unintended cursor movements, often caused by accessibility tools.
+Optimize original cursor types   - Minimize rapid changes in cursor types during recording to ensure smoother transitions for a better viewer experience.
+Previous  Background    Next   Disable smooth mouse movement

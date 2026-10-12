@@ -1,0 +1,16 @@
+URL: https://www.screen.studio/guide/camera
+
+Look & Feel
+Camera
+If you used a camera during the recording, then you can modify its position and shape visible in the final recording.
+Camera settings
+Hide camera   - If you prefer not to use your camera, you can hide it during recording.
+Position   - You can select the position of your camera in your recording.
+Mirror camera   - Use it to mirror your camera view.
+Roudness   - Allows you to change the roundness of your camera frame.
+Size   - Enables you to change the size of your camera frame.
+Camera during zoom
+There is an additional option to manage the camera size during zoom.
+Usually, when there is a zoom in the recording, we decrease the size of your camera frame to avoid covering the content of your recording.
+You can change the size of the camera during zooms, or you can turn it off to keep the size of your camera frame always the same.
+Previous  Camera Settings    Next   Reactions

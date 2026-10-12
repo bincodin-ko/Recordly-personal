@@ -1,0 +1,9 @@
+URL: https://www.screen.studio/guide/set-volume
+
+Editing project
+Set Volume
+To adjust the sound level of your entire recording or a specific clip in Screen Studio:
+1. Right-click on the part you would like to adjust.
+2. Select Set volume.
+3. Choose the appropriate sound level from the list.
+Previous  Speeding up the video    Next   Scrubber

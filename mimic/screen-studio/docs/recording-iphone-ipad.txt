@@ -1,0 +1,25 @@
+URL: https://www.screen.studio/guide/recording-iphone-ipad
+
+Recording
+Recording iPhone & iPad
+Screen Studio lets you record your iOS or iPadOS device using the USB cable.
+This guide will walk you through how to do this.
+Starting the recording
+First, connect your device to your computer with a USB cable.
+Make sure to use good-quality cable. Also, USB-C to Lightning cable is strongly recommended instead of USB-A to Lightning.
+In some cases, docking stations cannot handle recording the device with a USB cable. If you use a docking station and you’ll not see your device in the next step - try to connect your device directly to your computer.
+After connecting your device, you might see an alert asking if you trust this device. Click   “Trust this device.”   Otherwise, Screen Studio will not be able to record it.
+Then, open Recording Picker as you do with any other recording, and from the Device menu, select your device.
+Then, from the Device menu, select your device:
+You will see “Prepare for recording screen”:
+Before clicking  “Start recording,”  make sure your device is unlocked.
+Make sure to avoid locking your device during the recording.
+Then, start your recording and perform some actions on the device you want to record. You can also record your computer microphone or webcam while you record your device.
+Editing the recording
+After you finish the recording, you can edit it like any other Screen Studio project.
+An additional option in the editor is included, allowing you to choose your preferred iPhone or iPad frame if you wish to change it.
+Some final notes:
+Due to privacy limitations, Screen Studio cannot record your finger taps the same way it can record your mouse clicks and movement in desktop recordings. Because of that - automatic zooms are not supported.
+For similar reasons, no “cursor” is visible on the recording.
+If you want to show the cursor on your device recording, you might consider getting a Bluetooth Mouse and connecting it to your iPhone or iPad instead of using your finger. This way, there will be a circular cursor visible on the recording. Note that Screen Studio will not be able to make its movement smooth like on desktop recordings.
+Previous  iPhone Mirroring    Next   Starting & Finishing the recording

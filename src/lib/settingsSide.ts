@@ -19,7 +19,10 @@ export function loadSettingsSide(): SettingsSide {
 }
 
 let current: SettingsSide | null = null;
-const get = () => (current ??= loadSettingsSide());
+const get = () => {
+	if (current === null) current = loadSettingsSide();
+	return current;
+};
 
 export function setSettingsSide(side: SettingsSide): void {
 	current = side;

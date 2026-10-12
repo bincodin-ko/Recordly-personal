@@ -1,0 +1,16 @@
+URL: https://www.screen.studio/guide/explanation-of-export-settings
+
+Exporting
+Explanation of export settings
+Understanding a few crucial aspects about the export settings can make a huge difference in optimizing your output and export time. This guide covers key aspects to consider when exporting your projects, such as resolution, compression level, frame rate, and file format options.
+Quality (Compression Level)
+The first thing you should know is that the compression level in Screen Studio does not affect the time it takes to export your content. The factors that impact export time are the Frames Per Second (FPS), resolution, and file format (GIF vs. MP4), not the compression level. So, when you're setting compression for your project, know that it won't lengthen your export time. Video compression is the process of making video files smaller while maintaining quality, allowing for efficient storage and transmission.
+Output Size (Resolution)
+Speaking of resolution, it's critical to consider your target audience and platform before selecting it. For example, a 4K resolution export will take four times longer than exporting the same project in HD. While 4K provides more details and a higher quality image, ask yourself: "Do I really need 4K?" If your audience is mainly viewing content on smartphones or tablets, or if you're uploading to a platform that doesn't support 4K, the extra export time may not translate into noticeable benefits for your viewers.
+Export as (File Format)
+Now, let's discuss file formats. The two options you can use are GIF and MP4. Exporting a project as a GIF can take much longer than exporting it as an MP4. This is due to the optimization algorithm GIFs use during export. Therefore, it's predominantly best to use MP4—especially for longer or more complex videos. With GIFs they're best suitable for shorter video segments—perhaps a quick animation or a brief tutorial. We do not recommend creating GIFs that are longer than 1 minute due to the significantly longer export times and large file sizes.
+Frame Rate
+The frame rate, measured in frames per second (FPS), plays a key role in how smooth your video looks. Screen Studio offers various options to set this according to your needs. A higher frame rate, such as 60 FPS, gives your video a smoother and more polished appearance. This is particularly beneficial for high-motion scenarios like gaming videos or online content like tweets, as it commands more attention from viewers. However, more frames mean more data to process, which could extend your export time and result in larger file sizes. Conversely, a lower frame rate, like 24 or 30 FPS, is the standard for most online videos and films. It will take less time to export and will generate smaller file sizes while still appearing smooth to the viewer.
+Wrapping Up
+Deciding how you export your project depends on your specific needs considering the audience, platform, and content type. In Screen Studio, you have various options at your disposal, and understanding them aids you in delivering effectively without wasting additional resources. So, as you prepare to export your next Screen Studio project, keep these tips in mind. Save time, optimize your content, and achieve your goals more efficiently!
+Previous  Exporting the video    Next   Performance Settings

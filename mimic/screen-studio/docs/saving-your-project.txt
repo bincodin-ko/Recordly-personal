@@ -1,0 +1,22 @@
+URL: https://www.screen.studio/guide/saving-your-project
+
+Saving & Sharing project
+Saving your project
+You don’t have to export your recording right away after you finish your recording.
+You can save it to make your edit or export later or even to share it with other Screen Studio users.
+In this guide, we will show you how to do this.
+Saving a project
+Whenever you have your project window open, you can go to the top menu bar and select File and then  Save  or  Save as . You can also use shortcuts  ⌘ + S  for save or  ⌘ + ⇧ + S  for save as.
+When you select  Save , the project will be saved in the default folder for all your projects.
+When you select  Save As , you will be asked to input the direction where you want to save your project.
+💡 Each time you try to close the project without saving changes, a modal will pop up asking if you want to save your project or delete it.
+How to find your previous projects
+To find your previous projects go to the top menu bar and select File and then  Open recent  or  Show previous projects .
+Open recent  will display a list of recently created or edited projects. You can also view your recent projects by right-clicking on the Screen Studio app icon in the dock.
+Show previous projects  will redirect you to an folder where all your projects are saved.
+How to change the default folder for all new projects
+You can change the directory where all Screen Studio projects are saved.
+To do that, select Screen Studio in the top menu bar and then slect Settings, or you can use the shortcut  ⌘ + ,  to directly open settings.
+In the settings under the General tab, you will find the option to change the directory where all your projects will be saved.
+Click on it and select a new directory path.
+Previous  Shareable links: comments    Next   Extracting raw recording files

@@ -1,0 +1,13 @@
+URL: https://www.screen.studio/guide/recording-flag
+
+Recording
+Recording flag
+Marking Recording Flag
+To mark a recording flag during your session, use the default keyboard shortcut  ⌘  ⌥  ⌃ + F  . This will allow you to flag important moments in your recording. You will see these moments marked with a flag on your timeline, which will make it easier to identify key sections for editing.
+Changing Shortcut For Recording Flag
+If you want to change the shortcut for creating a recording flag, follow these steps:
+Go to the top menu bar and click on   Screen Studio
+From the dropdown list, choose   Show Settings
+Once the settings window opens, navigate to the   Shortcuts   tab section
+Find the option   Create recording flag   and modify the shortcut to your preferred key combination
+Previous  Managing recording in progress    Next   Managing Project Settings for New Recordings

@@ -1,0 +1,8 @@
+URL: https://www.screen.studio/guide/setting-up-permissions
+
+Getting started
+Setting up & Permissions
+Upon initial launch, the app will request permission to access accessibility features, the camera, microphone, and screen recording capabilities.
+When you click the button to allow permissions, macOS settings will open.
+Grant permission by toggling on the switch next to Screen Studio.
+Previous  System requirements    Next   Activating Screen Studio

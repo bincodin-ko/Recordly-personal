@@ -1,0 +1,7 @@
+URL: https://www.screen.studio/guide/new-recording
+
+Recording
+New Recording
+Whenever Screen Studio is opened - a new recording modal pops up.
+To open the recording modal when it's closed, use the keyboard shortcut  option +  cmd +  enter  or click the icon in the menu bar.
+Previous  Activating Screen Studio    Next   Recording entire display

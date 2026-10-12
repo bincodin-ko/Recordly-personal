@@ -1,0 +1,27 @@
+URL: https://www.screen.studio/guide/system-requirements
+
+Getting started
+System requirements
+Minimum requirements
+To ensure optimal performance when using Screen Studio, your Mac should meet the following specifications:
+Operating system:
+macOS Ventura 13.1 or later
+Processor:
+One of the following:
+•  Apple M1 or later  (recommended)
+•  Intel-based Mac  from these models:
+▪ MacBook Pro 2018 or later
+▪ MacBook Air 2020 or later
+Memory:
+8GB RAM minimum
+Note:  Performance requirements may vary based on your recording needs. For the best experience across all recording types, we recommend using a Mac with an Apple M1 processor or later.   Checking your Mac specifications
+To verify whether your Mac meets the minimum requirements:
+1. Click the  Apple logo  in the top-left corner of your screen
+2. Select  About This Mac  from the dropdown menu
+3. Review the displayed information for:
+▪ macOS version
+▪ Processor type
+▪ Memory (RAM) amount
+The About This Mac window will show all the specifications you need to compare against the requirements above.
+If your Mac meets these requirements, you're ready to install and use Screen Studio. If not, consider upgrading your hardware or macOS version for the best experience.
+Previous  Instant Zoom    Next   Setting up & Permissions

@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide/manual-zoom
+
+Zooms
+Manual Zoom
+Sometimes, you may want to zoom the area to a different position when a click occurs or set up a zoom for a part of the video without any clicks.
+You can achieve this by using the manual zoom option.
+Manual Zoom Explanation
+Whenever you want to create a manual zoom, create a new zoom on your recording or select an existing zoom and click on it.
+The zoom settings window will appear on the right side of your editor. Select the Manual zoom option.
+The preview of your displayed area will show up with a purple dot in the middle.  Move this dot to the area you want to zoom in on.
+If you want to adjust the zoom level, you can also set the zoom level settings.
+Previous  Auto Zoom    Next   Creating preset

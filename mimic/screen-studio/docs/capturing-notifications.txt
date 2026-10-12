@@ -1,0 +1,9 @@
+URL: https://www.screen.studio/guide/capturing-notifications
+
+Troubleshooting
+Capturing notifications
+Sometimes you may need to capture notifications in a recording. By default, the notifications from the Notification Center are prevented from appearing in your recordings. However, you can easily change that setting whenever you need.
+How to turn notifications on
+To enable capturing notifications, go to System Settings and choose "Notifications" from the menu bar on the left. Next, click on “Allow notifications when mirroring or sharing display”.
+Now, the pop-up notifications will appear in your recordings:
+Previous  Resolving Presets Access Issue    Next   Managing License

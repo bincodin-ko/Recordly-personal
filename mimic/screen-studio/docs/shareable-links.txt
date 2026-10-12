@@ -1,0 +1,25 @@
+URL: https://www.screen.studio/guide/shareable-links
+
+Exporting
+Shareable links
+Share your videos instantly through web links - no downloads or file transfers needed. Your viewers can stream your content directly in their web browser.
+This feature streamlines collaboration by: • Eliminating large file transfers • Providing instant access through any web browser • Reducing storage requirements for viewers • Enabling immediate playback
+How to share my video?
+Quick Share After Recording
+When you finish recording, you'll see a quick share widget in the bottom-left corner of your screen with two simple options:
+Click  Share  to instantly generate a streaming link
+Click  Edit  to make changes before sharing
+Share After Editing
+If you want to polish your video first:
+Select  Edit  in the share widget to open the editor
+Make your desired changes
+Select option to   Export   in the top menu bar and select the shareable link option
+Once the export is completed, a shareable link is generated and opens immediately in your default browser, allowing for easy sharing.
+This is an example shareable link:  https://screen.studio/share/ZwyKdN4t
+💡Please note that currently shareable recordings have a 30 min limit. For longer projects, you’ll need to export them as a file.
+How to manage your shareable links
+To access all your shared videos:
+Click   Screen Studio   in the top menu bar
+Select   Manage Shareable Links
+You will be directed to the  Shareable Links  tab on your dashboard, where you can easily access all the shareable links you have created.
+Previous  Performance Settings    Next   Shareable links: comments

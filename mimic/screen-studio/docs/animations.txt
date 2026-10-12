@@ -1,0 +1,19 @@
+URL: https://www.screen.studio/guide/animations
+
+Look & Feel
+Animations
+In Screen Studio, you have high control over the animation effects of your cursor, screen and cursor movements. This guide will explain each setting available in the   Animation   tab.
+💡 If you start your first recording, the default settings will be sufficient for your use case. However, this option is available for more demanding users.   Motion blur
+To achieve a more cinematic look for your recording, we are adding a motion blur effect to your mouse movements, zooms, and screen movements during the zoom.
+You can adjust the strength of the motion blur using a slider.
+By accessing the advanced settings, you can customize the motion blur for specific animations:
+Cursor movement   -  c hanges the motion blur only for animation of cursor movement.
+Screen zooming in   - affects the blur effect on the screen during the zoom in and out animation.
+Screen moving    - a ffects the blur effect on the screen during the movement while zoomed in.
+Cursor animations
+Cursor animation style   - This option refers to the speed of your cursor movement animations. You can select between:   Smooth  ,   Medium  ,   Rapid   and   None  .
+Screen animation
+By accessing the advanced settings, you can customize the screen animation for specific animations:
+Focused   - Animation stabilizes quickly, making it easier to follow and read the content.
+Smooth   - Animation is more fluid. It's great for more creative content that is not focused on reading.
+Previous  Shortcuts    Next   Copy current frame as an image

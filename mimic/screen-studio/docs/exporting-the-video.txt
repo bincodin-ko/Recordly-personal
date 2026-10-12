@@ -1,0 +1,15 @@
+URL: https://www.screen.studio/guide/exporting-the-video
+
+Exporting
+Exporting the video
+The last step of each recording is the export.
+Once you finish editing your project, you can proceed to export your video. You can do this at any step by clicking on the  Export  button in the top-right corner of the editor.
+Export settings
+Whenever you click on the  Export  button in the editor, the editor settings window will pop up.
+Now, you can decide if you want to export it as a  GIF  or  MP4  and select specific export settings for your recording, such as  frame rate ,  output size , and  quality .
+💡 If you are not sure which settings you are supposed to use, you can find an explanation of each function on the next page.
+Once everything is set up, choose  Export to File  to start exporting and save the file, or  Copy to Clipboard  to export and automatically copy the file to your clipboard.
+After that, you will see the export progress window.
+💡 When you click on the ⓘ symbol, you will be able to view the complete export video path.    Congratulations!
+You have just exported your first Screen Studio project!
+Previous  Sharing preset    Next   Explanation of export settings

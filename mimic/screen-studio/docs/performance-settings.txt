@@ -1,0 +1,11 @@
+URL: https://www.screen.studio/guide/performance-settings
+
+Exporting
+Performance Settings
+Sometimes, you may want to adjust the Performance Settings of the preview mode to optimize your editing experience. This can be done from the menu bar next to the export option.
+By adjusting these settings, you can tailor the preview mode to better suit your editing needs, balancing quality, performance, and power efficiency.
+Performance Settings Options
+Quality  : Selecting this option ensures that the preview video looks exactly the same as the exported video. All features, including motion blur, are enabled in the preview, providing a true representation of the final output.
+Performance  : Choosing this setting disables certain features, such as motion blur, in the preview video. While images and shapes may appear pixelated, this option can result in higher playback frames per second (FPS), making it smoother for real-time editing.
+Power Saving Mode  : By toggling this option on, you can reduce CPU and GPU usage, leading to lower power consumption. However, enabling power saving mode might decrease the frame rate of the preview video, which could affect the fluidity of playback.
+Previous  Explanation of export settings    Next   Shareable links

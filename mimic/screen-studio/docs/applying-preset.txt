@@ -1,0 +1,8 @@
+URL: https://www.screen.studio/guide/applying-preset
+
+Presets
+Applying preset
+How to apply a preset
+Whenever you finish a project or open a new one, you can apply a preset to it.
+To do that, press the   Presets   button in your project, select the preset you want to apply, and confirm it by clicking on it.
+Previous  Creating preset    Next   Sharing preset

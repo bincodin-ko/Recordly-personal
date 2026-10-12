@@ -1,0 +1,18 @@
+URL: https://www.screen.studio/guide/captions
+
+Look & Feel
+Captions
+Screen Studio allows you to generate multilingual captions for your videos using the Whisper AI model, which processes the captions locally on your device. Alternatively, you can utilize Apple Speech Recognition, which also generates transcripts locally through Apple's native speech recognition engine, requiring macOS 26.0 or later. All captions are created based on your voiceover.
+Creating captions
+By default, captions are turned off. If you want to create captions for your recording, open the  Captions  settings.
+💡 Please note that if you didn't record your microphone audio, this option won't be available.   You will have a few options to select:
+AI model to use   - Choose from three models:  Base ,  Small , and  Medium . Base prioritizes speed, Small balances accuracy and speed, and Medium provides the highest accuracy at the cost of processing time and storage.
+Language   - Language should be detected automatically; however, you can choose the specific one to avoid some potential mistakes.
+Prompt   - This is optional, but prompts will help generate an accurate transcript for your recording. It's useful, especially when you are using custom names, such as your product name.
+Once everything is ready click on  Generate transcript  button. This might take a few minutes, especially if you are generating transcripts for longer videos or using a larger AI model.
+Editing captions
+Once the transcript is generated, you will see captions on your video preview, and other options for editing captions will be available.
+You can hide the transcript and adjust caption size in your video.
+To fix errors in the transcript, click  Edit transcript  to open the editor and correct any typos.
+You can also export the transcript as a separate file.
+Previous  Dynamic camera layouts     Next   Background music

@@ -1,0 +1,11 @@
+URL: https://www.screen.studio/guide/instant-zoom
+
+Zooms
+Instant Zoom
+Sometimes, you may want to apply an instant zoom effect without any animations to quickly focus on a specific part of your recording.
+To create an instant zoom, you can either create a new zoom on your recording or select an existing zoom and click on it.
+Once selected, the zoom settings window will appear on the right side of your editor.
+Depending on your preferences for zoom - whether you prefer automatic or manual settings - you can choose the position where you would like the instant zoom to be applied. By toggling on the  Instant Animation.
+If you wish to fine-tune the effect, you also have the option to adjust the zoom level settings.
+This allows you to control how much you want to zoom in on the selected area, ensuring that the focus is exactly where you need it.
+Previous  Installing Screen Studio    Next   System requirements

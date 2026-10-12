@@ -1,0 +1,17 @@
+URL: https://www.screen.studio/guide/adding-editing-zooms
+
+Zooms
+Adding & Editing zooms
+Zooms are the key feature of Screen Studio that allows you to highlight the displayed area of your screen recordings.
+By default, all zooms are created automatically based on your clicks during the recording. However, you have the option to remove them or add your own zooms during the editing process.
+Zoom timeline
+Each zoom is reflected on your Zoom timeline in the editor and is presented as purple blocks.
+Adding new zoom
+To add a new zoom to your recording, simply click on the zoom timeline at the desired location.
+Editing zooms
+To manage the zoom duration, you can drag each zoom edge and adjust its length on the timeline.
+After clicking on a specific zoom, the settings bar will open, allowing you to set the zoom level.
+You can choose between auto zoom (zoom to your clicks) or manual zoom (you select the area to zoom). For more information on zoom types, please refer to the next page.
+Removing zoom
+To disable or remove a zoom, right-click on the zoom you want to remove and select either   Disable   or   Remove  .
+Previous  Copy current frame as an image    Next   Disable Automatic Zooms

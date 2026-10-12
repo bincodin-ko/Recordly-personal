@@ -1,0 +1,12 @@
+URL: https://www.screen.studio/guide
+
+Screen Studio Guide
+Here is the place where you can find basic information about how Screen Studio works.
+If you couldn't find an answer to your question here, please leave us feedback, and we will update it.
+Also, you can contact us directly at  team@screen.studio . We will be happy to help you.
+If it's your first time using Screen Studio, you can watch the video below for a quick overview on how to create your first recording
+Nice to have you on board!  Enjoy.
+Featured guides
+Look & Feel  Dynamic camera layouts
+Zooms  Adding & Editing zooms
+Exporting  Shareable links

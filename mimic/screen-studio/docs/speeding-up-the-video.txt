@@ -1,0 +1,9 @@
+URL: https://www.screen.studio/guide/speeding-up-the-video
+
+Editing project
+Speeding up the video
+To speed up or slow down your whole recording or just a selected fragment in Screen Studio:
+Right-click on the part you want to change.
+Click on the   Set speed    option.
+Choose a new speed from the options provided.
+Previous  Trimming    Next   Set Volume
