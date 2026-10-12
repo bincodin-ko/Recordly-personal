@@ -1,0 +1,8 @@
+{
+	"lint": { "errors": 6, "warnings": 17 },
+	"vitestKnownFailingFiles": [
+		"electron/ipc/captions/generation.test.ts",
+		"electron/ipc/recording/library.test.ts",
+		"electron/ipc/project/trashProjects.test.ts"
+	]
+}

@@ -90,7 +90,9 @@ test("login banner and email expansion work with reduced motion", async ({ page 
 	await page.emulateMedia({ reducedMotion: "reduce" });
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
-	await page.getByRole("button", { name: "Recordly account", exact: true }).click();
+	// The editor's account button is hidden in the personal build; sign in from the dashboard.
+	await page.getByRole("button", { name: "Home", exact: true }).click();
+	await page.getByRole("button", { name: "Sign in", exact: true }).click();
 	const login = page.getByRole("dialog", {
 		name: "Beautiful, shareable screen recordings",
 		exact: true,

@@ -56,6 +56,8 @@ function electronMainCjsGuardPlugin(): Plugin {
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+	// verify runs set a per-worktree cache; node_modules can be shared between worktrees.
+	cacheDir: process.env.RECORDLY_VITE_CACHE_DIR || "node_modules/.vite",
 	plugins: [
 		react(),
 		...(mode === "ui" || process.env.RECORDLY_RENDERER_ONLY === "1"

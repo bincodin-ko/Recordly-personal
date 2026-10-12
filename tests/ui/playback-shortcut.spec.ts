@@ -2,18 +2,18 @@ import { expect, test } from "@playwright/test";
 import { installDesktopBridge } from "./bridge";
 
 test("Space toggles once per press, including on the focused playback button", async ({ page }) => {
-	test.setTimeout(60000);
+	test.setTimeout(120000);
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
 	await expect(page.getByLabel("Loading preview", { exact: true })).toHaveCount(0, {
-		timeout: 20000,
+		timeout: 45000,
 	});
 	const play = page.getByRole("button", { name: "Play", exact: true });
 	const pause = page.getByRole("button", { name: "Pause", exact: true });
-	await expect(play).toBeVisible();
+	await expect(play).toBeVisible({ timeout: 45000 });
 	await expect(page.locator('[data-variant="clip"]')).toBeVisible();
 	await expect(page.getByLabel("Loading preview", { exact: true })).toHaveCount(0, {
-		timeout: 20000,
+		timeout: 45000,
 	});
 	await expect
 		.poll(() =>

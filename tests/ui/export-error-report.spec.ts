@@ -4,6 +4,15 @@ test("export reports preview only technical data and submit explicitly without a
 	page,
 }) => {
 	const reports: unknown[] = [];
+	// The personal build ships without support credentials (no .env), so the reporter would
+	// stay "unavailable". Give this module a fake endpoint; requests are mocked below.
+	await page.route("**/src/lib/feedback/exportErrorReporting.ts*", async (route) => {
+		const response = await route.fetch();
+		const body = (await response.text())
+			.replace("import.meta.env.VITE_SUPABASE_URL?.trim()", '"https://support.test"')
+			.replace("import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim()", '"fixture-key"');
+		await route.fulfill({ response, body });
+	});
 	await page.route("**/functions/v1/submit-export-error", async (route) => {
 		const req = route.request();
 		expect(req.headers().authorization).toBeUndefined();

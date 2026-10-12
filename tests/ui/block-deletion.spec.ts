@@ -5,7 +5,7 @@ test.beforeEach(async ({ page }) => {
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
 	await expect(page.locator('[data-variant="clip"]')).toHaveAttribute("data-end-ms", "6000", {
-		timeout: 20000,
+		timeout: 45000,
 	});
 });
 

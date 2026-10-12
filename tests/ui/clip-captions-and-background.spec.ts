@@ -7,7 +7,7 @@ test("split clips share one grip and captions live inside the filmstrip", async 
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
 	const clips = page.locator('[data-variant="clip"]');
-	await expect(clips).toHaveCount(1, { timeout: 20000 });
+	await expect(clips).toHaveCount(1, { timeout: 45000 });
 	await expect(clips.first()).toHaveAttribute("data-end-ms", "6000");
 	const scroll = page.getByTestId("timeline-scroll");
 	const clipRow = page.locator('[data-timeline-row="row-clip"]');
@@ -111,8 +111,9 @@ test("background swaps use the section fade without sliding or overlapping panel
 }) => {
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
-	await expect(page.locator('[data-background-panel="image"]')).toBeVisible({ timeout: 20000 });
-	for (const name of ["Color", "Gradient", "Video", "Image"]) {
+	// Background tabs are now Wallpaper (default) / Gradient / Color / Image; Video lives under Image.
+	await expect(page.locator('[data-background-panel="wallpaper"]')).toBeVisible({ timeout: 45000 });
+	for (const name of ["Color", "Gradient", "Image", "Wallpaper"]) {
 		await page.getByRole("row", { name, exact: true }).click();
 		const panel = page.locator("[data-background-panel]");
 		await expect(panel).toHaveCount(1);

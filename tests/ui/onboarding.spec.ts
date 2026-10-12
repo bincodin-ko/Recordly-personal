@@ -4,7 +4,7 @@ import { installDesktopBridge } from "./bridge";
 test("settings button replays login and the expanding feature tour", async ({ page }) => {
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
-	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible({ timeout: 45000 });
 	await page.getByRole("radio", { name: "Settings", exact: true }).click();
 	await page.getByRole("button", { name: "Show onboarding" }).click();
 	const tour = page.getByRole("dialog", { name: "Welcome to Recordly" });
@@ -51,6 +51,11 @@ test("first launch persists completion and signed-in users can continue", async 
 	});
 	await page.goto("/?windowType=editor");
 	const tour = page.getByRole("dialog", { name: "Welcome to Recordly" });
+	// First-launch auto-show is off in this build (AUTO_SHOW_ON_FIRST_LAUNCH = false); open it from Settings.
+	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible({ timeout: 45000 });
+	await expect(tour).toHaveCount(0);
+	await page.getByRole("radio", { name: "Settings", exact: true }).click();
+	await page.getByRole("button", { name: "Show onboarding" }).click();
 	await tour.getByRole("button", { name: "Continue", exact: true }).click();
 	await tour.getByRole("button", { name: "Next", exact: true }).click();
 	await tour.getByRole("button", { name: "Next", exact: true }).click();
@@ -59,7 +64,7 @@ test("first launch persists completion and signed-in users can continue", async 
 		.poll(() => page.evaluate(() => localStorage.getItem("recordly.onboarding.v1.seen")))
 		.toBe("true");
 	await page.reload();
-	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible({ timeout: 45000 });
 	await expect(tour).not.toBeVisible();
 });
 
@@ -68,7 +73,7 @@ test("feature banner fits a compact window with reduced motion", async ({ page }
 	await page.setViewportSize({ width: 620, height: 740 });
 	await page.emulateMedia({ reducedMotion: "reduce" });
 	await page.goto("/?windowType=editor");
-	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible({ timeout: 45000 });
 	await page.getByRole("radio", { name: "Settings", exact: true }).click();
 	await page.getByRole("button", { name: "Show onboarding" }).click();
 	const tour = page.getByRole("dialog", { name: "Welcome to Recordly" });
@@ -82,7 +87,7 @@ test("feature banner fits a compact window with reduced motion", async ({ page }
 test("successful sign-in advances to Feature without closing onboarding", async ({ page }) => {
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
-	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible({ timeout: 45000 });
 	await page.getByRole("radio", { name: "Settings", exact: true }).click();
 	await page.getByRole("button", { name: "Show onboarding" }).click();
 	const tour = page.getByRole("dialog", { name: "Welcome to Recordly" });

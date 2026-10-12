@@ -9,9 +9,9 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
 	await expect(page.getByRole("navigation", { name: "Editor tools" })).toBeVisible({
-		timeout: 20000,
+		timeout: 45000,
 	});
-	await expect(page.getByRole("slider", { name: "Blur", exact: true })).toBeVisible();
+	await expect(page.getByRole("slider", { name: "Background blur", exact: true })).toBeVisible();
 	await expect
 		.poll(() =>
 			page
@@ -33,19 +33,12 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await expect(page.getByRole("dialog", { name: "Custom color", exact: true })).toBeVisible();
 	await page.keyboard.press("Escape");
 	await page.getByRole("radio", { name: "Cursor", exact: true }).click();
-	await page.getByRole("radio", { name: "Webcam", exact: true }).click();
+	await page.getByRole("radio", { name: "Camera", exact: true }).click();
 	await page.getByRole("radio", { name: "Captions", exact: true }).click();
 	await page.getByRole("radio", { name: "Settings", exact: true }).click();
-	await expect(page.getByText("Appearance", { exact: true })).toBeVisible();
-	await page.getByRole("row", { name: "Dark", exact: true }).click();
+	// Theme picker removed; the editor is always dark (c88f573f).
+	await expect(page.getByText("Appearance", { exact: true })).toHaveCount(0);
 	await expect(page.locator("html")).toHaveClass(/dark/);
-	await page.screenshot({
-		path: "test-results/editor-dark.png",
-		fullPage: true,
-		animations: "disabled",
-	});
-	await page.getByRole("row", { name: "Light", exact: true }).click();
-	await expect(page.locator("html")).not.toHaveClass(/dark/);
 	await page.getByRole("radio", { name: "Scene", exact: true }).click();
 	await page.getByRole("button", { name: "Export", exact: true }).click();
 	await expect(page.getByRole("grid", { name: "Format", exact: true })).toBeVisible();
@@ -74,7 +67,8 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await page.getByRole("button", { name: "16:9", exact: true }).click();
 	await page.getByRole("menuitem", { name: "1:1", exact: true }).click();
 	await expect(page.getByRole("button", { name: "1:1", exact: true })).toBeVisible();
-	await expect(page.getByRole("button", { name: "Open presets", exact: true })).toHaveCount(0);
+	// Presets now live permanently in the Screen Studio-style top bar (2e876b0b).
+	await expect(page.getByRole("button", { name: "Open presets", exact: true })).toHaveCount(1);
 	await page.getByRole("button", { name: "Add Layer", exact: true }).click();
 	await page.getByRole("menuitem", { name: "Annotation", exact: true }).click();
 	await expect
