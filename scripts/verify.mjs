@@ -24,7 +24,7 @@ function run(name, args, env = {}) {
 	process.stdout.write(`verify: ${name} ... `);
 	const r = spawnSync(process.execPath, args, {
 		cwd: root,
-		env: { ...process.env, FORCE_COLOR: "0", NO_COLOR: "1", ...env },
+		env: { ...process.env, FORCE_COLOR: "0", ...env },
 		encoding: "utf8",
 		maxBuffer: 256 * 1024 * 1024,
 	});
