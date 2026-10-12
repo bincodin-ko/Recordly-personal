@@ -7,7 +7,10 @@ test("feedback preserves a draft on failure, supports attachments, and includes 
 	await installDesktopBridge(page);
 	await page.addInitScript(() => sessionStorage.setItem("recordly.demo-session", "1"));
 	await page.goto("/?windowType=editor");
-	await page.getByRole("button", { name: "Feedback", exact: true }).click();
+	// The editor layout (2e876b0b) no longer has a Feedback button; it lives in the dashboard sidebar.
+	await page.getByRole("button", { name: "Home", exact: true }).click();
+	const dashboard = page.getByRole("dialog", { name: "Projects dashboard", exact: true });
+	await dashboard.getByRole("button", { name: "Feedback", exact: true }).click();
 	const modal = page.getByRole("dialog", { name: "Send feedback", exact: true });
 	await modal.getByLabel("Subject", { exact: true }).fill("Export stops early");
 	await modal
@@ -37,10 +40,6 @@ test("feedback preserves a draft on failure, supports attachments, and includes 
 	await expect(modal.getByRole("alert")).toHaveCount(0);
 	await page.screenshot({ path: "test-results/feedback.png" });
 	await modal.getByRole("button", { name: "Close", exact: true }).click();
-	await page.getByRole("button", { name: "Home", exact: true }).click();
-	await page
-		.getByRole("dialog", { name: "Projects dashboard", exact: true })
-		.getByRole("button", { name: "Feedback", exact: true })
-		.click();
+	await dashboard.getByRole("button", { name: "Feedback", exact: true }).click();
 	await expect(page.getByRole("dialog", { name: "Send feedback", exact: true })).toBeVisible();
 });

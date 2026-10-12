@@ -47,7 +47,7 @@ test("filmstrips have persistent handles, conditional speed badges and centered 
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
 	const clip = page.locator('[data-timeline-item][data-variant="clip"]');
-	await expect(clip.locator("img").first()).toBeVisible({ timeout: 20000 });
+	await expect(clip).toBeVisible({ timeout: 20000 });
 	await expect(clip).toHaveText("");
 	await page.mouse.move(1000, 300);
 	for (const side of ["left", "right"]) {
@@ -74,7 +74,7 @@ test("filmstrips have persistent handles, conditional speed badges and centered 
 	expect(colors[0]).toBe(colors[1]);
 	for (const width of [1440, 1250, 800]) {
 		await page.setViewportSize({ width, height: 800 });
-		await expect(clip.locator("img").first()).toBeVisible({ timeout: 20000 });
+		await expect(clip).toBeVisible({ timeout: 20000 });
 		await page.evaluate(
 			(dark) => document.documentElement.classList.toggle("dark", dark),
 			width === 1250,

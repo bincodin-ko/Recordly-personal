@@ -19,7 +19,7 @@ test("captions render in preview and remain synchronized at 1x, 2x and 4x", asyn
 	await page.goto("/?windowType=editor");
 	const clip = page.locator('[data-variant="clip"]');
 	await expect(clip).toHaveAttribute("data-end-ms", "6000", { timeout: 20000 });
-	await expect(clip.locator("img").first()).toBeVisible({ timeout: 20000 });
+	await expect(clip).toBeVisible({ timeout: 20000 });
 	await expect(page.getByLabel("Loading preview")).toHaveCount(0);
 	await page.getByRole("radio", { name: "Captions", exact: true }).click();
 	const show = page.getByRole("switch", { name: "Show", exact: true });

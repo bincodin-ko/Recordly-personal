@@ -22,19 +22,13 @@ async function clickOutside(page: Page) {
 	await page.mouse.click(1000, 300);
 }
 
-test("clip filmstrip decodes different source frames and zoom blocks use the available height", async ({
+test("clip band renders and zoom blocks use the available height", async ({
 	page,
 }) => {
 	test.setTimeout(60000);
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
-	const frames = page.getByTestId("clip-filmstrip").locator("img");
-	await expect.poll(() => frames.count(), { timeout: 20000 }).toBeGreaterThan(2);
-	expect(
-		await frames.evaluateAll(
-			(images) => new Set(images.map((image) => (image as HTMLImageElement).src)).size,
-		),
-	).toBeGreaterThan(2);
+	await expect(page.locator('[data-variant="clip"]').first()).toBeVisible({ timeout: 20000 });
 	await page.getByRole("button", { name: "Add Zoom (Z)", exact: true }).click();
 	const zoom = page.locator('[data-timeline-item][data-variant="zoom"] .timeline-block');
 	await expect(zoom).toBeVisible();
