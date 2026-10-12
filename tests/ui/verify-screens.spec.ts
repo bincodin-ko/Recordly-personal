@@ -61,7 +61,7 @@ for (const viewport of [
 		test("command menu", async ({ page }) => {
 			await openEditor(page);
 			await page.locator("body").click({ position: { x: 5, y: 5 } });
-			await page.keyboard.press("ControlOrMeta+k");
+			await page.keyboard.press("Meta+k"); // bridge reports macOS, so the shortcut is Cmd+K
 			await expect(page.getByRole("dialog").first()).toBeVisible();
 			await shot(page, "command-menu");
 		});
