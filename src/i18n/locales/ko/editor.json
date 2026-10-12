@@ -293,7 +293,7 @@
 	},
 	"openRecordingsFolder": "녹화 폴더 열기",
 	"theme": {
-		"appearance": "화면 테마",
+		"appearance": "화면 밝기",
 		"light": "라이트",
 		"dark": "다크",
 		"system": "시스템"
@@ -585,5 +585,10 @@
 		"generating": "만드는 중…",
 		"failed": "보이스오버를 만들지 못했어요.",
 		"added": "재생 위치에 보이스오버를 넣었어요({{seconds}}초)."
+	},
+	"settingsSide": {
+		"label": "설정 칸 위치",
+		"left": "왼쪽",
+		"right": "오른쪽"
 	}
 }

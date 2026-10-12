@@ -13,7 +13,9 @@ interface ThemeContextValue {
 	toggleTheme: () => void;
 }
 
-const THEME_STORAGE_KEY = "recordly.theme";
+const isEditorWindow = () => !!globalThis.location?.search?.includes("windowType=editor");
+// The editor keeps its own preference (default dark) so other windows are unaffected.
+const THEME_STORAGE_KEY = isEditorWindow() ? "recordly.editorTheme" : "recordly.theme";
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
@@ -31,7 +33,7 @@ export function loadThemePreference(): ThemePreference {
 	} catch {
 		// Ignore storage errors
 	}
-	return "system";
+	return isEditorWindow() ? "dark" : "system";
 }
 
 export function persistThemePreference(pref: ThemePreference): void {
@@ -45,8 +47,6 @@ export function persistThemePreference(pref: ThemePreference): void {
 }
 
 function resolveTheme(pref: ThemePreference): ResolvedTheme {
-	// Editor is dark-only (Screen Studio look).
-	if (globalThis.location?.search?.includes("windowType=editor")) return "dark";
 	if (pref === "system") {
 		return globalThis.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 	}
