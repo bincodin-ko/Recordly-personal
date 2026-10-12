@@ -35,7 +35,8 @@ test("editor inspector and playback controls fit a smaller desktop", async ({ pa
 		page.getByRole("radiogroup", { name: "Motion Presets", exact: true }),
 	).toBeVisible();
 	await page.getByText("Smooth", { exact: true }).click();
-	await expect(page.getByRole("radio", { name: "Smooth", exact: true })).toBeChecked();
+	// The preset radio's accessible name now includes its description.
+	await expect(page.getByRole("radio", { name: /^Smooth/ })).toBeChecked();
 	await expect
 		.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth))
 		.toBe(true);

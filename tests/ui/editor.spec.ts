@@ -36,16 +36,9 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await page.getByRole("radio", { name: "Camera", exact: true }).click();
 	await page.getByRole("radio", { name: "Captions", exact: true }).click();
 	await page.getByRole("radio", { name: "Settings", exact: true }).click();
-	await expect(page.getByText("Appearance", { exact: true })).toBeVisible();
-	await page.getByRole("row", { name: "Dark", exact: true }).click();
+	// Theme picker removed; the editor is always dark (c88f573f).
+	await expect(page.getByText("Appearance", { exact: true })).toHaveCount(0);
 	await expect(page.locator("html")).toHaveClass(/dark/);
-	await page.screenshot({
-		path: "test-results/editor-dark.png",
-		fullPage: true,
-		animations: "disabled",
-	});
-	await page.getByRole("row", { name: "Light", exact: true }).click();
-	await expect(page.locator("html")).not.toHaveClass(/dark/);
 	await page.getByRole("radio", { name: "Scene", exact: true }).click();
 	await page.getByRole("button", { name: "Export", exact: true }).click();
 	await expect(page.getByRole("grid", { name: "Format", exact: true })).toBeVisible();

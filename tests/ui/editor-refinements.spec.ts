@@ -118,7 +118,8 @@ test("populated project and preset popovers fit long names and dismiss outside",
 		});
 	});
 	await page.getByRole("button", { name: "Home", exact: true }).click();
-	const projects = page.getByRole("dialog", { name: "Projects", exact: true });
+	// Home now opens the full Projects dashboard instead of a popover.
+	const projects = page.getByRole("dialog", { name: "Projects dashboard", exact: true });
 	await expect(projects.getByRole("button", { name: /A very long project name/ })).toHaveCount(5);
 	await expectButtonsFit(projects);
 	await page.screenshot({
