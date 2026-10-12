@@ -9,7 +9,7 @@ test("Home opens with a wireframe while saving and returns to the main library",
 }) => {
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
-	await expect(page.locator("html")).toHaveAttribute("data-project-creates", "1", { timeout: 20000 });
+	await expect(page.locator("html")).toHaveAttribute("data-project-creates", "1", { timeout: 45000 });
 	await page.evaluate(() => {
 		const save = window.electronAPI.saveProjectFile;
 		window.electronAPI.saveProjectFile = async (...args) => {

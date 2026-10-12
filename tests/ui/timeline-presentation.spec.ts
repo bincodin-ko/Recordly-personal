@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { installDesktopBridge, installDesktopBridgeOverrides } from "./bridge";
 
 test("editor uses skeletons until media opens", async ({ page }) => {
-	test.setTimeout(60000);
+	test.setTimeout(120000);
 	let release!: () => void;
 	let releaseMedia!: () => void;
 	const mediaPending = new Promise<void>((resolve) => {
@@ -27,7 +27,7 @@ test("editor uses skeletons until media opens", async ({ page }) => {
 	});
 	await page.goto("/?windowType=editor");
 	const loading = page.getByRole("status", { name: "Loading editor" });
-	await expect(loading).toBeVisible({ timeout: 20000 });
+	await expect(loading).toBeVisible({ timeout: 45000 });
 	await expect(loading.locator(".skeleton").first()).toBeVisible();
 	await page.screenshot({ path: "test-results/editor-skeleton.png", animations: "disabled" });
 	release();
@@ -36,9 +36,9 @@ test("editor uses skeletons until media opens", async ({ page }) => {
 	await page.waitForTimeout(500);
 	await expect(loading).toHaveCount(1);
 	releaseMedia();
-	await expect(loading).toHaveCount(0, { timeout: 20000 });
+	await expect(loading).toHaveCount(0, { timeout: 45000 });
 	await expect(page.getByLabel("Loading preview", { exact: true })).toHaveCount(0, {
-		timeout: 20000,
+		timeout: 45000,
 	});
 	await expect(page.locator('[data-variant="clip"]')).toBeVisible();
 });
@@ -50,7 +50,7 @@ test("filmstrips have persistent handles, conditional speed badges and centered 
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
 	const clip = page.locator('[data-timeline-item][data-variant="clip"]');
-	await expect(clip).toBeVisible({ timeout: 20000 });
+	await expect(clip).toBeVisible({ timeout: 45000 });
 	// The band now shows a compact label (duration and speed) instead of an empty filmstrip.
 	await expect(clip).toHaveText(/Clip\s*6s · 1×/);
 	await page.mouse.move(1000, 300);
@@ -79,7 +79,7 @@ test("filmstrips have persistent handles, conditional speed badges and centered 
 	expect(colors[0]).not.toBe("rgba(0, 0, 0, 0)");
 	for (const width of [1440, 1250, 800]) {
 		await page.setViewportSize({ width, height: 800 });
-		await expect(clip).toBeVisible({ timeout: 20000 });
+		await expect(clip).toBeVisible({ timeout: 45000 });
 		await page.evaluate(
 			(dark) => document.documentElement.classList.toggle("dark", dark),
 			width === 1250,

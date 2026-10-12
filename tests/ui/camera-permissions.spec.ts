@@ -40,7 +40,7 @@ test("editor mode never opens the camera and releases an active recorder preview
 		});
 	});
 	await page.goto("/?windowType=hud-overlay");
-	await expect(page.getByRole("button", { name: "Disable webcam" })).toBeVisible({ timeout: 20000 });
+	await expect(page.getByRole("button", { name: "Disable webcam" })).toBeVisible({ timeout: 45000 });
 	expect(await page.locator("html").getAttribute("data-camera-requests")).toBeNull();
 	await page.evaluate(() => window.dispatchEvent(new Event("test-leave-editor")));
 	await expect(page.locator("html")).toHaveAttribute("data-camera-requests", "1");

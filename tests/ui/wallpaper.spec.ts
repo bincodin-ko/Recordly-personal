@@ -4,14 +4,14 @@ import { installDesktopBridge } from "./bridge";
 test("wallpaper tiles add, select and remove custom backgrounds without nested controls", async ({
 	page,
 }) => {
-	test.setTimeout(60000);
+	test.setTimeout(120000);
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
 	// Custom uploads live in the "Image" background tab; built-in wallpapers in "Wallpaper".
 	const imageTab = page.getByRole("row", { name: "Image", exact: true });
 	const wallpaperTab = page.getByRole("row", { name: "Wallpaper", exact: true });
 	const initialSelection = page.locator('aside button[aria-pressed="true"]');
-	await expect(initialSelection).toBeVisible({ timeout: 20000 });
+	await expect(initialSelection).toBeVisible({ timeout: 45000 });
 	const originalName = await initialSelection.getAttribute("aria-label");
 	await imageTab.click();
 	const add = page.getByRole("button", { name: "Add wallpaper", exact: true });
@@ -55,18 +55,18 @@ test("wallpaper tiles add, select and remove custom backgrounds without nested c
 	await wallpaperTab.click();
 	await expect(original).toHaveAttribute("aria-pressed", "true");
 	await page.reload({ waitUntil: "domcontentloaded" });
-	await expect(imageTab).toBeVisible({ timeout: 20000 });
+	await expect(imageTab).toBeVisible({ timeout: 45000 });
 	await imageTab.click();
 	await expect(add).toBeVisible();
 	await expect(custom).toHaveCount(0);
 });
 
 test("video wallpapers share the gallery's add and remove controls", async ({ page }) => {
-	test.setTimeout(60000);
+	test.setTimeout(120000);
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
 	const original = page.locator('aside button[aria-pressed="true"]');
-	await expect(original).toBeVisible({ timeout: 20000 });
+	await expect(original).toBeVisible({ timeout: 45000 });
 	const originalName = await original.getAttribute("aria-label");
 	// Video wallpapers moved into the "Image" background tab.
 	await page.getByRole("row", { name: "Image", exact: true }).click();

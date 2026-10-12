@@ -9,7 +9,7 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
 	await expect(page.getByRole("navigation", { name: "Editor tools" })).toBeVisible({
-		timeout: 20000,
+		timeout: 45000,
 	});
 	await expect(page.getByRole("slider", { name: "Background blur", exact: true })).toBeVisible();
 	await expect

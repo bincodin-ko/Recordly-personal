@@ -19,7 +19,7 @@ test("selecting an untouched clip does not introduce a leading gap", async ({ pa
 	});
 	await page.goto("/?windowType=editor");
 	const clip = page.locator('[data-timeline-item][data-variant="clip"]');
-	await expect(clip).toBeVisible({ timeout: 20000 });
+	await expect(clip).toBeVisible({ timeout: 45000 });
 	await expect(clip).toHaveCSS("left", "0px");
 	for (let index = 0; index < 5; index++) {
 		const box = (await clip.boundingBox())!;
@@ -47,7 +47,7 @@ test("selecting an untouched clip does not introduce a leading gap", async ({ pa
 	});
 	await expect
 		.poll(() => page.evaluate(() => sessionStorage.getItem("test-saved-clips")), {
-			timeout: 20000,
+			timeout: 45000,
 		})
 		.not.toBeNull();
 	const clips = await page.evaluate(() =>

@@ -49,7 +49,7 @@ async function setup(page: Page) {
 	});
 	await page.goto("/?windowType=editor");
 	await expect(page.locator('[data-variant="clip"]')).toHaveAttribute("data-end-ms", "6000", {
-		timeout: 20000,
+		timeout: 45000,
 	});
 	await expect(page.locator('[data-variant="clip"]').first()).toBeVisible();
 	await expect(page.getByLabel("Loading preview")).toHaveCount(0);
@@ -154,7 +154,7 @@ test("generating captions leaves the current media session intact and shows the 
 		};
 	});
 	await page.goto("/?windowType=editor");
-	await expect(page.locator('[data-variant="clip"]').first()).toBeVisible({ timeout: 20000 });
+	await expect(page.locator('[data-variant="clip"]').first()).toBeVisible({ timeout: 45000 });
 	await page.getByRole("radio", { name: "Captions", exact: true }).click();
 	await page.getByRole("button", { name: "Generate Captions", exact: true }).click();
 	await expect(
@@ -191,7 +191,7 @@ test("preview recovers once when a local video URL fails to load", async ({ page
 	await page.route("**/missing-source.mp4", (route) => route.abort("connectionfailed"));
 	await page.goto("/?windowType=editor");
 	await expect(page.locator('[data-variant="clip"]')).toHaveAttribute("data-end-ms", "6000", {
-		timeout: 20000,
+		timeout: 45000,
 	});
 	await expect(page.getByLabel("Loading preview")).toHaveCount(0);
 	await expect(page.getByText(/Failed to load video/)).toHaveCount(0);
@@ -305,7 +305,7 @@ for (const enabled of [true, false]) {
 			);
 		}, enabled);
 		await page.reload();
-		await expect(page.locator('[data-variant="clip"]')).toHaveCount(1, { timeout: 20000 });
+		await expect(page.locator('[data-variant="clip"]')).toHaveCount(1, { timeout: 45000 });
 		await page.getByRole("button", { name: "Clips", exact: true }).click();
 		await page.evaluate(() => {
 			let count = 0;

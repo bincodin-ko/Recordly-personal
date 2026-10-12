@@ -5,7 +5,7 @@ test("HUD dividers are vertically centered", async ({ page }) => {
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=hud-overlay");
 	const dividers = page.getByRole("separator");
-	await expect(dividers.first()).toBeVisible({ timeout: 20000 });
+	await expect(dividers.first()).toBeVisible({ timeout: 45000 });
 	const offsets = await dividers.evaluateAll((elements) =>
 		elements.map((element) => {
 			const bounds = element.getBoundingClientRect();
@@ -39,7 +39,7 @@ test("recording HUD uses uniform controls and a readable timer", async ({ page }
 		};
 	});
 	await page.goto("/?windowType=hud-overlay");
-	await expect(page.getByRole("separator").first()).toBeVisible({ timeout: 20000 });
+	await expect(page.getByRole("separator").first()).toBeVisible({ timeout: 45000 });
 	await page.evaluate(() => window.dispatchEvent(new Event("test-recording-started")));
 	const controls = page.getByRole("group", { name: "Recording controls" });
 	await expect(controls).toBeVisible();

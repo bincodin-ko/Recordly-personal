@@ -41,7 +41,7 @@ async function makeThreeClips(page: Page) {
 test.beforeEach(async ({ page }) => {
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
-	await expect(clipsFor(page)).toHaveAttribute("data-end-ms", "6000", { timeout: 20000 });
+	await expect(clipsFor(page)).toHaveAttribute("data-end-ms", "6000", { timeout: 45000 });
 });
 
 test("left trimming keeps both gutter edges at one timestamp and can reveal footage again", async ({

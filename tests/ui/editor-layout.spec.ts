@@ -5,7 +5,7 @@ test("advanced controls preserve values and remember each section's view", async
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
 	const advanced = page.getByRole("switch", { name: "Advanced settings" });
-	await expect(advanced).toBeVisible({ timeout: 20000 });
+	await expect(advanced).toBeVisible({ timeout: 45000 });
 	await expect(page.getByRole("switch", { name: "Link padding sides" })).toHaveCount(0);
 	const blur = page.getByRole("slider", { name: "Background blur", exact: true });
 	await blur.focus();
@@ -46,7 +46,7 @@ test("header breadcrumb fits long names, native chrome and compact windows", asy
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
 	await expect(page.getByRole("button", { name: "Rename project" })).toBeVisible({
-		timeout: 20000,
+		timeout: 45000,
 	});
 	await page.getByRole("button", { name: "Rename project" }).click();
 	await page

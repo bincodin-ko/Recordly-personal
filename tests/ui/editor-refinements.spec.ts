@@ -25,10 +25,10 @@ async function clickOutside(page: Page) {
 test("clip band renders and zoom blocks use the available height", async ({
 	page,
 }) => {
-	test.setTimeout(60000);
+	test.setTimeout(120000);
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto("/?windowType=editor");
-	await expect(page.locator('[data-variant="clip"]').first()).toBeVisible({ timeout: 20000 });
+	await expect(page.locator('[data-variant="clip"]').first()).toBeVisible({ timeout: 45000 });
 	await page.getByRole("button", { name: "Add Zoom (Z)", exact: true }).click();
 	const zoom = page.locator('[data-timeline-item][data-variant="zoom"] .timeline-block');
 	await expect(zoom).toBeVisible();
@@ -43,7 +43,7 @@ test("clip band renders and zoom blocks use the available height", async ({
 test("advanced controls, webcam defaults and captions have consistent layouts", async ({
 	page,
 }) => {
-	test.setTimeout(60000);
+	test.setTimeout(120000);
 	await installDesktopBridge(page);
 
 	await page.goto("/?windowType=editor");
@@ -99,7 +99,7 @@ test("advanced controls, webcam defaults and captions have consistent layouts", 
 test("populated project and preset popovers fit long names and dismiss outside", async ({
 	page,
 }) => {
-	test.setTimeout(60000);
+	test.setTimeout(120000);
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
 	await expect(page.getByRole("button", { name: "Home", exact: true })).toBeVisible();

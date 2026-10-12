@@ -11,7 +11,9 @@ async function open(page: Page, windowType: string) {
 	await page.addInitScript(() => {
 		try {
 			localStorage.setItem("recordly.locale", "ko");
-		} catch {}
+		} catch {
+			// storage unavailable (e.g. about:blank)
+		}
 	});
 	await installDesktopBridge(page, "filmstrip.mp4");
 	await page.goto(`/?windowType=${windowType}`);
