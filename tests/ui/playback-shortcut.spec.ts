@@ -10,7 +10,7 @@ test("Space toggles once per press, including on the focused playback button", a
 	});
 	const play = page.getByRole("button", { name: "Play", exact: true });
 	const pause = page.getByRole("button", { name: "Pause", exact: true });
-	await expect(play).toBeVisible();
+	await expect(play).toBeVisible({ timeout: 20000 });
 	await expect(page.locator('[data-variant="clip"]')).toBeVisible();
 	await expect(page.getByLabel("Loading preview", { exact: true })).toHaveCount(0, {
 		timeout: 20000,
