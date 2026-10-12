@@ -235,7 +235,12 @@
 		"title": "편집 도구",
 		"ariaLabel": "설정 섹션",
 		"clip": "클립",
-		"audio": "오디오"
+		"audio": "오디오",
+		"general": "일반",
+		"motion": "움직임",
+		"recording": "녹화",
+		"files": "파일",
+		"advanced": "고급"
 	},
 	"captions": {
 		"selectOnTimeline": "타임라인에서 자막을 선택해 편집하세요.",

@@ -235,7 +235,12 @@
 		"title": "Editor tools",
 		"ariaLabel": "Settings sections",
 		"clip": "Clipe",
-		"audio": "Áudio"
+		"audio": "Áudio",
+		"general": "General",
+		"motion": "Motion",
+		"recording": "Recording",
+		"files": "Files",
+		"advanced": "Advanced"
 	},
 	"captions": {
 		"selectOnTimeline": "Selecione uma legenda na linha do tempo para editá-la.",

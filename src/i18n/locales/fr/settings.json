@@ -235,7 +235,12 @@
 		"title": "Editor tools",
 		"ariaLabel": "Settings sections",
 		"clip": "Clip",
-		"audio": "Audio"
+		"audio": "Audio",
+		"general": "General",
+		"motion": "Motion",
+		"recording": "Recording",
+		"files": "Files",
+		"advanced": "Advanced"
 	},
 	"captions": {
 		"selectOnTimeline": "Sélectionnez un sous-titre sur la timeline pour le modifier.",

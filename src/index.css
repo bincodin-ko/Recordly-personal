@@ -237,7 +237,8 @@ html[data-window-type="editor"].dark {
 	--border: rgba(255, 255, 255, 0.06);
 	--separator: rgba(255, 255, 255, 0.06);
 	--segment: #2a2a31;
-	--accent-soft: rgba(91, 69, 245, 0.2);
+	--accent-soft: rgba(91, 69, 245, 0.28);
+	--accent-soft-foreground: #cfc6ff;
 	--accent-hover: #6f5cf7;
 	--link: #8b7bff;
 	--backdrop: rgba(0, 0, 0, 0.65);

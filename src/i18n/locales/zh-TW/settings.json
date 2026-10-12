@@ -235,7 +235,12 @@
 		"title": "Editor tools",
 		"ariaLabel": "Settings sections",
 		"clip": "片段",
-		"audio": "音訊"
+		"audio": "音訊",
+		"general": "General",
+		"motion": "Motion",
+		"recording": "Recording",
+		"files": "Files",
+		"advanced": "Advanced"
 	},
 	"captions": {
 		"selectOnTimeline": "在時間軸上選擇字幕進行編輯。",

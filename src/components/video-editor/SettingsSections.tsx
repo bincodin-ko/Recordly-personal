@@ -35,11 +35,11 @@ export function SettingsSections({
 				>
 					{categories.map((category) => (
 						<ChoiceItem key={category} value={category}>
-							{labels[category]}
+							{translate(`settings.sections.${category}`, labels[category])}
 						</ChoiceItem>
 					))}
 				</ChoiceGroup>
-				<div role="region" aria-label={`${labels[active]} settings`} className="space-y-6">
+				<div role="region" aria-label={translate(`settings.sections.${active}`, labels[active])} className="space-y-6">
 					{children}
 				</div>
 			</div>

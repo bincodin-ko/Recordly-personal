@@ -2,8 +2,8 @@ import {
 	House,
 	SidebarSimple,
 	FilmStrip,
-	ArrowClockwise as Redo2,
-	ArrowCounterClockwise as Undo2,
+	RedoArrow as Redo2,
+	UndoArrow as Undo2,
 } from "@/components/ui/icons";
 import type { CSSProperties, FormEvent, RefObject } from "react";
 import { Button } from "@/components/ui/button";
