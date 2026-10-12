@@ -152,6 +152,24 @@ export async function installDesktopBridge(page: Page, videoFixture = "preview.m
 					document.documentElement.dataset.updateDismissed = "true";
 					return { success: true };
 				},
+				// Added in stages 1-7 and called without optional chaining on mount.
+				onVoiceoverProgress: subscribe,
+				getVoiceoverOptions: async () => ({
+					defaultEngine: "qwen",
+					gpu: false,
+					voices: { qwen: ["Default"], supertonic: ["Default"] },
+				}),
+				getRecordingFlags: async () => [],
+				getRecordingKeystrokes: async () => [],
+				getRecordingTypingTimes: async () => [],
+				getAudioSyncOffset: async () => 0,
+				setAudioSyncOffset: async (value: number) => value,
+				togglePrompterWindow: async () => true,
+				listAssetDirectory: async () => ({ success: true, files: [] }),
+				quickExportGetVideo: async () => `${location.origin}/tests/ui/fixtures/${videoFixture}`,
+				quickExportSave: async () => ({ success: true, canceled: true }),
+				quickExportCopy: success,
+				quickExportClose: async () => undefined,
 				...window.electronAPI,
 			},
 		});
