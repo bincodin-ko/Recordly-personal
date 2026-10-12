@@ -1,6 +1,10 @@
 import type { Page } from "@playwright/test";
 export async function installDesktopBridge(page: Page, videoFixture = "preview.mp4") {
 	await page.addInitScript((videoFixture) => {
+		// Specs assert English labels; the app defaults to Korean. A spec can set its own locale first.
+		try {
+			if (!localStorage.getItem("recordly.locale")) localStorage.setItem("recordly.locale", "en");
+		} catch {}
 		const success = async () => ({ success: true });
 		const subscribe = () => () => undefined;
 		const source = {

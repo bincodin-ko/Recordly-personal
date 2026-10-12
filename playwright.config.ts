@@ -17,6 +17,9 @@ const baseURL = `http://127.0.0.1:${port}`;
 export default defineConfig({
 	testDir: "./tests/ui",
 	timeout: 30000,
+	// The editor decodes video in every test; more workers starve each other (and a parallel worktree run).
+	workers: Number(process.env.VERIFY_WORKERS) || 3,
+	retries: 1,
 	use: {
 		baseURL,
 		viewport: { width: 1440, height: 1000 },
