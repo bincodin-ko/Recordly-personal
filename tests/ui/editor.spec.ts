@@ -11,7 +11,7 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await expect(page.getByRole("navigation", { name: "Editor tools" })).toBeVisible({
 		timeout: 20000,
 	});
-	await expect(page.getByRole("slider", { name: "Blur", exact: true })).toBeVisible();
+	await expect(page.getByRole("slider", { name: "Background blur", exact: true })).toBeVisible();
 	await expect
 		.poll(() =>
 			page
@@ -33,7 +33,7 @@ test("editor loads video, switches tools and edits export options", async ({ pag
 	await expect(page.getByRole("dialog", { name: "Custom color", exact: true })).toBeVisible();
 	await page.keyboard.press("Escape");
 	await page.getByRole("radio", { name: "Cursor", exact: true }).click();
-	await page.getByRole("radio", { name: "Webcam", exact: true }).click();
+	await page.getByRole("radio", { name: "Camera", exact: true }).click();
 	await page.getByRole("radio", { name: "Captions", exact: true }).click();
 	await page.getByRole("radio", { name: "Settings", exact: true }).click();
 	await expect(page.getByText("Appearance", { exact: true })).toBeVisible();

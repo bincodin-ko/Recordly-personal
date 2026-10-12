@@ -25,7 +25,7 @@ for (const savedRoundness of [undefined, 69]) {
 			savedRoundness,
 		);
 		await page.goto("/?windowType=editor");
-		await page.getByRole("radio", { name: "Webcam", exact: true }).click();
+		await page.getByRole("radio", { name: "Camera", exact: true }).click();
 		const expected = savedRoundness ?? 100;
 		await expect(page.getByRole("slider", { name: "Webcam Roundness" })).toHaveValue(
 			String(expected),

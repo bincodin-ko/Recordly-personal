@@ -119,7 +119,7 @@ test("Clips supports selection, remove all, undo and real timeline drag insertio
 	await page.screenshot({ path: "test-results/videos-panel.png", animations: "disabled" });
 	await page.getByRole("radio", { name: "Scene", exact: true }).click();
 	await expect(panel).toHaveCount(0);
-	await expect(page.getByRole("slider", { name: "Blur", exact: true })).toBeVisible();
+	await expect(page.getByRole("slider", { name: "Background blur", exact: true })).toBeVisible();
 	expect(errors).toEqual([]);
 });
 

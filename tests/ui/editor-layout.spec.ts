@@ -7,13 +7,13 @@ test("advanced controls preserve values and remember each section's view", async
 	const advanced = page.getByRole("switch", { name: "Advanced settings" });
 	await expect(advanced).toBeVisible({ timeout: 20000 });
 	await expect(page.getByRole("switch", { name: "Link padding sides" })).toHaveCount(0);
-	const blur = page.getByRole("slider", { name: "Blur", exact: true });
+	const blur = page.getByRole("slider", { name: "Background blur", exact: true });
 	await blur.focus();
 	await page.keyboard.press("ArrowRight");
 	const value = await blur.inputValue();
 	await page.locator("aside").getByText("Advanced", { exact: true }).click();
 	await expect(page.getByRole("switch", { name: "Link padding sides" })).toBeVisible();
-	await page.getByRole("radio", { name: "Webcam", exact: true }).click();
+	await page.getByRole("radio", { name: "Camera", exact: true }).click();
 	await expect(advanced).not.toBeChecked();
 	await expect(page.getByRole("slider", { name: "Webcam Height" })).toHaveCount(0);
 	await page.locator("aside").getByText("Advanced", { exact: true }).click();

@@ -7,11 +7,16 @@ test("wallpaper tiles add, select and remove custom backgrounds without nested c
 	test.setTimeout(60000);
 	await installDesktopBridge(page);
 	await page.goto("/?windowType=editor");
-	const add = page.getByRole("button", { name: "Add wallpaper", exact: true });
-	await expect(add).toBeVisible({ timeout: 20000 });
-	await expect(page.getByRole("button", { name: "Upload Custom", exact: true })).toHaveCount(0);
+	// Custom uploads live in the "Image" background tab; built-in wallpapers in "Wallpaper".
+	const imageTab = page.getByRole("row", { name: "Image", exact: true });
+	const wallpaperTab = page.getByRole("row", { name: "Wallpaper", exact: true });
 	const initialSelection = page.locator('aside button[aria-pressed="true"]');
+	await expect(initialSelection).toBeVisible({ timeout: 20000 });
 	const originalName = await initialSelection.getAttribute("aria-label");
+	await imageTab.click();
+	const add = page.getByRole("button", { name: "Add wallpaper", exact: true });
+	await expect(add).toBeVisible();
+	await expect(page.getByRole("button", { name: "Upload Custom", exact: true })).toHaveCount(0);
 	const chooser = page.waitForEvent("filechooser");
 	await add.click();
 	await (await chooser).setFiles("public/wallpapers/wallpaper1.jpg");
@@ -29,11 +34,15 @@ test("wallpaper tiles add, select and remove custom backgrounds without nested c
 	});
 	// Removing an unselected tile must preserve the current background.
 	const original = page.getByRole("button", { name: originalName!, exact: true });
+	await wallpaperTab.click();
 	await original.click();
+	await imageTab.click();
 	await custom.hover();
 	await remove.click();
 	await expect(custom).toHaveCount(0);
+	await wallpaperTab.click();
 	await expect(original).toHaveAttribute("aria-pressed", "true");
+	await imageTab.click();
 	// The same file can be added again and removed with the keyboard.
 	const secondChooser = page.waitForEvent("filechooser");
 	await add.click();
@@ -43,9 +52,12 @@ test("wallpaper tiles add, select and remove custom backgrounds without nested c
 	await expect(remove).toHaveCSS("opacity", "1");
 	await page.keyboard.press("Enter");
 	await expect(custom).toHaveCount(0);
+	await wallpaperTab.click();
 	await expect(original).toHaveAttribute("aria-pressed", "true");
 	await page.reload({ waitUntil: "domcontentloaded" });
-	await expect(add).toBeVisible({ timeout: 20000 });
+	await expect(imageTab).toBeVisible({ timeout: 20000 });
+	await imageTab.click();
+	await expect(add).toBeVisible();
 	await expect(custom).toHaveCount(0);
 });
 
@@ -56,7 +68,8 @@ test("video wallpapers share the gallery's add and remove controls", async ({ pa
 	const original = page.locator('aside button[aria-pressed="true"]');
 	await expect(original).toBeVisible({ timeout: 20000 });
 	const originalName = await original.getAttribute("aria-label");
-	await page.getByRole("row", { name: "Video", exact: true }).click();
+	// Video wallpapers moved into the "Image" background tab.
+	await page.getByRole("row", { name: "Image", exact: true }).click();
 	await expect(
 		page.getByRole("button", { name: "Add video wallpaper", exact: true }),
 	).toBeVisible();
@@ -79,6 +92,7 @@ test("video wallpapers share the gallery's add and remove controls", async ({ pa
 	});
 	await page.getByRole("button", { name: "Remove preview.mp4", exact: true }).click();
 	await expect(video).toHaveCount(0);
+	await page.getByRole("row", { name: "Wallpaper", exact: true }).click();
 	await expect(page.getByRole("button", { name: originalName!, exact: true })).toHaveAttribute(
 		"aria-pressed",
 		"true",
