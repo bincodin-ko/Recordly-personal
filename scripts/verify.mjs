@@ -14,6 +14,8 @@ fs.rmSync(path.join(out, "screens"), { recursive: true, force: true });
 fs.mkdirSync(logs, { recursive: true });
 fs.mkdirSync(path.join(out, "screens"), { recursive: true });
 
+// `--quick` (for merges): same steps, but Playwright runs only the screenshot spec.
+const quick = process.argv.includes("--quick");
 const bin = (p) => path.join(root, "node_modules", p);
 const results = [];
 
@@ -28,7 +30,9 @@ function run(name, args, env = {}) {
 	});
 	const text = `${r.stdout ?? ""}\n${r.stderr ?? ""}`;
 	fs.writeFileSync(path.join(logs, `${name}.log`), text);
-	return { code: r.status, text, seconds: Math.round((Date.now() - started) / 1000) };
+	// A step killed from outside (closed session, timeout) has no exit code; say so instead of "no report".
+	const killed = r.error ? `could not run: ${r.error.message}` : r.signal ? `killed by ${r.signal}` : "";
+	return { code: r.status, text, killed, seconds: Math.round((Date.now() - started) / 1000) };
 }
 
 function record(step, ok, counts, reason, seconds) {
@@ -40,7 +44,7 @@ function record(step, ok, counts, reason, seconds) {
 {
 	const r = run("tsc", [bin("typescript/bin/tsc"), "--noEmit"]);
 	const errors = (r.text.match(/error TS\d+/g) ?? []).length;
-	record("tsc --noEmit", r.code === 0, `${errors} errors`, r.code === 0 ? "" : "see logs/tsc.log", r.seconds);
+	record("tsc --noEmit", r.code === 0, `${errors} errors`, r.killed || (r.code === 0 ? "" : "see logs/tsc.log"), r.seconds);
 }
 
 // 2. Biome lint: fail only when counts rise above the stored baseline.
@@ -82,7 +86,7 @@ function record(step, ok, counts, reason, seconds) {
 		counts = `${report.numPassedTests}/${report.numTotalTests} tests, ${failedFiles.length} files failed (${failedFiles.length - unexpected.length} known)`;
 		reason = ok ? "" : `new failures: ${unexpected.join(", ")}`;
 	}
-	record("vitest", ok, counts, reason, r.seconds);
+	record("vitest", ok, counts, r.killed || reason, r.seconds);
 }
 
 // 5. Playwright UI (renderer-only, headless) incl. verify-screens.spec.ts screenshots.
@@ -91,15 +95,29 @@ function record(step, ok, counts, reason, seconds) {
 	fs.rmSync(json, { force: true });
 	const r = run(
 		"playwright",
-		[bin("@playwright/test/cli.js"), "test", "--reporter=line,json", "--output=.verify/test-results"],
+		[
+			bin("@playwright/test/cli.js"),
+			"test",
+			...(quick ? ["tests/ui/verify-screens.spec.ts"] : []),
+			"--reporter=line,json",
+			"--output=.verify/test-results",
+		],
 		{ PLAYWRIGHT_JSON_OUTPUT_NAME: json, VERIFY_SCREENS_DIR: path.join(out, "screens") },
 	);
 	let counts = "no report";
-	let reason = r.code === 0 ? "" : "see logs/playwright.log";
+	let reason = r.killed || (r.code === 0 ? "" : "see logs/playwright.log");
 	if (fs.existsSync(json)) {
-		const s = JSON.parse(fs.readFileSync(json, "utf8")).stats;
+		const report = JSON.parse(fs.readFileSync(json, "utf8"));
+		const s = report.stats;
 		counts = `${s.expected} passed, ${s.unexpected} failed, ${s.flaky} flaky, ${s.skipped} skipped`;
-		const failed = [...r.text.matchAll(/^\s+(tests[\\/]ui[\\/]\S+:\d+:\d+ › .+?)\s*─*$/gm)].map((m) => m[1]);
+		const failed = [];
+		const walk = (suite) => {
+			for (const spec of suite.specs ?? [])
+				for (const t of spec.tests)
+					if (t.status === "unexpected") failed.push(`${spec.file}:${spec.line} ${spec.title}`);
+			for (const child of suite.suites ?? []) walk(child);
+		};
+		for (const suite of report.suites) walk(suite);
 		if (failed.length) reason = `failed: ${failed.slice(0, 10).join("; ")}`;
 	}
 	const shots = fs.readdirSync(path.join(out, "screens")).filter((f) => f.endsWith(".png")).length;
@@ -108,7 +126,7 @@ function record(step, ok, counts, reason, seconds) {
 
 const allOk = results.every((r) => r.ok);
 const md = [
-	`# verify ${allOk ? "PASS" : "FAIL"} - ${new Date().toISOString()}`,
+	`# verify${quick ? " --quick" : ""} ${allOk ? "PASS" : "FAIL"} - ${new Date().toISOString()}`,
 	"",
 	"| step | result | counts | reason | sec |",
 	"| --- | --- | --- | --- | --- |",
