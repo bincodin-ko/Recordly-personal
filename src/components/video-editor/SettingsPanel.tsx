@@ -25,6 +25,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { ChoiceGroup, ChoiceItem } from "@/components/ui/choice-group";
 import { setSettingsSide, useSettingsSide } from "@/lib/settingsSide";
@@ -1924,7 +1925,8 @@ export function SettingsPanel({
 		return (
 			<Card className="flex min-h-0 flex-1 flex-col gap-0 overflow-hidden rounded-none bg-transparent p-0 shadow-none">
 				<div
-					className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-6 pt-1"
+					data-testid="settings-scroll"
+					className="settings-scroll flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-8 pt-1"
 					style={{ scrollbarGutter: "stable" }}
 				>
 					<div className="mb-4 flex items-center gap-2">
@@ -2211,6 +2213,51 @@ export function SettingsPanel({
 				</div>
 				<div className="flex items-center justify-between gap-3">
 					<div className="text-sm font-medium text-foreground">
+						{tSettings("captions.model", "Model")}
+					</div>
+					<Select
+						value={autoCaptionSettings.model ?? "small"}
+						onValueChange={(value) =>
+							updateAutoCaptionSettings({
+								model: value as AutoCaptionSettings["model"],
+							})
+						}
+					>
+						<SelectTrigger className="h-9 w-[180px] text-sm" data-testid="caption-model-select">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="base">
+								{tSettings("captions.modelBase", "Fast (Base)")}
+							</SelectItem>
+							<SelectItem value="small">
+								{tSettings("captions.modelSmall", "Normal (Small)")}
+							</SelectItem>
+							<SelectItem value="medium">
+								{tSettings("captions.modelMedium", "Accurate (Medium)")}
+							</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+				<div className="flex flex-col gap-1.5">
+					<div className="text-sm font-medium text-foreground">
+						{tSettings("captions.prompt", "Frequent words")}
+					</div>
+					<Input
+						aria-label={tSettings("captions.prompt", "Frequent words")}
+						data-testid="caption-prompt-input"
+						value={autoCaptionSettings.prompt ?? ""}
+						maxLength={500}
+						placeholder={tSettings(
+							"captions.promptPlaceholder",
+							"Names and terms, e.g. Recordly, Kubernetes",
+						)}
+						onChange={(event) => updateAutoCaptionSettings({ prompt: event.target.value })}
+						className="h-9 w-full text-sm"
+					/>
+				</div>
+				<div className="flex items-center justify-between gap-3">
+					<div className="text-sm font-medium text-foreground">
 						{tSettings("captions.displayMode", "Display")}
 					</div>
 					<Select
@@ -2281,7 +2328,11 @@ export function SettingsPanel({
 								onClick={onDownloadWhisperSmallModel}
 								className="h-9 w-full px-4 text-sm"
 							>
-								{tSettings("captions.downloadModel", "Download Model")}
+								{tSettings("captions.downloadModel", "Download Model")} (
+								{{ base: "148 MB", small: "488 MB", medium: "1.5 GB" }[
+									autoCaptionSettings.model ?? "small"
+								]}
+								)
 							</Button>
 						)}
 						<Button
@@ -3984,7 +4035,8 @@ export function SettingsPanel({
 	return (
 		<Card className="flex min-h-0 flex-1 flex-col gap-0 overflow-hidden rounded-none bg-transparent p-0 shadow-none">
 			<div
-				className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-6 pt-1"
+				data-testid="settings-scroll"
+					className="settings-scroll flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-8 pt-1"
 				style={{ scrollbarGutter: "stable" }}
 			>
 				<AnimatePresence mode="wait" initial={false}>

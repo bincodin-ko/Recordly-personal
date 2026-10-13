@@ -301,7 +301,13 @@
 			"ja": "일본어",
 			"ko": "한국어"
 		},
-		"downloadingModel": "자막 모델 다운로드 중"
+		"downloadingModel": "자막 모델 다운로드 중",
+		"model": "모델",
+		"modelBase": "빠름 (Base)",
+		"modelSmall": "보통 (Small)",
+		"modelMedium": "정확 (Medium)",
+		"prompt": "자주 나오는 단어",
+		"promptPlaceholder": "이름·용어 (예: Recordly, 쿠버네티스)"
 	},
 	"crop": {
 		"title": "영상 크롭",

@@ -27,6 +27,7 @@ type Props = {
 	handleSave: () => void;
 	handleOpenProjects: () => void;
 	handleOpenExport: () => void;
+	handleExtractRaw: () => void;
 };
 
 const SECTION_COMMANDS: { id: EditorEffectSection; key: string; fallback: string }[] = [
@@ -169,6 +170,12 @@ export function EditorCommandMenu(props: Props) {
 				label: t("editor.commandMenu.export", "Export"),
 				keywords: "export publish share render save video gif",
 				run: props.handleOpenExport,
+			},
+			{
+				id: "extractRaw",
+				label: t("editor.header.extractRaw", "Extract raw files..."),
+				keywords: "extract raw original files camera microphone audio 원본 파일",
+				run: props.handleExtractRaw,
 			},
 			{
 				id: "toggleCaptions",

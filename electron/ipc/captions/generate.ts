@@ -13,6 +13,7 @@ import {
 } from "../recording/diagnostics";
 import { normalizeVideoSourcePath } from "../utils";
 import { type CaptionAudioCandidate, getCaptionCompanionAudioCandidates } from "./audioCandidates";
+import { buildWhisperBaseArgs } from "./models";
 import { shouldRetryWhisperWithoutJson, whisperDtwPreset } from "./parser";
 import { readWhisperCaptionOutput } from "./output";
 import { isMissingWindowsWhisperRuntimeDependency } from "./runtimeErrors";
@@ -234,6 +235,7 @@ async function generateCaptionsForSource(options: {
 	whisperExecutablePath?: string;
 	whisperModelPath: string;
 	language?: string;
+	prompt?: string;
 	candidates: CaptionAudioCandidate[];
 }) {
 	const ffmpegPath = getFfmpegBinaryPath();
@@ -266,21 +268,13 @@ async function generateCaptionsForSource(options: {
 
 		const language =
 			options.language && options.language.trim() ? options.language.trim() : "auto";
-		const whisperBaseArgs = [
-			"-m",
-			whisperModelPath,
-			"-f",
+		const whisperBaseArgs = buildWhisperBaseArgs({
+			modelPath: whisperModelPath,
 			wavPath,
-			"-osrt",
-			"-of",
 			outputBase,
-			"-l",
 			language,
-			"-np",
-			// Do not carry a hallucinated phrase through later decoding windows.
-			"-mc",
-			"0",
-		];
+			prompt: options.prompt,
+		});
 
 		let jsonEnabled = true;
 		// DTW token alignment gives word times accurate enough to cut by transcript.
@@ -346,6 +340,7 @@ export async function generateAutoCaptionsFromVideo(options: {
 	whisperExecutablePath?: string;
 	whisperModelPath: string;
 	language?: string;
+	prompt?: string;
 }) {
 	const candidates = await resolveCaptionAudioCandidates(options.videoPath);
 	const microphone = candidates.filter((source) => source.label === "microphone audio sidecar");

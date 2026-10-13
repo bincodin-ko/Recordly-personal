@@ -441,7 +441,9 @@
 		"home": "홈",
 		"clips": "클립",
 		"export": "내보내기",
-		"togglePanel": "설정 패널 표시/숨기기"
+		"togglePanel": "설정 패널 표시/숨기기",
+		"more": "더보기",
+		"extractRaw": "원본 파일 꺼내기…"
 	},
 	"shell": {
 		"openProjects": "프로젝트 열기"
@@ -590,5 +592,11 @@
 		"label": "설정 칸 위치",
 		"left": "왼쪽",
 		"right": "오른쪽"
+	},
+	"rawFiles": {
+		"noSource": "열려 있는 녹화가 없어요",
+		"failed": "원본 파일을 꺼내지 못했어요",
+		"done": "원본 파일 {{count}}개를 꺼냈어요",
+		"openFolder": "폴더 열기"
 	}
 }

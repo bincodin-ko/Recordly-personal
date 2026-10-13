@@ -667,6 +667,10 @@ export interface AutoCaptionSettings {
 	/** Show the hover ghost on the timeline caption track for click-to-add. */
 	timelineQuickAdd: boolean;
 	language: string;
+	/** Whisper model size: base = fast, small = normal, medium = accurate. */
+	model: "base" | "small" | "medium";
+	/** Frequent words, passed to whisper as --prompt to fix spellings. */
+	prompt: string;
 	fontFamily: string;
 	fontSize: number;
 	bottomOffset: number;
@@ -685,6 +689,8 @@ export const DEFAULT_AUTO_CAPTION_SETTINGS: AutoCaptionSettings = {
 	enabled: false,
 	timelineQuickAdd: true,
 	language: "auto",
+	model: "small",
+	prompt: "",
 	fontFamily: getDefaultCaptionFontFamily(),
 	fontSize: 30,
 	bottomOffset: 3,

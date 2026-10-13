@@ -766,23 +766,24 @@ interface Window {
 		) => Promise<
 			{ success: true; width: number; height: number; data: Uint8Array } | { success: false; error: string }
 		>;
-		getWhisperSmallModelStatus: () => Promise<{
+		getWhisperSmallModelStatus: (model?: string) => Promise<{
 			success: boolean;
 			exists: boolean;
 			path?: string | null;
 			error?: string;
 		}>;
-		downloadWhisperSmallModel: () => Promise<{
+		downloadWhisperSmallModel: (model?: string) => Promise<{
 			success: boolean;
 			path?: string;
 			alreadyDownloaded?: boolean;
 			error?: string;
 		}>;
-		deleteWhisperSmallModel: () => Promise<{ success: boolean; error?: string }>;
+		deleteWhisperSmallModel: (model?: string) => Promise<{ success: boolean; error?: string }>;
 		onWhisperSmallModelDownloadProgress: (
 			callback: (state: {
 				status: "idle" | "downloading" | "downloaded" | "error";
 				progress: number;
+				model?: string;
 				path?: string | null;
 				error?: string;
 			}) => void,
@@ -792,6 +793,7 @@ interface Window {
 			whisperExecutablePath?: string;
 			whisperModelPath: string;
 			language?: string;
+			prompt?: string;
 		}) => Promise<{
 			success: boolean;
 			cues?: AutoCaptionCue[];
@@ -1008,6 +1010,13 @@ interface Window {
 		ackAuthCallbackUrl: (url: string) => Promise<void>;
 		getPendingAuthCallbackUrl: () => Promise<string | null>;
 		onAuthCallbackUrl: (callback: (url: string) => void) => () => void;
+		extractRawRecordingFiles: (videoPath: string) => Promise<{
+			success: boolean;
+			canceled?: boolean;
+			folder?: string;
+			files?: Array<{ kind: "screen" | "camera" | "microphone" | "system"; path: string }>;
+			error?: string;
+		}>;
 		revealInFolder: (
 			filePath: string,
 		) => Promise<{ success: boolean; error?: string; message?: string }>;

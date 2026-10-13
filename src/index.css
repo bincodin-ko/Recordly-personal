@@ -146,6 +146,18 @@
  outline: 2px solid var(--focus);
  outline-offset: 2px;
 }
+/* Korean wraps between words, never inside one. */
+:lang(ko) body,
+body:lang(ko) {
+ word-break: keep-all;
+ overflow-wrap: break-word;
+}
+/* Fade the panel's bottom edge so a row cut by the edge reads as "scroll for more";
+   pb-8 on the scroller keeps the last control clear of the fade at the end. */
+.settings-scroll {
+ -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 20px), transparent);
+ mask-image: linear-gradient(to bottom, #000 calc(100% - 20px), transparent);
+}
 ::selection {
  background: var(--accent-soft);
  color: var(--foreground);

@@ -161,27 +161,28 @@ export function registerCaptionHandlers() {
 		}
 	});
 
-	ipcMain.handle("get-whisper-small-model-status", async () => {
+	ipcMain.handle("get-whisper-small-model-status", async (_, model?: string) => {
 		try {
-			return await getWhisperSmallModelStatus();
+			return await getWhisperSmallModelStatus(model);
 		} catch (error) {
 			return { success: false, exists: false, path: null, error: String(error) };
 		}
 	});
 
-	ipcMain.handle("download-whisper-small-model", async (event) => {
+	ipcMain.handle("download-whisper-small-model", async (event, model?: string) => {
 		try {
-			const existing = await getWhisperSmallModelStatus();
+			const existing = await getWhisperSmallModelStatus(model);
 			if (existing.exists) {
 				sendWhisperModelDownloadProgress(event.sender, {
 					status: "downloaded",
 					progress: 100,
+					model,
 					path: existing.path,
 				});
 				return { success: true, path: existing.path, alreadyDownloaded: true };
 			}
 
-			const modelPath = await downloadWhisperSmallModel(event.sender);
+			const modelPath = await downloadWhisperSmallModel(event.sender, model);
 			return { success: true, path: modelPath };
 		} catch (error) {
 			console.error("Failed to download Whisper small model:", error);
@@ -189,9 +190,9 @@ export function registerCaptionHandlers() {
 		}
 	});
 
-	ipcMain.handle("delete-whisper-small-model", async (event) => {
+	ipcMain.handle("delete-whisper-small-model", async (event, model?: string) => {
 		try {
-			await deleteWhisperSmallModel();
+			await deleteWhisperSmallModel(model);
 			sendWhisperModelDownloadProgress(event.sender, {
 				status: "idle",
 				progress: 0,
@@ -201,7 +202,7 @@ export function registerCaptionHandlers() {
 		} catch (error) {
 			console.error("Failed to delete Whisper small model:", error);
 			// Verify whether the file was actually removed despite the error
-			const status = await getWhisperSmallModelStatus();
+			const status = await getWhisperSmallModelStatus(model);
 			if (!status.exists) {
 				// File is gone — treat as success
 				sendWhisperModelDownloadProgress(event.sender, {
@@ -230,6 +231,7 @@ export function registerCaptionHandlers() {
 				whisperExecutablePath: string;
 				whisperModelPath: string;
 				language?: string;
+				prompt?: string;
 			},
 		) => {
 			try {

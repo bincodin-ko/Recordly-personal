@@ -1,4 +1,5 @@
 import {
+	DotsThree,
 	House,
 	SidebarSimple,
 	FilmStrip,
@@ -7,6 +8,12 @@ import {
 } from "@/components/ui/icons";
 import type { CSSProperties, FormEvent, RefObject } from "react";
 import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { useI18n } from "@/contexts/I18nContext";
 import type { useExportDimensions } from "../export/useExportDimensions";
 import type { useExportSession } from "../export/useExportSession";
@@ -20,6 +27,7 @@ import { EditorPresetMenu } from "./EditorPresetMenu";
 
 type Props = {
 	panelOpen: boolean;
+	onExtractRaw: () => void;
 	onTogglePanel: () => void;
 	clipsOpen: boolean;
 	onToggleClips: () => void;
@@ -217,6 +225,28 @@ export function EditorHeader(props: Props) {
 					</Button>
 				</div>
 				<EditorPresetMenu t={t} presets={presets} />
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							type="button"
+							variant="ghost"
+							className="inline-flex h-9 w-9 min-w-9 items-center justify-center p-0"
+							title={t("editor.header.more", "More")}
+							aria-label={t("editor.header.more", "More")}
+							data-testid="editor-more-menu"
+						>
+							<DotsThree className="h-4 w-4" />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<DropdownMenuItem
+							onClick={props.onExtractRaw}
+							className="cursor-pointer text-foreground hover:bg-foreground/10"
+						>
+							{t("editor.header.extractRaw", "Extract raw files...")}
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 				<Button
 					type="button"
 					variant="ghost"

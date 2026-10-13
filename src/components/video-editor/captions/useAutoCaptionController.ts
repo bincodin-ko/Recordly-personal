@@ -61,33 +61,41 @@ export function useAutoCaptionController({
 	setAutoCaptions,
 	syncActiveVideoSource,
 }: UseAutoCaptionControllerParams) {
+	const model = autoCaptionSettings.model ?? "small";
+	const firstStatusRef = useRef(true);
 	const captionGenerationInFlightRef = useRef(false);
 	const activeSourceRef = useRef({ videoSourcePath, videoPath });
 	activeSourceRef.current = { videoSourcePath, videoPath };
 
 	useEffect(() => {
 		const unsubscribe = window.electronAPI.onWhisperSmallModelDownloadProgress((state) => {
+			if (state.model && state.model !== model) return;
 			setWhisperModelDownloadStatus(state.status);
 			setWhisperModelDownloadProgress(state.progress);
 			if (state.status === "downloaded") {
 				setDownloadedWhisperModelPath(state.path ?? null);
-				setWhisperModelPath((current) => current ?? state.path ?? null);
+				setWhisperModelPath(state.path ?? null);
 			} else if (state.status === "idle") {
 				setDownloadedWhisperModelPath(null);
+				setWhisperModelPath(null);
 			} else if (state.status === "error" && state.error) {
 				toast.error(state.error);
 			}
 		});
 
-		void window.electronAPI.getWhisperSmallModelStatus().then((result) => {
+		void window.electronAPI.getWhisperSmallModelStatus(model).then((result) => {
 			if (!result.success) return;
+			// First run keeps a custom model picked earlier; changing the size replaces it.
+			const keepCustom = firstStatusRef.current;
+			firstStatusRef.current = false;
 			if (result.exists && result.path) {
 				setDownloadedWhisperModelPath(result.path);
-				setWhisperModelPath((current) => current ?? result.path ?? null);
+				setWhisperModelPath((current) => (keepCustom ? (current ?? result.path ?? null) : result.path ?? null));
 				setWhisperModelDownloadStatus("downloaded");
 				setWhisperModelDownloadProgress(100);
 			} else {
 				setDownloadedWhisperModelPath(null);
+				setWhisperModelPath((current) => (keepCustom ? current : null));
 				setWhisperModelDownloadStatus("idle");
 				setWhisperModelDownloadProgress(0);
 			}
@@ -95,6 +103,7 @@ export function useAutoCaptionController({
 
 		return () => unsubscribe?.();
 	}, [
+		model,
 		setDownloadedWhisperModelPath,
 		setWhisperModelDownloadProgress,
 		setWhisperModelDownloadStatus,
@@ -112,7 +121,7 @@ export function useAutoCaptionController({
 		if (whisperModelDownloadStatus === "downloading") return;
 		setWhisperModelDownloadStatus("downloading");
 		setWhisperModelDownloadProgress(0);
-		const result = await window.electronAPI.downloadWhisperSmallModel();
+		const result = await window.electronAPI.downloadWhisperSmallModel(model);
 		if (!result.success) {
 			setWhisperModelDownloadStatus("error");
 			toast.error(result.error || translate("editor.messages.failedToDownloadWhisperSmallModel", "Failed to download Whisper small model"));
@@ -128,6 +137,7 @@ export function useAutoCaptionController({
 		setWhisperModelDownloadStatus,
 		setWhisperModelPath,
 		whisperModelDownloadStatus,
+		model,
 	]);
 
 	const handlePickWhisperModel = useCallback(async () => {
@@ -138,7 +148,7 @@ export function useAutoCaptionController({
 	}, [setWhisperModelPath]);
 
 	const handleDeleteWhisperSmallModel = useCallback(async () => {
-		const result = await window.electronAPI.deleteWhisperSmallModel();
+		const result = await window.electronAPI.deleteWhisperSmallModel(model);
 		if (!result.success) {
 			toast.error(result.error || translate("editor.messages.failedToDeleteWhisperSmallModel", "Failed to delete Whisper small model"));
 			return;
@@ -150,6 +160,7 @@ export function useAutoCaptionController({
 		toast.success(translate("editor.messages.whisperSmallModelDeleted", "Whisper small model deleted"));
 	}, [
 		downloadedWhisperModelPath,
+		model,
 		setDownloadedWhisperModelPath,
 		setWhisperModelDownloadProgress,
 		setWhisperModelDownloadStatus,
@@ -194,6 +205,7 @@ export function useAutoCaptionController({
 				whisperExecutablePath: whisperExecutablePath ?? undefined,
 				whisperModelPath,
 				language: autoCaptionSettings.language,
+				prompt: autoCaptionSettings.prompt || undefined,
 			});
 			if (resolveAutoCaptionSourcePath(activeSourceRef.current) !== sourcePath) {
 				toast.info(translate("editor.messages.recordingChangedGeneratedCaptionsWereNot", "Recording changed; generated captions were not applied."));
@@ -217,6 +229,7 @@ export function useAutoCaptionController({
 		}
 	}, [
 		autoCaptionSettings.language,
+		autoCaptionSettings.prompt,
 		isGeneratingCaptions,
 		setAutoCaptionSettings,
 		setAutoCaptions,
