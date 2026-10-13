@@ -133,7 +133,8 @@
 		"hidden": "Webcam nascosta",
 		"default": "Predefinito",
 		"hint": "Fai clic per aggiungere un layout webcam",
-		"delete": "Elimina layout"
+		"delete": "Elimina layout",
+		"cutout": "Cutout"
 	},
 	"zoomEdit": {
 		"menuLabel": "Zoom menu",

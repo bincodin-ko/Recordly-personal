@@ -492,3 +492,50 @@ export function saveEditorPresets(presets: EditorPreset[]): boolean {
 		return false;
 	}
 }
+
+// ---------- Preset files (.recordly-preset) ----------
+
+export const PRESET_FILE_FORMAT = "recordly-preset";
+export const PRESET_FILE_VERSION = 1;
+export const PRESET_FILE_EXTENSION = ".recordly-preset";
+const PRESET_FILE_MAX_CHARS = 1_000_000;
+
+export function serializeEditorPresetFile(preset: Pick<EditorPreset, "name" | "snapshot">): string {
+	return JSON.stringify(
+		{
+			format: PRESET_FILE_FORMAT,
+			version: PRESET_FILE_VERSION,
+			name: preset.name,
+			// Layout ranges belong to one recording, never to a shared look.
+			snapshot: normalizeEditorPresetSnapshot({
+				...preset.snapshot,
+				webcam: { ...preset.snapshot.webcam, layoutRegions: [] },
+			}),
+		},
+		null,
+		2,
+	);
+}
+
+/** Null when the text is not a preset file this version understands. */
+export function parseEditorPresetFile(
+	text: string,
+): { name: string; snapshot: EditorPresetSnapshot } | null {
+	if (typeof text !== "string" || text.length > PRESET_FILE_MAX_CHARS) return null;
+	let raw: unknown;
+	try {
+		raw = JSON.parse(text);
+	} catch {
+		return null;
+	}
+	if (!raw || typeof raw !== "object") return null;
+	const file = raw as { format?: unknown; version?: unknown; name?: unknown; snapshot?: unknown };
+	if (file.format !== PRESET_FILE_FORMAT) return null;
+	if (typeof file.version !== "number" || file.version < 1 || file.version > PRESET_FILE_VERSION) {
+		return null;
+	}
+	const name = normalizePresetName(file.name);
+	if (!name || !file.snapshot || typeof file.snapshot !== "object") return null;
+	const snapshot = normalizeEditorPresetSnapshot(file.snapshot);
+	return { name, snapshot: { ...snapshot, webcam: { ...snapshot.webcam, layoutRegions: [] } } };
+}

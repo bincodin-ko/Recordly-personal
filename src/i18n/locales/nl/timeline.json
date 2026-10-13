@@ -133,7 +133,8 @@
 		"hidden": "Camera verborgen",
 		"default": "Standaard",
 		"hint": "Klik om een cameralay-out toe te voegen",
-		"delete": "Lay-out verwijderen"
+		"delete": "Lay-out verwijderen",
+		"cutout": "Cutout"
 	},
 	"zoomEdit": {
 		"menuLabel": "Zoom menu",

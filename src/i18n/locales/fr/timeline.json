@@ -133,7 +133,8 @@
 		"hidden": "Caméra masquée",
 		"default": "Par défaut",
 		"hint": "Cliquez pour ajouter une disposition de caméra",
-		"delete": "Supprimer la disposition"
+		"delete": "Supprimer la disposition",
+		"cutout": "Cutout"
 	},
 	"zoomEdit": {
 		"menuLabel": "Zoom menu",

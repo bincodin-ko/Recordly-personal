@@ -133,7 +133,8 @@
 		"hidden": "카메라 숨김",
 		"default": "기본",
 		"hint": "눌러서 카메라 레이아웃 추가",
-		"delete": "레이아웃 지우기"
+		"delete": "레이아웃 지우기",
+		"cutout": "컷아웃"
 	},
 	"zoomEdit": {
 		"menuLabel": "줌 메뉴",

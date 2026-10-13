@@ -18,7 +18,7 @@ import {
  * layout range; ranges on the Layout track switch to camera fullscreen, split screen
  * or screen only (camera hidden). Shared by preview and export so both match.
  */
-export type CameraLayoutKind = "default" | "fullscreen" | "split" | "hidden";
+export type CameraLayoutKind = "default" | "fullscreen" | "split" | "hidden" | "cutout";
 
 export interface CameraLayoutRegion {
 	id: string;
@@ -126,6 +126,18 @@ export function getSplitLayout(canvas: { width: number; height: number }, mask: 
 	return { screen, camera, screenClip, radius: Math.min(camera.width, camera.height) * 0.06 };
 }
 
+/** Share of the canvas height the cut-out person fills, standing on the bottom edge. */
+const CUTOUT_HEIGHT_SHARE = 0.62;
+
+/** Cut-out camera: no box or rounding, bigger than the bubble, on the bubble's side of the bottom edge. */
+export function getCutoutRect(canvas: { width: number; height: number }, bubble: Rect, margin: number): Rect {
+	const aspect = Math.max(0.1, bubble.width) / Math.max(0.1, bubble.height);
+	const height = Math.min(canvas.height * CUTOUT_HEIGHT_SHARE, (canvas.width * 0.6) / aspect);
+	const width = height * aspect;
+	const right = bubble.x + bubble.width / 2 > canvas.width / 2;
+	return { x: right ? canvas.width - width - margin : margin, y: canvas.height - height, width, height };
+}
+
 function getFrameForLayout(
 	kind: CameraLayoutKind,
 	params: {
@@ -145,6 +157,14 @@ function getFrameForLayout(
 			return { screen: identity, screenClip: full, camera: full, radius: 0, opacity: 1 };
 		case "split":
 			return { ...getSplitLayout(canvas, params.mask, params.margin), opacity: 1 };
+		case "cutout":
+			return {
+				screen: identity,
+				screenClip: full,
+				camera: getCutoutRect(canvas, bubble, params.margin / 2),
+				radius: 0,
+				opacity: 1,
+			};
 		case "hidden":
 			return { screen: identity, screenClip: full, camera: bubble, radius: bubbleRadius, opacity: 0 };
 		default:
