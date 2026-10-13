@@ -14,11 +14,14 @@ export interface BackgroundMusicSettings {
 
 export interface AudioExtrasSettings {
 	micMode: MicAudioMode;
+	/** Screen Studio "Mute microphone": silences the mic track in preview and export. */
+	micMuted: boolean;
 	music: BackgroundMusicSettings;
 }
 
 export const DEFAULT_AUDIO_EXTRAS: AudioExtrasSettings = {
 	micMode: "standard",
+	micMuted: false,
 	music: { path: null, volume: 0.25, ducking: true },
 };
 
@@ -43,6 +46,7 @@ export function normalizeAudioExtras(value: unknown): AudioExtrasSettings {
 		micMode: MIC_MODES.includes(raw.micMode as MicAudioMode)
 			? (raw.micMode as MicAudioMode)
 			: DEFAULT_AUDIO_EXTRAS.micMode,
+		micMuted: raw.micMuted === true,
 		music: {
 			path: typeof music.path === "string" && music.path.length > 0 ? music.path : null,
 			volume: Number.isFinite(volume)

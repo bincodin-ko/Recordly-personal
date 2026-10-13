@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import type { SourceAudioTrackSettings } from "@/components/video-editor/audio/audioTypes";
+import { getSourceTrackIdFromPath } from "@/lib/exporter/audioRoutingEngine";
 import { resolveSourceTrackRoutingPolicy } from "@/lib/exporter/sourceTrackRoutingPolicy";
 import type { AudioRegion, ClipRegion } from "../types";
 import { findClipAtTimelineTime, getClipVolume } from "../types";
@@ -125,9 +126,31 @@ export function useVideoEditorAudio({
 
 	// Per-segment volume scales the recording's own audio (not imported audio tracks).
 	const embeddedSourcePreviewGain = baseEmbeddedSourcePreviewGain * currentClipVolume;
+	const micMuted = audioExtras.micMuted;
 	const getSourceTrackPreviewGain = useCallback(
-		(audioPath: string) => baseGetSourceTrackPreviewGain(audioPath) * currentClipVolume,
-		[baseGetSourceTrackPreviewGain, currentClipVolume],
+		(audioPath: string) =>
+			micMuted && getSourceTrackIdFromPath(audioPath) === "mic"
+				? 0
+				: baseGetSourceTrackPreviewGain(audioPath) * currentClipVolume,
+		[baseGetSourceTrackPreviewGain, currentClipVolume, micMuted],
+	);
+	// "Mute microphone" is the mic track at volume 0 for every consumer (preview, export).
+	const withMicMute = useCallback(
+		(settings: SourceAudioTrackSettings): SourceAudioTrackSettings =>
+			micMuted ? { ...settings, mic: { volume: 0, normalize: false } } : settings,
+		[micMuted],
+	);
+	const mutedActiveSettings = useMemo(
+		() => withMicMute(activeSourceAudioTrackSettings),
+		[withMicMute, activeSourceAudioTrackSettings],
+	);
+	const mutedSelectedSettings = useMemo(
+		() => withMicMute(selectedClipSourceAudioTrackSettings),
+		[withMicMute, selectedClipSourceAudioTrackSettings],
+	);
+	const getMutedSettingsForClip = useCallback(
+		(clipId: string | null) => withMicMute(getSourceAudioTrackSettingsForClip(clipId)),
+		[withMicMute, getSourceAudioTrackSettingsForClip],
 	);
 
 	const { playSourceAudioPreview } = useAudioPreviewSync({
@@ -167,10 +190,10 @@ export function useVideoEditorAudio({
 		activeClipIdAtCurrentTime,
 		isCurrentClipMuted,
 		sourceAudioTrackMeta,
-		activeSourceAudioTrackSettings,
-		selectedClipSourceAudioTrackSettings,
+		activeSourceAudioTrackSettings: mutedActiveSettings,
+		selectedClipSourceAudioTrackSettings: mutedSelectedSettings,
 		playSourceAudioPreview,
-		getSourceAudioTrackSettingsForClip,
+		getSourceAudioTrackSettingsForClip: getMutedSettingsForClip,
 		onSourceAudioTracksMetaChange,
 		onSelectedClipSourceAudioTrackVolumeChange,
 		onSelectedClipSourceAudioTrackNormalizeChange,

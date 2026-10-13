@@ -402,6 +402,7 @@
 		"mixedLabel": "Quelle",
 		"deleteRegion": "Audio löschen",
 		"microphone": "Microphone",
+		"muteMic": "Mikrofon stummschalten",
 		"micMode": "Microphone audio mode",
 		"micModeStandard": "Standard",
 		"micModeNoiseReduction": "Noise reduction",

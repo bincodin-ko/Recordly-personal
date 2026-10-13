@@ -27,7 +27,15 @@ export interface FixedShortcut {
 	bindings: ShortcutBinding[];
 }
 
+/** Pro-editor playback keys (handled in useEditorPlaybackControls). Repeating J or L doubles the speed. */
+export const JKL_SHORTCUTS: FixedShortcut[] = [
+	{ get label() { return translate("shortcuts.actions.jklReverse", "Play Backward (repeat: 2x, 4x)"); }, display: "J", bindings: [{ key: "j" }] },
+	{ get label() { return translate("shortcuts.actions.jklPause", "Pause"); }, display: "K", bindings: [{ key: "k" }] },
+	{ get label() { return translate("shortcuts.actions.jklForward", "Play Forward (repeat: 2x, 4x)"); }, display: "L", bindings: [{ key: "l" }] },
+];
+
 export const FIXED_SHORTCUTS: FixedShortcut[] = [
+	...JKL_SHORTCUTS,
 	// Held by electron/ipc/register/recording.ts (RECORDING_FLAG_SHORTCUT).
 	{ get label() { return translate("shortcuts.actions.recordingFlag", "Recording Flag"); }, display: "Ctrl + Alt + F", bindings: [{ key: "f", ctrl: true, alt: true }] },
 	{ get label() { return translate("shortcuts.actions.cycleForward", "Cycle Annotations Forward"); }, display: "Tab", bindings: [{ key: "tab" }] },

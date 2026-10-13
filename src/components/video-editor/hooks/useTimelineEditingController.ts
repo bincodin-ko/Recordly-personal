@@ -109,6 +109,14 @@ export function useTimelineEditingController(input: Input) {
 		playSourceAudioPreview: audio.playSourceAudioPreview,
 		timelinePlayheadTime: projection.timelinePlayheadTime,
 		timelineDuration: projection.timelineDuration,
+		scrubAudio: {
+			videoResource: input.videoPath,
+			fallbackPaths: audio.previewSourceAudioFallbackPaths,
+			fallbackDelayMsByPath: audio.sourceAudioFallbackStartDelayMsByPath,
+			embeddedGain: audio.embeddedSourcePreviewGain,
+			getTrackGain: audio.getSourceTrackPreviewGain,
+			mapTimelineMsToSourceMs: projection.mapTimelineTimeToSourceTime,
+		},
 	});
 	const captionCommands = useCaptionCommands({
 		clipRegions: timeline.clipRegions,

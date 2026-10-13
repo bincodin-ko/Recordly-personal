@@ -108,14 +108,21 @@ export function EditorTimelinePanel(props: Props) {
 		[handleSeek, isPlaying],
 	);
 	const handleSeekFromTimeline = useCallback(
-		(time: number) => {
+		(time: number, phase?: "start" | "move" | "end") => {
 			restoreRef.current = null;
 			pendingScrubRef.current = null;
 			livePlayheadRef.current = time;
 			setFrozenPlayhead(null);
+			if (phase === "end") {
+				// Drag finished at the same spot: the playhead is already there.
+				playback.scrubEnd();
+				return;
+			}
 			handleTimelineSeek(time);
+			if (phase === "start") playback.scrubStart();
+			if (phase === "move") playback.scrubMove(time);
 		},
-		[handleTimelineSeek],
+		[handleTimelineSeek, playback],
 	);
 	useEffect(() => {
 		if (isPlaying && restoreRef.current !== null) {

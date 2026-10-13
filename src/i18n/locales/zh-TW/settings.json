@@ -402,6 +402,7 @@
 		"mixedLabel": "源",
 		"deleteRegion": "刪除音訊",
 		"microphone": "Microphone",
+		"muteMic": "麥克風靜音",
 		"micMode": "Microphone audio mode",
 		"micModeStandard": "Standard",
 		"micModeNoiseReduction": "Noise reduction",
