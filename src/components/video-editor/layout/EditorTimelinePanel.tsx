@@ -249,7 +249,16 @@ export function EditorTimelinePanel(props: Props) {
 						? {
 								regions: props.webcam.layoutRegions ?? [],
 								onChange: (layoutRegions) =>
-									props.setWebcam((current) => ({ ...current, layoutRegions })),
+									props.setWebcam((current) => ({
+										...current,
+										layoutRegions,
+										// A cut-out needs the person separated from the background.
+										...(layoutRegions.some((r) => r.layout === "cutout") &&
+										(!current.backgroundRemoval ||
+											(current.backgroundStyle ?? "transparent") !== "transparent")
+											? { backgroundRemoval: true, backgroundStyle: "transparent" as const }
+											: {}),
+									})),
 							}
 						: null
 				}

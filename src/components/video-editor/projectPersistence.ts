@@ -1102,6 +1102,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 								(region.layout === "default" ||
 									region.layout === "fullscreen" ||
 									region.layout === "split" ||
+									region.layout === "cutout" ||
 									region.layout === "hidden"),
 						)
 						.map(({ id, startMs, endMs, layout }) => ({ id, startMs, endMs, layout }))

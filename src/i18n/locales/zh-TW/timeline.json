@@ -132,7 +132,8 @@
 		"hidden": "隱藏攝影機",
 		"default": "預設",
 		"hint": "點擊新增攝影機版面",
-		"delete": "刪除版面"
+		"delete": "刪除版面",
+		"cutout": "Cutout"
 	},
 	"zoomEdit": {
 		"menuLabel": "Zoom menu",

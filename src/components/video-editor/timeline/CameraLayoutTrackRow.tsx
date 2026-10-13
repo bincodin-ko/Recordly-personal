@@ -16,7 +16,7 @@ const NEW_LAYOUT_MS = 3000;
 const MIN_LAYOUT_MS = 300;
 const EDGE_PX = 6;
 
-const LAYOUT_OPTIONS: CameraLayoutKind[] = ["fullscreen", "split", "default", "hidden"];
+const LAYOUT_OPTIONS: CameraLayoutKind[] = ["fullscreen", "split", "cutout", "default", "hidden"];
 
 export function getCameraLayoutLabel(layout: CameraLayoutKind): string {
 	switch (layout) {
@@ -24,6 +24,8 @@ export function getCameraLayoutLabel(layout: CameraLayoutKind): string {
 			return translate("timeline.cameraLayout.fullscreen", "Camera fullscreen");
 		case "split":
 			return translate("timeline.cameraLayout.split", "Split screen");
+		case "cutout":
+			return translate("timeline.cameraLayout.cutout", "Cutout");
 		case "hidden":
 			return translate("timeline.cameraLayout.hidden", "Camera hidden");
 		default:
@@ -34,6 +36,7 @@ export function getCameraLayoutLabel(layout: CameraLayoutKind): string {
 const BLOCK_COLORS: Record<CameraLayoutKind, string> = {
 	fullscreen: "bg-[#7c3aed]/80 border-[#a78bfa]/60",
 	split: "bg-[#0e7490]/80 border-[#67e8f9]/50",
+	cutout: "bg-[#be185d]/80 border-[#f9a8d4]/50",
 	default: "bg-[#3f3f46] border-white/20",
 	hidden: "bg-[#27272a] border-dashed border-white/30",
 };

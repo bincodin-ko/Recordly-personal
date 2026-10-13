@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { useI18n } from "@/contexts/I18nContext";
 import { cn } from "@/lib/utils";
+import { useRef } from "react";
+import { PRESET_FILE_EXTENSION } from "../editorPreferences";
 import type { useVideoEditorPresets } from "../presets/useVideoEditorPresets";
 
 type Props = {
@@ -22,7 +24,10 @@ export function EditorPresetMenu({ t, presets }: Props) {
 		handleApplyEditorPreset,
 		handleDeleteEditorPreset,
 		handleSavePresetSubmit,
+		handleExportEditorPresetFile,
+		handleImportEditorPresetFile,
 	} = presets;
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	return (
 		<Popover open={presetPopoverOpen} onOpenChange={setPresetPopoverOpen}>
@@ -131,6 +136,40 @@ export function EditorPresetMenu({ t, presets }: Props) {
 								})
 							)}
 						</div>
+					</div>
+					<div className="flex gap-2 border-t border-foreground/10 pt-3">
+						<Button
+							type="button"
+							variant="ghost"
+							size="sm"
+							className="h-8 flex-1 px-2 text-xs"
+							data-testid="preset-export-file"
+							onClick={handleExportEditorPresetFile}
+						>
+							{t("editor.presets.exportFile", "Export to file…")}
+						</Button>
+						<Button
+							type="button"
+							variant="ghost"
+							size="sm"
+							className="h-8 flex-1 px-2 text-xs"
+							data-testid="preset-import-file"
+							onClick={() => fileInputRef.current?.click()}
+						>
+							{t("editor.presets.importFile", "Import from file…")}
+						</Button>
+						<input
+							ref={fileInputRef}
+							type="file"
+							accept={`${PRESET_FILE_EXTENSION},application/json`}
+							className="hidden"
+							data-testid="preset-import-input"
+							onChange={(event) => {
+								const file = event.target.files?.[0];
+								event.target.value = "";
+								if (file) void handleImportEditorPresetFile(file);
+							}}
+						/>
 					</div>
 				</div>
 			</PopoverContent>

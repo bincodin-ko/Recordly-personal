@@ -132,7 +132,8 @@
 		"hidden": "Camera hidden",
 		"default": "Default",
 		"hint": "Click to add a camera layout",
-		"delete": "Delete layout"
+		"delete": "Delete layout",
+		"cutout": "Cutout"
 	},
 	"zoomEdit": {
 		"menuLabel": "Zoom menu",

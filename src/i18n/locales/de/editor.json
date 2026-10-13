@@ -314,14 +314,20 @@
 		"toasts": {
 			"applied": "Applied preset \"{{name}}\"",
 			"saved": "Saved preset \"{{name}}\"",
-			"deleted": "Deleted preset \"{{name}}\""
+			"deleted": "Deleted preset \"{{name}}\"",
+			"exported": "Exported preset \"{{name}}\" to a file",
+			"imported": "Imported preset \"{{name}}\""
 		},
 		"errors": {
 			"nameRequired": "Enter a preset name.",
 			"duplicateName": "A preset with that name already exists.",
 			"saveFailed": "Could not save that preset. Check your browser storage settings and try again.",
-			"deleteFailed": "Could not delete that preset. Check your browser storage settings and try again."
-		}
+			"deleteFailed": "Could not delete that preset. Check your browser storage settings and try again.",
+			"importInvalid": "Could not read the preset file. Check that it is a valid .recordly-preset file.",
+			"exportFailed": "Could not save the preset file."
+		},
+		"exportFile": "Export to file…",
+		"importFile": "Import from file…"
 	},
 	"dashboard": {
 		"sidebar": {
@@ -463,7 +469,11 @@
 		"frameCopied": "Bild in die Zwischenablage kopiert",
 		"frameCopyFailed": "Das Bild konnte nicht kopiert werden",
 		"copyFrame": "Bild kopieren",
-		"copyFrameHint": "Aktuelles Bild als Bild kopieren (Strg+C)"
+		"copyFrameHint": "Aktuelles Bild als Bild kopieren (Strg+C)",
+		"reelOff": "Off",
+		"reelInstagram": "Instagram",
+		"reelTikTok": "TikTok",
+		"reelOverlayLabel": "Reel screen elements"
 	},
 	"extensions": {
 		"unavailableTitle": "Extensions are no longer available",

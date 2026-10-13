@@ -132,7 +132,8 @@
 		"hidden": "Камера скрыта",
 		"default": "По умолчанию",
 		"hint": "Нажмите, чтобы добавить макет камеры",
-		"delete": "Удалить макет"
+		"delete": "Удалить макет",
+		"cutout": "Cutout"
 	},
 	"zoomEdit": {
 		"menuLabel": "Zoom menu",

@@ -3,7 +3,10 @@ import { toast } from "@/components/ui/toast";
 import {
 	type EditorPreset,
 	type EditorPresetSnapshot,
+	parseEditorPresetFile,
+	PRESET_FILE_EXTENSION,
 	saveEditorPresets,
+	serializeEditorPresetFile,
 	serializeEditorPresetSnapshot,
 } from "../editorPreferences";
 
@@ -163,7 +166,65 @@ export function useEditorPresets({
 		if (handleSaveEditorPreset(presetNameDraft)) setPresetNameDraft("");
 	}, [handleSaveEditorPreset, presetNameDraft, setPresetNameDraft]);
 
+	const handleExportEditorPresetFile = useCallback(() => {
+		const name = currentEditorPreset?.name ?? (presetNameDraft.trim() || "preset");
+		try {
+			const blob = new Blob([serializeEditorPresetFile({ name, snapshot: currentSnapshot })], {
+				type: "application/json",
+			});
+			const url = URL.createObjectURL(blob);
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = `${name.replace(/[\\/:*?"<>|]/g, "_")}${PRESET_FILE_EXTENSION}`;
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+			setTimeout(() => URL.revokeObjectURL(url), 10_000);
+			toast.success(t("editor.presets.toasts.exported", 'Exported preset "{{name}}" to a file', { name }));
+		} catch {
+			toast.error(t("editor.presets.errors.exportFailed", "Could not save the preset file."));
+		}
+	}, [currentEditorPreset, currentSnapshot, presetNameDraft, t]);
+
+	const handleImportEditorPresetFile = useCallback(
+		async (file: File) => {
+			const parsed = parseEditorPresetFile(await file.text().catch(() => ""));
+			if (!parsed) {
+				toast.error(
+					t(
+						"editor.presets.errors.importInvalid",
+						"Could not read the preset file. Check that it is a valid .recordly-preset file.",
+					),
+				);
+				return;
+			}
+			const taken = new Set(editorPresets.map((preset) => preset.name.toLocaleLowerCase()));
+			let name = parsed.name;
+			for (let n = 2; taken.has(name.toLocaleLowerCase()); n++) name = `${parsed.name} (${n})`;
+			const timestamp = new Date().toISOString();
+			const imported: EditorPreset = {
+				id: crypto.randomUUID(),
+				name,
+				createdAt: timestamp,
+				updatedAt: timestamp,
+				snapshot: parsed.snapshot,
+			};
+			const nextPresets = [imported, ...editorPresets];
+			if (!saveEditorPresets(nextPresets)) {
+				toast.error(t("editor.presets.errors.saveFailed", "Could not save that preset. Check your browser storage settings and try again."));
+				return;
+			}
+			setEditorPresets(nextPresets);
+			setActivePresetId(imported.id);
+			applySnapshot(imported.snapshot);
+			toast.success(t("editor.presets.toasts.imported", 'Imported preset "{{name}}"', { name }));
+		},
+		[applySnapshot, editorPresets, setActivePresetId, setEditorPresets, t],
+	);
+
 	return {
+		handleExportEditorPresetFile,
+		handleImportEditorPresetFile,
 		currentEditorPreset,
 		handleApplyEditorPreset,
 		handleDeleteEditorPreset,
