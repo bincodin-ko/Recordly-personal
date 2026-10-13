@@ -59,6 +59,9 @@
 		"instructions": "단축키를 클릭한 뒤 새 키 조합을 누르세요. 취소하려면 Esc를 누르세요.",
 		"resetToDefaults": "기본값으로 되돌리기",
 		"cancel": "취소",
-		"save": "저장"
+		"save": "저장",
+		"globalNeedsModifier": "녹화 단축키는 Ctrl 또는 Alt와 글자·숫자·F키 조합이어야 해요.",
+		"globalRegisterFailed": "다른 앱이 이미 쓰는 녹화 단축키예요. 다른 조합을 골라 주세요.",
+		"globalScopeHint": "다른 앱을 쓰는 중에도 동작해요"
 	}
 }

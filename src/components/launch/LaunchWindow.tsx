@@ -67,6 +67,7 @@ function LaunchWindowContent() {
 		pauseRecording,
 		resumeRecording,
 		cancelRecording,
+		restartRecording,
 		microphoneEnabled,
 		setMicrophoneEnabled,
 		microphoneDeviceId,
@@ -83,6 +84,14 @@ function LaunchWindowContent() {
 	} = useScreenRecorder();
 
 	const { elapsed, formatTime } = useRecordingTimer(recording, paused);
+
+	// Global record shortcut (main process) -> same as pressing the record/stop button.
+	const toggleRecordingRef = useRef(toggleRecording);
+	toggleRecordingRef.current = toggleRecording;
+	useEffect(
+		() => window.electronAPI?.onRecordingShortcutToggle?.(() => toggleRecordingRef.current()),
+		[],
+	);
 	const hudContentRef = useRef<HTMLDivElement>(null);
 	const hudBarRef = useRef<HTMLDivElement>(null);
 
@@ -223,6 +232,7 @@ function LaunchWindowContent() {
 			onStopRecording={toggleRecording}
 			onHideHud={() => window.electronAPI?.hudOverlayHide?.()}
 			onCancelRecording={cancelRecording}
+			onRestartRecording={restartRecording}
 			formatTime={formatTime}
 		/>
 	);

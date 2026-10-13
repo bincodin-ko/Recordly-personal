@@ -5,6 +5,7 @@ import {
 	MinusIcon,
 	PauseIcon,
 	PlayIcon,
+	ArrowCounterClockwise,
 	XIcon,
 } from "@/components/ui/icons";
 import { useScopedT } from "@/contexts/I18nContext";
@@ -20,6 +21,7 @@ interface RecordingControlsProps {
 	onStopRecording: () => void;
 	onHideHud: () => void;
 	onCancelRecording: () => void;
+	onRestartRecording: () => void;
 	formatTime: (seconds: number) => string;
 }
 export function RecordingControls({
@@ -31,6 +33,7 @@ export function RecordingControls({
 	onStopRecording,
 	onHideHud,
 	onCancelRecording,
+	onRestartRecording,
 	formatTime,
 }: RecordingControlsProps) {
 	const t = useScopedT("launch");
@@ -116,6 +119,18 @@ export function RecordingControls({
 					<span className="size-3 rounded-[3px] bg-current" />
 				</Button>
 				<Tooltip.Content>{t("recording.stop")}</Tooltip.Content>
+			</Tooltip>
+			<Tooltip>
+				<Button
+					isIconOnly
+					variant="ghost"
+					className={actionClass}
+					onPress={onRestartRecording}
+					aria-label={t("recording.restart")}
+				>
+					<ArrowCounterClockwise className="size-4" />
+				</Button>
+				<Tooltip.Content>{t("recording.restart")}</Tooltip.Content>
 			</Tooltip>
 			<Tooltip>
 				<Button

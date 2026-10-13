@@ -1066,7 +1066,10 @@ interface Window {
 			error?: string;
 		}>;
 		getShortcuts: () => Promise<Record<string, unknown> | null>;
-		saveShortcuts: (shortcuts: unknown) => Promise<{ success: boolean; error?: string }>;
+		saveShortcuts: (
+			shortcuts: unknown,
+		) => Promise<{ success: boolean; error?: string; globalShortcutRegistered?: boolean }>;
+		onRecordingShortcutToggle?: (callback: () => void) => () => void;
 		getAppSetting: (key: string) => unknown;
 		setAppSetting: (key: string, value: unknown) => boolean;
 		setHasUnsavedChanges: (hasChanges: boolean) => void;

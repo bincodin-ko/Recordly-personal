@@ -174,6 +174,10 @@ export async function closeExportStream(
 	};
 }
 
+export function hasActiveExportStreams(): boolean {
+	return exportStreamSessions.size > 0;
+}
+
 export function hasExportStream(streamId: string): boolean {
 	return exportStreamSessions.has(streamId);
 }

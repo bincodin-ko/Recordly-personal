@@ -78,7 +78,8 @@
 			"title": "Record sound from",
 			"all": "All system sound"
 		},
-		"flagHint": "Druk op Ctrl+Alt+F om hier een vlag te plaatsen"
+		"flagHint": "Druk op Ctrl+Alt+F om hier een vlag te plaatsen",
+		"restart": "Restart recording"
 	},
 	"sourceSelector": {
 		"loadingSources": "Bronnen laden...",

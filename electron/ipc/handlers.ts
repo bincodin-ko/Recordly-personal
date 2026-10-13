@@ -30,8 +30,9 @@ import {
 	windowsCaptureProcess,
 } from "./state";
 
-export { cleanupAllExportStreams } from "./export/exportStream";
-export { cleanupNativeVideoExportSessions } from "./export/native-video";
+export { cleanupAllExportStreams, hasActiveExportStreams } from "./export/exportStream";
+export { cleanupNativeVideoExportSessions, hasActiveNativeExports } from "./export/native-video";
+export { isCursorCaptureActive as isRecordingActive } from "./state";
 
 /** Returns the currently selected source ID for setDisplayMediaRequestHandler */
 export function getSelectedSourceId(): string | null {

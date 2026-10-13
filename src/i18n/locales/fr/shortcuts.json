@@ -12,6 +12,8 @@
 		"deleteSelectedAlt": "Supprimer la sélection (alt)",
 		"panTimeline": "Déplacer la timeline",
 		"zoomTimeline": "Zoomer la timeline",
-		"splitClip": "Split Clip"
+		"splitClip": "Split Clip",
+		"toggleRecording": "Start / Stop Recording",
+		"recordingFlag": "Recording Flag"
 	}
 }

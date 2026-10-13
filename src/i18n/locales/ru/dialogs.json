@@ -59,6 +59,9 @@
 		"instructions": "Выберите сочетание и нажмите новую комбинацию клавиш. Нажмите Esc для отмены.",
 		"resetToDefaults": "Сбросить по умолчанию",
 		"cancel": "Отмена",
-		"save": "Сохранить"
+		"save": "Сохранить",
+		"globalNeedsModifier": "Recording shortcut needs Ctrl or Alt and a letter, number or F-key.",
+		"globalRegisterFailed": "Another app already uses this recording shortcut. Pick a different one.",
+		"globalScopeHint": "Works even when another app is focused"
 	}
 }

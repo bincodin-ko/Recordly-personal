@@ -14,7 +14,9 @@ interface ShortcutsContextValue {
 	shortcuts: ShortcutsConfig;
 	isMac: boolean;
 	setShortcuts: (config: ShortcutsConfig) => void;
-	persistShortcuts: (config?: ShortcutsConfig) => Promise<void>;
+	persistShortcuts: (
+		config?: ShortcutsConfig,
+	) => Promise<{ globalShortcutRegistered?: boolean } | undefined>;
 	isConfigOpen: boolean;
 	openConfig: () => void;
 	closeConfig: () => void;
@@ -52,7 +54,7 @@ export function ShortcutsProvider({ children }: { children: ReactNode }) {
 
 	const persistShortcuts = useCallback(
 		async (config?: ShortcutsConfig) => {
-			await window.electronAPI?.saveShortcuts?.(config ?? shortcuts);
+			return window.electronAPI?.saveShortcuts?.(config ?? shortcuts);
 		},
 		[shortcuts],
 	);

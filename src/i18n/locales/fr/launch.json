@@ -78,7 +78,8 @@
 			"title": "Record sound from",
 			"all": "All system sound"
 		},
-		"flagHint": "Appuyez sur Ctrl+Alt+F pour ajouter un repère à cet instant"
+		"flagHint": "Appuyez sur Ctrl+Alt+F pour ajouter un repère à cet instant",
+		"restart": "Restart recording"
 	},
 	"sourceSelector": {
 		"loadingSources": "Chargement des sources...",

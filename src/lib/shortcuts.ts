@@ -6,6 +6,7 @@ export const SHORTCUT_ACTIONS = [
 	"addKeyframe",
 	"deleteSelected",
 	"playPause",
+	"toggleRecording",
 ] as const;
 
 export type ShortcutAction = (typeof SHORTCUT_ACTIONS)[number];
@@ -27,6 +28,8 @@ export interface FixedShortcut {
 }
 
 export const FIXED_SHORTCUTS: FixedShortcut[] = [
+	// Held by electron/ipc/register/recording.ts (RECORDING_FLAG_SHORTCUT).
+	{ get label() { return translate("shortcuts.actions.recordingFlag", "Recording Flag"); }, display: "Ctrl + Alt + F", bindings: [{ key: "f", ctrl: true, alt: true }] },
 	{ get label() { return translate("shortcuts.actions.cycleForward", "Cycle Annotations Forward"); }, display: "Tab", bindings: [{ key: "tab" }] },
 	{
 		get label() { return translate("shortcuts.actions.cycleBackward", "Cycle Annotations Backward"); },
@@ -80,6 +83,8 @@ export const DEFAULT_SHORTCUTS: ShortcutsConfig = {
 	addKeyframe: { key: "f" },
 	deleteSelected: { key: "d", ctrl: true },
 	playPause: { key: " " },
+	// Global: works while another app is focused (registered in the main process).
+	toggleRecording: { key: "2", ctrl: true, shift: true },
 };
 
 export const SHORTCUT_LABELS: Record<ShortcutAction, string> = {
@@ -89,6 +94,7 @@ export const SHORTCUT_LABELS: Record<ShortcutAction, string> = {
 	get addKeyframe() { return translate("shortcuts.actions.addKeyframe", "Add Keyframe"); },
 	get deleteSelected() { return translate("shortcuts.actions.deleteSelected", "Delete Selected"); },
 	get playPause() { return translate("shortcuts.actions.playPause", "Play / Pause"); },
+	get toggleRecording() { return translate("shortcuts.actions.toggleRecording", "Start / Stop Recording"); },
 };
 
 export function matchesShortcut(

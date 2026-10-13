@@ -78,7 +78,8 @@
 			"title": "Record sound from",
 			"all": "All system sound"
 		},
-		"flagHint": "按 Ctrl+Alt+F 在此刻添加标记"
+		"flagHint": "按 Ctrl+Alt+F 在此刻添加标记",
+		"restart": "Restart recording"
 	},
 	"sourceSelector": {
 		"loadingSources": "正在加载源...",
