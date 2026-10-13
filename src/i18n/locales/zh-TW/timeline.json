@@ -82,7 +82,8 @@
 		"minSec": "{{m}}m {{s}}s",
 		"zoom": "Zoom",
 		"loupe": "Glass Loupe (round lens)",
-		"loupeShort": "Loupe"
+		"loupeShort": "Loupe",
+		"off": "Off"
 	},
 	"empty": {
 		"title": "No Video Loaded",
@@ -132,5 +133,10 @@
 		"default": "預設",
 		"hint": "點擊新增攝影機版面",
 		"delete": "刪除版面"
+	},
+	"zoomEdit": {
+		"menuLabel": "Zoom menu",
+		"disable": "Turn off",
+		"enable": "Turn on"
 	}
 }

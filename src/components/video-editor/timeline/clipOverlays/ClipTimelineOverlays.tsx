@@ -15,11 +15,12 @@ import { SliderControl } from "../../SliderControl";
 import type { useClipRegionCommands } from "../../hooks/useClipRegionCommands";
 import type { RestoreDecision, TrimGap } from "../../trimRestore";
 import type { TypingSuggestion } from "../../typingSpeedUp";
-import { type ClipRegion, getClipVolume } from "../../types";
+import { type ClipRegion, getClipVolume, type ZoomRegion } from "../../types";
 import { getPreviewPlaybackRateRange } from "../../videoPlayback/playbackRate";
 
 export type OverlayState =
 	| { kind: "menu"; clipId: string; x: number; y: number }
+	| { kind: "zoomMenu"; zoomId: string; x: number; y: number }
 	| { kind: "typing"; id: string; x: number; y: number }
 	| { kind: "restore"; gap: TrimGap; decision: Exclude<RestoreDecision, { kind: "plain" }> };
 
@@ -33,6 +34,8 @@ interface Props {
 	typingSpeed: number;
 	onTypingSpeedChange: (speed: number) => void;
 	onApplyTyping: (targets: TypingSuggestion[]) => void;
+	zoomRegions: ZoomRegion[];
+	onToggleZoom: (id: string) => void;
 	onClose: () => void;
 	commands: ReturnType<typeof useClipRegionCommands>;
 	onRestore: (gap: TrimGap, side: "before" | "after" | null) => void;
@@ -132,6 +135,8 @@ export function ClipTimelineOverlays({
 	typingSpeed,
 	onTypingSpeedChange,
 	onApplyTyping,
+	zoomRegions,
+	onToggleZoom,
 	onClose,
 	commands,
 	onRestore,
@@ -225,6 +230,31 @@ export function ClipTimelineOverlays({
 							))}
 					</>
 				)}
+			</FloatingCard>
+		);
+	}
+
+	if (overlay.kind === "zoomMenu") {
+		const zoom = zoomRegions.find((z) => z.id === overlay.zoomId);
+		if (!zoom) return null;
+		return (
+			<FloatingCard
+				x={overlay.x}
+				y={overlay.y}
+				onClose={onClose}
+				label={t("zoomEdit.menuLabel", "Zoom menu")}
+			>
+				<MenuRow
+					label={
+						zoom.disabled
+							? t("zoomEdit.enable", "Turn on")
+							: t("zoomEdit.disable", "Turn off")
+					}
+					onClick={() => {
+						onToggleZoom(zoom.id);
+						onClose();
+					}}
+				/>
 			</FloatingCard>
 		);
 	}

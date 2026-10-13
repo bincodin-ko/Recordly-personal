@@ -408,3 +408,13 @@
 .glassZoom:hover .zoomEndCap {
 	opacity: 1;
 }
+
+/* Zoom block turned off: dimmed with diagonal stripes. */
+.zoomDisabled {
+	opacity: 0.45;
+	background-image: repeating-linear-gradient(
+		135deg,
+		rgba(255, 255, 255, 0.18) 0 6px,
+		rgba(0, 0, 0, 0.18) 6px 12px
+	) !important;
+}

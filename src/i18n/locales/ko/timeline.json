@@ -82,7 +82,8 @@
 		"minSec": "{{m}}분 {{s}}초",
 		"zoom": "줌",
 		"loupe": "글라스 루페(둥근 렌즈)",
-		"loupeShort": "렌즈"
+		"loupeShort": "렌즈",
+		"off": "꺼짐"
 	},
 	"empty": {
 		"title": "불러온 영상이 없어요",
@@ -132,5 +133,10 @@
 		"default": "기본",
 		"hint": "눌러서 카메라 레이아웃 추가",
 		"delete": "레이아웃 지우기"
+	},
+	"zoomEdit": {
+		"menuLabel": "줌 메뉴",
+		"disable": "끄기",
+		"enable": "켜기"
 	}
 }

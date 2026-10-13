@@ -20,6 +20,7 @@ interface Params {
 	typingTimes: number[];
 	sourceDurationMs: number;
 	clipCommands: ReturnType<typeof useClipRegionCommands>;
+	onToggleZoomDisabled: (id: string) => void;
 }
 
 /** Already sped up: every footage piece under the burst plays at a non-default speed. */
@@ -32,7 +33,7 @@ function isAlreadySped(suggestion: TypingSuggestion, clips: ClipRegion[]) {
 }
 
 export function useClipTimelineActions(params: Params) {
-	const { clipRegions, zoomRegions, typingTimes, sourceDurationMs, clipCommands } = params;
+	const { clipRegions, zoomRegions, typingTimes, sourceDurationMs, clipCommands, onToggleZoomDisabled } = params;
 	const [overlay, setOverlay] = useState<OverlayState | null>(null);
 	const [typingSpeed, setTypingSpeed] = useState(DEFAULT_TYPING_SPEED);
 
@@ -63,6 +64,7 @@ export function useClipTimelineActions(params: Params) {
 					: [];
 			}),
 			openClipMenu: (clipId, x, y) => setOverlay({ kind: "menu", clipId, x, y }),
+			openZoomMenu: (zoomId, x, y) => setOverlay({ kind: "zoomMenu", zoomId, x, y }),
 			openTrimRestore: (bubbleId) => {
 				const gap = gaps.find((g) => g.id === bubbleId);
 				if (!gap) return;
@@ -102,6 +104,8 @@ export function useClipTimelineActions(params: Params) {
 			typingSpeed={typingSpeed}
 			onTypingSpeedChange={setTypingSpeed}
 			onApplyTyping={applyTyping}
+			zoomRegions={zoomRegions}
+			onToggleZoom={onToggleZoomDisabled}
 			onClose={close}
 			commands={clipCommands}
 			onRestore={(gap: TrimGap, side) => {

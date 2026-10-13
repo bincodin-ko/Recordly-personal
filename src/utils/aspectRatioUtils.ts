@@ -5,6 +5,7 @@ export const ASPECT_RATIOS = [
 	"9:16",
 	"1:1",
 	"4:3",
+	"3:4",
 	"4:5",
 	"16:10",
 	"10:16",
@@ -60,6 +61,8 @@ export function getAspectRatioValue(aspectRatio: AspectRatio, nativeAspectRatio 
 			return 1;
 		case "4:3":
 			return 4 / 3;
+		case "3:4":
+			return 3 / 4;
 		case "4:5":
 			return 4 / 5;
 		case "16:10":
@@ -85,7 +88,7 @@ export function getAspectRatioDimensions(
 
 export function getAspectRatioLabel(aspectRatio: AspectRatio): string {
 	if (aspectRatio === "native") {
-		return translate("editor.aspect.native", "Native");
+		return translate("editor.aspect.native", "Auto");
 	}
 	if (isCustomAspectRatio(aspectRatio)) {
 		return translate("editor.aspect.custom", "Custom {{ratio}}", { ratio: aspectRatio });

@@ -19,6 +19,13 @@ export interface ZoomRegion {
 	instant?: boolean;
 	/** Screen Studio "Glass Loupe": magnify inside a round lens instead of zooming the frame. */
 	loupe?: boolean;
+	/** Screen Studio "turn off": block stays on the timeline but is skipped in preview and export. */
+	disabled?: boolean;
+}
+
+/** Zoom blocks the user turned off are dropped before preview/export. */
+export function activeZoomRegions(regions: ZoomRegion[]): ZoomRegion[] {
+	return regions.some((r) => r.disabled) ? regions.filter((r) => !r.disabled) : regions;
 }
 
 export interface CursorTelemetryPoint {

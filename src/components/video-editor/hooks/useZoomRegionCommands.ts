@@ -193,6 +193,16 @@ export function useZoomRegionCommands({
 		},
 		[selectedZoomId, setZoomRegions],
 	);
+	const handleZoomDisabledToggle = useCallback(
+		(id: string) => {
+			setZoomRegions((current) =>
+				current.map((region) =>
+					region.id === id ? { ...region, disabled: region.disabled ? undefined : true } : region,
+				),
+			);
+		},
+		[setZoomRegions],
+	);
 	const handleZoomDelete = useCallback(
 		(id: string) => {
 			setZoomRegions((current) => current.filter((region) => region.id !== id));
@@ -202,6 +212,7 @@ export function useZoomRegionCommands({
 	);
 
 	return {
+		handleZoomDisabledToggle,
 		handleSelectZoom,
 		handleZoomAdded,
 		handleZoomSuggested,

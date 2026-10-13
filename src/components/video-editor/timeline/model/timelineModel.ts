@@ -68,6 +68,7 @@ export function buildTimelineItems(params: {
 		zoomDepth: region.depth,
 		zoomMode: region.mode ?? "auto",
 		loupe: Boolean(region.loupe),
+		zoomDisabled: Boolean(region.disabled),
 		variant: "zoom",
 	}));
 

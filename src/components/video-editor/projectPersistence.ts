@@ -416,6 +416,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 								: undefined,
 						instant: region.instant === true ? true : undefined,
 						loupe: region.loupe === true ? true : undefined,
+						disabled: region.disabled === true ? true : undefined,
 					};
 				})
 		: [];
@@ -1120,7 +1121,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 			(validAspectRatios.has(editor.aspectRatio as AspectRatio) ||
 				isCustomAspectRatio(editor.aspectRatio))
 				? (editor.aspectRatio as AspectRatio)
-				: "16:9",
+				: "native",
 	};
 }
 

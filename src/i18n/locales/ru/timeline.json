@@ -82,7 +82,8 @@
 		"minSec": "{{m}}m {{s}}s",
 		"zoom": "Zoom",
 		"loupe": "Glass Loupe (round lens)",
-		"loupeShort": "Loupe"
+		"loupeShort": "Loupe",
+		"off": "Off"
 	},
 	"empty": {
 		"title": "No Video Loaded",
@@ -132,5 +133,10 @@
 		"default": "По умолчанию",
 		"hint": "Нажмите, чтобы добавить макет камеры",
 		"delete": "Удалить макет"
+	},
+	"zoomEdit": {
+		"menuLabel": "Zoom menu",
+		"disable": "Turn off",
+		"enable": "Turn on"
 	}
 }

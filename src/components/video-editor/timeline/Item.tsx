@@ -50,6 +50,8 @@ interface ItemProps {
 	zoomMode?: "auto" | "manual";
 	/** Zoom uses Glass Loupe (round lens) instead of zooming the frame. */
 	loupe?: boolean;
+	/** Zoom block turned off: dimmed and striped, skipped in preview/export. */
+	zoomDisabled?: boolean;
 	speedValue?: number;
 	waveformPeaks?: AudioPeaksData | null;
 	waveformSegmentSpan?: Span;
@@ -91,6 +93,7 @@ export default function Item({
 	zoomDepth = 1,
 	zoomMode = "auto",
 	loupe = false,
+	zoomDisabled = false,
 	speedValue,
 	waveformPeaks = null,
 	waveformSegmentSpan,
@@ -293,6 +296,7 @@ export default function Item({
 			{...attributes}
 			data-timeline-item="true"
 			data-variant={variant}
+			data-zoom-disabled={zoomDisabled || undefined}
 			data-start-ms={span.start}
 			data-end-ms={span.end}
 			aria-label={
@@ -302,10 +306,11 @@ export default function Item({
 			}
 			onPointerDownCapture={handleSelect}
 			onContextMenu={(event) => {
-				if (variant !== "clip" || !clipActions) return;
+				if (!clipActions || (variant !== "clip" && variant !== "zoom")) return;
 				event.preventDefault();
 				event.stopPropagation();
-				clipActions.openClipMenu(id, event.clientX, event.clientY);
+				if (variant === "zoom") clipActions.openZoomMenu(id, event.clientX, event.clientY);
+				else clipActions.openClipMenu(id, event.clientX, event.clientY);
 			}}
 			onDoubleClick={(event) => {
 				if (!onDoubleClick) return;
@@ -330,6 +335,7 @@ export default function Item({
 						glassClass,
 						"timeline-block w-full flex items-center justify-center gap-1.5 relative",
 						isSelected && glassStyles.selected,
+						zoomDisabled && glassStyles.zoomDisabled,
 						embedded && glassStyles.embeddedCaption,
 						isClip ? "overflow-visible" : "overflow-hidden",
 					)}
@@ -445,6 +451,14 @@ export default function Item({
 										{zoomMode === "manual"
 											? translate("timeline.item.manual", "Manual")
 											: translate("timeline.item.auto", "Auto")}
+										{zoomDisabled && (
+											<span
+												data-testid="zoom-off-badge"
+												className="ml-0.5 inline-flex items-center rounded-full bg-black/40 px-1 text-[9px] font-semibold"
+											>
+												{translate("timeline.item.off", "Off")}
+											</span>
+										)}
 										{loupe && (
 											<span
 												data-testid="zoom-loupe-badge"
