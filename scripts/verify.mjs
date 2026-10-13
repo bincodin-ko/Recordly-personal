@@ -98,7 +98,7 @@ function record(step, ok, counts, reason, seconds) {
 		[
 			bin("@playwright/test/cli.js"),
 			"test",
-			...(quick ? ["tests/ui/verify-screens.spec.ts"] : []),
+			...(quick ? ["tests/ui/verify-screens.spec.ts", "tests/ui/screen-studio-mimic-b.spec.ts"] : []),
 			"--reporter=line,json",
 			"--output=.verify/test-results",
 		],
