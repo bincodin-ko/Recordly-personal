@@ -18,6 +18,8 @@ import {
 	Tray,
 } from "electron";
 import { RECORDINGS_DIR } from "./appPaths";
+import { getQuitBusy, quitDialogOptions, shouldAllowQuit } from "./quitGuard";
+import { unregisterRecordingToggleShortcut } from "./recordingToggleShortcut";
 import { createAuthCallbackController } from "./authCallback";
 import { showCursor } from "./cursorHider";
 import { getGpuSwitches } from "./gpuSwitches";
@@ -25,6 +27,9 @@ import {
 	cleanupAllExportStreams,
 	cleanupNativeVideoExportSessions,
 	getSelectedSourceId,
+	hasActiveExportStreams,
+	hasActiveNativeExports,
+	isRecordingActive,
 	killWindowsCaptureProcess,
 	registerIpcHandlers,
 } from "./ipc/handlers";
@@ -881,7 +886,36 @@ function createSourceSelectorWindowWrapper() {
 
 // On macOS, applications and their menu bar stay active until the user quits
 // explicitly with Cmd + Q.
-app.on("before-quit", () => {
+// Asks "정말 끌까요?" while recording/exporting. Once confirmed, later quit/close steps don't ask again.
+let quitConfirmed = false;
+function confirmQuitWhileBusy(): boolean {
+	const busy = getQuitBusy({
+		recording: isRecordingActive,
+		exporting: hasActiveExportStreams() || hasActiveNativeExports(),
+	});
+	const parent = getHudOverlayWindow() ?? mainWindow;
+	const allowed = shouldAllowQuit(busy, quitConfirmed, (kind) => {
+		const options = quitDialogOptions(kind);
+		return parent && !parent.isDestroyed()
+			? dialog.showMessageBoxSync(parent, options)
+			: dialog.showMessageBoxSync(options);
+	});
+	if (allowed && busy) {
+		quitConfirmed = true;
+		// The quit that follows happens right away; forget the answer so a later take asks again.
+		setTimeout(() => {
+			quitConfirmed = false;
+		}, 2000);
+	}
+	return allowed;
+}
+
+app.on("before-quit", (event) => {
+	if (!confirmQuitWhileBusy()) {
+		event.preventDefault();
+		return;
+	}
+	unregisterRecordingToggleShortcut();
 	isAppQuitting = true;
 	authCallbacks.close();
 	void clearRecordingTrashUndo().catch((error) =>
@@ -992,6 +1026,7 @@ app.whenReady().then(async () => {
 	}
 
 	ipcMain.on("hud-overlay-close", () => {
+		if (!confirmQuitWhileBusy()) return;
 		const hud = getHudOverlayWindow();
 		if (hud) {
 			console.log("[main] Closing HUD window via hud-overlay-close");

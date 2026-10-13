@@ -78,7 +78,8 @@
 			"title": "Record sound from",
 			"all": "All system sound"
 		},
-		"flagHint": "Нажмите Ctrl+Alt+F, чтобы поставить флажок в этот момент"
+		"flagHint": "Нажмите Ctrl+Alt+F, чтобы поставить флажок в этот момент",
+		"restart": "Restart recording"
 	},
 	"sourceSelector": {
 		"loadingSources": "Загрузка источников...",

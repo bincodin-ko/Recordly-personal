@@ -12,6 +12,8 @@
 		"deleteSelectedAlt": "删除选中（替代）",
 		"panTimeline": "平移时间线",
 		"zoomTimeline": "缩放时间线",
-		"splitClip": "Split Clip"
+		"splitClip": "Split Clip",
+		"toggleRecording": "Start / Stop Recording",
+		"recordingFlag": "Recording Flag"
 	}
 }

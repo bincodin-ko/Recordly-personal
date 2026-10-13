@@ -59,6 +59,9 @@
 		"instructions": "Klik op een sneltoets en druk vervolgens op de nieuwe toetscombinatie. Druk op Esc om te annuleren.",
 		"resetToDefaults": "Standaardwaarden herstellen",
 		"cancel": "Annuleren",
-		"save": "Opslaan"
+		"save": "Opslaan",
+		"globalNeedsModifier": "Recording shortcut needs Ctrl or Alt and a letter, number or F-key.",
+		"globalRegisterFailed": "Another app already uses this recording shortcut. Pick a different one.",
+		"globalScopeHint": "Works even when another app is focused"
 	}
 }

@@ -12,6 +12,8 @@
 		"deleteSelectedAlt": "선택 항목 삭제 (보조)",
 		"panTimeline": "타임라인 이동",
 		"zoomTimeline": "타임라인 확대/축소",
-		"splitClip": "클립 나누기"
+		"splitClip": "클립 나누기",
+		"toggleRecording": "녹화 시작 / 종료",
+		"recordingFlag": "녹화 깃발"
 	}
 }

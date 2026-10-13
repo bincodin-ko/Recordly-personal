@@ -145,7 +145,8 @@ type UseScreenRecorderReturn = {
 	toggleRecording: () => void;
 	pauseRecording: () => void;
 	resumeRecording: () => void;
-	cancelRecording: () => void;
+	cancelRecording: () => Promise<void>;
+	restartRecording: () => Promise<void>;
 	preparePermissions: (options?: { startup?: boolean }) => Promise<boolean>;
 	isMacOS: boolean;
 	microphoneEnabled: boolean;
@@ -2402,7 +2403,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 		}
 	}, [markRecordingResumed, paused, recording, resumeMicFallbackRecorder]);
 
-	const cancelRecording = useCallback(() => {
+	const cancelRecording = useCallback(async () => {
 		recordingStartGeneration.current += 1;
 		if (!recording) return;
 		setPaused(false);
@@ -2424,9 +2425,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 		if (nativeScreenRecording.current) {
 			setRecording(false);
 			window.electronAPI?.setRecordingState(false);
-			void (async () => {
-				await Promise.allSettled([discardActiveNativeCapture(), stopMicFallbackRecorder()]);
-			})();
+			await Promise.allSettled([discardActiveNativeCapture(), stopMicFallbackRecorder()]);
 			return;
 		}
 
@@ -2446,6 +2445,13 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 		recording,
 		stopMicFallbackRecorder,
 	]);
+
+	// Screen Studio "Restart": throw this take away and begin a new one with the same source/settings.
+	const restartRecording = async () => {
+		if (!recording || starting || finalizing) return;
+		await cancelRecording();
+		await startRecording();
+	};
 
 	const toggleRecording = async () => {
 		if (starting || countdownActive || finalizing) {
@@ -2469,6 +2475,7 @@ export function useScreenRecorder(): UseScreenRecorderReturn {
 		pauseRecording,
 		resumeRecording,
 		cancelRecording,
+		restartRecording,
 		preparePermissions,
 		isMacOS,
 		microphoneEnabled,

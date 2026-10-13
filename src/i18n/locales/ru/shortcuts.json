@@ -12,6 +12,8 @@
 		"deleteSelectedAlt": "Удалить выбранное (alt)",
 		"panTimeline": "Прокрутка таймлайна",
 		"zoomTimeline": "Масштабирование таймлайна",
-		"splitClip": "Split Clip"
+		"splitClip": "Split Clip",
+		"toggleRecording": "Start / Stop Recording",
+		"recordingFlag": "Recording Flag"
 	}
 }

@@ -206,6 +206,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
 		ipcRenderer.on("editor-mode-changed", listener);
 		return () => ipcRenderer.removeListener("editor-mode-changed", listener);
 	},
+	onRecordingShortcutToggle: (callback: () => void) => {
+		const listener = () => callback();
+		ipcRenderer.on("recording-shortcut-toggle", listener);
+		return () => ipcRenderer.removeListener("recording-shortcut-toggle", listener);
+	},
 	hudOverlayRendererReady: () => {
 		ipcRenderer.send("hud-overlay-renderer-ready");
 	},

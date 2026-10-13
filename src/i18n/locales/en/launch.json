@@ -78,7 +78,8 @@
 			"title": "Record sound from",
 			"all": "All system sound"
 		},
-		"flagHint": "Press Ctrl+Alt+F to add a flag at this moment"
+		"flagHint": "Press Ctrl+Alt+F to add a flag at this moment",
+		"restart": "Restart recording"
 	},
 	"sourceSelector": {
 		"loadingSources": "Loading sources...",

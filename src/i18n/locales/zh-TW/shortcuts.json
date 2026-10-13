@@ -12,6 +12,8 @@
 		"deleteSelectedAlt": "刪除所選項目（Alt）",
 		"panTimeline": "平移時間軸",
 		"zoomTimeline": "縮放時間軸",
-		"splitClip": "Split Clip"
+		"splitClip": "Split Clip",
+		"toggleRecording": "Start / Stop Recording",
+		"recordingFlag": "Recording Flag"
 	}
 }

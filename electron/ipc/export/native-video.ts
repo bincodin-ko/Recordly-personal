@@ -350,6 +350,10 @@ export interface NativeStaticLayoutExportSession {
 	currentProcess: ReturnType<typeof spawn> | null;
 }
 
+export function hasActiveNativeExports(): boolean {
+	return nativeVideoExportSessions.size > 0 || nativeStaticLayoutExportSessions.size > 0;
+}
+
 export function cleanupNativeVideoExportSessions() {
 	for (const [sessionId, session] of nativeVideoExportSessions) {
 		session.terminating = true;

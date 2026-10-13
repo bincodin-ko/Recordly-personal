@@ -78,7 +78,8 @@
 			"title": "Record sound from",
 			"all": "All system sound"
 		},
-		"flagHint": "Premi Ctrl+Alt+F per aggiungere un segnaposto in questo momento"
+		"flagHint": "Premi Ctrl+Alt+F per aggiungere un segnaposto in questo momento",
+		"restart": "Restart recording"
 	},
 	"sourceSelector": {
 		"loadingSources": "Caricamento sorgenti...",

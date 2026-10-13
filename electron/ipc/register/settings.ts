@@ -3,7 +3,8 @@ import fs from "node:fs/promises";
 import { app, BrowserWindow, ipcMain } from "electron";
 import { hasAppSetting, readAppSettingsStore, writeAppSettingsStore } from "../../appSettingsStore";
 import { hideCursor } from "../../cursorHider";
-import { createCountdownWindow } from "../../windows";
+import { applyRecordingToggleShortcut } from "../../recordingToggleShortcut";
+import { createCountdownWindow, getHudOverlayWindow } from "../../windows";
 import { COUNTDOWN_SETTINGS_FILE, RECORDINGS_SETTINGS_FILE, SHORTCUTS_FILE } from "../constants";
 import {
 	createRecordingPreferencesStore,
@@ -39,7 +40,22 @@ function getBrowserMicrophoneProfileFromEnv() {
 	};
 }
 
+function applyToggleShortcut(saved: unknown) {
+	return applyRecordingToggleShortcut(saved, () => {
+		const hud = getHudOverlayWindow();
+		if (hud && !hud.isDestroyed()) hud.webContents.send("recording-shortcut-toggle");
+	});
+}
+
 export function registerSettingsHandlers() {
+	void fs
+		.readFile(SHORTCUTS_FILE, "utf-8")
+		.then((data) => parseJsonWithByteOrderMark(data) as unknown)
+		.catch(() => null)
+		.then((saved) => {
+			applyToggleShortcut(saved);
+		});
+
 	ipcMain.handle(
 		"get-window-fullscreen",
 		(event) => BrowserWindow.fromWebContents(event.sender)?.isFullScreen() ?? false,
@@ -122,7 +138,8 @@ export function registerSettingsHandlers() {
 	ipcMain.handle("save-shortcuts", async (_, shortcuts: unknown) => {
 		try {
 			await fs.writeFile(SHORTCUTS_FILE, JSON.stringify(shortcuts, null, 2), "utf-8");
-			return { success: true };
+			const registration = applyToggleShortcut(shortcuts);
+			return { success: true, globalShortcutRegistered: registration.success };
 		} catch (error) {
 			console.error("Failed to save shortcuts:", error);
 			return { success: false, error: String(error) };

@@ -23,6 +23,7 @@ import {
 	type ShortcutConflict,
 	type ShortcutsConfig,
 } from "@/lib/shortcuts";
+import { bindingToAccelerator } from "@/lib/globalAccelerator";
 import { useScopedT } from "../../contexts/I18nContext";
 
 const MODIFIER_KEYS = new Set(["Control", "Shift", "Alt", "Meta"]);
@@ -62,8 +63,11 @@ export function ShortcutsConfigDialog() {
 
 			if (MODIFIER_KEYS.has(e.key)) return;
 
+			// Shift/Alt change e.key ("@" for Shift+2); the global shortcut needs the physical key.
+			const physicalKey =
+				captureFor === "toggleRecording" ? /^(?:Digit|Key)(.)$/.exec(e.code)?.[1] : undefined;
 			const binding: ShortcutBinding = {
-				key: e.key.toLowerCase(),
+				key: (physicalKey ?? e.key).toLowerCase(),
 				...(e.ctrlKey || e.metaKey ? { ctrl: true } : {}),
 				...(e.shiftKey ? { shift: true } : {}),
 				...(e.altKey ? { alt: true } : {}),
@@ -71,6 +75,11 @@ export function ShortcutsConfigDialog() {
 
 			const found = findConflict(binding, captureFor, draft);
 			setCaptureFor(null);
+
+			if (captureFor === "toggleRecording" && !bindingToAccelerator(binding)) {
+				toast.error(t("shortcutsConfig.globalNeedsModifier"));
+				return;
+			}
 
 			if (found?.type === "fixed") {
 				toast.error(t("shortcutsConfig.reserved", undefined, { label: found.label }));
@@ -104,8 +113,12 @@ export function ShortcutsConfigDialog() {
 
 	const handleSave = useCallback(async () => {
 		setShortcuts(draft);
-		await persistShortcuts(draft);
-		toast.success(t("shortcutsConfig.saved"));
+		const result = await persistShortcuts(draft);
+		if (result && result.globalShortcutRegistered === false) {
+			toast.error(t("shortcutsConfig.globalRegisterFailed"));
+		} else {
+			toast.success(t("shortcutsConfig.saved"));
+		}
 		closeConfig();
 	}, [draft, setShortcuts, persistShortcuts, closeConfig, t]);
 

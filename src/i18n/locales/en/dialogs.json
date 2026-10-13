@@ -59,6 +59,9 @@
 		"instructions": "Click a shortcut then press the new key combination. Press Esc to cancel.",
 		"resetToDefaults": "Reset to defaults",
 		"cancel": "Cancel",
-		"save": "Save"
+		"save": "Save",
+		"globalNeedsModifier": "Recording shortcut needs Ctrl or Alt and a letter, number or F-key.",
+		"globalRegisterFailed": "Another app already uses this recording shortcut. Pick a different one.",
+		"globalScopeHint": "Works even when another app is focused"
 	}
 }
