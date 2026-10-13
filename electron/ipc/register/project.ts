@@ -12,7 +12,11 @@ import path from "node:path";
 import { BrowserWindow, dialog, ipcMain, shell } from "electron";
 import { RECORDINGS_DIR } from "../../appPaths";
 import { buildMediaUrl, getMediaServerBaseUrl } from "../../mediaServer";
-import { LEGACY_PROJECT_FILE_EXTENSIONS, PROJECT_FILE_EXTENSION } from "../constants";
+import {
+	COMPANION_AUDIO_LAYOUTS,
+	LEGACY_PROJECT_FILE_EXTENSIONS,
+	PROJECT_FILE_EXTENSION,
+} from "../constants";
 import { getProjectBackupPath, writeProjectFileAtomically } from "../project/atomicSave";
 import {
 	getProjectsDir,
@@ -31,6 +35,7 @@ import {
 	saveProjectThumbnail,
 	saveRecentProjectPaths,
 } from "../project/manager";
+import { buildRawFilePlan } from "../project/rawFiles";
 import { persistRecordingSessionManifest, resolveRecordingSession } from "../project/session";
 import {
 	currentProjectPath,
@@ -347,6 +352,48 @@ export function registerProjectHandlers() {
 			}
 		},
 	);
+	ipcMain.handle("extract-raw-recording-files", async (event, videoPath: string) => {
+		try {
+			const source = normalizeVideoSourcePath(videoPath);
+			if (!source) return { success: false, error: "No recording is loaded." };
+			const window = BrowserWindow.fromWebContents(event.sender);
+			const dialogOptions = {
+				title: "원본 파일을 꺼낼 폴더 선택",
+				properties: ["openDirectory", "createDirectory"] as Array<
+					"openDirectory" | "createDirectory"
+				>,
+			};
+			const picked = window
+				? await dialog.showOpenDialog(window, dialogOptions)
+				: await dialog.showOpenDialog(dialogOptions);
+			if (picked.canceled || !picked.filePaths[0]) return { success: false, canceled: true };
+			const destDir = picked.filePaths[0];
+			const session = await resolveRecordingSession(source);
+			const basePath = source.replace(/\.[^.]+$/u, "");
+			const plan = await buildRawFilePlan({
+				videoPath: source,
+				webcamPath: session?.webcamPath ?? null,
+				destDir,
+				companions: COMPANION_AUDIO_LAYOUTS.flatMap((layout) => [
+					{ kind: "system" as const, src: `${basePath}${layout.systemSuffix}` },
+					{ kind: "microphone" as const, src: `${basePath}${layout.micSuffix}` },
+				]),
+			});
+			for (const item of plan) {
+				if (path.resolve(item.src) !== path.resolve(item.dest)) {
+					await fs.copyFile(item.src, item.dest);
+				}
+			}
+			return {
+				success: true,
+				folder: destDir,
+				files: plan.map((item) => ({ kind: item.kind, path: item.dest })),
+			};
+		} catch (error) {
+			console.error("Failed to extract raw recording files:", error);
+			return { success: false, error: String(error) };
+		}
+	});
 	ipcMain.handle("reveal-in-folder", async (_, filePath: string) => {
 		try {
 			// shell.showItemInFolder doesn't return a value, it throws on error

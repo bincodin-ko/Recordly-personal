@@ -1010,6 +1010,13 @@ interface Window {
 		ackAuthCallbackUrl: (url: string) => Promise<void>;
 		getPendingAuthCallbackUrl: () => Promise<string | null>;
 		onAuthCallbackUrl: (callback: (url: string) => void) => () => void;
+		extractRawRecordingFiles: (videoPath: string) => Promise<{
+			success: boolean;
+			canceled?: boolean;
+			folder?: string;
+			files?: Array<{ kind: "screen" | "camera" | "microphone" | "system"; path: string }>;
+			error?: string;
+		}>;
 		revealInFolder: (
 			filePath: string,
 		) => Promise<{ success: boolean; error?: string; message?: string }>;

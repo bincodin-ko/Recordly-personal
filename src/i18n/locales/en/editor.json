@@ -441,7 +441,9 @@
 		"home": "Home",
 		"clips": "Clips",
 		"export": "Export",
-		"togglePanel": "Toggle settings panel"
+		"togglePanel": "Toggle settings panel",
+		"more": "More",
+		"extractRaw": "Extract raw files..."
 	},
 	"shell": {
 		"openProjects": "Open Projects"
@@ -590,5 +592,11 @@
 		"label": "Settings panel position",
 		"left": "Left",
 		"right": "Right"
+	},
+	"rawFiles": {
+		"noSource": "No recording is loaded",
+		"failed": "Could not extract raw files",
+		"done": "Extracted {{count}} raw files",
+		"openFolder": "Open folder"
 	}
 }

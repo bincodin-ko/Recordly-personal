@@ -9,9 +9,10 @@ import { useRecordingLibrary } from "../library/useRecordingLibrary";
 import { RecordingLibraryPanel } from "../library/RecordingLibraryPanel";
 import { RECORDING_DRAG_TYPE } from "@/types/recordingLibrary";
 import { Button } from "@/components/ui/button";
+import { resolveAutoCaptionSourcePath } from "../autoCaptionSource";
 import { useCallback, useMemo, useEffect, useRef, useState, type ComponentProps } from "react";
 import { EditorAnnouncementBanner } from "@/components/announcements/EditorAnnouncementBanner";
-import { Toaster } from "@/components/ui/toast";
+import { toast, Toaster } from "@/components/ui/toast";
 import type { useI18n } from "@/contexts/I18nContext";
 import type { useEditorExportController } from "../export/useEditorExportController";
 import type { useExportDimensions } from "../export/useExportDimensions";
@@ -68,6 +69,35 @@ export function EditorShell(props: Props) {
 	const [shareRequestNonce, setShareRequestNonce] = useState(0);
 	const auth = useRecordlyAuth();
 	const { isMac } = useShortcuts();
+	const handleExtractRaw = useCallback(async () => {
+		const source = resolveAutoCaptionSourcePath({
+			videoSourcePath: props.project.videoSourcePath,
+			videoPath: props.project.videoPath,
+		});
+		if (!source) {
+			toast.error(props.t("editor.rawFiles.noSource", "No recording is loaded"));
+			return;
+		}
+		const result = await window.electronAPI.extractRawRecordingFiles(source);
+		if (result.canceled) return;
+		if (!result.success || !result.folder) {
+			toast.error(result.error || props.t("editor.rawFiles.failed", "Could not extract raw files"));
+			return;
+		}
+		const folder = result.folder;
+		toast.success(
+			props.t("editor.rawFiles.done", "Extracted {{count}} raw files", {
+				count: result.files?.length ?? 0,
+			}),
+			{
+				duration: 10000,
+				action: {
+					label: props.t("editor.rawFiles.openFolder", "Open folder"),
+					onClick: () => void window.electronAPI.revealInFolder(result.files?.[0]?.path ?? folder),
+				},
+			},
+		);
+	}, [props.project.videoSourcePath, props.project.videoPath, props.t]);
 	const requestSignIn = (reason: SignInReason) => {
 		if (reason === "share" && auth.user) {
 			setShareRequestNonce((value) => value + 1);
@@ -266,6 +296,7 @@ export function EditorShell(props: Props) {
 			<EditorHeader
 				panelOpen={panelOpen}
 				onTogglePanel={() => setPanelOpen((open) => !open)}
+				onExtractRaw={() => void handleExtractRaw()}
 				clipsOpen={library.open}
 				onToggleClips={() => library.setOpen((open) => !open)}
 				t={t}
@@ -500,6 +531,7 @@ export function EditorShell(props: Props) {
 				handleSave={() => void saveActions.handleSaveProject()}
 				handleOpenProjects={openActions.handleOpenProjectBrowser}
 				handleOpenExport={dialogActions.handleOpenExportDropdown}
+				handleExtractRaw={() => void handleExtractRaw()}
 			/>
 			<Toaster className="pointer-events-auto" />
 		</div>

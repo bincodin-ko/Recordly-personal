@@ -1072,6 +1072,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
 		ipcRenderer.on("auth:callback", listener);
 		return () => ipcRenderer.removeListener("auth:callback", listener);
 	},
+	extractRawRecordingFiles: (videoPath: string) => {
+		return ipcRenderer.invoke("extract-raw-recording-files", videoPath);
+	},
 	revealInFolder: (filePath: string) => {
 		return ipcRenderer.invoke("reveal-in-folder", filePath);
 	},
