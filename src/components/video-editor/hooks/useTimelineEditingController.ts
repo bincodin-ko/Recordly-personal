@@ -1,9 +1,10 @@
 import { translate } from "@/contexts/I18nContext";
 import type { Dispatch, MutableRefObject, RefObject, SetStateAction } from "react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "@/components/ui/toast";
 import type { useI18n } from "@/contexts/I18nContext";
 import type { useShortcuts } from "@/contexts/ShortcutsContext";
+import { analyzeMicLevels, shouldAutoMuteMic, takeFreshRecordingMicCheck } from "../audio/micSpeech";
 import { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
 import type { useAppearanceState } from "../state/useAppearanceState";
 import type { useTimelineState } from "../state/useTimelineState";
@@ -103,12 +104,27 @@ export function useTimelineEditingController(input: Input) {
 		summarizeErrorMessage,
 		onSourceFallbackLoadError: handleSourceFallbackLoadError,
 	});
+	// New recording whose mic caught no speech opens with "Mute microphone" on (Screen Studio).
+	const micTrackPath = audio.sourceAudioFallbackPaths.find((path) => /\.mic\./i.test(path)) ?? null;
+	const { videoPath } = input;
+	const { setAudioExtras } = input.appearance;
+	const currentVideoPathRef = useRef(videoPath);
+	currentVideoPathRef.current = videoPath;
+	useEffect(() => {
+		if (!micTrackPath || !takeFreshRecordingMicCheck(videoPath)) return;
+		// No cleanup-cancel: the marker is consumed once (StrictMode re-runs would lose it).
+		void analyzeMicLevels(micTrackPath).then((levels) => {
+			if (currentVideoPathRef.current === videoPath && shouldAutoMuteMic(levels))
+				setAudioExtras((previous) => ({ ...previous, micMuted: true }));
+		});
+	}, [micTrackPath, videoPath, setAudioExtras]);
 	const playback = useEditorPlaybackControls({
 		videoPlaybackRef: input.videoPlaybackRef,
 		timelineRef: input.timelineRef,
 		playSourceAudioPreview: audio.playSourceAudioPreview,
 		timelinePlayheadTime: projection.timelinePlayheadTime,
 		timelineDuration: projection.timelineDuration,
+		playheadKey: input.videoSourcePath ?? input.videoPath,
 		scrubAudio: {
 			videoResource: input.videoPath,
 			fallbackPaths: audio.previewSourceAudioFallbackPaths,

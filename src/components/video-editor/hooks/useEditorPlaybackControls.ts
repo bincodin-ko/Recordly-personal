@@ -9,6 +9,7 @@ import {
 } from "../scrub/jkl";
 import { ScrubAudio, type ScrubSource } from "../scrub/scrubAudio";
 import { scrubRate } from "../scrub/scrubMath";
+import { loadPlayhead, savePlayhead } from "./playheadMemory";
 import type { TimelineEditorHandle } from "../timeline/TimelineEditor";
 import type { VideoPlaybackRef } from "../VideoPlayback";
 
@@ -18,6 +19,8 @@ interface UseEditorPlaybackControlsParams {
 	playSourceAudioPreview: () => void;
 	timelinePlayheadTime: number;
 	timelineDuration: number;
+	/** Identifies the recording so its playhead can be restored on reopen. */
+	playheadKey: string | null;
 	/** Audio used for audible scrubbing and J/K/L. */
 	scrubAudio: {
 		videoResource: string | null;
@@ -49,6 +52,7 @@ export function useEditorPlaybackControls({
 	playSourceAudioPreview,
 	timelinePlayheadTime,
 	timelineDuration,
+	playheadKey,
 	scrubAudio,
 }: UseEditorPlaybackControlsParams) {
 	const getActivePlayback = useCallback(() => videoPlaybackRef.current, [videoPlaybackRef]);
@@ -248,6 +252,25 @@ export function useEditorPlaybackControls({
 		},
 		[stopJkl],
 	);
+
+	// --- Reopen at the saved playhead ---
+	const restoredKey = useRef<string | null>(null);
+	useEffect(() => {
+		const playback = getActivePlayback();
+		if (!playheadKey || restoredKey.current === playheadKey) return;
+		if (!(timelineDuration > 0) || !playback?.video) return;
+		restoredKey.current = playheadKey;
+		const saved = loadPlayhead(window.localStorage, playheadKey, timelineDuration);
+		if (saved !== null) playback.seekTimeline(saved);
+	}, [getActivePlayback, playheadKey, timelineDuration]);
+	useEffect(() => {
+		if (!playheadKey || restoredKey.current !== playheadKey) return;
+		const timer = window.setTimeout(
+			() => savePlayhead(window.localStorage, playheadKey, timelinePlayheadTime),
+			400,
+		);
+		return () => window.clearTimeout(timer);
+	}, [playheadKey, timelinePlayheadTime]);
 
 	const handleTimelineSeek = useCallback(
 		(time: number) => {

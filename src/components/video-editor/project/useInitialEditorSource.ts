@@ -1,5 +1,6 @@
 import { translate } from "@/contexts/I18nContext";
 /* biome-ignore-all lint/correctness/useExhaustiveDependencies: editor state setters are stable and initial source loading intentionally runs once per launch configuration. */
+import { markFreshRecordingForMicCheck } from "../audio/micSpeech";
 import { type MutableRefObject, useEffect, useRef } from "react";
 import { fromFileUrl, resolveVideoUrl } from "../projectPersistence";
 import type { getDevOpenRecordingConfig, getSmokeExportConfig } from "../smokeExportConfig";
@@ -169,6 +170,7 @@ export function useInitialEditorSource({
 					pendingFreshRecordingAutoZoomPathRef.current =
 						appearance.autoApplyFreshRecordingAutoZooms ? sourceUrl : null;
 					applySessionPresentation(sessionResult.session);
+					markFreshRecordingForMicCheck(sourceUrl);
 					// Area recording: start the fresh recording cropped to the chosen rectangle.
 					const area = sessionResult.session.initialCropRegion;
 					if (area && area.width > 0 && area.height > 0) {
