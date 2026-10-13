@@ -1,5 +1,5 @@
-단계: 1
-상태: 진행중
+단계: 3
+상태: 승인대기
 테스트 명령: npm run verify -- --quick
 
 # feature-mimic: Screen Studio → Recordly 개인용
@@ -19,6 +19,7 @@
 
 ## 진행
 - [x] 1-1 자료 수집: docs/*.txt (가이드 70쪽), docs/changelog-4.0.txt, docs/homepage-features.txt
-- [ ] 1-3/1-5 대조표 compare.md (Screen Studio 기능 전부 vs Recordly)
+- [x] 1-3 대조표 compare.md: 151개 / 같음 78 / 다름 37 / 없음 22 / 해당없음 12 / 미확인 2
 - [ ] 빠진 것 묶음 계획 → 사용자 승인
-- [ ] 디자인 오류 점검 (ai-qa)
+- [x] 디자인 오류 점검 design-check.md: 실제 오류 3 (줌 탭 단어 끊김, 1280 창 카메라·자막 잘림, Ctrl+K 잘림), 시험용 가짜 데이터 탓 2(영어), 의심 1(소스 창 흰 화면)
+- [ ] 9묶음 승인 대기 (personal/PLAN.md)
