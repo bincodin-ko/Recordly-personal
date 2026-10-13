@@ -241,7 +241,7 @@ export function EditorHeader(props: Props) {
 					<DropdownMenuContent align="end">
 						<DropdownMenuItem
 							onClick={props.onExtractRaw}
-							className="cursor-pointer text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
+							className="cursor-pointer text-foreground hover:bg-foreground/10"
 						>
 							{t("editor.header.extractRaw", "Extract raw files...")}
 						</DropdownMenuItem>

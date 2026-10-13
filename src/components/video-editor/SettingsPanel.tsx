@@ -1919,7 +1919,8 @@ export function SettingsPanel({
 		return (
 			<Card className="flex min-h-0 flex-1 flex-col gap-0 overflow-hidden rounded-none bg-transparent p-0 shadow-none">
 				<div
-					className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-6 pt-1"
+					data-testid="settings-scroll"
+					className="settings-scroll flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-8 pt-1"
 					style={{ scrollbarGutter: "stable" }}
 				>
 					<div className="mb-4 flex items-center gap-2">
@@ -3988,7 +3989,8 @@ export function SettingsPanel({
 	return (
 		<Card className="flex min-h-0 flex-1 flex-col gap-0 overflow-hidden rounded-none bg-transparent p-0 shadow-none">
 			<div
-				className="flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-6 pt-1"
+				data-testid="settings-scroll"
+					className="settings-scroll flex-1 min-h-0 overflow-y-auto custom-scrollbar px-5 pb-8 pt-1"
 				style={{ scrollbarGutter: "stable" }}
 			>
 				<AnimatePresence mode="wait" initial={false}>

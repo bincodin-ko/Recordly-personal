@@ -70,10 +70,16 @@ export function EditorShell(props: Props) {
 	const auth = useRecordlyAuth();
 	const { isMac } = useShortcuts();
 	const handleExtractRaw = useCallback(async () => {
-		const source = resolveAutoCaptionSourcePath({
+		let source = resolveAutoCaptionSourcePath({
 			videoSourcePath: props.project.videoSourcePath,
 			videoPath: props.project.videoPath,
 		});
+		if (!source) {
+			const session = await window.electronAPI.getCurrentRecordingSession?.();
+			source = resolveAutoCaptionSourcePath({
+				recordingSessionVideoPath: session?.success ? session.session?.videoPath : null,
+			});
+		}
 		if (!source) {
 			toast.error(props.t("editor.rawFiles.noSource", "No recording is loaded"));
 			return;

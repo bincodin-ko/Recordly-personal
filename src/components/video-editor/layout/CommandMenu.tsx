@@ -120,10 +120,11 @@ export function CommandMenu({
 						placeholder={placeholder}
 						aria-label={placeholder}
 						spellCheck={false}
-						className="h-12 min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+						style={{ outline: "none" }} // the dialog is the focus context; the global ring would clip at its rounded edge
+						className="h-12 min-w-0 flex-1 bg-transparent text-sm placeholder:text-muted-foreground"
 					/>
 				</div>
-				<div ref={listRef} role="listbox" className="min-h-0 flex-1 overflow-y-auto p-1.5">
+				<div ref={listRef} role="listbox" className="max-h-[300px] min-h-0 flex-1 overflow-y-auto p-1.5">
 					{results.length === 0 ? (
 						<div className="px-3 py-8 text-center text-sm text-muted-foreground">
 							{emptyLabel}
