@@ -135,6 +135,7 @@ export function EditorTimelinePanel(props: Props) {
 		typingTimes: timeline.typingTimes,
 		sourceDurationMs,
 		clipCommands,
+		onToggleZoomDisabled: zoomCommands.handleZoomDisabledToggle,
 	});
 	const shortcutBlocks = useMemo(
 		() =>

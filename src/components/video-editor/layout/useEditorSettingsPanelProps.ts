@@ -120,6 +120,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		onAudioDelete: audioCommands.handleAudioDelete,
 		shadowIntensity: appearance.shadowIntensity,
 		onShadowChange: appearance.setShadowIntensity,
+		frameStyle: appearance.frameStyle,
+		onFrameStyleChange: appearance.setFrameStyle,
 		backgroundBlur: appearance.backgroundBlur,
 		onBackgroundBlurChange: appearance.setBackgroundBlur,
 		autoApplyFreshRecordingAutoZooms: appearance.autoApplyFreshRecordingAutoZooms,

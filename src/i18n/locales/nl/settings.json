@@ -219,7 +219,11 @@
 			"toggle": "Schakelaar"
 		},
 		"webcamAvoidCursor": "Wijk uit voor de cursor",
-		"webcamHideWhenSilent": "Verbergen bij stilte"
+		"webcamHideWhenSilent": "Verbergen bij stilte",
+		"shadowAngle": "Angle",
+		"shadowDistance": "Distance",
+		"shadowSoftness": "Softness",
+		"inset": "Inset"
 	},
 	"sections": {
 		"scene": "Scène",

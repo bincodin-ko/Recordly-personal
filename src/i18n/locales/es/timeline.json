@@ -82,7 +82,8 @@
 		"minSec": "{{m}}m {{s}}s",
 		"zoom": "Zoom",
 		"loupe": "Glass Loupe (round lens)",
-		"loupeShort": "Loupe"
+		"loupeShort": "Loupe",
+		"off": "Off"
 	},
 	"empty": {
 		"title": "No Video Loaded",
@@ -132,5 +133,10 @@
 		"default": "Predeterminado",
 		"hint": "Haz clic para añadir un diseño de cámara",
 		"delete": "Eliminar diseño"
+	},
+	"zoomEdit": {
+		"menuLabel": "Zoom menu",
+		"disable": "Turn off",
+		"enable": "Turn on"
 	}
 }

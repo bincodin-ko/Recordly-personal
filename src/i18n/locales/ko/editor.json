@@ -529,7 +529,7 @@
 		"exportNoOutput": "내보내기 결과물이 만들어지지 않았어요"
 	},
 	"aspect": {
-		"native": "원본 비율",
+		"native": "자동",
 		"custom": "직접 지정 {{ratio}}"
 	},
 	"audioSync": {

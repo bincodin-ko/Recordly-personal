@@ -944,6 +944,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 							zoomDepth={item.zoomDepth}
 							zoomMode={item.zoomMode}
 						loupe={item.loupe}
+							zoomDisabled={item.zoomDisabled}
 							variant="zoom"
 						>
 							{item.label}

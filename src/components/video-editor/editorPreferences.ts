@@ -324,7 +324,8 @@ function normalizeEditorControls(
 		borderRadius: sanitizedRaw.borderRadius ?? fallback.borderRadius,
 		padding: sanitizedRaw.padding ?? fallback.padding,
 		webcam: sanitizedRaw.webcam ?? fallback.webcam,
-		aspectRatio: sanitizedRaw.aspectRatio ?? fallback.aspectRatio,
+		// Aspect ratio is per-project; new recordings always start on "native" (자동).
+		aspectRatio: fallback.aspectRatio,
 	};
 
 	const normalized = normalizeProjectEditor(candidate);

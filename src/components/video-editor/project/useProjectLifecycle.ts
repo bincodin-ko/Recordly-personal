@@ -132,6 +132,7 @@ export function useProjectLifecycle(input: Input) {
 
 		appearance.setWallpaper(editor.wallpaper);
 		appearance.setShadowIntensity(editor.shadowIntensity);
+		appearance.setFrameStyle(editor.frameStyle);
 		appearance.setBackgroundBlur(editor.backgroundBlur);
 		appearance.setZoomMotionBlur(editor.zoomMotionBlur);
 		appearance.setZoomMotionBlurTuning({ ...editor.zoomMotionBlurTuning });

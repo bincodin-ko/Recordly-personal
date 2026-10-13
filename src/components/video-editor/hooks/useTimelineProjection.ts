@@ -14,7 +14,7 @@ import {
 	mapTimelineTimeToSourceTime,
 	type SpeedRegion,
 	trimsToClips,
-	type ZoomRegion,
+	activeZoomRegions,
 } from "../types";
 
 type Input = {
@@ -102,7 +102,7 @@ export function useTimelineProjection({
 		(timeMs: number) => mapSourceTimeToTimelineTime(timeMs, clipRegions),
 		[clipRegions],
 	);
-	const effectiveZoomRegions: ZoomRegion[] = zoomRegions;
+	const effectiveZoomRegions = useMemo(() => activeZoomRegions(zoomRegions), [zoomRegions]);
 	const effectiveCaptionRegions = useMemo(
 		() => projectCaptionCues(autoCaptions, clipRegions),
 		[autoCaptions, clipRegions],

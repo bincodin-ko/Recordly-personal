@@ -1,3 +1,4 @@
+import type { FrameStyle } from "@/lib/frameStyle";
 import type { ColorGradingSettings } from "@/lib/colorGrading";
 import { clipAltersAudio } from "@/components/video-editor/types";
 import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
@@ -55,6 +56,7 @@ interface VideoExporterConfig extends ExportConfig {
 	speedRegions?: SpeedRegion[];
 	showShadow: boolean;
 	shadowIntensity: number;
+	frameStyle?: FrameStyle;
 	backgroundBlur: number;
 	zoomMotionBlur?: number;
 	zoomMotionBlurTuning?: ZoomMotionBlurTuning;
@@ -227,6 +229,7 @@ export class VideoExporter {
 				zoomRegions: this.config.zoomRegions,
 				showShadow: this.config.showShadow,
 				shadowIntensity: this.config.shadowIntensity,
+				frameStyle: this.config.frameStyle,
 				backgroundBlur: this.config.backgroundBlur,
 				zoomMotionBlur: this.config.zoomMotionBlur,
 				zoomMotionBlurTuning: this.config.zoomMotionBlurTuning,

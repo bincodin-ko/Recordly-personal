@@ -1,3 +1,4 @@
+import { type FrameStyle, isDefaultFrameStyle } from "@/lib/frameStyle";
 import { clipAltersAudio } from "@/components/video-editor/types";
 import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
 import { type ColorGradingSettings, hasActiveColorGrading } from "@/lib/colorGrading";
@@ -105,6 +106,7 @@ interface VideoExporterConfig extends ExportConfig {
 	speedRegions?: SpeedRegion[];
 	showShadow: boolean;
 	shadowIntensity: number;
+	frameStyle?: FrameStyle;
 	backgroundBlur: number;
 	zoomMotionBlur?: number;
 	zoomMotionBlurTuning?: ZoomMotionBlurTuning;
@@ -624,6 +626,7 @@ export class ModernVideoExporter {
 					zoomRegions: this.config.zoomRegions,
 					showShadow: this.config.showShadow,
 					shadowIntensity: this.config.shadowIntensity,
+					frameStyle: this.config.frameStyle,
 					backgroundBlur: this.config.backgroundBlur,
 					zoomMotionBlur: this.config.zoomMotionBlur,
 					zoomMotionBlurTuning: this.config.zoomMotionBlurTuning,
@@ -1769,6 +1772,8 @@ export class ModernVideoExporter {
 		effectiveDurationSec: number,
 	): string[] {
 		const reasons: string[] = [];
+		// The native helper only knows the default shadow/frame look.
+		if (!isDefaultFrameStyle(this.config.frameStyle)) reasons.push("custom-frame-style");
 		if (requiresClipTimelineRendering(this.config.clipRegions))
 			reasons.push("explicit-clip-timeline");
 		if (

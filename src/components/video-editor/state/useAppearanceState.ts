@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { DEFAULT_FRAME_STYLE, type FrameStyle } from "@/lib/frameStyle";
 import { type AudioExtrasSettings, DEFAULT_AUDIO_EXTRAS } from "../audio/audioExtras";
 import { type ColorGradingSettings, DEFAULT_COLOR_GRADING } from "@/lib/colorGrading";
 import { type CursorExtrasSettings, DEFAULT_CURSOR_EXTRAS } from "../cursorExtras";
@@ -29,6 +30,7 @@ import {
 export function useAppearanceState(preferences: EditorPreferences) {
 	const [wallpaper, setWallpaper] = useState(preferences.wallpaper);
 	const [shadowIntensity, setShadowIntensity] = useState(preferences.shadowIntensity);
+	const [frameStyle, setFrameStyle] = useState<FrameStyle>(DEFAULT_FRAME_STYLE);
 	const [backgroundBlur, setBackgroundBlur] = useState(preferences.backgroundBlur);
 	const [zoomMotionBlur, setZoomMotionBlur] = useState(preferences.zoomMotionBlur);
 	const [zoomMotionBlurTuning, setZoomMotionBlurTuning] = useState<ZoomMotionBlurTuning>(
@@ -134,6 +136,8 @@ export function useAppearanceState(preferences: EditorPreferences) {
 		setWallpaper,
 		shadowIntensity,
 		setShadowIntensity,
+		frameStyle,
+		setFrameStyle,
 		backgroundBlur,
 		setBackgroundBlur,
 		zoomMotionBlur,

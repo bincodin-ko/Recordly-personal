@@ -219,7 +219,11 @@
 			"toggle": "딸깍"
 		},
 		"webcamAvoidCursor": "커서가 오면 비켜 주기",
-		"webcamHideWhenSilent": "말 안 할 때 숨기기"
+		"webcamHideWhenSilent": "말 안 할 때 숨기기",
+		"shadowAngle": "각도",
+		"shadowDistance": "거리",
+		"shadowSoftness": "부드러움",
+		"inset": "안쪽 여백"
 	},
 	"sections": {
 		"scene": "장면",

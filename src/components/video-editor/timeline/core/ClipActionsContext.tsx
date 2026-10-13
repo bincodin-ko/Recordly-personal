@@ -20,6 +20,7 @@ export interface ClipActions {
 	trimBubbles: TrimBubble[];
 	typingBadges: TypingBadge[];
 	openClipMenu: (clipId: string, x: number, y: number) => void;
+	openZoomMenu: (zoomId: string, x: number, y: number) => void;
 	openTrimRestore: (bubbleId: string) => void;
 	openTypingPopover: (badgeId: string, x: number, y: number) => void;
 }

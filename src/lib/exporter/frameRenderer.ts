@@ -1,3 +1,5 @@
+import type { FrameStyle } from "@/lib/frameStyle";
+import { drawInsetFrame } from "@/lib/geometry/insetFrame";
 import { type CursorExtrasRenderOptions, drawShortcutOverlay } from "@/components/video-editor/cursorExtras";
 import { Application, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
 import { createVideoSharpener } from "@/lib/videoSharpenFilter";
@@ -113,6 +115,8 @@ interface FrameRenderConfig {
 	zoomOutEasing?: ZoomTransitionEasing;
 	connectedZoomEasing?: ZoomTransitionEasing;
 	borderRadius?: number;
+	/** Shadow angle/distance/softness and inset frame; omitted = defaults. */
+	frameStyle?: FrameStyle;
 	padding?: Padding | number;
 	cropRegion: CropRegion;
 	webcam?: WebcamOverlaySettings;
@@ -249,6 +253,7 @@ export class FrameRenderer {
 	private videoTextureSource: VideoTextureSource | null = null;
 	private backgroundSprite: HTMLCanvasElement | null = null;
 	private maskGraphics: Graphics | null = null;
+	private insetGraphics: Graphics | null = null;
 	private zoomBlurFilter: ZoomBlurFilter | null = null;
 	private motionBlurFilter: MotionBlurFilter | null = null;
 	private shadowCanvas: HTMLCanvasElement | null = null;
@@ -513,6 +518,8 @@ export class FrameRenderer {
 		this.maskGraphics = new Graphics();
 		this.videoEffectsContainer.addChild(this.maskGraphics);
 		this.videoContainer.mask = this.maskGraphics;
+		this.insetGraphics = new Graphics();
+		this.videoEffectsContainer.addChild(this.insetGraphics);
 		if (this.cursorOverlay) {
 			this.cursorContainer.addChild(this.cursorOverlay.container);
 		}
@@ -1596,6 +1603,19 @@ export class FrameRenderer {
 			radius: scaledBorderRadius,
 		});
 		this.maskGraphics.fill({ color: 0xffffff });
+		if (this.insetGraphics) {
+			drawInsetFrame(
+				this.insetGraphics,
+				{
+					x: layout.centerOffsetX,
+					y: layout.centerOffsetY,
+					width: layout.croppedDisplayWidth,
+					height: layout.croppedDisplayHeight,
+					radius: scaledBorderRadius,
+				},
+				this.config.frameStyle?.inset ?? 0,
+			);
+		}
 
 		// Cache layout info
 		this.layoutCache = {
@@ -1719,6 +1739,7 @@ export class FrameRenderer {
 			viewportWidth: w,
 			backgroundBlur: this.config.backgroundBlur,
 			shadowIntensity: this.config.showShadow ? this.config.shadowIntensity : 0,
+			frameStyle: this.config.frameStyle,
 		});
 
 		// Clear composite canvas
@@ -2032,6 +2053,7 @@ export class FrameRenderer {
 		this.videoEffectsContainer = null;
 		this.videoContainer = null;
 		this.maskGraphics = null;
+		this.insetGraphics = null;
 		this.zoomBlurFilter = null;
 		this.motionBlurFilter = null;
 		if (this.cursorOverlay) {

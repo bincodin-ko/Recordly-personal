@@ -204,7 +204,6 @@ describe("editorPreferences", () => {
 			wallpaper: "#123456",
 			backgroundBlur: 3.5,
 			showCursor: false,
-			aspectRatio: "native",
 			zoomInOverlapMs: 200,
 			exportFormat: "gif",
 			gifFrameRate: 30,
@@ -242,7 +241,6 @@ describe("editorPreferences", () => {
 
 		expect(loadEditorPreferences()).toEqual({
 			...DEFAULT_EDITOR_PREFERENCES,
-			aspectRatio: "16:9",
 			zoomInOverlapMs: 200,
 			customAspectWidth: "21",
 			customAspectHeight: "9",
@@ -329,7 +327,6 @@ describe("editorPreferences", () => {
 			cursorSway: 1.5,
 			borderRadius: 18,
 			padding: { top: 30, right: 30, bottom: 30, left: 30, linked: true },
-			aspectRatio: "4:5",
 			exportEncodingMode: "quality",
 			exportFormat: "gif",
 			gifFrameRate: 20,

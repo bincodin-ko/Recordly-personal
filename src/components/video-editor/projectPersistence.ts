@@ -1,3 +1,4 @@
+import { type FrameStyle, normalizeFrameStyle } from "@/lib/frameStyle";
 import { type AudioExtrasSettings, normalizeAudioExtras } from "./audio/audioExtras";
 import { type ColorGradingSettings, normalizeColorGrading } from "@/lib/colorGrading";
 import { type CursorExtrasSettings, normalizeCursorExtras } from "./cursorExtras";
@@ -87,6 +88,8 @@ const DEFAULT_MOTION_PRESET = CURSOR_MOTION_PRESETS.focused;
 export interface ProjectEditorState {
 	wallpaper: string;
 	shadowIntensity: number;
+	/** Shadow angle/distance/softness + inset; absent in older projects = defaults. */
+	frameStyle: FrameStyle;
 	backgroundBlur: number;
 	zoomMotionBlur: number;
 	zoomMotionBlurTuning: ZoomMotionBlurTuning;
@@ -416,6 +419,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 								: undefined,
 						instant: region.instant === true ? true : undefined,
 						loupe: region.loupe === true ? true : undefined,
+						disabled: region.disabled === true ? true : undefined,
 					};
 				})
 		: [];
@@ -863,6 +867,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 	return {
 		wallpaper: typeof editor.wallpaper === "string" ? editor.wallpaper : DEFAULT_WALLPAPER_PATH,
 		shadowIntensity: typeof editor.shadowIntensity === "number" ? editor.shadowIntensity : 0.67,
+		frameStyle: normalizeFrameStyle(editor.frameStyle),
 		backgroundBlur: normalizedBackgroundBlur,
 		zoomMotionBlur: normalizedZoomMotionBlur,
 		zoomMotionBlurTuning: normalizedZoomMotionBlurTuning,
@@ -1120,7 +1125,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 			(validAspectRatios.has(editor.aspectRatio as AspectRatio) ||
 				isCustomAspectRatio(editor.aspectRatio))
 				? (editor.aspectRatio as AspectRatio)
-				: "16:9",
+				: "native",
 	};
 }
 
