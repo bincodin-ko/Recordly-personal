@@ -1,5 +1,5 @@
-단계: 3
-상태: 승인대기
+단계: 5
+상태: 진행중
 테스트 명령: npm run verify -- --quick
 
 # feature-mimic: Screen Studio → Recordly 개인용
