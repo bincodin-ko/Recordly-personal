@@ -3,17 +3,17 @@ import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import { get as httpsGet } from "node:https";
 import type Electron from "electron";
-import {
-	WHISPER_MODEL_DIR,
-	WHISPER_MODEL_DOWNLOAD_URL,
-	WHISPER_SMALL_MODEL_PATH,
-} from "../constants";
+import { createHash } from "node:crypto";
+import { createReadStream } from "node:fs";
+import { WHISPER_MODEL_DIR } from "../constants";
+import { getWhisperModelPath, normalizeWhisperModelId, WHISPER_MODELS } from "./models";
 
 export function sendWhisperModelDownloadProgress(
 	webContents: Electron.WebContents,
 	payload: {
 		status: "idle" | "downloading" | "downloaded" | "error";
 		progress: number;
+		model?: string;
 		path?: string | null;
 		error?: string;
 	},
@@ -21,21 +21,24 @@ export function sendWhisperModelDownloadProgress(
 	webContents.send("whisper-small-model-download-progress", payload);
 }
 
-export async function getWhisperSmallModelStatus() {
+export async function getWhisperSmallModelStatus(model?: unknown) {
+	const modelPath = getWhisperModelPath(WHISPER_MODEL_DIR, model);
 	try {
-		await fs.access(WHISPER_SMALL_MODEL_PATH, fsConstants.R_OK);
-		return {
-			success: true,
-			exists: true,
-			path: WHISPER_SMALL_MODEL_PATH,
-		};
+		await fs.access(modelPath, fsConstants.R_OK);
+		return { success: true, exists: true, path: modelPath };
 	} catch {
-		return {
-			success: true,
-			exists: false,
-			path: null,
-		};
+		return { success: true, exists: false, path: null };
 	}
+}
+
+function sha256OfFile(filePath: string): Promise<string> {
+	return new Promise((resolve, reject) => {
+		const hash = createHash("sha256");
+		createReadStream(filePath)
+			.on("data", (chunk) => hash.update(chunk))
+			.on("error", reject)
+			.on("end", () => resolve(hash.digest("hex")));
+	});
 }
 
 export function downloadFileWithProgress(
@@ -112,44 +115,36 @@ export function downloadFileWithProgress(
 
 export async function downloadWhisperSmallModel(
 	webContents: Electron.WebContents,
+	modelInput?: unknown,
 ): Promise<string> {
+	const model = normalizeWhisperModelId(modelInput);
+	const info = WHISPER_MODELS[model];
+	const modelPath = getWhisperModelPath(WHISPER_MODEL_DIR, model);
 	await fs.mkdir(WHISPER_MODEL_DIR, { recursive: true });
-	const tempPath = `${WHISPER_SMALL_MODEL_PATH}.download`;
+	const tempPath = `${modelPath}.download`;
+	const send = (payload: Parameters<typeof sendWhisperModelDownloadProgress>[1]) =>
+		sendWhisperModelDownloadProgress(webContents, { ...payload, model });
 
-	sendWhisperModelDownloadProgress(webContents, {
-		status: "downloading",
-		progress: 0,
-		path: null,
-	});
+	send({ status: "downloading", progress: 0, path: null });
 
 	try {
 		await fs.rm(tempPath, { force: true });
-		await downloadFileWithProgress(WHISPER_MODEL_DOWNLOAD_URL, tempPath, (progress) => {
-			sendWhisperModelDownloadProgress(webContents, {
-				status: "downloading",
-				progress,
-				path: null,
-			});
+		await downloadFileWithProgress(info.url, tempPath, (progress) => {
+			send({ status: "downloading", progress, path: null });
 		});
-		await fs.rename(tempPath, WHISPER_SMALL_MODEL_PATH);
-		sendWhisperModelDownloadProgress(webContents, {
-			status: "downloaded",
-			progress: 100,
-			path: WHISPER_SMALL_MODEL_PATH,
-		});
-		return WHISPER_SMALL_MODEL_PATH;
+		if ((await sha256OfFile(tempPath)) !== info.sha256) {
+			throw new Error("Whisper model checksum mismatch; the download was discarded.");
+		}
+		await fs.rename(tempPath, modelPath);
+		send({ status: "downloaded", progress: 100, path: modelPath });
+		return modelPath;
 	} catch (error) {
 		await fs.rm(tempPath, { force: true }).catch(() => undefined);
-		sendWhisperModelDownloadProgress(webContents, {
-			status: "error",
-			progress: 0,
-			path: null,
-			error: String(error),
-		});
+		send({ status: "error", progress: 0, path: null, error: String(error) });
 		throw error;
 	}
 }
 
-export async function deleteWhisperSmallModel(): Promise<void> {
-	await fs.rm(WHISPER_SMALL_MODEL_PATH, { force: true });
+export async function deleteWhisperSmallModel(model?: unknown): Promise<void> {
+	await fs.rm(getWhisperModelPath(WHISPER_MODEL_DIR, model), { force: true });
 }

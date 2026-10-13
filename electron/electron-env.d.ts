@@ -766,23 +766,24 @@ interface Window {
 		) => Promise<
 			{ success: true; width: number; height: number; data: Uint8Array } | { success: false; error: string }
 		>;
-		getWhisperSmallModelStatus: () => Promise<{
+		getWhisperSmallModelStatus: (model?: string) => Promise<{
 			success: boolean;
 			exists: boolean;
 			path?: string | null;
 			error?: string;
 		}>;
-		downloadWhisperSmallModel: () => Promise<{
+		downloadWhisperSmallModel: (model?: string) => Promise<{
 			success: boolean;
 			path?: string;
 			alreadyDownloaded?: boolean;
 			error?: string;
 		}>;
-		deleteWhisperSmallModel: () => Promise<{ success: boolean; error?: string }>;
+		deleteWhisperSmallModel: (model?: string) => Promise<{ success: boolean; error?: string }>;
 		onWhisperSmallModelDownloadProgress: (
 			callback: (state: {
 				status: "idle" | "downloading" | "downloaded" | "error";
 				progress: number;
+				model?: string;
 				path?: string | null;
 				error?: string;
 			}) => void,
@@ -792,6 +793,7 @@ interface Window {
 			whisperExecutablePath?: string;
 			whisperModelPath: string;
 			language?: string;
+			prompt?: string;
 		}) => Promise<{
 			success: boolean;
 			cues?: AutoCaptionCue[];

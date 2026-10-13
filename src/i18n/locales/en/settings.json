@@ -303,7 +303,13 @@
 			"ja": "Japanese",
 			"ko": "Korean"
 		},
-		"downloadingModel": "Downloading caption model"
+		"downloadingModel": "Downloading caption model",
+		"model": "Model",
+		"modelBase": "Fast (Base)",
+		"modelSmall": "Normal (Small)",
+		"modelMedium": "Accurate (Medium)",
+		"prompt": "Frequent words",
+		"promptPlaceholder": "Names and terms, e.g. Recordly, Kubernetes"
 	},
 	"crop": {
 		"title": "Crop Video",
