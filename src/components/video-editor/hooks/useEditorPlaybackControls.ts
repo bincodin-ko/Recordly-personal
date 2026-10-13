@@ -150,7 +150,7 @@ export function useEditorPlaybackControls({
 		scrubLast.current = null;
 		scrubSmoothedRate.current = 0;
 		getScrubEngine().warmUp();
-	}, [getScrubEngine, stopJkl]);
+	}, [cancelRestore, getScrubEngine, stopJkl]);
 
 	const scrubMove = useCallback(
 		(timelineSeconds: number) => {
