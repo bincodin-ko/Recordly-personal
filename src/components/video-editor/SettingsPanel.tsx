@@ -1,3 +1,4 @@
+import { DEFAULT_FRAME_STYLE, FRAME_STYLE_LIMITS, type FrameStyle } from "@/lib/frameStyle";
 import {
 	CLICK_SOUND_IDS,
 	type ClickSoundId,
@@ -480,6 +481,8 @@ interface SettingsPanelProps {
 	onAudioDelete?: (id: string) => void;
 	shadowIntensity?: number;
 	onShadowChange?: (intensity: number) => void;
+	frameStyle?: FrameStyle;
+	onFrameStyleChange?: (style: FrameStyle) => void;
 	backgroundBlur?: number;
 	onBackgroundBlurChange?: (amount: number) => void;
 	connectZooms?: boolean;
@@ -961,6 +964,8 @@ export function SettingsPanel({
 	onAudioDelete,
 	shadowIntensity = 0.67,
 	onShadowChange,
+	frameStyle = DEFAULT_FRAME_STYLE,
+	onFrameStyleChange,
 	backgroundBlur = 0,
 	onBackgroundBlurChange,
 	connectZooms = true,
@@ -1572,6 +1577,7 @@ export function SettingsPanel({
 
 	const resetFrameSection = () => {
 		onShadowChange?.(initialEditorPreferences.shadowIntensity);
+		onFrameStyleChange?.(DEFAULT_FRAME_STYLE);
 		onBorderRadiusChange?.(initialEditorPreferences.borderRadius);
 		onAspectRatioChange?.(initialEditorPreferences.aspectRatio);
 		onPaddingChange?.({ ...initialEditorPreferences.padding });
@@ -1956,6 +1962,46 @@ export function SettingsPanel({
 					step={0.01}
 					onChange={(v) => onShadowChange?.(v)}
 					formatValue={(v) => `${Math.round(v * 100)}%`}
+				/>
+				{shadowIntensity > 0 && (
+					<div className="flex flex-col gap-3 border-l border-foreground/10 pl-3" data-testid="shadow-detail">
+						<SliderControl
+							label={tSettings("effects.shadowAngle", "Angle")}
+							value={frameStyle.shadowAngle}
+							min={0}
+							max={360}
+							step={1}
+							onChange={(v) => onFrameStyleChange?.({ ...frameStyle, shadowAngle: v })}
+							formatValue={(v) => `${Math.round(v)}°`}
+						/>
+						<SliderControl
+							label={tSettings("effects.shadowDistance", "Distance")}
+							value={frameStyle.shadowDistance}
+							min={FRAME_STYLE_LIMITS.shadowDistance.min}
+							max={FRAME_STYLE_LIMITS.shadowDistance.max}
+							step={0.01}
+							onChange={(v) => onFrameStyleChange?.({ ...frameStyle, shadowDistance: v })}
+							formatValue={(v) => `${Math.round(v * 100)}%`}
+						/>
+						<SliderControl
+							label={tSettings("effects.shadowSoftness", "Softness")}
+							value={frameStyle.shadowSoftness}
+							min={FRAME_STYLE_LIMITS.shadowSoftness.min}
+							max={FRAME_STYLE_LIMITS.shadowSoftness.max}
+							step={0.01}
+							onChange={(v) => onFrameStyleChange?.({ ...frameStyle, shadowSoftness: v })}
+							formatValue={(v) => `${Math.round(v * 100)}%`}
+						/>
+					</div>
+				)}
+				<SliderControl
+					label={tSettings("effects.inset", "Inset")}
+					value={frameStyle.inset}
+					min={FRAME_STYLE_LIMITS.inset.min}
+					max={FRAME_STYLE_LIMITS.inset.max}
+					step={0.1}
+					onChange={(v) => onFrameStyleChange?.({ ...frameStyle, inset: v })}
+					formatValue={(v) => `${v.toFixed(1)}%`}
 				/>
 				<SliderControl
 					label={tSettings("effects.radius", "Radius")}

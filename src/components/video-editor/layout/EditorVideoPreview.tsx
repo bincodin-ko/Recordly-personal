@@ -81,6 +81,7 @@ export function EditorVideoPreview({
 			isPlaying={isPlaying}
 			showShadow={appearance.shadowIntensity > 0}
 			shadowIntensity={appearance.shadowIntensity}
+			frameStyle={appearance.frameStyle}
 			backgroundBlur={appearance.backgroundBlur}
 			connectZooms={appearance.connectZooms}
 			zoomInDurationMs={appearance.zoomInDurationMs}

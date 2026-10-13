@@ -219,7 +219,11 @@
 			"toggle": "Umschalten"
 		},
 		"webcamAvoidCursor": "Dem Cursor ausweichen",
-		"webcamHideWhenSilent": "Bei Stille ausblenden"
+		"webcamHideWhenSilent": "Bei Stille ausblenden",
+		"shadowAngle": "Angle",
+		"shadowDistance": "Distance",
+		"shadowSoftness": "Softness",
+		"inset": "Inset"
 	},
 	"sections": {
 		"scene": "Szene",

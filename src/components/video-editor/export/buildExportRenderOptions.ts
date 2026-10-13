@@ -40,6 +40,7 @@ export function buildExportRenderOptions({
 		speedRegions: effectiveSpeedRegions,
 		showShadow: shadowIntensity > 0,
 		shadowIntensity,
+		frameStyle: appearance.frameStyle,
 		backgroundBlur: appearance.backgroundBlur,
 		zoomMotionBlur: appearance.zoomMotionBlur,
 		zoomMotionBlurTuning: appearance.zoomMotionBlurTuning,

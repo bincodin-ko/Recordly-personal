@@ -1,3 +1,4 @@
+import type { FrameStyle } from "@/lib/frameStyle";
 import type { ColorGradingSettings } from "@/lib/colorGrading";
 import type { CursorExtrasRenderOptions } from "@/components/video-editor/cursorExtras";
 import GIF from "gif.js";
@@ -45,6 +46,7 @@ interface GifExporterConfig {
 	speedRegions?: SpeedRegion[];
 	showShadow: boolean;
 	shadowIntensity: number;
+	frameStyle?: FrameStyle;
 	backgroundBlur: number;
 	zoomMotionBlur?: number;
 	zoomMotionBlurTuning?: ZoomMotionBlurTuning;
@@ -149,6 +151,7 @@ export function buildGifFrameRendererConfig(
 		zoomRegions: config.zoomRegions,
 		showShadow: config.showShadow,
 		shadowIntensity: config.shadowIntensity,
+		frameStyle: config.frameStyle,
 		backgroundBlur: config.backgroundBlur,
 		zoomMotionBlur: config.zoomMotionBlur,
 		zoomMotionBlurTuning: config.zoomMotionBlurTuning,

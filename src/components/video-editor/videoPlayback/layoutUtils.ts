@@ -1,3 +1,4 @@
+import { drawInsetFrame } from "@/lib/geometry/insetFrame";
 import { Application, Graphics, Sprite } from "pixi.js";
 import { drawSquircleOnGraphics } from "@/lib/geometry/squircle";
 import { ADVANCED_VERTICAL_PADDING_MAX, type CropRegion, type Padding } from "../types";
@@ -149,6 +150,9 @@ interface LayoutParams {
 	app: Application;
 	videoSprite: Sprite;
 	maskGraphics: Graphics;
+	/** Dark ring drawn along the inside of the mask (Screen Studio "Inset"). */
+	insetGraphics?: Graphics | null;
+	insetPercent?: number;
 	videoElement: HTMLVideoElement;
 	cropRegion?: CropRegion;
 	lockedVideoDimensions?: { width: number; height: number } | null;
@@ -179,6 +183,8 @@ export function layoutVideoContent(params: LayoutParams): LayoutResult | null {
 		app,
 		videoSprite,
 		maskGraphics,
+		insetGraphics,
+		insetPercent = 0,
 		videoElement,
 		cropRegion,
 		lockedVideoDimensions,
@@ -232,6 +238,23 @@ export function layoutVideoContent(params: LayoutParams): LayoutResult | null {
 		),
 	});
 	maskGraphics.fill({ color: 0xffffff });
+	if (insetGraphics) {
+		drawInsetFrame(
+			insetGraphics,
+			{
+				x: layout.centerOffsetX,
+				y: layout.centerOffsetY,
+				width: layout.croppedDisplayWidth,
+				height: layout.croppedDisplayHeight,
+				radius: scalePreviewBorderRadius(
+					layout.croppedDisplayWidth,
+					layout.croppedDisplayHeight,
+					borderRadius,
+				),
+			},
+			insetPercent,
+		);
+	}
 
 	return {
 		stageSize: { width, height },

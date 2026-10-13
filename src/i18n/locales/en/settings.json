@@ -225,7 +225,11 @@
 			"toggle": "Toggle"
 		},
 		"webcamAvoidCursor": "Move away from cursor",
-		"webcamHideWhenSilent": "Hide during silence"
+		"webcamHideWhenSilent": "Hide during silence",
+		"shadowAngle": "Angle",
+		"shadowDistance": "Distance",
+		"shadowSoftness": "Softness",
+		"inset": "Inset"
 	},
 	"sections": {
 		"scene": "Scene",

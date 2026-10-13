@@ -1,3 +1,5 @@
+import { DEFAULT_FRAME_STYLE, type FrameStyle, resolveShadowOffset } from "@/lib/frameStyle";
+
 const EFFECT_REFERENCE_WIDTH = 640;
 
 export type SceneEffectMetrics = {
@@ -19,16 +21,20 @@ export function getSceneEffectMetrics({
 	viewportWidth,
 	backgroundBlur,
 	shadowIntensity,
+	frameStyle = DEFAULT_FRAME_STYLE,
 }: {
 	viewportWidth: number;
 	backgroundBlur: number;
 	shadowIntensity: number;
+	frameStyle?: FrameStyle;
 }): SceneEffectMetrics {
 	const scale = Math.max(1, viewportWidth) / EFFECT_REFERENCE_WIDTH;
 	const blurPx = Math.max(0, backgroundBlur) * scale;
 	const intensity = Math.max(0, shadowIntensity);
-	const shadow = (offsetY: number, blur: number, alpha: number) =>
-		`drop-shadow(0 ${offsetY * intensity * scale}px ${blur * intensity * scale}px rgba(0,0,0,${alpha * intensity}))`;
+	const shadow = (offsetY: number, blur: number, alpha: number) => {
+		const offset = resolveShadowOffset(offsetY * intensity * scale, frameStyle);
+		return `drop-shadow(${offset.x}px ${offset.y}px ${blur * frameStyle.shadowSoftness * intensity * scale}px rgba(0,0,0,${alpha * intensity}))`;
+	};
 
 	return {
 		viewportScale: scale,

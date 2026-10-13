@@ -1,3 +1,4 @@
+import { DEFAULT_FRAME_STYLE, type FrameStyle } from "@/lib/frameStyle";
 import { Application, Container, Graphics, Rectangle, Sprite, Texture, UPDATE_PRIORITY } from "pixi.js";
 import { MotionBlurFilter } from "pixi-filters/motion-blur";
 import { ZoomBlurFilter } from "pixi-filters/zoom-blur";
@@ -258,6 +259,7 @@ interface VideoPlaybackProps {
 	isPlaying: boolean;
 	showShadow?: boolean;
 	shadowIntensity?: number;
+	frameStyle?: FrameStyle;
 	backgroundBlur?: number;
 	connectZooms?: boolean;
 	zoomInDurationMs?: number;
@@ -351,6 +353,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			isPlaying,
 			showShadow,
 			shadowIntensity = 0,
+			frameStyle = DEFAULT_FRAME_STYLE,
 			backgroundBlur = 0,
 			connectZooms = true,
 			zoomInDurationMs = DEFAULT_ZOOM_IN_DURATION_MS,
@@ -503,6 +506,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 		}>({ x: 0, y: 0, width: 0, height: 0 });
 		const cropBoundsRef = useRef({ startX: 0, endX: 0, startY: 0, endY: 0 });
 		const maskGraphicsRef = useRef<Graphics | null>(null);
+		const insetGraphicsRef = useRef<Graphics | null>(null);
 		const isPlayingRef = useRef(isPlaying);
 		const suspendRenderingRef = useRef(suspendRendering);
 		const isSeekingRef = useRef(false);
@@ -1068,6 +1072,8 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				app,
 				videoSprite,
 				maskGraphics,
+				insetGraphics: insetGraphicsRef.current,
+				insetPercent: frameStyle.inset,
 				videoElement,
 				cropRegion,
 				lockedVideoDimensions: lockedVideoDimensionsRef.current,
@@ -1129,6 +1135,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			cropRegion,
 			borderRadius,
 			padding,
+			frameStyle.inset,
 			applyWebcamBubbleLayout,
 			syncPreviewMotionBlurQuality,
 		]);
@@ -2013,6 +2020,9 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			cameraContainer.addChild(maskGraphics);
 			videoEffectsContainer.mask = maskGraphics;
 			maskGraphicsRef.current = maskGraphics;
+			const insetGraphics = new Graphics();
+			videoEffectsContainer.addChild(insetGraphics);
+			insetGraphicsRef.current = insetGraphics;
 			if (cursorOverlayRef.current) {
 				cursorContainer.addChild(cursorOverlayRef.current.container);
 			}
@@ -2073,6 +2083,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 				destroyPixiContainer(videoSprite);
 				destroyPixiContainer(maskGraphics);
 				maskGraphicsRef.current = null;
+				insetGraphicsRef.current = null;
 				if (!videoTexture.destroyed) videoTexture.destroy(false);
 				previewVideoSourceRef.current.suspend();
 
@@ -2518,6 +2529,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			viewportWidth: previewViewportWidth,
 			backgroundBlur,
 			shadowIntensity: showShadow ? shadowIntensity : 0,
+			frameStyle,
 		});
 		const captionFontFamily = autoCaptionSettings?.fontFamily || getDefaultCaptionFontFamily();
 		// Overscan blurred wallpaper layers so the browser never samples transparent

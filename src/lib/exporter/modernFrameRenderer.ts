@@ -1,3 +1,5 @@
+import { DEFAULT_FRAME_STYLE, type FrameStyle, resolveShadowOffset } from "@/lib/frameStyle";
+import { drawInsetFrame } from "@/lib/geometry/insetFrame";
 import {
 	type CursorExtrasRenderOptions,
 	drawShortcutOverlay,
@@ -157,6 +159,8 @@ interface FrameRenderConfig {
 	zoomOutEasing?: ZoomTransitionEasing;
 	connectedZoomEasing?: ZoomTransitionEasing;
 	borderRadius?: number;
+	/** Shadow angle/distance/softness and inset frame; omitted = defaults. */
+	frameStyle?: FrameStyle;
 	padding?: Padding | number;
 	cropRegion: CropRegion;
 	webcam?: WebcamOverlaySettings;
@@ -448,6 +452,7 @@ export class FrameRenderer {
 	private backgroundSprite: Sprite | null = null;
 	private backgroundTextureSource: MutableVideoTextureSource | null = null;
 	private videoMaskGraphics: Graphics | null = null;
+	private videoInsetGraphics: Graphics | null = null;
 	private webcamMaskGraphics: Graphics | null = null;
 	private zoomBlurFilter: ZoomBlurFilter | null = null;
 	private motionBlurFilter: MotionBlurFilter | null = null;
@@ -628,6 +633,8 @@ export class FrameRenderer {
 		this.videoMaskGraphics = new Graphics();
 		this.videoEffectsContainer.addChild(this.videoMaskGraphics);
 		this.videoContainer.mask = this.videoMaskGraphics;
+		this.videoInsetGraphics = new Graphics();
+		this.videoEffectsContainer.addChild(this.videoInsetGraphics);
 
 		this.webcamMaskGraphics = new Graphics();
 		this.webcamContainer.addChild(this.webcamMaskGraphics);
@@ -843,6 +850,7 @@ export class FrameRenderer {
 			height: number;
 			radius: number;
 			offsetY: number;
+			offsetX?: number;
 			alpha: number;
 			blur: number;
 		},
@@ -852,7 +860,7 @@ export class FrameRenderer {
 			return;
 		}
 
-		const padding = getShadowFilterPadding(options.blur, options.offsetY);
+		const padding = getShadowFilterPadding(options.blur, Math.hypot(options.offsetX ?? 0, options.offsetY));
 		this.ensureShadowLayerCanvas(
 			layer,
 			options.width + padding * 2,
@@ -869,7 +877,7 @@ export class FrameRenderer {
 		layer.context.filter = options.blur > 0 ? `blur(${options.blur}px)` : "none";
 		layer.context.fillStyle = `rgba(0, 0, 0, ${options.alpha})`;
 		drawSquircleOnCanvas(layer.context, {
-			x: padding,
+			x: padding + (options.offsetX ?? 0),
 			y: padding + options.offsetY,
 			width: options.width,
 			height: options.height,
@@ -3319,6 +3327,19 @@ export class FrameRenderer {
 			radius: scaledBorderRadius,
 		});
 		this.videoMaskGraphics.fill({ color: 0xffffff });
+		if (this.videoInsetGraphics) {
+			drawInsetFrame(
+				this.videoInsetGraphics,
+				{
+					x: layout.centerOffsetX,
+					y: layout.centerOffsetY,
+					width: layout.croppedDisplayWidth,
+					height: layout.croppedDisplayHeight,
+					radius: scaledBorderRadius,
+				},
+				this.config.frameStyle?.inset ?? 0,
+			);
+		}
 
 		this.updateVideoShadowLayout({
 			maskX: layout.centerOffsetX,
@@ -3358,6 +3379,7 @@ export class FrameRenderer {
 			viewportWidth: this.config.width,
 			backgroundBlur: 0,
 			shadowIntensity: shadowStrength,
+			frameStyle: this.config.frameStyle,
 		}).viewportScale;
 		for (const layer of this.videoShadowLayers) {
 			if (!this.config.showShadow || shadowStrength <= 0) {
@@ -3365,16 +3387,24 @@ export class FrameRenderer {
 				continue;
 			}
 
-			const offsetY = layer.offsetScale * effectScale * shadowStrength;
+			const frameStyle = this.config.frameStyle ?? DEFAULT_FRAME_STYLE;
+			const offset = resolveShadowOffset(
+				layer.offsetScale * effectScale * shadowStrength,
+				frameStyle,
+			);
 			this.rasterizeShadowLayer(layer, {
 				x: layout.maskX,
 				y: layout.maskY,
 				width: layout.maskWidth,
 				height: layout.maskHeight,
 				radius: layout.maskRadius,
-				offsetY,
+				offsetX: offset.x,
+				offsetY: offset.y,
 				alpha: layer.alphaScale * shadowStrength,
-				blur: Math.max(0, layer.blurScale * effectScale * shadowStrength),
+				blur: Math.max(
+					0,
+					layer.blurScale * effectScale * shadowStrength * frameStyle.shadowSoftness,
+				),
 			});
 		}
 	}
@@ -3580,6 +3610,7 @@ export class FrameRenderer {
 		this.backgroundSprite = null;
 		this.backgroundTextureSource = null;
 		this.videoMaskGraphics = null;
+		this.videoInsetGraphics = null;
 		this.webcamMaskGraphics = null;
 		this.zoomBlurFilter = null;
 		this.motionBlurFilter = null;

@@ -219,7 +219,11 @@
 			"toggle": "切换"
 		},
 		"webcamAvoidCursor": "避开光标",
-		"webcamHideWhenSilent": "静音时隐藏"
+		"webcamHideWhenSilent": "静音时隐藏",
+		"shadowAngle": "Angle",
+		"shadowDistance": "Distance",
+		"shadowSoftness": "Softness",
+		"inset": "Inset"
 	},
 	"sections": {
 		"scene": "场景",

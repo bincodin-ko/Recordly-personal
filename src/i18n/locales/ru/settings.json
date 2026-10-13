@@ -219,7 +219,11 @@
 			"toggle": "Переключатель"
 		},
 		"webcamAvoidCursor": "Уходить от курсора",
-		"webcamHideWhenSilent": "Скрывать в тишине"
+		"webcamHideWhenSilent": "Скрывать в тишине",
+		"shadowAngle": "Angle",
+		"shadowDistance": "Distance",
+		"shadowSoftness": "Softness",
+		"inset": "Inset"
 	},
 	"sections": {
 		"scene": "Сцена",
