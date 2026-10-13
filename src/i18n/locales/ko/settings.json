@@ -40,6 +40,7 @@
 		"separateClipFromAudio": "클립에서 오디오 분리",
 		"delete": "클립 삭제",
 		"hideCursor": "커서 숨기기",
+		"disableSmoothCursor": "부드러운 마우스 이동 끄기",
 		"volume": "볼륨"
 	},
 	"effects": {
@@ -206,6 +207,9 @@
 		"customEffectColor": "직접 지정한 효과 색상",
 		"devBadge": "개발",
 		"hideIdleCursor": "커서가 멈춰 있으면 숨기기",
+		"stopCursorAtEnd": "영상 끝에서 커서 이동 멈추기",
+		"removeCursorShakes": "커서 떨림 제거",
+		"alwaysDefaultCursor": "항상 기본 시스템 커서 사용",
 		"idleCursorDelay": "숨기기까지 대기",
 		"clickSound": "클릭 소리",
 		"clickSoundVolume": "클릭 소리 크기",

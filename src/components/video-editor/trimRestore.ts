@@ -54,7 +54,7 @@ export function findTrimGaps(clips: ClipRegion[], sourceDurationMs: number): Tri
 type Side = "before" | "after";
 
 function clipEffectKey(clip: ClipRegion): string {
-	return `${clip.speed}|${getClipVolume(clip)}|${clip.muted ? 1 : 0}|${clip.hideCursor ? 1 : 0}`;
+	return `${clip.speed}|${getClipVolume(clip)}|${clip.muted ? 1 : 0}|${clip.hideCursor ? 1 : 0}|${clip.disableSmoothCursor ? 1 : 0}`;
 }
 
 function zoomTouchesEdge(zooms: ZoomRegion[], clip: ClipRegion, side: Side): boolean {
@@ -73,6 +73,7 @@ export function neighbourEffects(clip: ClipRegion | undefined, zooms: ZoomRegion
 	if (getClipVolume(clip) !== 1) effects.push("volume");
 	if (clip.muted) effects.push("muted");
 	if (clip.hideCursor) effects.push("hideCursor");
+	if (clip.disableSmoothCursor) effects.push("disableSmoothCursor");
 	if (zoomTouchesEdge(zooms, clip, side)) effects.push("zoom");
 	return effects;
 }
@@ -123,6 +124,7 @@ export function restoreTrimGap(params: {
 		muted: inherit?.muted ?? false,
 		showSourceAudio: inherit?.showSourceAudio ?? false,
 		...(inherit?.hideCursor ? { hideCursor: true } : {}),
+		...(inherit?.disableSmoothCursor ? { disableSmoothCursor: true } : {}),
 		...(inherit && getClipVolume(inherit) !== 1 ? { volume: getClipVolume(inherit) } : {}),
 	};
 	if (inherit?.sourceMinMs !== undefined) restored.sourceMinMs = inherit.sourceMinMs;

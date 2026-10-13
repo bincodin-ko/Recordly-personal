@@ -109,6 +109,8 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		onClipMutedChange: clipCommands.handleClipMutedChange,
 		selectedClipHideCursor: Boolean(selectedClip?.hideCursor),
 		onClipHideCursorChange: clipCommands.handleClipHideCursorChange,
+		selectedClipDisableSmoothCursor: Boolean(selectedClip?.disableSmoothCursor),
+		onClipDisableSmoothCursorChange: clipCommands.handleClipDisableSmoothCursorChange,
 		onClipSeparateAudio: () => void clipCommands.handleClipSeparateAudio(),
 		onClipDelete: clipCommands.handleClipDelete,
 		selectedAudioId: timeline.selectedAudioId,

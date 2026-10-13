@@ -287,6 +287,17 @@ export function useClipRegionCommands({
 		},
 		[selectedClipId, setClipRegions],
 	);
+	const handleClipDisableSmoothCursorChange = useCallback(
+		(disableSmoothCursor: boolean) => {
+			if (!selectedClipId) return;
+			setClipRegions((current) =>
+				current.map((clip) =>
+					clip.id === selectedClipId ? { ...clip, disableSmoothCursor } : clip,
+				),
+			);
+		},
+		[selectedClipId, setClipRegions],
+	);
 	const handleClipShowSourceAudioChange = useCallback(
 		(showSourceAudio: boolean) => {
 			if (!selectedClipId) return;
@@ -417,6 +428,7 @@ export function useClipRegionCommands({
 		handleRestoreTrim,
 		handleClipMutedChange,
 		handleClipHideCursorChange,
+		handleClipDisableSmoothCursorChange,
 		handleClipShowSourceAudioChange,
 		handleClipSeparateAudio,
 		handleClipDelete,

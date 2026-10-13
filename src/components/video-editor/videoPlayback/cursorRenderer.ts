@@ -15,7 +15,13 @@ import {
 	DEFAULT_CURSOR_STYLE,
 	normalizeCursorClickEffectColor,
 } from "../types";
-import { getCursorVisibility, type TimeRange } from "../cursorExtras";
+import {
+	cleanupCursorSamples,
+	type CursorMotionRules,
+	getCursorVisibility,
+	isInsideRanges,
+	type TimeRange,
+} from "../cursorExtras";
 import { getCursorViewportScale } from "./cursorScale";
 import { computeCursorSwayRotation } from "./cursorSway";
 import { type CursorViewportRect, projectCursorPositionToViewport } from "./cursorViewport";
@@ -114,6 +120,8 @@ export interface CursorRenderConfig {
 	idleHideMs: number;
 	/** Source-time ranges where the cursor is hidden. */
 	hiddenRanges: TimeRange[];
+	/** Optional motion clean-up / raw-path rules (Screen Studio cursor "Advanced"). */
+	motion?: CursorMotionRules;
 }
 
 const MIN_CURSOR_VIEWPORT_SCALE = 0;
@@ -1280,9 +1288,10 @@ export class PixiCursorOverlay {
 		this.config.clickBounceDuration = clamp(clickBounceDuration, 60, 500);
 	}
 
-	setVisibilityRules(idleHideMs: number, hiddenRanges: TimeRange[]) {
+	setVisibilityRules(idleHideMs: number, hiddenRanges: TimeRange[], motion?: CursorMotionRules) {
 		this.config.idleHideMs = Math.max(0, idleHideMs);
 		this.config.hiddenRanges = hiddenRanges;
+		this.config.motion = motion;
 	}
 
 	setSway(sway: number) {
@@ -1345,6 +1354,8 @@ export class PixiCursorOverlay {
 		visible: boolean,
 		freeze = false,
 	): void {
+		const motion = this.config.motion;
+		if (motion) samples = cleanupCursorSamples(samples, motion);
 		if (samples.length === 0 || viewport.width <= 0 || viewport.height <= 0) {
 			this.container.visible = false;
 			this.cursorVisible = false;
@@ -1378,13 +1389,14 @@ export class PixiCursorOverlay {
 		const h =
 			this.config.dotRadius *
 			getCursorViewportScale(viewport.width, this.config.minViewportScale);
-		const { cursorType, clickSample, clickBounceProgress, clickProgress } =
-			getCursorVisualState(
-				samples,
-				timeMs,
-				this.config.clickBounceDuration,
-				this.config.clickEffectDurationMs,
-			);
+		const visualState = getCursorVisualState(
+			samples,
+			timeMs,
+			this.config.clickBounceDuration,
+			this.config.clickEffectDurationMs,
+		);
+		const { clickSample, clickBounceProgress, clickProgress } = visualState;
+		const cursorType = motion?.alwaysDefaultCursor ? "arrow" : visualState.cursorType;
 		const projectedClickSample = clickSample
 			? projectCursorPositionToViewport(clickSample, viewport.sourceCrop)
 			: null;
@@ -1448,8 +1460,12 @@ export class PixiCursorOverlay {
 				this.lastRenderedTimeMs !== null &&
 				Math.abs(timeMs - this.lastRenderedTimeMs) > CURSOR_TIME_DISCONTINUITY_MS;
 			shouldFreezeCursorMotion = freeze || hasTimeDiscontinuity;
+			// "Disable smooth mouse movement": follow the recorded path exactly.
+			const rawPath = isInsideRanges(motion?.rawRanges, timeMs);
 
-			if (shouldFreezeCursorMotion) {
+			if (rawPath) {
+				this.state.snapTo(projectedTarget.cx, projectedTarget.cy, timeMs);
+			} else if (shouldFreezeCursorMotion) {
 				if (!sameFrameTime || !this.lastRenderedPoint) {
 					this.state.snapTo(projectedTarget.cx, projectedTarget.cy, timeMs);
 				}

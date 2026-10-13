@@ -1808,7 +1808,12 @@ export class ModernVideoExporter {
 			cursorExtras &&
 			((cursorExtras.settings.showShortcuts && cursorExtras.keystrokes.length > 0) ||
 				((this.config.cursorTelemetry?.length ?? 0) > 0 &&
-					(cursorExtras.settings.hideIdleCursor || cursorExtras.hiddenRanges.length > 0)))
+					(cursorExtras.settings.hideIdleCursor ||
+						cursorExtras.settings.removeCursorShakes ||
+						cursorExtras.settings.stopCursorAtEnd ||
+						cursorExtras.settings.alwaysDefaultCursor ||
+						cursorExtras.hiddenRanges.length > 0 ||
+						(cursorExtras.rawRanges?.length ?? 0) > 0)))
 		) {
 			reasons.push("unsupported-cursor-extras");
 		}

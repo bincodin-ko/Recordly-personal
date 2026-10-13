@@ -4,6 +4,7 @@ import {
 	type CursorExtrasRenderOptions,
 	drawShortcutOverlay,
 	getActiveShortcut,
+	getCursorMotionRules,
 } from "@/components/video-editor/cursorExtras";
 import {
 	Application,
@@ -674,6 +675,12 @@ export class FrameRenderer {
 					? this.config.cursorExtras.settings.idleCursorDelaySec * 1000
 					: 0,
 				this.config.cursorExtras?.hiddenRanges ?? [],
+				this.config.cursorExtras
+					? getCursorMotionRules(
+							this.config.cursorExtras.settings,
+							this.config.cursorExtras.rawRanges,
+						)
+					: undefined,
 			);
 			this.cursorContainer.addChild(this.cursorOverlay.container);
 		}

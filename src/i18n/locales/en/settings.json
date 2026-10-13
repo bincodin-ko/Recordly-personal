@@ -46,6 +46,7 @@
 		"separateClipFromAudio": "Separate clip from audio",
 		"delete": "Delete Clip",
 		"hideCursor": "Hide cursor",
+		"disableSmoothCursor": "Disable smooth mouse movement",
 		"volume": "Volume"
 	},
 	"effects": {
@@ -212,6 +213,9 @@
 		"customEffectColor": "Custom effect color",
 		"devBadge": "DEV",
 		"hideIdleCursor": "Hide cursor if it's not moving",
+		"stopCursorAtEnd": "Stop cursor movement at the end",
+		"removeCursorShakes": "Remove cursor shakes",
+		"alwaysDefaultCursor": "Always use default system cursor",
 		"idleCursorDelay": "Hide after",
 		"clickSound": "Click sound",
 		"clickSoundVolume": "Click sound volume",

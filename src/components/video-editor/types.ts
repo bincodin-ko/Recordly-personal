@@ -78,7 +78,7 @@ export type CursorStyle =
 export const DEFAULT_CURSOR_STYLE: CursorStyle = "tahoe";
 
 export type CursorClickEffectStyle = "none" | "spotlight" | "ripple" | "echo";
-export const DEFAULT_CURSOR_CLICK_EFFECT: CursorClickEffectStyle = "none";
+export const DEFAULT_CURSOR_CLICK_EFFECT: CursorClickEffectStyle = "ripple";
 export const DEFAULT_CURSOR_CLICK_EFFECT_COLOR = "#2563EB";
 export const DEFAULT_CURSOR_CLICK_EFFECT_SCALE = 1;
 export const DEFAULT_CURSOR_CLICK_EFFECT_OPACITY = 1;
@@ -282,6 +282,8 @@ export interface ClipRegion {
 	showSourceAudio?: boolean;
 	/** Hide the cursor while this clip plays (Screen Studio "hide cursor" on a fragment). */
 	hideCursor?: boolean;
+	/** Cursor follows the raw recorded path while this clip plays (Screen Studio "Disable smooth mouse movement"). */
+	disableSmoothCursor?: boolean;
 	/** Per-segment volume, 0..1 (Screen Studio "Set volume"). Unset = 1. */
 	volume?: number;
 }

@@ -89,6 +89,7 @@ export function buildTimelineItems(params: {
 			showSourceAudio: region.showSourceAudio,
 			muted: Boolean(region.muted),
 			cursorHidden: Boolean(region.hideCursor),
+			rawCursor: Boolean(region.disableSmoothCursor),
 			volumeValue: region.muted || getClipVolume(region) >= 1 ? undefined : getClipVolume(region),
 			variant: "clip",
 		};

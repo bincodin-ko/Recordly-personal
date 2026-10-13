@@ -7,6 +7,7 @@ import {
 	SpeakerX,
 	SpeakerLow,
 	EyeSlash,
+	Cursor,
 	FilmStrip,
 	MagnifyingGlass as LoupeIcon,
 	TimerIcon,
@@ -59,6 +60,7 @@ interface ItemProps {
 	waveformNormalize?: boolean;
 	muted?: boolean;
 	cursorHidden?: boolean;
+	rawCursor?: boolean;
 	/** Clip volume below 100% (0..1); shown as a small badge. */
 	volumeValue?: number;
 	variant?: "zoom" | "trim" | "clip" | "annotation" | "speed" | "audio" | "caption";
@@ -101,6 +103,7 @@ export default function Item({
 	waveformNormalize = false,
 	muted = false,
 	cursorHidden = false,
+	rawCursor = false,
 	volumeValue,
 	variant = "zoom",
 	isLoading = false,
@@ -400,6 +403,18 @@ export default function Item({
 							title={translate("timeline.item.cursorHidden", "Cursor hidden")}
 						>
 							<EyeSlash className="w-3 h-3 text-white/90 shrink-0" />
+						</div>
+					)}
+					{isClip && rawCursor && (
+						<div
+							data-testid="clip-raw-cursor-badge"
+							className={cn(
+								"absolute top-1 z-20 flex items-center rounded bg-black/65 p-0.5 pointer-events-none",
+								cursorHidden ? "left-6" : "left-1",
+							)}
+							title={translate("timeline.item.rawCursor", "Smooth cursor off")}
+						>
+							<Cursor className="w-3 h-3 text-white/90 shrink-0" />
 						</div>
 					)}
 					{isClip && volumeValue !== undefined && (

@@ -40,6 +40,7 @@
 		"separateClipFromAudio": "Отделить аудио от клипа",
 		"delete": "Удалить клип",
 		"hideCursor": "Скрыть курсор",
+		"disableSmoothCursor": "Отключить плавное движение мыши",
 		"volume": "Громкость"
 	},
 	"effects": {
@@ -206,6 +207,9 @@
 		"customEffectColor": "Custom effect color",
 		"devBadge": "DEV",
 		"hideIdleCursor": "Скрывать курсор, если он не движется",
+		"stopCursorAtEnd": "Остановить движение курсора в конце",
+		"removeCursorShakes": "Убрать дрожание курсора",
+		"alwaysDefaultCursor": "Всегда использовать системный курсор по умолчанию",
 		"idleCursorDelay": "Скрыть через",
 		"clickSound": "Звук щелчка",
 		"clickSoundVolume": "Громкость щелчка",

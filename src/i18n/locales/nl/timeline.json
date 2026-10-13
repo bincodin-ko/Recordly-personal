@@ -78,6 +78,7 @@
 		"trim": "Trim",
 		"clip": "Clip",
 		"cursorHidden": "Cursor verborgen",
+		"rawCursor": "Vloeiende cursor uit",
 		"sec": "{{s}}s",
 		"minSec": "{{m}}m {{s}}s",
 		"zoom": "Zoom",

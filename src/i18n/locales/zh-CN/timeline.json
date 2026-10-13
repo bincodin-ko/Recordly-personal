@@ -78,6 +78,7 @@
 		"trim": "Trim",
 		"clip": "Clip",
 		"cursorHidden": "光标已隐藏",
+		"rawCursor": "平滑光标已关闭",
 		"sec": "{{s}}s",
 		"minSec": "{{m}}m {{s}}s",
 		"zoom": "Zoom",

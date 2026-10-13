@@ -756,6 +756,7 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 						waveformSegmentSpan={item.sourceSpan ?? item.span}
 						speedValue={item.speedValue}
 						cursorHidden={item.cursorHidden}
+						rawCursor={item.rawCursor}
 						volumeValue={item.volumeValue}
 					>
 						{item.label}

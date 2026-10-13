@@ -40,6 +40,7 @@
 		"separateClipFromAudio": "Clip van audio scheiden",
 		"delete": "Clip verwijderen",
 		"hideCursor": "Cursor verbergen",
+		"disableSmoothCursor": "Vloeiende muisbeweging uitschakelen",
 		"volume": "Volume"
 	},
 	"effects": {
@@ -206,6 +207,9 @@
 		"customEffectColor": "Custom effect color",
 		"devBadge": "DEV",
 		"hideIdleCursor": "Cursor verbergen als hij niet beweegt",
+		"stopCursorAtEnd": "Cursorbeweging aan het einde stoppen",
+		"removeCursorShakes": "Cursortrillingen verwijderen",
+		"alwaysDefaultCursor": "Altijd de standaard systeemcursor gebruiken",
 		"idleCursorDelay": "Verbergen na",
 		"clickSound": "Klikgeluid",
 		"clickSoundVolume": "Volume klikgeluid",

@@ -1,6 +1,6 @@
 import type { FrameStyle } from "@/lib/frameStyle";
 import { drawInsetFrame } from "@/lib/geometry/insetFrame";
-import { type CursorExtrasRenderOptions, drawShortcutOverlay } from "@/components/video-editor/cursorExtras";
+import { type CursorExtrasRenderOptions, drawShortcutOverlay, getCursorMotionRules } from "@/components/video-editor/cursorExtras";
 import { Application, Container, Graphics, Rectangle, Sprite, Texture } from "pixi.js";
 import { createVideoSharpener } from "@/lib/videoSharpenFilter";
 import { type ColorGradingSettings, createColorLookFilter } from "@/lib/colorGrading";
@@ -460,6 +460,12 @@ export class FrameRenderer {
 					? this.config.cursorExtras.settings.idleCursorDelaySec * 1000
 					: 0,
 				this.config.cursorExtras?.hiddenRanges ?? [],
+				this.config.cursorExtras
+					? getCursorMotionRules(
+							this.config.cursorExtras.settings,
+							this.config.cursorExtras.rawRanges,
+						)
+					: undefined,
 			);
 		}
 

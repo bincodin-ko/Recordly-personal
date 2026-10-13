@@ -40,6 +40,7 @@
 		"separateClipFromAudio": "Separar clip del audio",
 		"delete": "Eliminar clip",
 		"hideCursor": "Ocultar cursor",
+		"disableSmoothCursor": "Desactivar el movimiento suave del ratón",
 		"volume": "Volumen"
 	},
 	"effects": {
@@ -206,6 +207,9 @@
 		"customEffectColor": "Custom effect color",
 		"devBadge": "DEV",
 		"hideIdleCursor": "Ocultar el cursor si no se mueve",
+		"stopCursorAtEnd": "Detener el movimiento del cursor al final",
+		"removeCursorShakes": "Eliminar temblores del cursor",
+		"alwaysDefaultCursor": "Usar siempre el cursor predeterminado del sistema",
 		"idleCursorDelay": "Ocultar tras",
 		"clickSound": "Sonido de clic",
 		"clickSoundVolume": "Volumen del sonido de clic",

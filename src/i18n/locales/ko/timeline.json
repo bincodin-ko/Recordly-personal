@@ -78,6 +78,7 @@
 		"trim": "자르기",
 		"clip": "클립",
 		"cursorHidden": "커서 숨김",
+		"rawCursor": "부드러운 이동 꺼짐",
 		"sec": "{{s}}초",
 		"minSec": "{{m}}분 {{s}}초",
 		"zoom": "줌",

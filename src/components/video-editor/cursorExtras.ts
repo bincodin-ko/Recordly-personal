@@ -31,6 +31,12 @@ export interface CursorExtrasSettings {
 	/** Screen Studio "Hide cursor if it's not moving". */
 	hideIdleCursor: boolean;
 	idleCursorDelaySec: number;
+	/** Screen Studio "Stop cursor movement at the end of the video". */
+	stopCursorAtEnd: boolean;
+	/** Screen Studio "Remove cursor shakes". */
+	removeCursorShakes: boolean;
+	/** Screen Studio "Always use default system cursor" (never switch to text/pointer shapes). */
+	alwaysDefaultCursor: boolean;
 }
 
 export const DEFAULT_CURSOR_EXTRAS: CursorExtrasSettings = {
@@ -43,6 +49,9 @@ export const DEFAULT_CURSOR_EXTRAS: CursorExtrasSettings = {
 	clickSoundType: "default",
 	hideIdleCursor: false,
 	idleCursorDelaySec: 2,
+	stopCursorAtEnd: false,
+	removeCursorShakes: false,
+	alwaysDefaultCursor: false,
 };
 
 /** Mirrors electron/ipc/cursor/keystrokes.ts `<video>.keys.json` samples. */
@@ -63,6 +72,8 @@ export interface CursorExtrasRenderOptions {
 	keystrokes: KeystrokeSample[];
 	/** Source-time ranges where the cursor is hidden (clips with "Hide cursor"). */
 	hiddenRanges: TimeRange[];
+	/** Source-time ranges where the cursor follows the raw recorded path (no smoothing). */
+	rawRanges?: TimeRange[];
 }
 
 function clamp(value: number, min: number, max: number) {
@@ -96,6 +107,9 @@ export function normalizeCursorExtras(raw: unknown): CursorExtrasSettings {
 			0.5,
 			10,
 		),
+		stopCursorAtEnd: bool(value.stopCursorAtEnd, d.stopCursorAtEnd),
+		removeCursorShakes: bool(value.removeCursorShakes, d.removeCursorShakes),
+		alwaysDefaultCursor: bool(value.alwaysDefaultCursor, d.alwaysDefaultCursor),
 	};
 }
 
@@ -129,6 +143,96 @@ export function getHiddenCursorRanges(clips: ClipRegion[] | undefined): TimeRang
 	return (clips ?? [])
 		.filter((clip) => clip.hideCursor)
 		.map((clip) => ({ startMs: getClipSourceStartMs(clip), endMs: getClipSourceEndMs(clip) }));
+}
+
+/** Clips with "Disable smooth mouse movement": the cursor follows the raw recording there. */
+export function getRawCursorRanges(clips: ClipRegion[] | undefined): TimeRange[] {
+	return (clips ?? [])
+		.filter((clip) => clip.disableSmoothCursor)
+		.map((clip) => ({ startMs: getClipSourceStartMs(clip), endMs: getClipSourceEndMs(clip) }));
+}
+
+export function isInsideRanges(ranges: TimeRange[] | undefined, timeMs: number) {
+	return (ranges ?? []).some((r) => timeMs >= r.startMs && timeMs <= r.endMs);
+}
+
+// ---------------------------------------------------------------------------
+// Telemetry clean-up shared by preview and export (Remove cursor shakes / Stop at end)
+
+/** Moves smaller than this (fraction of the frame) count as hand tremor. */
+export const CURSOR_SHAKE_DEADZONE = 0.004;
+/** The cursor holds still for this long before the recording ends. */
+export const CURSOR_STOP_AT_END_MS = 1000;
+
+export interface CursorSampleCleanup {
+	removeShakes: boolean;
+	stopAtEnd: boolean;
+}
+
+const cleanupCache = new WeakMap<CursorTelemetryPoint[], Map<string, CursorTelemetryPoint[]>>();
+
+/**
+ * Returns telemetry with tremor removed (dead zone around the last settled position;
+ * clicks always settle) and/or the final second frozen. Returns the input when nothing is on.
+ */
+export function cleanupCursorSamples(
+	samples: CursorTelemetryPoint[],
+	options: CursorSampleCleanup,
+): CursorTelemetryPoint[] {
+	if (samples.length === 0 || (!options.removeShakes && !options.stopAtEnd)) return samples;
+	const key = `${options.removeShakes ? 1 : 0}${options.stopAtEnd ? 1 : 0}`;
+	let perKey = cleanupCache.get(samples);
+	const hit = perKey?.get(key);
+	if (hit) return hit;
+
+	let out = samples;
+	if (options.removeShakes) {
+		let ax = samples[0].cx;
+		let ay = samples[0].cy;
+		out = samples.map((sample) => {
+			const clicked = sample.interactionType !== undefined && sample.interactionType !== "move";
+			if (clicked || Math.hypot(sample.cx - ax, sample.cy - ay) >= CURSOR_SHAKE_DEADZONE) {
+				ax = sample.cx;
+				ay = sample.cy;
+				return sample;
+			}
+			return { ...sample, cx: ax, cy: ay };
+		});
+	}
+	if (options.stopAtEnd) {
+		const endMs = out[out.length - 1].timeMs;
+		const freezeMs = Math.max(out[0].timeMs, endMs - CURSOR_STOP_AT_END_MS);
+		let hold: CursorTelemetryPoint | undefined;
+		for (const sample of out) if (sample.timeMs <= freezeMs) hold = sample;
+		if (hold) {
+			const { cx, cy } = hold;
+			out = out.map((s) => (s.timeMs > freezeMs ? { ...s, cx, cy } : s));
+		}
+	}
+	if (!perKey) {
+		perKey = new Map();
+		cleanupCache.set(samples, perKey);
+	}
+	perKey.set(key, out);
+	return out;
+}
+
+export interface CursorMotionRules extends CursorSampleCleanup {
+	/** Ranges (source time) drawn on the raw path, bypassing the spring. */
+	rawRanges: TimeRange[];
+	alwaysDefaultCursor: boolean;
+}
+
+export function getCursorMotionRules(
+	settings: CursorExtrasSettings,
+	rawRanges: TimeRange[] | undefined,
+): CursorMotionRules {
+	return {
+		rawRanges: rawRanges ?? [],
+		removeShakes: settings.removeCursorShakes,
+		stopAtEnd: settings.stopCursorAtEnd,
+		alwaysDefaultCursor: settings.alwaysDefaultCursor,
+	};
 }
 
 // ---------------------------------------------------------------------------

@@ -490,6 +490,7 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 								? region.showSourceAudio
 								: false,
 						...(region.hideCursor === true ? { hideCursor: true } : {}),
+						...(region.disableSmoothCursor === true ? { disableSmoothCursor: true } : {}),
 						...(isFiniteNumber(region.volume) && region.volume >= 0 && region.volume < 1
 							? { volume: region.volume }
 							: {}),
@@ -896,7 +897,8 @@ export function normalizeProjectEditor(editor: Partial<ProjectEditorState>): Pro
 		cursorStyle: normalizedCursorStyle,
 		cursorClickEffect: normalizeCursorClickEffectStyle(
 			(editor as Partial<ProjectEditorState>).cursorClickEffect,
-			DEFAULT_CURSOR_CLICK_EFFECT,
+			// New projects (`{}`) get the default ripple; saved projects that predate the field stay off.
+			Object.keys(editor).length === 0 ? DEFAULT_CURSOR_CLICK_EFFECT : "none",
 		),
 		cursorClickEffectColor: normalizedCursorClickEffectColor,
 		cursorClickEffectScale: normalizedCursorClickEffectScale,

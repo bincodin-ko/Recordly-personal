@@ -472,6 +472,8 @@ interface SettingsPanelProps {
 	onClipVolumeChange?: (volume: number) => void;
 	selectedClipHideCursor?: boolean;
 	onClipHideCursorChange?: (hideCursor: boolean) => void;
+	selectedClipDisableSmoothCursor?: boolean;
+	onClipDisableSmoothCursorChange?: (disable: boolean) => void;
 	onClipSeparateAudio?: () => void;
 	onClipDelete?: (id: string) => void;
 	selectedAudioId?: string | null;
@@ -953,6 +955,8 @@ export function SettingsPanel({
 	onClipMutedChange,
 	selectedClipHideCursor = false,
 	onClipHideCursorChange,
+	selectedClipDisableSmoothCursor = false,
+	onClipDisableSmoothCursorChange,
 	onClipSeparateAudio,
 	onClipDelete,
 	selectedClipVolume,
@@ -3197,6 +3201,17 @@ export function SettingsPanel({
 						aria-label={tSettings("clip.hideCursor", "Hide cursor")}
 					/>
 				</label>
+				<label className="flex items-center justify-between py-2">
+					<span className="text-xs text-muted-foreground">
+						{tSettings("clip.disableSmoothCursor", "Disable smooth mouse movement")}
+					</span>
+					<Switch
+						data-testid="clip-disable-smooth-cursor"
+						checked={selectedClipDisableSmoothCursor}
+						onCheckedChange={(v) => onClipDisableSmoothCursorChange?.(v)}
+						aria-label={tSettings("clip.disableSmoothCursor", "Disable smooth mouse movement")}
+					/>
+				</label>
 				{onClipSeparateAudio && (
 					<Button
 						type="button"
@@ -3367,6 +3382,39 @@ export function SettingsPanel({
 									formatValue={(v) => `${v.toFixed(1)}s`}
 								/>
 							)}
+							<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+								<span>{tSettings("effects.alwaysDefaultCursor")}</span>
+								<Switch
+									data-testid="cursor-always-default"
+									aria-label={tSettings("effects.alwaysDefaultCursor")}
+									checked={cursorExtras.alwaysDefaultCursor}
+									onCheckedChange={(alwaysDefaultCursor) =>
+										onCursorExtrasChange?.({ alwaysDefaultCursor })
+									}
+								/>
+							</label>
+							<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+								<span>{tSettings("effects.stopCursorAtEnd")}</span>
+								<Switch
+									data-testid="cursor-stop-at-end"
+									aria-label={tSettings("effects.stopCursorAtEnd")}
+									checked={cursorExtras.stopCursorAtEnd}
+									onCheckedChange={(stopCursorAtEnd) =>
+										onCursorExtrasChange?.({ stopCursorAtEnd })
+									}
+								/>
+							</label>
+							<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+								<span>{tSettings("effects.removeCursorShakes")}</span>
+								<Switch
+									data-testid="cursor-remove-shakes"
+									aria-label={tSettings("effects.removeCursorShakes")}
+									checked={cursorExtras.removeCursorShakes}
+									onCheckedChange={(removeCursorShakes) =>
+										onCursorExtrasChange?.({ removeCursorShakes })
+									}
+								/>
+							</label>
 							<CursorClickEffectCards
 								title={tSettings(
 									"effects.cursorClickEffects.title",

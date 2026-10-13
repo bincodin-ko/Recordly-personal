@@ -44,7 +44,9 @@ import {
 	DEFAULT_CURSOR_EXTRAS,
 	drawShortcutOverlay,
 	getActiveShortcut,
+	getCursorMotionRules,
 	getHiddenCursorRanges,
+	getRawCursorRanges,
 	type KeystrokeSample,
 	playPreviewClickSound,
 } from "./cursorExtras";
@@ -1496,6 +1498,7 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 			cursorOverlayRef.current?.setVisibilityRules(
 				cursorExtras.hideIdleCursor ? cursorExtras.idleCursorDelaySec * 1000 : 0,
 				hiddenCursorRangesRef.current,
+				getCursorMotionRules(cursorExtras, getRawCursorRanges(clipRegions)),
 			);
 			requestPausedFrameRefresh();
 		}, [cursorExtras, keystrokes, clipRegions, requestPausedFrameRefresh]);
@@ -1921,6 +1924,10 @@ const VideoPlayback = forwardRef<VideoPlaybackRef, VideoPlaybackProps>(
 							? cursorExtrasRef.current.idleCursorDelaySec * 1000
 							: 0,
 						hiddenCursorRangesRef.current,
+						getCursorMotionRules(
+							cursorExtrasRef.current,
+							getRawCursorRanges(clipRegionsRef.current),
+						),
 					);
 					cursorOverlay.setFilterResolution(
 						app.renderer.resolution || window.devicePixelRatio || 1,

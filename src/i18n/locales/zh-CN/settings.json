@@ -40,6 +40,7 @@
 		"separateClipFromAudio": "将剪辑与音频分离",
 		"delete": "删除片段",
 		"hideCursor": "隐藏光标",
+		"disableSmoothCursor": "禁用平滑鼠标移动",
 		"volume": "音量"
 	},
 	"effects": {
@@ -206,6 +207,9 @@
 		"customEffectColor": "Custom effect color",
 		"devBadge": "DEV",
 		"hideIdleCursor": "光标静止时隐藏",
+		"stopCursorAtEnd": "在结尾处停止光标移动",
+		"removeCursorShakes": "消除光标抖动",
+		"alwaysDefaultCursor": "始终使用默认系统光标",
 		"idleCursorDelay": "隐藏前等待",
 		"clickSound": "点击音效",
 		"clickSoundVolume": "点击音效音量",
