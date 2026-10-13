@@ -37,7 +37,8 @@ export interface TimelineEditorProps {
 	videoDuration: number;
 	currentTime: number;
 	playheadTime?: number;
-	onSeek?: (time: number) => void;
+	/** `phase` is set while the playhead is dragged (scrubbing). */
+	onSeek?: (time: number, phase?: "start" | "move" | "end") => void;
 	onHoverScrub?: (timeMs: number | null) => void;
 	cursorTelemetry?: CursorTelemetryPoint[];
 	autoSuggestZoomsTrigger?: number;

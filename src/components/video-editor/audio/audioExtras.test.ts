@@ -21,6 +21,7 @@ describe("audioExtras", () => {
 	it("normalizes bad input to defaults", () => {
 		expect(normalizeAudioExtras({ micMode: "x", music: { volume: 9 } })).toEqual({
 			micMode: "standard",
+			micMuted: false,
 			music: { path: null, volume: 1, ducking: true },
 		});
 	});

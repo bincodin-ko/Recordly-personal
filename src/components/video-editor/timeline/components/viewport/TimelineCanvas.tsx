@@ -62,7 +62,7 @@ interface TimelineCanvasProps {
 	items: TimelineRenderItem[];
 	videoDurationMs: number;
 	currentTimeMs: number;
-	onSeek?: (time: number) => void;
+	onSeek?: (time: number, phase?: "start" | "move" | "end") => void;
 	/** Hover scrub: timeline ms under the pointer, or null when it leaves. */
 	onHoverScrub?: (timeMs: number | null) => void;
 	canPlaceZoomAtMs?: (startMs: number) => boolean;
@@ -1147,7 +1147,7 @@ export default function TimelineCanvas({
 			}
 
 			const rect = localTimelineRef.current.getBoundingClientRect();
-			onSeek(getAbsoluteMsFromClientX(e.clientX, rect) / 1000);
+			onSeek(getAbsoluteMsFromClientX(e.clientX, rect) / 1000, "start");
 			setIsSeeking(true);
 			e.preventDefault();
 		},
@@ -1172,7 +1172,7 @@ export default function TimelineCanvas({
 			if (!onSeek || !localTimelineRef.current || pendingSeekClientXRef.current === null)
 				return;
 			const rect = localTimelineRef.current.getBoundingClientRect();
-			onSeek(getAbsoluteMsFromClientX(pendingSeekClientXRef.current, rect) / 1000);
+			onSeek(getAbsoluteMsFromClientX(pendingSeekClientXRef.current, rect) / 1000, "move");
 		};
 
 		const handleMouseMove = (event: globalThis.MouseEvent) => {
@@ -1182,13 +1182,17 @@ export default function TimelineCanvas({
 			}
 		};
 
-		const handleMouseUp = () => {
+		const handleMouseUp = (event: globalThis.MouseEvent) => {
 			if (seekRafRef.current !== null) {
 				cancelAnimationFrame(seekRafRef.current);
 				seekRafRef.current = null;
 			}
 			if (pendingSeekClientXRef.current !== null) {
 				flushSeek();
+			}
+			if (onSeek && localTimelineRef.current) {
+				const rect = localTimelineRef.current.getBoundingClientRect();
+				onSeek(getAbsoluteMsFromClientX(event.clientX, rect) / 1000, "end");
 			}
 			pendingSeekClientXRef.current = null;
 			setIsSeeking(false);

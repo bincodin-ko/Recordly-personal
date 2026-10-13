@@ -406,6 +406,7 @@
 		"mixedLabel": "Источник",
 		"deleteRegion": "Удалить аудио",
 		"microphone": "Microphone",
+		"muteMic": "Отключить микрофон",
 		"micMode": "Microphone audio mode",
 		"micModeStandard": "Standard",
 		"micModeNoiseReduction": "Noise reduction",

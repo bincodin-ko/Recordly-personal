@@ -406,6 +406,7 @@
 		"mixedLabel": "Bron",
 		"deleteRegion": "Audio verwijderen",
 		"microphone": "Microphone",
+		"muteMic": "Microfoon dempen",
 		"micMode": "Microphone audio mode",
 		"micModeStandard": "Standard",
 		"micModeNoiseReduction": "Noise reduction",

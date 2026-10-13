@@ -406,6 +406,7 @@
 		"mixedLabel": "원본",
 		"deleteRegion": "오디오 삭제",
 		"microphone": "마이크",
+		"muteMic": "마이크 음소거",
 		"micMode": "마이크 소리 모드",
 		"micModeStandard": "기본",
 		"micModeNoiseReduction": "잡음 제거",
