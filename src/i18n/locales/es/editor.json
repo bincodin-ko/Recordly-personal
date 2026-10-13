@@ -529,7 +529,7 @@
 		"exportNoOutput": "Export produced no output"
 	},
 	"aspect": {
-		"native": "Native",
+		"native": "Auto",
 		"custom": "Custom {{ratio}}"
 	},
 	"audioSync": {
