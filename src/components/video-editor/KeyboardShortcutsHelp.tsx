@@ -5,7 +5,7 @@ import { Gear as Settings2, Question as HelpCircle } from "@/components/ui/icons
 import { useEffect, useState } from "react";
 import { useScopedT } from "@/contexts/I18nContext";
 import { useShortcuts } from "@/contexts/ShortcutsContext";
-import { formatBinding, JKL_SHORTCUTS, SHORTCUT_ACTIONS, SHORTCUT_LABELS } from "@/lib/shortcuts";
+import { formatBinding, SHORTCUT_ACTIONS, SHORTCUT_LABELS } from "@/lib/shortcuts";
 import { formatShortcut } from "@/utils/platformUtils";
 
 export function KeyboardShortcutsHelp() {
@@ -53,13 +53,6 @@ export function KeyboardShortcutsHelp() {
 						<div key={action} className="flex items-center justify-between">
 							<span className="text-muted-foreground">{SHORTCUT_LABELS[action]}</span>
 							<Kbd>{formatBinding(shortcuts[action], isMac)}</Kbd>
-						</div>
-					))}
-
-					{JKL_SHORTCUTS.map((shortcut) => (
-						<div key={shortcut.display} className="flex items-center justify-between gap-2">
-							<span className="text-muted-foreground">{shortcut.label}</span>
-							<Kbd>{shortcut.display}</Kbd>
 						</div>
 					))}
 

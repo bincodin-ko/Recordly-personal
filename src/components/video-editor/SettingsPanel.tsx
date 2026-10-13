@@ -3030,14 +3030,6 @@ export function SettingsPanel({
 						</SelectContent>
 					</Select>
 				</label>
-				<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-					<span>{tSettings("audio.muteMic", "Mute microphone")}</span>
-					<Switch
-						aria-label={tSettings("audio.muteMic", "Mute microphone")}
-						checked={audioExtras.micMuted}
-						onCheckedChange={(micMuted) => onAudioExtrasChange?.({ ...audioExtras, micMuted })}
-					/>
-				</label>
 				<p className="text-xs text-muted-foreground" role="status">
 					{micEnhanceStatus === "processing" && audioExtras.micMode !== "standard"
 						? tSettings("audio.micModeProcessing", "Processing microphone audio…")
@@ -3047,6 +3039,14 @@ export function SettingsPanel({
 								? tSettings("audio.micModeError", "Couldn't process the microphone audio. Using the original.")
 								: micModeHint[audioExtras.micMode]}
 				</p>
+				<label className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+					<span>{tSettings("audio.muteMic", "Mute microphone")}</span>
+					<Switch
+						aria-label={tSettings("audio.muteMic", "Mute microphone")}
+						checked={audioExtras.micMuted}
+						onCheckedChange={(micMuted) => onAudioExtrasChange?.({ ...audioExtras, micMuted })}
+					/>
+				</label>
 
 				<div className="mt-3">
 					<SectionLabel>{tSettings("audio.backgroundMusic", "Background audio")}</SectionLabel>

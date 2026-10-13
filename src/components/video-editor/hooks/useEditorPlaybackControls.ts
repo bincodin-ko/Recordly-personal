@@ -58,6 +58,17 @@ export function useEditorPlaybackControls({
 	const getActivePlayback = useCallback(() => videoPlaybackRef.current, [videoPlaybackRef]);
 	const latest = useRef({ timelinePlayheadTime, timelineDuration, scrubAudio });
 	latest.current = { timelinePlayheadTime, timelineDuration, scrubAudio };
+	const playheadKeyRef = useRef(playheadKey);
+	playheadKeyRef.current = playheadKey;
+
+	// Playhead memory: restoredKey gates saving until the saved spot was applied (or the user moved).
+	const restoredKey = useRef<string | null>(null);
+	const restoreTimer = useRef<number | null>(null);
+	const cancelRestore = useCallback(() => {
+		if (restoreTimer.current !== null) window.clearInterval(restoreTimer.current);
+		restoreTimer.current = null;
+		restoredKey.current = playheadKeyRef.current;
+	}, []);
 
 	const startPlayback = useCallback(() => {
 		const playback = getActivePlayback();
@@ -134,6 +145,7 @@ export function useEditorPlaybackControls({
 	}, []);
 
 	const scrubStart = useCallback(() => {
+		cancelRestore();
 		stopJkl();
 		scrubLast.current = null;
 		scrubSmoothedRate.current = 0;
@@ -216,6 +228,7 @@ export function useEditorPlaybackControls({
 				cancelAnimationFrame(jklFrame.current);
 				jklFrame.current = null;
 			}
+			cancelRestore();
 			const next = jklReduce(jklState.current, key);
 			jklState.current = next;
 			if (next.dir === 0) {
@@ -227,7 +240,7 @@ export function useEditorPlaybackControls({
 				runJklLoop(next);
 			}
 		},
-		[getActivePlayback, runJklLoop, startPlayback],
+		[cancelRestore, getActivePlayback, runJklLoop, startPlayback],
 	);
 
 	useEffect(() => {
@@ -254,15 +267,31 @@ export function useEditorPlaybackControls({
 	);
 
 	// --- Reopen at the saved playhead ---
-	const restoredKey = useRef<string | null>(null);
 	useEffect(() => {
-		const playback = getActivePlayback();
-		if (!playheadKey || restoredKey.current === playheadKey) return;
-		if (!(timelineDuration > 0) || !playback?.video) return;
-		restoredKey.current = playheadKey;
-		const saved = loadPlayhead(window.localStorage, playheadKey, timelineDuration);
-		if (saved !== null) playback.seekTimeline(saved);
-	}, [getActivePlayback, playheadKey, timelineDuration]);
+		if (!playheadKey || restoredKey.current === playheadKey || !(timelineDuration > 0)) return;
+		const key = playheadKey;
+		const saved = loadPlayhead(window.localStorage, key, timelineDuration);
+		if (saved === null) {
+			restoredKey.current = key;
+			return;
+		}
+		// ponytail: the preview transport appears a moment after the duration is known and
+		// starts at 0, so re-seek until the playhead sticks (max ~5 s), no readiness event exists.
+		let tries = 0;
+		restoreTimer.current = window.setInterval(() => {
+			tries += 1;
+			const landed = Math.abs(latest.current.timelinePlayheadTime - saved) < 0.05;
+			if (landed || tries > 25) {
+				cancelRestore();
+				return;
+			}
+			getActivePlayback()?.seekTimeline(saved);
+		}, 200);
+		return () => {
+			if (restoreTimer.current !== null) window.clearInterval(restoreTimer.current);
+			restoreTimer.current = null;
+		};
+	}, [cancelRestore, getActivePlayback, playheadKey, timelineDuration]);
 	useEffect(() => {
 		if (!playheadKey || restoredKey.current !== playheadKey) return;
 		const timer = window.setTimeout(
@@ -274,10 +303,11 @@ export function useEditorPlaybackControls({
 
 	const handleTimelineSeek = useCallback(
 		(time: number) => {
+			cancelRestore();
 			stopJkl();
 			handleSeek(time, { pause: true });
 		},
-		[handleSeek, stopJkl],
+		[cancelRestore, handleSeek, stopJkl],
 	);
 
 	const handlePreviewSkipBack = useCallback(() => {
