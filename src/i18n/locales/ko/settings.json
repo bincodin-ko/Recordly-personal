@@ -22,7 +22,9 @@
 		"followSpeedFast": "빠르게"
 	},
 	"trim": {
-		"deleteRegion": "자르기 구간 삭제"
+		"empty": "아직 잘린 구간이 없어요.",
+		"seek": "이 자리로 이동",
+		"restoreAll": "전부 자르기 취소"
 	},
 	"speed": {
 		"playbackSpeed": "재생 속도",
@@ -248,7 +250,8 @@
 		"motion": "움직임",
 		"recording": "녹화",
 		"files": "파일",
-		"advanced": "고급"
+		"advanced": "고급",
+		"trim": "자르기"
 	},
 	"captions": {
 		"selectOnTimeline": "타임라인에서 자막을 선택해 편집하세요.",

@@ -131,6 +131,7 @@
     "allowToChangeInstallationDirectory": true,
     "createDesktopShortcut": true,
     "createStartMenuShortcut": true,
-    "shortcutName": "Recordly"
+    "shortcutName": "Recordly",
+    "include": "build/installer.nsh"
   }
 }

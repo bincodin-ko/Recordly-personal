@@ -1,9 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { WebcamOverlaySettings } from "../types";
 import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { buildShortcutBlocks, type CursorExtrasSettings } from "../cursorExtras";
 import type { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
 import { retimeCaptionFragment } from "../captionTimeline";
+import { buildShortcutBlocks, type CursorExtrasSettings } from "../cursorExtras";
 import type { useAnnotationRegionCommands } from "../hooks/useAnnotationRegionCommands";
 import type { useAudioRegionCommands } from "../hooks/useAudioRegionCommands";
 import type { useCaptionCommands } from "../hooks/useCaptionCommands";
@@ -12,9 +11,11 @@ import type { useEditorPlaybackControls } from "../hooks/useEditorPlaybackContro
 import type { useTimelineProjection } from "../hooks/useTimelineProjection";
 import type { useZoomRegionCommands } from "../hooks/useZoomRegionCommands";
 import type { useTimelineState } from "../state/useTimelineState";
-import { ClipActionsProvider } from "../timeline/core/ClipActionsContext";
+import { TRIM_SEEK_EVENT } from "../TrimListSection";
 import { useClipTimelineActions } from "../timeline/clipOverlays/useClipTimelineActions";
+import { ClipActionsProvider } from "../timeline/core/ClipActionsContext";
 import TimelineEditor, { type TimelineEditorHandle } from "../timeline/TimelineEditor";
+import type { WebcamOverlaySettings } from "../types";
 
 type Props = {
 	panelRef?: RefObject<HTMLDivElement | null>;
@@ -136,6 +137,12 @@ export function EditorTimelinePanel(props: Props) {
 		},
 		[],
 	);
+	useEffect(() => {
+		const onTrimSeek = (event: Event) =>
+			handleTimelineSeek((event as CustomEvent<number>).detail);
+		window.addEventListener(TRIM_SEEK_EVENT, onTrimSeek);
+		return () => window.removeEventListener(TRIM_SEEK_EVENT, onTrimSeek);
+	}, [handleTimelineSeek]);
 	const clipTimelineActions = useClipTimelineActions({
 		clipRegions: timeline.clipRegions,
 		zoomRegions: timeline.zoomRegions,
@@ -165,121 +172,125 @@ export function EditorTimelinePanel(props: Props) {
 			style={{ height: "22%", minHeight: 180, maxHeight: 280 }}
 		>
 			<ClipActionsProvider value={clipTimelineActions.actions}>
-			<TimelineEditor
-				ref={timelineRef}
-				videoDuration={projection.timelineDuration}
-				currentTime={frozenPlayhead ?? currentTime}
-				playheadTime={frozenPlayhead ?? projection.timelinePlayheadTime}
-				onSeek={handleSeekFromTimeline}
-				onHoverScrub={handleHoverScrub}
-				videoPath={videoPath}
-				videoSourcePath={videoSourcePath}
-				cursorTelemetrySourcePath={cursorTelemetrySourcePath}
-				cursorTelemetry={normalizedCursorTelemetry}
-				autoSuggestZoomsTrigger={autoSuggestZoomsTrigger}
-				onAutoSuggestZoomsConsumed={handleAutoSuggestZoomsConsumed}
-				disableSuggestedZooms={disableSuggestedZooms}
-				zoomRegions={timeline.zoomRegions}
-				onZoomAdded={zoomCommands.handleZoomAdded}
-				onZoomSuggested={zoomCommands.handleZoomSuggested}
-				onZoomSpanChange={zoomCommands.handleZoomSpanChange}
-				onZoomDelete={zoomCommands.handleZoomDelete}
-				selectedZoomId={timeline.selectedZoomId}
-				onSelectZoom={zoomCommands.handleSelectZoom}
-				trimRegions={timeline.trimRegions}
-				clipRegions={timeline.clipRegions}
-				onClipSplit={clipCommands.handleClipSplit}
-				onClipDelete={clipCommands.handleClipDelete}
-				onClipSpanChange={clipCommands.handleClipSpanChange}
-				selectedClipId={timeline.selectedClipId}
-				onSelectClip={clipCommands.handleSelectClip}
-				audioRegions={timeline.audioRegions}
-				onAudioAdded={audioCommands.handleAudioAdded}
-				onAudioSpanChange={audioCommands.handleAudioSpanChange}
-				onAudioDelete={audioCommands.handleAudioDelete}
-				selectedAudioId={timeline.selectedAudioId}
-				onSelectAudio={audioCommands.handleSelectAudio}
-				captionRegions={projection.effectiveCaptionRegions}
-				onCaptionSpanChange={(id, span) => {
-					const fragment = projection.effectiveCaptionRegions.find(
-						(cue) => cue.id === id,
-					);
-					if (!fragment) return;
-					captionCommands.handleCaptionRetime(
-						fragment.sourceCueId,
-						retimeCaptionFragment(fragment, span),
-					);
-				}}
-				selectedCaptionId={
-					projection.effectiveCaptionRegions.find(
-						(cue) =>
-							cue.sourceCueId === timeline.selectedCaptionId &&
-							currentTime * 1000 >= cue.startMs &&
-							currentTime * 1000 < cue.endMs,
-					)?.id ??
-					projection.effectiveCaptionRegions.find(
-						(cue) => cue.sourceCueId === timeline.selectedCaptionId,
-					)?.id ??
-					null
-				}
-				onSelectCaption={(id) => {
-					const fragment = projection.effectiveCaptionRegions.find(
-						(cue) => cue.id === id,
-					);
-					captionCommands.handleSelectCaption(fragment?.sourceCueId ?? null);
-					if (fragment) playback.handleTimelineSeek(fragment.startMs / 1000);
-				}}
-				onCaptionDelete={(id) => {
-					const fragment = projection.effectiveCaptionRegions.find(
-						(cue) => cue.id === id,
-					);
-					if (fragment) captionCommands.handleCaptionDelete(fragment.sourceCueId);
-				}}
-				onCaptionAdded={captionCommands.handleCaptionAdded}
-				captionsEnabled={timeline.autoCaptionSettings.enabled}
-				captionQuickAddEnabled={timeline.autoCaptionSettings.timelineQuickAdd}
-				annotationRegions={timeline.annotationRegions}
-				onAnnotationAdded={annotationCommands.handleAnnotationAdded}
-				onAnnotationSpanChange={annotationCommands.handleAnnotationSpanChange}
-				onAnnotationDelete={annotationCommands.handleAnnotationDelete}
-				selectedAnnotationId={timeline.selectedAnnotationId}
-				onSelectAnnotation={handleSelectAnnotation}
-				showSourceAudioTrack={timeline.clipRegions.some((clip) => clip.showSourceAudio)}
-				sourceAudioResourceVersion={timeline.sourceAudioFallbackRefreshKey}
-				sourceAudioTrackSettings={audio.activeSourceAudioTrackSettings}
-				getSourceAudioTrackSettingsForClip={audio.getSourceAudioTrackSettingsForClip}
-				onSourceAudioAvailabilityChange={timeline.setHasClipSourceAudio}
-				onSourceAudioTracksMetaChange={audio.onSourceAudioTracksMetaChange}
-				shortcutBlocks={shortcutBlocks}
-				cameraLayout={
-					props.webcam.enabled && props.webcam.sourcePath
-						? {
-								regions: props.webcam.layoutRegions ?? [],
-								onChange: (layoutRegions) =>
-									props.setWebcam((current) => ({
-										...current,
-										layoutRegions,
-										// A cut-out needs the person separated from the background.
-										...(layoutRegions.some((r) => r.layout === "cutout") &&
-										(!current.backgroundRemoval ||
-											(current.backgroundStyle ?? "transparent") !== "transparent")
-											? { backgroundRemoval: true, backgroundStyle: "transparent" as const }
-											: {}),
-									})),
+				<TimelineEditor
+					ref={timelineRef}
+					videoDuration={projection.timelineDuration}
+					currentTime={frozenPlayhead ?? currentTime}
+					playheadTime={frozenPlayhead ?? projection.timelinePlayheadTime}
+					onSeek={handleSeekFromTimeline}
+					onHoverScrub={handleHoverScrub}
+					videoPath={videoPath}
+					videoSourcePath={videoSourcePath}
+					cursorTelemetrySourcePath={cursorTelemetrySourcePath}
+					cursorTelemetry={normalizedCursorTelemetry}
+					autoSuggestZoomsTrigger={autoSuggestZoomsTrigger}
+					onAutoSuggestZoomsConsumed={handleAutoSuggestZoomsConsumed}
+					disableSuggestedZooms={disableSuggestedZooms}
+					zoomRegions={timeline.zoomRegions}
+					onZoomAdded={zoomCommands.handleZoomAdded}
+					onZoomSuggested={zoomCommands.handleZoomSuggested}
+					onZoomSpanChange={zoomCommands.handleZoomSpanChange}
+					onZoomDelete={zoomCommands.handleZoomDelete}
+					selectedZoomId={timeline.selectedZoomId}
+					onSelectZoom={zoomCommands.handleSelectZoom}
+					trimRegions={timeline.trimRegions}
+					clipRegions={timeline.clipRegions}
+					onClipSplit={clipCommands.handleClipSplit}
+					onClipDelete={clipCommands.handleClipDelete}
+					onClipSpanChange={clipCommands.handleClipSpanChange}
+					selectedClipId={timeline.selectedClipId}
+					onSelectClip={clipCommands.handleSelectClip}
+					audioRegions={timeline.audioRegions}
+					onAudioAdded={audioCommands.handleAudioAdded}
+					onAudioSpanChange={audioCommands.handleAudioSpanChange}
+					onAudioDelete={audioCommands.handleAudioDelete}
+					selectedAudioId={timeline.selectedAudioId}
+					onSelectAudio={audioCommands.handleSelectAudio}
+					captionRegions={projection.effectiveCaptionRegions}
+					onCaptionSpanChange={(id, span) => {
+						const fragment = projection.effectiveCaptionRegions.find(
+							(cue) => cue.id === id,
+						);
+						if (!fragment) return;
+						captionCommands.handleCaptionRetime(
+							fragment.sourceCueId,
+							retimeCaptionFragment(fragment, span),
+						);
+					}}
+					selectedCaptionId={
+						projection.effectiveCaptionRegions.find(
+							(cue) =>
+								cue.sourceCueId === timeline.selectedCaptionId &&
+								currentTime * 1000 >= cue.startMs &&
+								currentTime * 1000 < cue.endMs,
+						)?.id ??
+						projection.effectiveCaptionRegions.find(
+							(cue) => cue.sourceCueId === timeline.selectedCaptionId,
+						)?.id ??
+						null
+					}
+					onSelectCaption={(id) => {
+						const fragment = projection.effectiveCaptionRegions.find(
+							(cue) => cue.id === id,
+						);
+						captionCommands.handleSelectCaption(fragment?.sourceCueId ?? null);
+						if (fragment) playback.handleTimelineSeek(fragment.startMs / 1000);
+					}}
+					onCaptionDelete={(id) => {
+						const fragment = projection.effectiveCaptionRegions.find(
+							(cue) => cue.id === id,
+						);
+						if (fragment) captionCommands.handleCaptionDelete(fragment.sourceCueId);
+					}}
+					onCaptionAdded={captionCommands.handleCaptionAdded}
+					captionsEnabled={timeline.autoCaptionSettings.enabled}
+					captionQuickAddEnabled={timeline.autoCaptionSettings.timelineQuickAdd}
+					annotationRegions={timeline.annotationRegions}
+					onAnnotationAdded={annotationCommands.handleAnnotationAdded}
+					onAnnotationSpanChange={annotationCommands.handleAnnotationSpanChange}
+					onAnnotationDelete={annotationCommands.handleAnnotationDelete}
+					selectedAnnotationId={timeline.selectedAnnotationId}
+					onSelectAnnotation={handleSelectAnnotation}
+					showSourceAudioTrack={timeline.clipRegions.some((clip) => clip.showSourceAudio)}
+					sourceAudioResourceVersion={timeline.sourceAudioFallbackRefreshKey}
+					sourceAudioTrackSettings={audio.activeSourceAudioTrackSettings}
+					getSourceAudioTrackSettingsForClip={audio.getSourceAudioTrackSettingsForClip}
+					onSourceAudioAvailabilityChange={timeline.setHasClipSourceAudio}
+					onSourceAudioTracksMetaChange={audio.onSourceAudioTracksMetaChange}
+					shortcutBlocks={shortcutBlocks}
+					cameraLayout={
+						props.webcam.enabled && props.webcam.sourcePath
+							? {
+									regions: props.webcam.layoutRegions ?? [],
+									onChange: (layoutRegions) =>
+										props.setWebcam((current) => ({
+											...current,
+											layoutRegions,
+											// A cut-out needs the person separated from the background.
+											...(layoutRegions.some((r) => r.layout === "cutout") &&
+											(!current.backgroundRemoval ||
+												(current.backgroundStyle ?? "transparent") !==
+													"transparent")
+												? {
+														backgroundRemoval: true,
+														backgroundStyle: "transparent" as const,
+													}
+												: {}),
+										})),
+								}
+							: null
+					}
+					onShortcutDisabledChange={(times, disabled) =>
+						setDisabledShortcutTimes((current) => {
+							const next = new Set(current);
+							for (const time of times) {
+								if (disabled) next.add(time);
+								else next.delete(time);
 							}
-						: null
-				}
-				onShortcutDisabledChange={(times, disabled) =>
-					setDisabledShortcutTimes((current) => {
-						const next = new Set(current);
-						for (const time of times) {
-							if (disabled) next.add(time);
-							else next.delete(time);
-						}
-						return [...next].sort((a, b) => a - b);
-					})
-				}
-			/>
+							return [...next].sort((a, b) => a - b);
+						})
+					}
+				/>
 			</ClipActionsProvider>
 			{clipTimelineActions.overlays}
 		</div>

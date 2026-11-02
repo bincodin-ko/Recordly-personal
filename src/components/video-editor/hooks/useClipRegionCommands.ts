@@ -269,6 +269,36 @@ export function useClipRegionCommands({
 		],
 	);
 
+	/** Undo several trims that need no effect choice, in one state update. */
+	const handleRestoreTrims = useCallback(
+		(gaps: TrimGap[]) => {
+			let clips = clipRegions;
+			let zooms = zoomRegions;
+			for (const gap of gaps) {
+				const result = restoreTrimGap({
+					gap,
+					clips,
+					zooms,
+					side: null,
+					createId: () => `clip-${nextClipIdRef.current++}`,
+				});
+				clips = result.clips;
+				zooms = result.zooms;
+			}
+			setClipRegions(clips);
+			setZoomRegions(zooms);
+			setAnnotationRegions((current) => rippleBySource(current, clipRegions, clips));
+		},
+		[
+			clipRegions,
+			zoomRegions,
+			nextClipIdRef,
+			setClipRegions,
+			setZoomRegions,
+			setAnnotationRegions,
+		],
+	);
+
 	const handleClipMutedChange = useCallback(
 		(muted: boolean) => {
 			if (!selectedClipId) return;
@@ -426,6 +456,7 @@ export function useClipRegionCommands({
 		setClipVolumeById,
 		handleApplySpeedRanges,
 		handleRestoreTrim,
+		handleRestoreTrims,
 		handleClipMutedChange,
 		handleClipHideCursorChange,
 		handleClipDisableSmoothCursorChange,

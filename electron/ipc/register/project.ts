@@ -1,10 +1,3 @@
-import { persistRecentMetadata } from "../project/recentMetadata";
-import { renameLibraryProject } from "../project/renameLibraryProject";
-import { createUntitledProject } from "../project/createUntitledProject";
-import { trashLibraryProjects } from "../project/trashProjects";
-import { getRecordingThumbnail } from "../recording/thumbnail";
-import { listRecordings, setRecordingsRemoved } from "../recording/library";
-import { importRecording, discardRecordingImport } from "../recording/importRecording";
 import { randomUUID } from "node:crypto";
 import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
@@ -18,6 +11,7 @@ import {
 	PROJECT_FILE_EXTENSION,
 } from "../constants";
 import { getProjectBackupPath, writeProjectFileAtomically } from "../project/atomicSave";
+import { createUntitledProject } from "../project/createUntitledProject";
 import {
 	getProjectsDir,
 	getProjectThumbnailPath,
@@ -25,9 +19,9 @@ import {
 	isTrustedProjectPath,
 	listProjectLibraryEntries,
 	loadProjectFromPath,
-	readProjectPreview,
 	loadRecentProjectPaths,
 	persistRecordingsDirectorySetting,
+	readProjectPreview,
 	rememberApprovedLocalReadPath,
 	rememberRecentProject,
 	replaceApprovedSessionLocalReadPaths,
@@ -36,23 +30,29 @@ import {
 	saveRecentProjectPaths,
 } from "../project/manager";
 import { buildRawFilePlan } from "../project/rawFiles";
+import { persistRecentMetadata } from "../project/recentMetadata";
+import { renameLibraryProject } from "../project/renameLibraryProject";
 import { persistRecordingSessionManifest, resolveRecordingSession } from "../project/session";
+import { trashLibraryProjects } from "../project/trashProjects";
+import { discardRecordingImport, importRecording } from "../recording/importRecording";
+import { listRecordings, setRecordingsRemoved } from "../recording/library";
+import { getRecordingThumbnail } from "../recording/thumbnail";
 import {
+	captureAreaForVideo,
 	currentProjectPath,
 	currentRecordingSession,
 	currentVideoPath,
 	setCurrentProjectPath,
 	setCurrentRecordingSession,
 	setCurrentVideoPath,
- captureAreaForVideo,
 } from "../state";
 import {
 	approveUserPath,
 	getRecordingsDir,
 	getTelemetryPathForVideo,
 	isAutoRecordingPath,
-	normalizeVideoSourcePath,
 	normalizePath,
+	normalizeVideoSourcePath,
 	parseJsonWithByteOrderMark,
 } from "../utils";
 
@@ -854,51 +854,11 @@ export function registerProjectHandlers() {
 	});
 	ipcMain.handle(
 		"set-current-video-path",
-		async (
+		(
 			_,
 			path: string,
 			options?: { preserveProjectPath?: boolean; hideOverlayCursorByDefault?: boolean },
-		) => {
-			setCurrentVideoPath(normalizeVideoSourcePath(path) ?? path);
-			approveUserPath(currentVideoPath);
-			const resolvedSession = (await resolveRecordingSession(currentVideoPath)) ?? {
-				videoPath: currentVideoPath!,
-				webcamPath: null,
-				timeOffsetMs: 0,
-			};
-
-			const nextSession = {
-				...resolvedSession,
-				hideOverlayCursorByDefault:
-					normalizeBoolean(options?.hideOverlayCursorByDefault) ||
-					normalizeBoolean(resolvedSession.hideOverlayCursorByDefault),
-				// Area recording (no-webcam recordings arrive through this handler).
-				initialCropRegion:
-					resolvedSession.initialCropRegion ?? captureAreaForVideo(resolvedSession.videoPath),
-			};
-
-			setCurrentRecordingSession(nextSession);
-			await replaceApprovedSessionLocalReadPaths([
-				resolvedSession.videoPath,
-				resolvedSession.webcamPath,
-			]);
-
-			if (nextSession.webcamPath) {
-				await persistRecordingSessionManifest(nextSession);
-			}
-
-			if (!options?.preserveProjectPath) {
-				setCurrentProjectPath(null);
-			}
-
-			for (const window of BrowserWindow.getAllWindows()) {
-				if (!window.isDestroyed()) {
-					window.webContents.send("recording-session-changed", nextSession);
-				}
-			}
-
-			return { success: true, webcamPath: nextSession.webcamPath ?? null };
-		},
+		) => openVideoSession(path, options),
 	);
 
 	ipcMain.handle(
@@ -1007,4 +967,50 @@ export function registerProjectHandlers() {
 		}
 		return { success: true as const, url: buildMediaUrl(baseUrl, resolved) };
 	});
+}
+
+/** Make `path` the editor's current video. Shared by IPC and OS "Open with" launches. */
+export async function openVideoSession(
+	path: string,
+	options?: { preserveProjectPath?: boolean; hideOverlayCursorByDefault?: boolean },
+) {
+	setCurrentVideoPath(normalizeVideoSourcePath(path) ?? path);
+	approveUserPath(currentVideoPath);
+	const resolvedSession = (await resolveRecordingSession(currentVideoPath)) ?? {
+		videoPath: currentVideoPath!,
+		webcamPath: null,
+		timeOffsetMs: 0,
+	};
+
+	const nextSession = {
+		...resolvedSession,
+		hideOverlayCursorByDefault:
+			normalizeBoolean(options?.hideOverlayCursorByDefault) ||
+			normalizeBoolean(resolvedSession.hideOverlayCursorByDefault),
+		// Area recording (no-webcam recordings arrive through this handler).
+		initialCropRegion:
+			resolvedSession.initialCropRegion ?? captureAreaForVideo(resolvedSession.videoPath),
+	};
+
+	setCurrentRecordingSession(nextSession);
+	await replaceApprovedSessionLocalReadPaths([
+		resolvedSession.videoPath,
+		resolvedSession.webcamPath,
+	]);
+
+	if (nextSession.webcamPath) {
+		await persistRecordingSessionManifest(nextSession);
+	}
+
+	if (!options?.preserveProjectPath) {
+		setCurrentProjectPath(null);
+	}
+
+	for (const window of BrowserWindow.getAllWindows()) {
+		if (!window.isDestroyed()) {
+			window.webContents.send("recording-session-changed", nextSession);
+		}
+	}
+
+	return { success: true, webcamPath: nextSession.webcamPath ?? null };
 }

@@ -1,5 +1,3 @@
-import { createSaveBeforeCloseController } from "./saveBeforeClose";
-import { clearRecordingTrashUndo } from "./ipc/recording/library";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -18,9 +16,12 @@ import {
 	Tray,
 } from "electron";
 import { RECORDINGS_DIR } from "./appPaths";
-import { getQuitBusy, quitDialogOptions, shouldAllowQuit } from "./quitGuard";
-import { unregisterRecordingToggleShortcut } from "./recordingToggleShortcut";
 import { createAuthCallbackController } from "./authCallback";
+import {
+	onCaptureExtrasRecordingState,
+	registerCaptureExtrasHandlers,
+	restoreDesktopIconsSync,
+} from "./captureExtras";
 import { showCursor } from "./cursorHider";
 import { getGpuSwitches } from "./gpuSwitches";
 import {
@@ -33,15 +34,15 @@ import {
 	killWindowsCaptureProcess,
 	registerIpcHandlers,
 } from "./ipc/handlers";
-import {
-	onCaptureExtrasRecordingState,
-	registerCaptureExtrasHandlers,
-	restoreDesktopIconsSync,
-} from "./captureExtras";
+import { clearRecordingTrashUndo } from "./ipc/recording/library";
+import { openVideoSession } from "./ipc/register/project";
 import { ensureMediaServer } from "./mediaServer";
 import { hardenWebContentsNavigation, shouldHardenWebContentsType } from "./navigationPolicy";
 import { shouldGrantDisplayCapture, shouldGrantMediaPermission } from "./permissionPolicy";
+import { getQuitBusy, quitDialogOptions, shouldAllowQuit } from "./quitGuard";
+import { unregisterRecordingToggleShortcut } from "./recordingToggleShortcut";
 import { ensurePackagedRendererServer, getPackagedRendererBaseUrl } from "./rendererServer";
+import { createSaveBeforeCloseController } from "./saveBeforeClose";
 import {
 	checkForAppUpdates,
 	deferUpdateReminder,
@@ -59,6 +60,7 @@ import {
 	skipAvailableUpdateVersion,
 } from "./updater";
 import {
+	beginHudCaptureProtection,
 	createEditorWindow,
 	createHudOverlayWindow,
 	createSourceSelectorWindow,
@@ -66,11 +68,10 @@ import {
 	getUpdateToastWindow,
 	hideUpdateToastWindow,
 	isHudOverlayMousePassthroughSupported,
-	beginHudCaptureProtection,
+	preloadPrompterWindow,
 	reassertHudOverlayMousePassthrough as reassertHudOverlayMouseState,
 	setHudOverlayRecordingActive,
 	showUpdateToastWindow,
-	preloadPrompterWindow,
 } from "./windows";
 
 const electronMainDir = path.dirname(fileURLToPath(import.meta.url));
@@ -851,7 +852,8 @@ function createEditorWindowWrapper() {
 				defaultId: 1,
 				cancelId: 1,
 				title: "프로젝트를 저장하지 못했어요",
-				message: "저장에 실패했거나 응답이 없어요. 저장하지 않은 변경 사항을 버리고 닫을까요?",
+				message:
+					"저장에 실패했거나 응답이 없어요. 저장하지 않은 변경 사항을 버리고 닫을까요?",
 			});
 			return result.response === 0;
 		},
@@ -941,9 +943,56 @@ app.on("activate", () => {
 	focusOrCreateMainWindow();
 });
 
+// Windows "Open with" passes the file path as a command-line argument.
+const OPEN_WITH_VIDEO_EXTENSIONS = new Set([".webm", ".mp4", ".mov", ".avi", ".mkv"]);
+
+function findOpenWithVideo(argv: string[]): string | null {
+	return (
+		argv
+			.slice(1)
+			.find(
+				(arg) =>
+					!arg.startsWith("-") &&
+					OPEN_WITH_VIDEO_EXTENSIONS.has(path.extname(arg).toLowerCase()),
+			) ?? null
+	);
+}
+
+async function openVideoFromShell(videoPath: string) {
+	const editor = getExistingEditorWindow();
+	if (editor && editorHasUnsavedChanges) {
+		const { response } = await dialog.showMessageBox(editor, {
+			type: "question",
+			buttons: ["열기", "취소"],
+			defaultId: 0,
+			cancelId: 1,
+			message: "저장하지 않은 변경 사항이 있어요.",
+			detail: `${path.basename(videoPath)} 파일을 열면 지금 편집 내용이 사라져요.`,
+		});
+		if (response !== 0) {
+			restoreWindowSafely(editor);
+			return;
+		}
+	}
+	await openVideoSession(videoPath);
+	if (editor) {
+		editorHasUnsavedChanges = false;
+		mainWindow = editor;
+		editor.reload();
+		restoreWindowSafely(editor);
+		return;
+	}
+	createEditorWindowWrapper();
+}
+
 app.on("second-instance", (_event, commandLine) => {
 	const authCallback = authCallbacks.find(commandLine);
 	if (authCallback) authCallbacks.dispatch(authCallback);
+	const video = findOpenWithVideo(commandLine);
+	if (video) {
+		void openVideoFromShell(video);
+		return;
+	}
 	focusOrCreateMainWindow();
 });
 
@@ -1107,7 +1156,12 @@ app.whenReady().then(async () => {
 		return;
 	}
 
-	createWindow();
+	const startupVideo = findOpenWithVideo(process.argv);
+	if (startupVideo) {
+		await openVideoFromShell(startupVideo);
+	} else {
+		createWindow();
+	}
 	setupAutoUpdates(getUpdateDialogWindow, sendUpdateToastToWindows);
 	if (IS_DEV && process.env.RECORDLY_DEV_PREVIEW_UPDATE === "1") {
 		setTimeout(() => {

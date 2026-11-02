@@ -8,6 +8,7 @@ import {
 	Gear,
 	FrameCorners,
 	MagnifyingGlassPlus,
+	Scissors,
 	SpeakerHigh,
 } from "@/components/ui/icons";
 import {
@@ -72,6 +73,7 @@ export function EditorSidebar({
 			{ id: "cursor" as const, label: t("settings.sections.cursor", "Cursor"), icon: Cursor },
 			{ id: "webcam" as const, label: t("settings.sections.webcam", "Webcam"), icon: Camera },
 			{ id: "audio" as const, label: t("settings.sections.audio", "Audio"), icon: SpeakerHigh },
+			{ id: "trim" as const, label: t("settings.sections.trim", "Trim"), icon: Scissors },
 			{
 				id: "captions" as const,
 				label: t("settings.sections.captions", "Captions"),

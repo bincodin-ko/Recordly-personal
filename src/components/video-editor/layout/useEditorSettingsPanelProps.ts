@@ -17,6 +17,7 @@ import { removeCaptionWordsInRanges } from "../transcriptEdit";
 
 type Input = {
 	activeEffectSection: EditorEffectSection;
+	sourceDurationMs: number;
 	appearance: ReturnType<typeof useAppearanceState>;
 	timeline: ReturnType<typeof useTimelineState>;
 	zoomCommands: ReturnType<typeof useZoomRegionCommands>;
@@ -219,6 +220,7 @@ export function useEditorSettingsPanelProps(input: Input): ComponentProps<typeof
 		annotationRegions: timeline.annotationRegions,
 		autoCaptions: timeline.autoCaptions,
 		clipRegions: timeline.clipRegions,
+		sourceDurationMs: input.sourceDurationMs,
 		onCutSourceRanges: (ranges) => {
 			if (!clipCommands.handleCutSourceRanges(ranges)) return false;
 			timeline.setAutoCaptions((cues) => removeCaptionWordsInRanges(cues, ranges));

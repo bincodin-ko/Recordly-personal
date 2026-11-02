@@ -1,9 +1,9 @@
-import { type ReactNode, useCallback, useMemo, useState } from "react";
-import { translate } from "@/contexts/I18nContext";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "@/components/ui/toast";
+import { translate } from "@/contexts/I18nContext";
 import type { useClipRegionCommands } from "../../hooks/useClipRegionCommands";
+import { TRIM_RESTORE_ALL_EVENT, TRIM_RESTORE_EVENT } from "../../TrimListSection";
 import { decideRestore, findTrimGaps, type TrimGap } from "../../trimRestore";
-import { DEFAULT_TYPING_SPEED, detectTypingBursts, type TypingSuggestion } from "../../typingSpeedUp";
 import {
 	type ClipRegion,
 	getClipSourceEndMs,
@@ -11,6 +11,11 @@ import {
 	mapSourceTimeToTimelineTime,
 	type ZoomRegion,
 } from "../../types";
+import {
+	DEFAULT_TYPING_SPEED,
+	detectTypingBursts,
+	type TypingSuggestion,
+} from "../../typingSpeedUp";
 import type { ClipActions } from "../core/ClipActionsContext";
 import { ClipTimelineOverlays, type OverlayState } from "./ClipTimelineOverlays";
 
@@ -27,13 +32,21 @@ interface Params {
 function isAlreadySped(suggestion: TypingSuggestion, clips: ClipRegion[]) {
 	const pieces = clips.filter(
 		(clip) =>
-			getClipSourceStartMs(clip) < suggestion.endMs && getClipSourceEndMs(clip) > suggestion.startMs,
+			getClipSourceStartMs(clip) < suggestion.endMs &&
+			getClipSourceEndMs(clip) > suggestion.startMs,
 	);
 	return pieces.length > 0 && pieces.every((clip) => clip.speed !== 1);
 }
 
 export function useClipTimelineActions(params: Params) {
-	const { clipRegions, zoomRegions, typingTimes, sourceDurationMs, clipCommands, onToggleZoomDisabled } = params;
+	const {
+		clipRegions,
+		zoomRegions,
+		typingTimes,
+		sourceDurationMs,
+		clipCommands,
+		onToggleZoomDisabled,
+	} = params;
 	const [overlay, setOverlay] = useState<OverlayState | null>(null);
 	const [typingSpeed, setTypingSpeed] = useState(DEFAULT_TYPING_SPEED);
 
@@ -59,9 +72,7 @@ export function useClipTimelineActions(params: Params) {
 			typingBadges: suggestions.flatMap((s) => {
 				const startMs = mapSourceTimeToTimelineTime(s.startMs, clipRegions);
 				const endMs = mapSourceTimeToTimelineTime(s.endMs, clipRegions);
-				return endMs > startMs
-					? [{ id: s.id, startMs, endMs, keyCount: s.keyCount }]
-					: [];
+				return endMs > startMs ? [{ id: s.id, startMs, endMs, keyCount: s.keyCount }] : [];
 			}),
 			openClipMenu: (clipId, x, y) => setOverlay({ kind: "menu", clipId, x, y }),
 			openZoomMenu: (zoomId, x, y) => setOverlay({ kind: "zoomMenu", zoomId, x, y }),
@@ -79,6 +90,27 @@ export function useClipTimelineActions(params: Params) {
 		}),
 		[gaps, suggestions, clipRegions, zoomRegions, clipCommands],
 	);
+
+	// Side-panel trim list: same undo-trim flow as the timeline bubble.
+	useEffect(() => {
+		const onRestore = (event: Event) =>
+			actions.openTrimRestore((event as CustomEvent<string>).detail);
+		const onRestoreAll = () => {
+			const plain = gaps.filter(
+				(gap) => decideRestore(gap, clipRegions, zoomRegions).kind === "plain",
+			);
+			if (plain.length > 0) clipCommands.handleRestoreTrims(plain);
+			// Gaps whose effects must be chosen still ask, one at a time.
+			const pending = gaps.find((gap) => !plain.includes(gap));
+			if (pending) actions.openTrimRestore(pending.id);
+		};
+		window.addEventListener(TRIM_RESTORE_EVENT, onRestore);
+		window.addEventListener(TRIM_RESTORE_ALL_EVENT, onRestoreAll);
+		return () => {
+			window.removeEventListener(TRIM_RESTORE_EVENT, onRestore);
+			window.removeEventListener(TRIM_RESTORE_ALL_EVENT, onRestoreAll);
+		};
+	}, [actions, gaps, clipRegions, zoomRegions, clipCommands]);
 
 	const close = useCallback(() => setOverlay(null), []);
 	const applyTyping = useCallback(

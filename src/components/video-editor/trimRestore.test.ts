@@ -48,3 +48,20 @@ describe("restoreTrimGap", () => {
 		expect(out.zooms[0].endMs).toBe(restored.endMs);
 	});
 });
+
+describe("restoring every gap in a row (side panel 'undo all')", () => {
+	it("leaves no gaps", () => {
+		let clips: ClipRegion[] = [
+			{ id: "a", startMs: 0, endMs: 1000, sourceStartMs: 500, speed: 1 } as ClipRegion,
+			{ id: "b", startMs: 1000, endMs: 2000, sourceStartMs: 3000, speed: 1 } as ClipRegion,
+		];
+		let zooms: ZoomRegion[] = [];
+		let n = 0;
+		for (const gap of findTrimGaps(clips, 6000)) {
+			const result = restoreTrimGap({ gap, clips, zooms, side: null, createId: () => `r${n++}` });
+			clips = result.clips;
+			zooms = result.zooms;
+		}
+		expect(findTrimGaps(clips, 6000)).toEqual([]);
+	});
+});

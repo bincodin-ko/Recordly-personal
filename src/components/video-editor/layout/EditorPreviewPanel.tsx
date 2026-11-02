@@ -1,23 +1,3 @@
-import { Skeleton } from "@/components/ui/skeleton";
-import { Slider } from "@/components/ui/slider";
-import {
-	CaretDown,
-	Check,
-	Smartphone,
-	Crop,
-	Copy,
-	MagicWand,
-	MagnifyingGlassPlus,
-	Pause,
-	Play,
-	Plus,
-	Scissors,
-	SkipBack,
-	SkipForward,
-	SpeakerHigh,
-	SpeakerLow,
-	SpeakerX,
-} from "@/components/ui/icons";
 import {
 	type Dispatch,
 	type RefObject,
@@ -27,27 +7,43 @@ import {
 	useState,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+	CaretDown,
+	Check,
+	Copy,
+	Crop,
+	MagicWand,
+	MagnifyingGlassMinus,
+	MagnifyingGlassPlus,
+	Pause,
+	Play,
+	Plus,
+	Scissors,
+	SkipBack,
+	SkipForward,
+	Smartphone,
+	SpeakerHigh,
+	SpeakerLow,
+	SpeakerX,
+} from "@/components/ui/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Slider } from "@/components/ui/slider";
 import type { useI18n } from "@/contexts/I18nContext";
 import { ASPECT_RATIOS, type AspectRatio, getAspectRatioLabel } from "@/utils/aspectRatioUtils";
 import type { useVideoEditorAudio } from "../audio/useVideoEditorAudio";
 import type { CaptionEditTarget } from "../captionEditing";
+import { copyPreviewFrame } from "../copyFrame";
 import type { useAnnotationRegionCommands } from "../hooks/useAnnotationRegionCommands";
 import type { useEditorPlaybackControls } from "../hooks/useEditorPlaybackControls";
 import type { useTimelineProjection } from "../hooks/useTimelineProjection";
 import type { useZoomRegionCommands } from "../hooks/useZoomRegionCommands";
-import type { useAppearanceState } from "../state/useAppearanceState";
-import type { useTimelineState } from "../state/useTimelineState";
-import type { TimelineEditorHandle } from "../timeline/TimelineEditor";
-import type { VideoPlaybackRef } from "../VideoPlayback";
-import { copyPreviewFrame } from "../copyFrame";
-import { VoiceoverDialog } from "../VoiceoverDialog";
 import { ReelModeOverlay } from "../ReelModeOverlay";
 import {
 	loadReelOverlayKind,
@@ -55,6 +51,11 @@ import {
 	type ReelOverlayKind,
 	saveReelOverlayKind,
 } from "../reelOverlay";
+import type { useAppearanceState } from "../state/useAppearanceState";
+import type { useTimelineState } from "../state/useTimelineState";
+import type { TimelineEditorHandle } from "../timeline/TimelineEditor";
+import type { VideoPlaybackRef } from "../VideoPlayback";
+import { VoiceoverDialog } from "../VoiceoverDialog";
 import { EditorVideoPreview } from "./EditorVideoPreview";
 
 type Props = {
@@ -146,7 +147,8 @@ export function EditorPreviewPanel(props: Props) {
 	const showReelOverlay = reelKind !== "off" && aspectRatio === "9:16";
 	const chooseReelKind = (kind: ReelOverlayKind) => {
 		if (kind === "off") {
-			if (showReelOverlay && aspectBeforeReelRef.current) setAspectRatio(aspectBeforeReelRef.current);
+			if (showReelOverlay && aspectBeforeReelRef.current)
+				setAspectRatio(aspectBeforeReelRef.current);
 			aspectBeforeReelRef.current = null;
 		} else if (aspectRatio !== "9:16") {
 			aspectBeforeReelRef.current = aspectRatio;
@@ -212,7 +214,9 @@ export function EditorPreviewPanel(props: Props) {
 										{t("editor.preview.reelMode", "Reel mode")}
 									</span>
 									{reelKind !== "off" ? (
-										<span className="text-muted-foreground">{reelLabel(reelKind)}</span>
+										<span className="text-muted-foreground">
+											{reelLabel(reelKind)}
+										</span>
 									) : null}
 									<CaretDown className="h-3 w-3" />
 								</Button>
@@ -225,7 +229,9 @@ export function EditorPreviewPanel(props: Props) {
 										className="flex cursor-pointer items-center justify-between gap-3 text-muted-foreground hover:bg-foreground/10 hover:text-foreground"
 									>
 										<span>{reelLabel(kind)}</span>
-										{reelKind === kind ? <Check className="h-3 w-3 text-[#2563EB]" /> : null}
+										{reelKind === kind ? (
+											<Check className="h-3 w-3 text-[#2563EB]" />
+										) : null}
 									</DropdownMenuItem>
 								))}
 							</DropdownMenuContent>
@@ -246,8 +252,15 @@ export function EditorPreviewPanel(props: Props) {
 						<Button
 							variant="ghost"
 							size="sm"
-							onClick={() => void copyPreviewFrame(videoPlaybackRef.current?.containerRef.current)}
-							title={t("editor.preview.copyFrameHint", "Copy the current frame as an image (Ctrl+C)")}
+							onClick={() =>
+								void copyPreviewFrame(
+									videoPlaybackRef.current?.containerRef.current,
+								)
+							}
+							title={t(
+								"editor.preview.copyFrameHint",
+								"Copy the current frame as an image (Ctrl+C)",
+							)}
 							className="h-7 gap-1.5 px-2 text-xs"
 						>
 							<Copy className="h-3.5 w-3.5" />
@@ -277,7 +290,10 @@ export function EditorPreviewPanel(props: Props) {
 							>
 								{videoPath && !isPreviewReady && (
 									<Skeleton
-										aria-label={t("editor.preview.loadingPreview", "Loading preview")}
+										aria-label={t(
+											"editor.preview.loadingPreview",
+											"Loading preview",
+										)}
 										className="pointer-events-none absolute inset-0 z-20 h-full w-full rounded-xl"
 									/>
 								)}
@@ -406,7 +422,11 @@ export function EditorPreviewPanel(props: Props) {
 							size="icon"
 							className={`h-9 w-9  ${isPlaying ? "bg-foreground/10 text-foreground hover:bg-foreground/20" : "bg-neutral-800 text-white hover:bg-neutral-700 dark:bg-white dark:text-black dark:hover:bg-white/90"} `}
 							onClick={playback.togglePlayPause}
-							title={isPlaying ? t("editor.playback.pause", "Pause") : t("editor.playback.play", "Play")}
+							title={
+								isPlaying
+									? t("editor.playback.pause", "Pause")
+									: t("editor.playback.play", "Play")
+							}
 						>
 							{isPlaying ? (
 								<Pause className="h-3.5 w-3.5" weight="fill" />
@@ -439,17 +459,32 @@ export function EditorPreviewPanel(props: Props) {
 					>
 						<Scissors className="h-4 w-4" />
 					</Button>
-					<Slider
-						aria-label={t("editor.playback.timelineZoom", "Timeline zoom")}
-						min={0}
-						max={1}
-						step={0.01}
-						defaultValue={[0]}
-						onValueChange={([value]) =>
-							window.dispatchEvent(new CustomEvent("timeline-zoom", { detail: value }))
-						}
-						className="mx-2 w-24"
-					/>
+					<div
+						className="flex items-center"
+						title={t("editor.playback.timelineZoom", "Timeline zoom")}
+					>
+						<MagnifyingGlassMinus
+							className="ml-2 h-3.5 w-3.5 text-muted-foreground"
+							aria-hidden="true"
+						/>
+						<Slider
+							aria-label={t("editor.playback.timelineZoom", "Timeline zoom")}
+							min={0}
+							max={1}
+							step={0.01}
+							defaultValue={[0]}
+							onValueChange={([value]) =>
+								window.dispatchEvent(
+									new CustomEvent("timeline-zoom", { detail: value }),
+								)
+							}
+							className="mx-1.5 w-24"
+						/>
+						<MagnifyingGlassPlus
+							className="mr-2 h-3.5 w-3.5 text-muted-foreground"
+							aria-hidden="true"
+						/>
+					</div>
 					<AudioSyncControl
 						t={t}
 						onChanged={() => timeline.setSourceAudioFallbackRefreshKey((k) => k + 1)}
@@ -522,7 +557,9 @@ function AudioSyncControl({ t, onChanged }: { t: Props["t"]; onChanged: () => vo
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent side="top" sideOffset={10} className="flex w-72 flex-col gap-3 p-3">
-				<div className="text-xs font-medium">{t("editor.audioSync.title", "Sound sync")}</div>
+				<div className="text-xs font-medium">
+					{t("editor.audioSync.title", "Sound sync")}
+				</div>
 				<div className="text-[11px] text-muted-foreground">
 					{t("editor.audioSync.hint", "+ makes sound later, - makes it earlier.")}
 				</div>
@@ -547,7 +584,12 @@ function AudioSyncControl({ t, onChanged }: { t: Props["t"]; onChanged: () => vo
 							{delta}
 						</Button>
 					))}
-					<Button variant="ghost" size="sm" className="ml-auto h-7 px-2 text-xs" onClick={() => void commit(0)}>
+					<Button
+						variant="ghost"
+						size="sm"
+						className="ml-auto h-7 px-2 text-xs"
+						onClick={() => void commit(0)}
+					>
 						{t("editor.audioSync.reset", "Reset")}
 					</Button>
 				</div>

@@ -28,7 +28,9 @@
 		"followSpeedFast": "Fast"
 	},
 	"trim": {
-		"deleteRegion": "Delete Trim Region"
+		"empty": "No trimmed parts yet.",
+		"seek": "Go to this spot",
+		"restoreAll": "Undo all trims"
 	},
 	"speed": {
 		"playbackSpeed": "Playback Speed",
@@ -254,7 +256,8 @@
 		"motion": "Motion",
 		"recording": "Recording",
 		"files": "Files",
-		"advanced": "Advanced"
+		"advanced": "Advanced",
+		"trim": "Trim"
 	},
 	"captions": {
 		"selectOnTimeline": "Select a caption on the timeline to edit it.",
