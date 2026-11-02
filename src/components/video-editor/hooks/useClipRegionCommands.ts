@@ -10,7 +10,7 @@ import {
 } from "../clipSequence";
 import { getClipSourceStartMs, type AnnotationRegion, type AudioRegion } from "../types";
 import { planClipSplit } from "../clipSplit";
-import { mergeAllSplits, mergeSplit, restoreTrimGap, type SplitPoint, type TrimGap } from "../trimRestore";
+import { mergeSplit, restoreTrimGap, type SplitPoint, type TrimGap } from "../trimRestore";
 import { applySpeedToSourceRanges, rippleBySource, type SourceSpeedRange } from "../typingSpeedUp";
 import { cutSourceRanges, type SourceRange } from "../transcriptEdit";
 import type { ClipRegion, EditorEffectSection, ZoomRegion } from "../types";
@@ -269,43 +269,6 @@ export function useClipRegionCommands({
 		],
 	);
 
-	/** Undo several trims that need no effect choice, in one state update. */
-	const handleRestoreTrims = useCallback(
-		(gaps: TrimGap[]) => {
-			let clips = clipRegions;
-			let zooms = zoomRegions;
-			for (const gap of gaps) {
-				const result = restoreTrimGap({
-					gap,
-					clips,
-					zooms,
-					side: null,
-					createId: () => `clip-${nextClipIdRef.current++}`,
-				});
-				clips = result.clips;
-				zooms = result.zooms;
-			}
-			// Scissors cuts go too: the recording ends up as whole clips again.
-			clips = mergeAllSplits(clips);
-			if (selectedClipId && !clips.some((clip) => clip.id === selectedClipId)) {
-				setSelectedClipId(null);
-			}
-			setClipRegions(clips);
-			setZoomRegions(zooms);
-			setAnnotationRegions((current) => rippleBySource(current, clipRegions, clips));
-		},
-		[
-			clipRegions,
-			zoomRegions,
-			nextClipIdRef,
-			selectedClipId,
-			setSelectedClipId,
-			setClipRegions,
-			setZoomRegions,
-			setAnnotationRegions,
-		],
-	);
-
 	/** Undo a scissors cut. Timeline positions don't move, so nothing else ripples. */
 	const handleMergeSplit = useCallback(
 		(point: Pick<SplitPoint, "leftClipId" | "rightClipId">) => {
@@ -472,7 +435,6 @@ export function useClipRegionCommands({
 		setClipVolumeById,
 		handleApplySpeedRanges,
 		handleRestoreTrim,
-		handleRestoreTrims,
 		handleMergeSplit,
 		handleClipMutedChange,
 		handleClipHideCursorChange,

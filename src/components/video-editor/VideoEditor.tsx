@@ -356,7 +356,6 @@ export default function VideoEditor() {
 	);
 	const settingsPanelProps = useEditorSettingsPanelProps({
 		activeEffectSection,
-		sourceDurationMs: duration * 1000,
 		appearance,
 		timeline,
 		zoomCommands,

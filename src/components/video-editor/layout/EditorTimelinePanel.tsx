@@ -11,7 +11,6 @@ import type { useEditorPlaybackControls } from "../hooks/useEditorPlaybackContro
 import type { useTimelineProjection } from "../hooks/useTimelineProjection";
 import type { useZoomRegionCommands } from "../hooks/useZoomRegionCommands";
 import type { useTimelineState } from "../state/useTimelineState";
-import { TRIM_SEEK_EVENT } from "../TrimListSection";
 import { useClipTimelineActions } from "../timeline/clipOverlays/useClipTimelineActions";
 import { ClipActionsProvider } from "../timeline/core/ClipActionsContext";
 import TimelineEditor, { type TimelineEditorHandle } from "../timeline/TimelineEditor";
@@ -137,12 +136,6 @@ export function EditorTimelinePanel(props: Props) {
 		},
 		[],
 	);
-	useEffect(() => {
-		const onTrimSeek = (event: Event) =>
-			handleTimelineSeek((event as CustomEvent<number>).detail);
-		window.addEventListener(TRIM_SEEK_EVENT, onTrimSeek);
-		return () => window.removeEventListener(TRIM_SEEK_EVENT, onTrimSeek);
-	}, [handleTimelineSeek]);
 	const clipTimelineActions = useClipTimelineActions({
 		clipRegions: timeline.clipRegions,
 		zoomRegions: timeline.zoomRegions,

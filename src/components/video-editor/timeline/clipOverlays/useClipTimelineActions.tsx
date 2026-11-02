@@ -1,9 +1,8 @@
-import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { toast } from "@/components/ui/toast";
 import { translate } from "@/contexts/I18nContext";
 import type { useClipRegionCommands } from "../../hooks/useClipRegionCommands";
-import { TRIM_MERGE_EVENT, TRIM_RESTORE_ALL_EVENT, TRIM_RESTORE_EVENT } from "../../TrimListSection";
-import { decideRestore, findTrimGaps, type TrimGap } from "../../trimRestore";
+import { decideRestore, findSplitPoints, findTrimGaps, type TrimGap } from "../../trimRestore";
 import {
 	type ClipRegion,
 	getClipSourceEndMs,
@@ -69,6 +68,8 @@ export function useClipTimelineActions(params: Params) {
 				leftClipId: gap.beforeClipId,
 				rightClipId: gap.afterClipId,
 			})),
+			splitPoints: findSplitPoints(clipRegions),
+			mergeSplit: clipCommands.handleMergeSplit,
 			typingBadges: suggestions.flatMap((s) => {
 				const startMs = mapSourceTimeToTimelineTime(s.startMs, clipRegions);
 				const endMs = mapSourceTimeToTimelineTime(s.endMs, clipRegions);
@@ -90,34 +91,6 @@ export function useClipTimelineActions(params: Params) {
 		}),
 		[gaps, suggestions, clipRegions, zoomRegions, clipCommands],
 	);
-
-	// Side-panel trim list: same undo-trim flow as the timeline bubble.
-	useEffect(() => {
-		const onRestore = (event: Event) =>
-			actions.openTrimRestore((event as CustomEvent<string>).detail);
-		const onRestoreAll = () => {
-			const plain = gaps.filter(
-				(gap) => decideRestore(gap, clipRegions, zoomRegions).kind === "plain",
-			);
-			// Also joins every scissors cut (empty list = joins only).
-			clipCommands.handleRestoreTrims(plain);
-			// Gaps whose effects must be chosen still ask, one at a time.
-			const pending = gaps.find((gap) => !plain.includes(gap));
-			if (pending) actions.openTrimRestore(pending.id);
-		};
-		const onMerge = (event: Event) =>
-			clipCommands.handleMergeSplit(
-				(event as CustomEvent<{ leftClipId: string; rightClipId: string }>).detail,
-			);
-		window.addEventListener(TRIM_MERGE_EVENT, onMerge);
-		window.addEventListener(TRIM_RESTORE_EVENT, onRestore);
-		window.addEventListener(TRIM_RESTORE_ALL_EVENT, onRestoreAll);
-		return () => {
-			window.removeEventListener(TRIM_MERGE_EVENT, onMerge);
-			window.removeEventListener(TRIM_RESTORE_EVENT, onRestore);
-			window.removeEventListener(TRIM_RESTORE_ALL_EVENT, onRestoreAll);
-		};
-	}, [actions, gaps, clipRegions, zoomRegions, clipCommands]);
 
 	const close = useCallback(() => setOverlay(null), []);
 	const applyTyping = useCallback(

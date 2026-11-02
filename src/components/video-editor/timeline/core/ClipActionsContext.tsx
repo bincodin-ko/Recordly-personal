@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import type { SplitPoint } from "../../trimRestore";
 
 /** A trimmed stretch shown as a bubble on the clip row (Screen Studio "undo trim" bubble). */
 export interface TrimBubble {
@@ -18,6 +19,9 @@ export interface TypingBadge {
 
 export interface ClipActions {
 	trimBubbles: TrimBubble[];
+	/** Scissors cuts: two touching clips that play on from the same source frame. */
+	splitPoints: SplitPoint[];
+	mergeSplit: (point: Pick<SplitPoint, "leftClipId" | "rightClipId">) => void;
 	typingBadges: TypingBadge[];
 	openClipMenu: (clipId: string, x: number, y: number) => void;
 	openZoomMenu: (zoomId: string, x: number, y: number) => void;

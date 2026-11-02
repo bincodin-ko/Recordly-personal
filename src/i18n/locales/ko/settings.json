@@ -22,11 +22,6 @@
 		"followSpeedFast": "빠르게"
 	},
 	"trim": {
-		"empty": "아직 자른 곳이 없어요.",
-		"seek": "이 자리로 이동",
-		"restoreAll": "전부 자르기 취소",
-		"splitAt": "나눈 자리 {{time}}",
-		"removed": "잘라낸 {{start}} ~ {{end}}",
 		"cannotJoin": "앞뒤 조각의 배속·볼륨·커서 설정이 달라 합칠 수 없어요."
 	},
 	"speed": {
@@ -253,8 +248,7 @@
 		"motion": "움직임",
 		"recording": "녹화",
 		"files": "파일",
-		"advanced": "고급",
-		"trim": "자르기"
+		"advanced": "고급"
 	},
 	"captions": {
 		"selectOnTimeline": "타임라인에서 자막을 선택해 편집하세요.",

@@ -4,6 +4,7 @@ import { useClipActions } from "../../core/ClipActionsContext";
 import { Keyboard, Scissors } from "@/components/ui/icons";
 import { Plus } from "@/components/ui/icons";
 import { useTimelineContext } from "dnd-timeline";
+import { createPortal } from "react-dom";
 import {
 	type MouseEvent,
 	type MouseEventHandler,
@@ -612,6 +613,32 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 
 	const { clips } = useTimelinePresentation();
 	const clipActions = useClipActions();
+	// Click (not drag) on the line between two clips opens a small "undo trim" button there.
+	const [seamPopup, setSeamPopup] = useState<{
+		leftId: string;
+		rightId: string;
+		x: number;
+		y: number;
+	} | null>(null);
+	const seamDownRef = useRef<{ x: number; y: number } | null>(null);
+	useEffect(() => {
+		if (!seamPopup) return;
+		const close = (event: PointerEvent) => {
+			if (!(event.target as Element | null)?.closest?.("[data-seam-popup]")) setSeamPopup(null);
+		};
+		const onKey = (event: KeyboardEvent) => event.key === "Escape" && setSeamPopup(null);
+		window.addEventListener("pointerdown", close, true);
+		const dismiss = () => setSeamPopup(null);
+		window.addEventListener("keydown", onKey);
+		window.addEventListener("wheel", dismiss, true);
+		window.addEventListener("resize", dismiss);
+		return () => {
+			window.removeEventListener("wheel", dismiss, true);
+			window.removeEventListener("resize", dismiss);
+			window.removeEventListener("pointerdown", close, true);
+			window.removeEventListener("keydown", onKey);
+		};
+	}, [seamPopup]);
 	const clipPresentation = useMemo(
 		() =>
 			clipItems.map((item) => ({
@@ -734,7 +761,33 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 					})}
 				</Row>
 			)}
-			<Row filmstrip id={CLIP_ROW_ID} isEmpty={clipItems.length === 0} hint={translate("timeline.hints.clip", "Press C to split clip")}>
+			<Row
+				filmstrip
+				id={CLIP_ROW_ID}
+				isEmpty={clipItems.length === 0}
+				hint={translate("timeline.hints.clip", "Press C to split clip")}
+				onPointerDownCapture={(event) => {
+					seamDownRef.current = { x: event.clientX, y: event.clientY };
+				}}
+				onClickCapture={(event) => {
+					const down = seamDownRef.current;
+					seamDownRef.current = null;
+					if (!clipActions || !down) return;
+					if (Math.hypot(event.clientX - down.x, event.clientY - down.y) > 4) return;
+					const seams = event.currentTarget.querySelectorAll<HTMLElement>("[data-seam-left]");
+					for (const seam of seams) {
+						const rect = seam.getBoundingClientRect();
+						if (Math.abs(event.clientX - (rect.left + rect.width / 2)) > 8) continue;
+						setSeamPopup({
+							leftId: seam.dataset.seamLeft ?? "",
+							rightId: seam.dataset.seamRight ?? "",
+							x: rect.left + rect.width / 2,
+							y: rect.top,
+						});
+						return;
+					}
+				}}
+			>
 				{clipPresentation.map((item) => (
 					<Item
 						id={item.id}
@@ -772,6 +825,8 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 						<div
 							key={`seam-${left.id}`}
 							data-testid="clip-seam-grip"
+							data-seam-left={left.id}
+							data-seam-right={right.id}
 							aria-hidden="true"
 							className={cn(glassStyles.zoomEndCap, glassStyles.clipHandle)}
 							style={{
@@ -783,6 +838,49 @@ const TimelineCanvasRows = memo(function TimelineCanvasRows({
 						/>
 					);
 				})}
+				{(() => {
+					if (!seamPopup || !clipActions) return null;
+					const left = clipPresentation.find((clip) => clip.id === seamPopup.leftId);
+					const right = clipPresentation.find((clip) => clip.id === seamPopup.rightId);
+					if (!left || !right || left.span.end !== right.span.start) return null;
+					const split = clipActions.splitPoints.find(
+						(point) => point.leftClipId === left.id && point.rightClipId === right.id,
+					);
+					const gap = clipActions.trimBubbles.find(
+						(bubble) => bubble.leftClipId === left.id && bubble.rightClipId === right.id,
+					);
+					if (!split && !gap) return null;
+					const disabledReason =
+						split && !split.mergeable
+							? translate(
+									"settings.trim.cannotJoin",
+									"The two sides have different speed, volume or cursor settings.",
+								)
+							: undefined;
+					// Portal: the playhead layer sits above the clip row and would cross the label.
+					return createPortal(
+						<button
+							type="button"
+							data-seam-popup
+							data-testid="seam-undo-trim"
+							disabled={Boolean(disabledReason)}
+							title={disabledReason}
+							className="fixed z-[1000] flex -translate-x-1/2 -translate-y-full items-center gap-1 whitespace-nowrap rounded-md bg-amber-400 px-2 py-1 text-[11px] font-medium text-black shadow hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-60"
+							style={{ left: seamPopup.x, top: seamPopup.y - 4 }}
+							onPointerDown={(event) => event.stopPropagation()}
+							onClick={(event) => {
+								event.stopPropagation();
+								setSeamPopup(null);
+								if (split) clipActions.mergeSplit(split);
+								else if (gap) clipActions.openTrimRestore(gap.id);
+							}}
+						>
+							<Scissors className="size-3" />
+							{translate("timeline.clipEdit.undoTrim", "Undo trim")}
+						</button>,
+						document.body,
+					);
+				})()}
 				{clipActions?.typingBadges.map((badge) => {
 					const span = getRegionDisplaySpan(
 						{ start: badge.startMs, end: badge.endMs },

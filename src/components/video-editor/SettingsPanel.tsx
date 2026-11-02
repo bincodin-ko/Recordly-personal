@@ -45,7 +45,6 @@ import { SUPPORTED_LOCALES } from "../../i18n/config";
 import { AnnotationSettingsPanel } from "./AnnotationSettingsPanel";
 import CaptionListPanel from "./CaptionListPanel";
 import TranscriptPanel from "./TranscriptPanel";
-import { TrimListSection } from "./TrimListSection";
 import type { SourceRange } from "./transcriptEdit";
 import type { CaptionRetimeSpan } from "./captionOps";
 import {
@@ -588,8 +587,6 @@ interface SettingsPanelProps {
 	onAnnotationDelete?: (id: string) => void;
 	autoCaptions?: CaptionCue[];
 	clipRegions?: ClipRegion[];
-	/** Recording length, for the side-panel trim list. */
-	sourceDurationMs?: number;
 	onCutSourceRanges?: (ranges: SourceRange[]) => boolean;
 	autoCaptionSettings?: AutoCaptionSettings;
 	whisperExecutablePath?: string | null;
@@ -1063,7 +1060,6 @@ export function SettingsPanel({
 	onAnnotationDelete,
 	autoCaptions = [],
 	clipRegions = [],
-	sourceDurationMs = 0,
 	onCutSourceRanges,
 	autoCaptionSettings = DEFAULT_AUTO_CAPTION_SETTINGS,
 	whisperModelPath,
@@ -3278,10 +3274,6 @@ export function SettingsPanel({
 				return zoomItemSectionContent;
 			case "clip":
 				return clipSectionContent;
-			case "trim":
-				return (
-					<TrimListSection clipRegions={clipRegions} sourceDurationMs={sourceDurationMs} />
-				);
 			case "audio":
 				return audioSectionContent;
 			case "frame":

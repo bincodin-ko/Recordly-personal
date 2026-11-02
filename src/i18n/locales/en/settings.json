@@ -28,11 +28,6 @@
 		"followSpeedFast": "Fast"
 	},
 	"trim": {
-		"empty": "No cuts yet.",
-		"seek": "Go to this spot",
-		"restoreAll": "Undo all trims",
-		"splitAt": "Cut at {{time}}",
-		"removed": "Removed {{start}} ~ {{end}}",
 		"cannotJoin": "The two sides have different speed, volume or cursor settings."
 	},
 	"speed": {
@@ -259,8 +254,7 @@
 		"motion": "Motion",
 		"recording": "Recording",
 		"files": "Files",
-		"advanced": "Advanced",
-		"trim": "Trim"
+		"advanced": "Advanced"
 	},
 	"captions": {
 		"selectOnTimeline": "Select a caption on the timeline to edit it.",
