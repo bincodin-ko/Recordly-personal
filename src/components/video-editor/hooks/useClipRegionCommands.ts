@@ -10,7 +10,7 @@ import {
 } from "../clipSequence";
 import { getClipSourceStartMs, type AnnotationRegion, type AudioRegion } from "../types";
 import { planClipSplit } from "../clipSplit";
-import { restoreTrimGap, type TrimGap } from "../trimRestore";
+import { mergeAllSplits, mergeSplit, restoreTrimGap, type SplitPoint, type TrimGap } from "../trimRestore";
 import { applySpeedToSourceRanges, rippleBySource, type SourceSpeedRange } from "../typingSpeedUp";
 import { cutSourceRanges, type SourceRange } from "../transcriptEdit";
 import type { ClipRegion, EditorEffectSection, ZoomRegion } from "../types";
@@ -285,6 +285,11 @@ export function useClipRegionCommands({
 				clips = result.clips;
 				zooms = result.zooms;
 			}
+			// Scissors cuts go too: the recording ends up as whole clips again.
+			clips = mergeAllSplits(clips);
+			if (selectedClipId && !clips.some((clip) => clip.id === selectedClipId)) {
+				setSelectedClipId(null);
+			}
 			setClipRegions(clips);
 			setZoomRegions(zooms);
 			setAnnotationRegions((current) => rippleBySource(current, clipRegions, clips));
@@ -293,10 +298,21 @@ export function useClipRegionCommands({
 			clipRegions,
 			zoomRegions,
 			nextClipIdRef,
+			selectedClipId,
+			setSelectedClipId,
 			setClipRegions,
 			setZoomRegions,
 			setAnnotationRegions,
 		],
+	);
+
+	/** Undo a scissors cut. Timeline positions don't move, so nothing else ripples. */
+	const handleMergeSplit = useCallback(
+		(point: Pick<SplitPoint, "leftClipId" | "rightClipId">) => {
+			setClipRegions((current) => mergeSplit(current, point));
+			if (selectedClipId === point.rightClipId) setSelectedClipId(point.leftClipId);
+		},
+		[selectedClipId, setClipRegions, setSelectedClipId],
 	);
 
 	const handleClipMutedChange = useCallback(
@@ -457,6 +473,7 @@ export function useClipRegionCommands({
 		handleApplySpeedRanges,
 		handleRestoreTrim,
 		handleRestoreTrims,
+		handleMergeSplit,
 		handleClipMutedChange,
 		handleClipHideCursorChange,
 		handleClipDisableSmoothCursorChange,

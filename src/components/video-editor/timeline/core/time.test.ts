@@ -34,8 +34,9 @@ describe("timeline core/time", () => {
 	});
 
 	it("formats playhead labels for sub-minute and minute timelines", () => {
-		expect(formatPlayheadTime(1234)).toBe("1.2s");
-		expect(formatPlayheadTime(61_400)).toBe("1:01.4");
+		expect(formatPlayheadTime(1234)).toBe("0:01.23");
+		expect(formatPlayheadTime(61_400)).toBe("1:01.40");
+		expect(formatPlayheadTime(59_996)).toBe("1:00.00");
 	});
 
 	it("normalizes wheel delta by deltaMode", () => {
@@ -60,7 +61,7 @@ describe("timeline core/time", () => {
 describe("readable timeline ruler", () => {
 	it("carries fractional rounding into the next minute", () => {
 		expect(formatTimeLabel(59999, 100)).toBe("1:00.00");
-		expect(formatPlayheadTime(59999)).toBe("1:00.0");
+		expect(formatPlayheadTime(59999)).toBe("1:00.00");
 		expect(formatTimeLabel(3599999, 100)).toBe("1:00:00.00");
 	});
 	it("reduces tick density in narrow windows", () => {

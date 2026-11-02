@@ -1,3 +1,4 @@
+import { formatClockTime } from "../timeline/core/time";
 import {
 	type Dispatch,
 	type RefObject,
@@ -94,10 +95,7 @@ type Props = {
 };
 
 function formatTime(seconds: number) {
-	if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
-	const mins = Math.floor(seconds / 60);
-	const secs = Math.floor(seconds % 60);
-	return `${mins}:${secs.toString().padStart(2, "0")}`;
+	return formatClockTime(seconds * 1000);
 }
 
 export function EditorPreviewPanel(props: Props) {

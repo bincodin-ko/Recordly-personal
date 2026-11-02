@@ -2,7 +2,6 @@
 // the clip row; restoring it brings the footage back and, when effects sit on the
 // neighbouring clips, the restored stretch has to take over one side's effects.
 import { packClipSequence } from "./clipSequence";
-import { rippleBySource } from "./typingSpeedUp";
 import {
 	type ClipRegion,
 	getClipSourceEndMs,
@@ -11,6 +10,7 @@ import {
 	sortClipRegions,
 	type ZoomRegion,
 } from "./types";
+import { rippleBySource } from "./typingSpeedUp";
 
 export interface TrimGap {
 	id: string;
@@ -66,7 +66,11 @@ function zoomTouchesEdge(zooms: ZoomRegion[], clip: ClipRegion, side: Side): boo
 }
 
 /** Effects a neighbour would pass into the restored stretch (empty = nothing to merge). */
-export function neighbourEffects(clip: ClipRegion | undefined, zooms: ZoomRegion[], side: Side): string[] {
+export function neighbourEffects(
+	clip: ClipRegion | undefined,
+	zooms: ZoomRegion[],
+	side: Side,
+): string[] {
 	if (!clip) return [];
 	const effects: string[] = [];
 	if (clip.speed !== 1) effects.push("speed");
@@ -96,7 +100,9 @@ export function decideRestore(
 	if (afterFx.length === 0) return { kind: "single", side: "before" };
 	if (beforeFx.length === 0) return { kind: "single", side: "after" };
 	const same =
-		before && after && clipEffectKey(before) === clipEffectKey(after) &&
+		before &&
+		after &&
+		clipEffectKey(before) === clipEffectKey(after) &&
 		beforeFx.join() === afterFx.join();
 	return same ? { kind: "plain" } : { kind: "conflict" };
 }
@@ -113,7 +119,12 @@ export function restoreTrimGap(params: {
 	createId: () => string;
 }): { clips: ClipRegion[]; zooms: ZoomRegion[] } {
 	const { gap, clips, zooms, side, createId } = params;
-	const inherit = side === "before" ? clips.find((c) => c.id === gap.beforeClipId) : side === "after" ? clips.find((c) => c.id === gap.afterClipId) : undefined;
+	const inherit =
+		side === "before"
+			? clips.find((c) => c.id === gap.beforeClipId)
+			: side === "after"
+				? clips.find((c) => c.id === gap.afterClipId)
+				: undefined;
 	const speed = inherit?.speed ?? 1;
 	const restored: ClipRegion = {
 		id: createId(),
@@ -143,14 +154,83 @@ export function restoreTrimGap(params: {
 		const placed = nextClips.find((c) => c.id === restored.id)!;
 		const edge = nextClips.find((c) => c.id === inherit.id)!;
 		nextZooms = nextZooms.map((z) => {
-			if (side === "before" && z.endMs >= edge.endMs - ZOOM_EDGE_MS && z.endMs <= edge.endMs && z.startMs < edge.endMs) {
+			if (
+				side === "before" &&
+				z.endMs >= edge.endMs - ZOOM_EDGE_MS &&
+				z.endMs <= edge.endMs &&
+				z.startMs < edge.endMs
+			) {
 				return { ...z, endMs: placed.endMs };
 			}
-			if (side === "after" && z.startMs <= edge.startMs + ZOOM_EDGE_MS && z.startMs >= edge.startMs && z.endMs > edge.startMs) {
+			if (
+				side === "after" &&
+				z.startMs <= edge.startMs + ZOOM_EDGE_MS &&
+				z.startMs >= edge.startMs &&
+				z.endMs > edge.startMs
+			) {
 				return { ...z, startMs: placed.startMs };
 			}
 			return z;
 		});
 	}
 	return { clips: nextClips, zooms: nextZooms };
+}
+
+export interface SplitPoint {
+	id: string;
+	/** Where the cut sits on the timeline and in the recording. */
+	timelineMs: number;
+	sourceMs: number;
+	leftClipId: string;
+	rightClipId: string;
+	/** Same speed, volume, mute and cursor settings on both sides, so joining changes nothing else. */
+	mergeable: boolean;
+}
+
+// A scissors cut: two neighbouring clips that continue the same footage without a gap.
+export function findSplitPoints(clips: ClipRegion[]): SplitPoint[] {
+	const sorted = sortClipRegions(clips);
+	const points: SplitPoint[] = [];
+	for (let i = 1; i < sorted.length; i++) {
+		const left = sorted[i - 1];
+		const right = sorted[i];
+		const sourceMs = getClipSourceEndMs(left);
+		if (Math.abs(right.startMs - left.endMs) > 1) continue;
+		if (Math.abs(getClipSourceStartMs(right) - sourceMs) > 1) continue;
+		points.push({
+			id: `split-${left.id}-${right.id}`,
+			timelineMs: left.endMs,
+			sourceMs,
+			leftClipId: left.id,
+			rightClipId: right.id,
+			mergeable: clipEffectKey(left) === clipEffectKey(right),
+		});
+	}
+	return points;
+}
+
+/** Undo a scissors cut: the left clip grows over the right one. */
+export function mergeSplit(
+	clips: ClipRegion[],
+	point: Pick<SplitPoint, "leftClipId" | "rightClipId">,
+) {
+	const left = clips.find((c) => c.id === point.leftClipId);
+	const right = clips.find((c) => c.id === point.rightClipId);
+	if (!left || !right) return clips;
+	const merged: ClipRegion = {
+		...left,
+		endMs: right.endMs,
+		sourceStartMs: getClipSourceStartMs(left),
+	};
+	return clips.filter((c) => c.id !== right.id).map((c) => (c.id === left.id ? merged : c));
+}
+
+/** Join every cut that can be joined, left to right. */
+export function mergeAllSplits(clips: ClipRegion[]): ClipRegion[] {
+	let next = clips;
+	for (;;) {
+		const point = findSplitPoints(next).find((p) => p.mergeable);
+		if (!point) return next;
+		next = mergeSplit(next, point);
+	}
 }

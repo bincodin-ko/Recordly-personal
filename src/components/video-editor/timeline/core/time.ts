@@ -102,7 +102,11 @@ export function formatTimeLabel(milliseconds: number, intervalMs: number) {
 		: `${minutes}:${seconds}`;
 }
 
+/** Clock time to the hundredth of a second, e.g. "1:05.37". Used everywhere a time is shown. */
+export function formatClockTime(ms: number): string {
+	return formatTimeLabel(ms, 100);
+}
+
 export function formatPlayheadTime(ms: number): string {
-	const rounded = Math.round(Math.max(0, ms) / 100) * 100;
-	return rounded < 60000 ? `${(rounded / 1000).toFixed(1)}s` : formatTimeLabel(rounded, 500);
+	return formatClockTime(ms);
 }

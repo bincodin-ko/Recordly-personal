@@ -28,9 +28,12 @@
 		"followSpeedFast": "Fast"
 	},
 	"trim": {
-		"empty": "No trimmed parts yet.",
+		"empty": "No cuts yet.",
 		"seek": "Go to this spot",
-		"restoreAll": "Undo all trims"
+		"restoreAll": "Undo all trims",
+		"splitAt": "Cut at {{time}}",
+		"removed": "Removed {{start}} ~ {{end}}",
+		"cannotJoin": "The two sides have different speed, volume or cursor settings."
 	},
 	"speed": {
 		"playbackSpeed": "Playback Speed",
